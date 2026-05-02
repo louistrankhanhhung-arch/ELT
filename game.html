@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ELT Game Engine</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --panel: #ffffff;
+      --ink: #173044;
+      --muted: #6b7a86;
+      --accent: #d23b2a;
+      --blue: #0f74a8;
+      --good: #2fa866;
+      --bad: #d94646;
+      --border: rgba(23,48,68,.14);
+      --shadow: 0 10px 28px rgba(23,48,68,.14);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .app {
+      width: min(1180px, 100vw);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(12px, 3vw, 30px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(36px, 6vw, 76px);
+      line-height: 1;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 22px);
+      font-weight: 800;
+      text-align: center;
+      min-height: 28px;
+    }
+
+    .panel {
+      width: min(980px, 100%);
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(14px, 3vw, 28px);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: clamp(16px, 2vw, 21px);
+      font-weight: 800;
+      cursor: pointer;
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 3px 10px rgba(23,48,68,.12);
+      transition: transform .12s ease, opacity .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    button:active { transform: scale(.97); }
+    button.primary { background: var(--blue); color: white; }
+    button.accent { background: var(--accent); color: white; }
+    button.good { background: var(--good); color: white; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(12px, 3vw, 24px);
+      width: 100%;
+    }
+
+    .card {
+      background: white;
+      border: 4px solid transparent;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+      position: relative;
+      min-height: 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card:hover { transform: translateY(-2px); }
+    .card.correct { border-color: var(--good); box-shadow: 0 0 0 6px rgba(47,168,102,.16), var(--shadow); }
+    .card.wrong { border-color: var(--bad); animation: shake .28s linear; }
+    .card.active { border-color: var(--blue); box-shadow: 0 0 0 6px rgba(15,116,168,.16), var(--shadow); }
+    .card.disabled { opacity: .55; pointer-events: none; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: #eef3f5;
+    }
+
+    .label {
+      text-align: center;
+      color: var(--accent);
+      font-size: clamp(24px, 4vw, 44px);
+      padding: 10px;
+      line-height: 1.08;
+      font-weight: 800;
+    }
+
+    .largeText {
+      text-align: center;
+      color: var(--accent);
+      font-size: clamp(34px, 6vw, 72px);
+      font-weight: 900;
+      line-height: 1.08;
+      padding: 12px;
+    }
+
+    .status {
+      min-height: 30px;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 22px);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .scorebar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: clamp(15px, 2vw, 20px);
+    }
+
+    .builderTarget, .builderAnswer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      min-height: 64px;
+      padding: 12px;
+      border: 2px dashed var(--border);
+      border-radius: 18px;
+      background: rgba(15,116,168,.04);
+    }
+
+    .wordTile {
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 900;
+      background: white;
+      color: var(--accent);
+      box-shadow: 0 3px 10px rgba(23,48,68,.12);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .lineItem {
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: clamp(22px, 3vw, 38px);
+      font-weight: 850;
+      color: var(--accent);
+      background: white;
+      box-shadow: 0 3px 10px rgba(23,48,68,.12);
+      cursor: pointer;
+      line-height: 1.12;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hiddenWord {
+      color: transparent;
+      position: relative;
+    }
+    .hiddenWord::after {
+      content: "••••";
+      color: var(--muted);
+      letter-spacing: 6px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .error {
+      margin: auto;
+      max-width: 760px;
+      padding: 20px;
+      border-radius: 22px;
+      background: #fff;
+      color: var(--bad);
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 700px) {
+      .grid { gap: 10px; }
+      button { padding: 10px 13px; }
+      .panel { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1 id="title">Game</h1>
+    <div class="subtitle" id="subtitle"></div>
+    <div class="scorebar" id="scorebar"></div>
+    <section class="panel" id="game"></section>
+    <div class="controls" id="controls"></div>
+    <div class="status" id="status"></div>
+  </main>
+
+  <audio id="audio" preload="auto"></audio>
+
+  <script>
+    const DEFAULT_DATA = {
+      type: "listen-choose",
+      title: "Listen & Choose",
+      subtitle: "Listen. Choose the picture.",
+      settings: { shuffle: true, rounds: 5, slowRate: 0.75 },
+      items: [
+        { word: "boy", img: "img/boy.jpg", audio: "audio/boy.mp3" },
+        { word: "girl", img: "img/girl.jpg", audio: "audio/girl.mp3" },
+        { word: "teacher", img: "img/teacher.jpg", audio: "audio/teacher.mp3" },
+        { word: "student", img: "img/student.jpg", audio: "audio/student.mp3" }
+      ]
+    };
+
+    const els = {
+      title: document.getElementById('title'),
+      subtitle: document.getElementById('subtitle'),
+      scorebar: document.getElementById('scorebar'),
+      game: document.getElementById('game'),
+      controls: document.getElementById('controls'),
+      status: document.getElementById('status'),
+      audio: document.getElementById('audio')
+    };
+
+    let data = DEFAULT_DATA;
+    let state = { score: 0, round: 0, answer: null, selected: [], bank: [], order: [] };
+
+    function getParam(name) { return new URLSearchParams(location.search).get(name); }
+
+    async function loadData() {
+      const url = getParam('data');
+      if (!url) return DEFAULT_DATA;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Cannot load JSON data: ' + url);
+      return await res.json();
+    }
+
+    function normalizeData(d) {
+      const safe = { ...DEFAULT_DATA, ...d };
+      safe.settings = { ...DEFAULT_DATA.settings, ...(d.settings || {}) };
+      return safe;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+      }[c]));
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function setStatus(msg) { els.status.textContent = msg || ''; }
+    function setScore() { els.scorebar.innerHTML = `<span>Score: ${state.score}</span><span>Round: ${state.round}</span>`; }
+
+    function btn(label, className, onClick) {
+      const b = document.createElement('button');
+      b.textContent = label;
+      if (className) b.className = className;
+      b.addEventListener('click', onClick);
+      return b;
+    }
+
+    async function play(src, rate = 1) {
+      if (!src) return;
+      els.audio.pause();
+      els.audio.currentTime = 0;
+      els.audio.src = src;
+      els.audio.playbackRate = rate;
+      try { await els.audio.play(); }
+      catch { setStatus('Tap 🔊 Play to start audio on this device.'); }
+    }
+
+    function renderShell() {
+      els.title.textContent = data.title || 'Game';
+      els.subtitle.textContent = data.subtitle || '';
+      els.controls.innerHTML = '';
+      els.game.innerHTML = '';
+      setStatus('');
+      setScore();
+    }
+
+    function cardHTML(item, showText = true) {
+      const image = item.img ? `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.word || item.text || '')}">` : '';
+      const label = showText ? `<div class="label">${escapeHtml(item.word || item.text || '')}</div>` : '';
+      return `${image}${label}`;
+    }
+
+    function renderGrid(items, onClick, showText = true) {
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      items.forEach((item, idx) => {
+        const c = document.createElement('article');
+        c.className = 'card';
+        c.innerHTML = cardHTML(item, showText);
+        c.addEventListener('click', () => onClick(item, idx, c));
+        grid.appendChild(c);
+      });
+      els.game.appendChild(grid);
+    }
+
+    function newListenChooseRound() {
+      renderShell();
+      state.round += 1;
+      setScore();
+      const pool = data.settings.shuffle ? shuffle(data.items) : [...data.items];
+      state.answer = pool[Math.floor(Math.random() * pool.length)];
+      renderGrid(pool, (item, idx, card) => {
+        if (item === state.answer || item.word === state.answer.word) {
+          card.classList.add('correct');
+          state.score += 1;
+          setScore();
+          setStatus('Good! 🎉');
+          setTimeout(() => {
+            if (state.round >= Number(data.settings.rounds || 5)) finishGame();
+            else newListenChooseRound();
+          }, 850);
+        } else {
+          card.classList.add('wrong');
+          setStatus('Try again. Listen carefully.');
+          setTimeout(() => card.classList.remove('wrong'), 450);
+          setTimeout(() => play(state.answer.audio), 450);
+        }
+      }, false);
+      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(state.answer.audio)));
+      els.controls.appendChild(btn('🔁 New', '', newListenChooseRound));
+      setTimeout(() => play(state.answer.audio), 250);
+    }
+
+    function renderFastTap() {
+      state.score = 0; state.round = 0;
+      newListenChooseRound();
+    }
+
+    function renderMemoryMatch() {
+      renderShell();
+      state.selected = [];
+      const cards = [];
+      (data.items || []).forEach((item, i) => {
+        cards.push({ kind: 'img', pair: i, item });
+        cards.push({ kind: 'word', pair: i, item });
+      });
+      const deck = shuffle(cards);
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      deck.forEach((cardData, idx) => {
+        const c = document.createElement('article');
+        c.className = 'card';
+        c.dataset.pair = cardData.pair;
+        c.dataset.open = '0';
+        c.innerHTML = `<div class="largeText">?</div>`;
+        c.addEventListener('click', () => {
+          if (c.dataset.open === '1' || state.selected.length >= 2) return;
+          c.dataset.open = '1';
+          c.innerHTML = cardData.kind === 'img'
+            ? `<img src="${escapeHtml(cardData.item.img)}"><div class="label">${escapeHtml(cardData.item.word || '')}</div>`
+            : `<div class="largeText">${escapeHtml(cardData.item.word || '')}</div>`;
+          if (cardData.item.audio) play(cardData.item.audio);
+          state.selected.push(c);
+          if (state.selected.length === 2) {
+            const [a, b] = state.selected;
+            if (a.dataset.pair === b.dataset.pair) {
+              a.classList.add('correct'); b.classList.add('correct');
+              state.score += 1; setScore(); setStatus('Match!');
+              state.selected = [];
+              if (state.score === data.items.length) finishGame();
+            } else {
+              a.classList.add('wrong'); b.classList.add('wrong');
+              setStatus('Try again.');
+              setTimeout(() => {
+                [a, b].forEach(x => { x.dataset.open = '0'; x.className = 'card'; x.innerHTML = `<div class="largeText">?</div>`; });
+                state.selected = [];
+              }, 850);
+            }
+          }
+        });
+        grid.appendChild(c);
+      });
+      els.game.appendChild(grid);
+      els.controls.appendChild(btn('🔁 Reset', '', renderMemoryMatch));
+    }
+
+    function renderSentenceBuilder() {
+      renderShell();
+      const target = data.target || '';
+      const words = shuffle(data.words || target.replace(/[.!?]/g, '').split(/\s+/).filter(Boolean));
+      state.bank = words;
+      state.selected = [];
+      const targetDiv = document.createElement('div');
+      targetDiv.className = 'largeText';
+      targetDiv.textContent = data.settings?.hideTarget ? 'Build the sentence.' : target;
+      const answer = document.createElement('div');
+      answer.className = 'builderAnswer';
+      const bank = document.createElement('div');
+      bank.className = 'builderTarget';
+      els.game.appendChild(targetDiv);
+      els.game.appendChild(answer);
+      els.game.appendChild(bank);
+
+      function refresh() {
+        answer.innerHTML = '';
+        bank.innerHTML = '';
+        state.selected.forEach((w, i) => {
+          const tile = document.createElement('div'); tile.className = 'wordTile'; tile.textContent = w;
+          tile.addEventListener('click', () => { state.bank.push(w); state.selected.splice(i, 1); refresh(); });
+          answer.appendChild(tile);
+        });
+        state.bank.forEach((w, i) => {
+          const tile = document.createElement('div'); tile.className = 'wordTile'; tile.textContent = w;
+          tile.addEventListener('click', () => { state.selected.push(w); state.bank.splice(i, 1); refresh(); });
+          bank.appendChild(tile);
+        });
+      }
+      refresh();
+      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(data.audio)));
+      els.controls.appendChild(btn('✅ Check', 'good', () => {
+        const built = state.selected.join(' ').replace(/\s+([.!?])/g, '$1').trim();
+        const cleanTarget = target.replace(/[.!?]/g, '').trim().toLowerCase();
+        const cleanBuilt = built.replace(/[.!?]/g, '').trim().toLowerCase();
+        if (cleanBuilt === cleanTarget) { state.score += 1; setScore(); setStatus('Good sentence! 🎉'); play(data.audio); }
+        else setStatus('Not yet. Try again.');
+      }));
+      els.controls.appendChild(btn('🔁 Reset', '', renderSentenceBuilder));
+    }
+
+    function renderListenComplete() {
+      renderShell();
+      const options = shuffle(data.options || []);
+      const prompt = document.createElement('div');
+      prompt.className = 'largeText';
+      prompt.textContent = data.prompt || 'Listen and complete.';
+      els.game.appendChild(prompt);
+      renderGrid(options.map(o => ({ word: o })), (item, idx, card) => {
+        if (item.word === data.answer) { card.classList.add('correct'); setStatus('Correct! 🎉'); state.score += 1; setScore(); }
+        else { card.classList.add('wrong'); setStatus('Try again.'); setTimeout(() => card.classList.remove('wrong'), 450); }
+      }, true);
+      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(data.audio)));
+      setTimeout(() => play(data.audio), 250);
+    }
+
+    function renderLineOrdering() {
+      renderShell();
+      state.selected = [];
+      state.bank = shuffle(data.lines || []);
+      const answer = document.createElement('div'); answer.className = 'row';
+      const bank = document.createElement('div'); bank.className = 'row';
+      els.game.appendChild(answer); els.game.appendChild(bank);
+      function refresh() {
+        answer.innerHTML = ''; bank.innerHTML = '';
+        state.selected.forEach((line, i) => {
+          const el = document.createElement('div'); el.className = 'lineItem'; el.textContent = line.text;
+          el.addEventListener('click', () => { state.bank.push(line); state.selected.splice(i, 1); refresh(); });
+          answer.appendChild(el);
+        });
+        state.bank.forEach((line, i) => {
+          const el = document.createElement('div'); el.className = 'lineItem'; el.textContent = line.text;
+          el.addEventListener('click', () => { state.selected.push(line); state.bank.splice(i, 1); refresh(); if (line.audio) play(line.audio); });
+          bank.appendChild(el);
+        });
+      }
+      refresh();
+      els.controls.appendChild(btn('✅ Check', 'good', () => {
+        const ok = state.selected.length === data.lines.length && state.selected.every((l, i) => l.text === data.lines[i].text);
+        if (ok) { setStatus('Correct order! 🎉'); state.score += 1; setScore(); }
+        else setStatus('Not yet. Try again.');
+      }));
+      els.controls.appendChild(btn('🔁 Reset', '', renderLineOrdering));
+    }
+
+    function renderWhoSaysIt() {
+      renderShell();
+      const line = data.lines[Math.floor(Math.random() * data.lines.length)];
+      state.answer = line.speaker;
+      const speakers = shuffle([...(data.speakers || [...new Set(data.lines.map(l => l.speaker).filter(Boolean))])]);
+      renderGrid(speakers.map(s => ({ word: s })), (item, idx, card) => {
+        if (item.word === state.answer) { card.classList.add('correct'); setStatus('Correct! 🎉'); state.score += 1; setScore(); }
+        else { card.classList.add('wrong'); setStatus('Try again.'); setTimeout(() => card.classList.remove('wrong'), 450); }
+      }, true);
+      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(line.audio)));
+      els.controls.appendChild(btn('🔁 New', '', renderWhoSaysIt));
+      setTimeout(() => play(line.audio), 250);
+    }
+
+    function finishGame() {
+      renderShell();
+      els.game.innerHTML = `<div class="largeText">Great job! 🎉</div>`;
+      setStatus(`Final score: ${state.score}`);
+      els.controls.appendChild(btn('🔁 Play Again', 'primary', startGame));
+    }
+
+    function startGame() {
+      state = { score: 0, round: 0, answer: null, selected: [], bank: [], order: [] };
+      switch ((data.type || '').toLowerCase()) {
+        case 'listen-choose': return newListenChooseRound();
+        case 'fast-tap': return renderFastTap();
+        case 'memory-match': return renderMemoryMatch();
+        case 'sentence-builder': return renderSentenceBuilder();
+        case 'listen-complete': return renderListenComplete();
+        case 'line-ordering': return renderLineOrdering();
+        case 'who-says-it': return renderWhoSaysIt();
+        default:
+          renderShell();
+          els.game.innerHTML = `<div class="largeText">Unknown game type</div>`;
+          setStatus('Check the JSON type.');
+      }
+    }
+
+    async function init() {
+      try {
+        data = normalizeData(await loadData());
+        startGame();
+      } catch (err) {
+        document.body.innerHTML = `<div class="error">Could not load game data.<br>${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
