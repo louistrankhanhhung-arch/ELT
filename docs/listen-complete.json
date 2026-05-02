@@ -1,0 +1,9 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "subtitle": "Listen and choose the missing word.",
+  "prompt": "I am a ____.",
+  "audio": "https://...",
+  "answer": "student",
+  "options": ["student", "teacher", "boy", "girl"]
+}
