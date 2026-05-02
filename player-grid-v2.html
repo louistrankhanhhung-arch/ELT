@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ELT Player Grid v2</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --panel: #ffffff;
+      --ink: #173044;
+      --muted: #6b7a86;
+      --accent: #d23b2a;
+      --accent-2: #0f74a8;
+      --good: #2fa866;
+      --bad: #d94646;
+      --border: rgba(23,48,68,.14);
+      --shadow: 0 10px 28px rgba(23,48,68,.14);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: min(1180px, 100vw);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 18px clamp(12px, 3vw, 32px) 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(34px, 6vw, 74px);
+      line-height: 1;
+      font-weight: 500;
+      text-align: center;
+      flex: 1 1 auto;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 3px 10px rgba(23,48,68,.12);
+      transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+      user-select: none;
+    }
+
+    button:active { transform: scale(.97); }
+    button.primary { background: var(--accent-2); color: white; }
+    button.accent { background: var(--accent); color: white; }
+    button.ghost { background: rgba(255,255,255,.78); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .status {
+      min-height: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(14px, 3vw, 28px);
+      align-items: stretch;
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 4px solid transparent;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+    }
+
+    .card:hover { transform: translateY(-2px); }
+    .card.active {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 6px rgba(15,116,168,.16), var(--shadow);
+    }
+    .card.correct {
+      border-color: var(--good);
+      box-shadow: 0 0 0 6px rgba(47,168,102,.16), var(--shadow);
+    }
+    .card.wrong {
+      border-color: var(--bad);
+      animation: shake .28s linear;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eef3f5;
+    }
+
+    .label {
+      text-align: center;
+      font-size: clamp(24px, 4vw, 42px);
+      color: var(--accent);
+      padding: 10px 8px 14px;
+      min-height: 58px;
+    }
+
+    .label.hidden-word { color: transparent; }
+    .label.hidden-word::after {
+      content: "•••";
+      color: var(--muted);
+      letter-spacing: 6px;
+    }
+
+    .quizPanel {
+      display: none;
+      width: min(900px, 100%);
+      margin: 0 auto;
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+    }
+
+    .quizPanel.show { display: block; }
+    .quizPrompt {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .focus {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,247,251,.98);
+      z-index: 20;
+      display: none;
+      padding: clamp(12px, 3vw, 28px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .focus.show { display: flex; }
+
+    .focusBox {
+      width: min(980px, 100%);
+      max-height: 100%;
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: clamp(12px, 3vw, 24px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .focusImg {
+      width: min(760px, 100%);
+      max-height: 58vh;
+      object-fit: contain;
+      border-radius: 20px;
+      background: #eef3f5;
+    }
+
+    .focusWord {
+      font-size: clamp(38px, 7vw, 76px);
+      color: var(--accent);
+      line-height: 1;
+      text-align: center;
+    }
+
+    .focusWord.hidden-word { color: transparent; }
+    .focusWord.hidden-word::after {
+      content: "•••";
+      color: var(--muted);
+      letter-spacing: 8px;
+    }
+
+    .focusControls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .error {
+      margin: auto;
+      max-width: 760px;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--bad);
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 640px) {
+      .grid { gap: 10px; }
+      button { padding: 10px 13px; }
+      .app { padding-top: 10px; }
+      .label { min-height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <div class="topbar">
+      <h1 id="title">Listen and Repeat</h1>
+    </div>
+
+    <div class="controls">
+      <button class="primary" id="playAllBtn">▶ Play All</button>
+      <button class="accent" id="quizBtn">🎧 Listen & Choose</button>
+      <button class="ghost" id="shuffleBtn">🔀 Shuffle</button>
+      <button class="ghost" id="hideTextBtn">🙈 Hide Text</button>
+    </div>
+
+    <div class="quizPanel" id="quizPanel">
+      <div class="quizPrompt" id="quizPrompt">Listen. Choose the picture.</div>
+      <button class="primary" id="replayQuizBtn">🔊 Replay</button>
+      <button class="ghost" id="exitQuizBtn">Exit Quiz</button>
+    </div>
+
+    <div class="status" id="status"></div>
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <div class="focus" id="focus">
+    <div class="focusBox">
+      <img class="focusImg" id="focusImg" alt="" />
+      <div class="focusWord" id="focusWord"></div>
+      <div class="focusControls">
+        <button class="ghost" id="prevBtn">◀ Back</button>
+        <button class="primary" id="playBtn">🔊 Play</button>
+        <button class="ghost" id="nextBtn">Next ▶</button>
+        <button class="accent" id="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio" preload="auto"></audio>
+
+  <script>
+    const DEFAULT_DATA = {
+      title: "Listen and Repeat",
+      settings: {
+        shuffle: false,
+        hideText: false,
+        autoplayOnFocus: true,
+        delayMs: 900
+      },
+      items: [
+        { word: "boy", img: "img/boy.jpg", audio: "audio/boy.mp3" },
+        { word: "girl", img: "img/girl.jpg", audio: "audio/girl.mp3" },
+        { word: "teacher", img: "img/teacher.jpg", audio: "audio/teacher.mp3" },
+        { word: "student", img: "img/student.jpg", audio: "audio/student.mp3" }
+      ]
+    };
+
+    const els = {
+      title: document.getElementById("title"),
+      grid: document.getElementById("grid"),
+      status: document.getElementById("status"),
+      audio: document.getElementById("audio"),
+      playAllBtn: document.getElementById("playAllBtn"),
+      quizBtn: document.getElementById("quizBtn"),
+      shuffleBtn: document.getElementById("shuffleBtn"),
+      hideTextBtn: document.getElementById("hideTextBtn"),
+      quizPanel: document.getElementById("quizPanel"),
+      quizPrompt: document.getElementById("quizPrompt"),
+      replayQuizBtn: document.getElementById("replayQuizBtn"),
+      exitQuizBtn: document.getElementById("exitQuizBtn"),
+      focus: document.getElementById("focus"),
+      focusImg: document.getElementById("focusImg"),
+      focusWord: document.getElementById("focusWord"),
+      prevBtn: document.getElementById("prevBtn"),
+      playBtn: document.getElementById("playBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      closeBtn: document.getElementById("closeBtn")
+    };
+
+    let data = DEFAULT_DATA;
+    let items = [];
+    let focusIndex = 0;
+    let hideText = false;
+    let quizMode = false;
+    let quizAnswerIndex = -1;
+    let isPlayingAll = false;
+
+    function getParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    async function loadData() {
+      const dataUrl = getParam("data");
+      if (!dataUrl) return DEFAULT_DATA;
+      const res = await fetch(dataUrl, { cache: "no-store" });
+      if (!res.ok) throw new Error("Cannot load JSON data: " + dataUrl);
+      return await res.json();
+    }
+
+    function normalizeData(d) {
+      const safe = { ...DEFAULT_DATA, ...d };
+      safe.settings = { ...DEFAULT_DATA.settings, ...(d.settings || {}) };
+      safe.items = Array.isArray(d.items) ? d.items : DEFAULT_DATA.items;
+      return safe;
+    }
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function render() {
+      els.title.textContent = data.title || "Listen and Repeat";
+      els.grid.innerHTML = "";
+      hideText = Boolean(data.settings.hideText);
+      updateHideTextButton();
+      items.forEach((item, index) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.dataset.index = index;
+        card.innerHTML = `
+          <img src="${escapeAttr(item.img)}" alt="${escapeAttr(item.word || item.text || "picture")}">
+          <div class="label ${hideText ? "hidden-word" : ""}">${escapeHtml(item.word || item.text || "")}</div>
+        `;
+        card.addEventListener("click", () => handleCardClick(index));
+        els.grid.appendChild(card);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;"
+      }[c]));
+    }
+
+    function escapeAttr(str) { return escapeHtml(str); }
+
+    function cards() {
+      return [...document.querySelectorAll(".card")];
+    }
+
+    function clearCardStates() {
+      cards().forEach(c => c.classList.remove("active", "correct", "wrong"));
+    }
+
+    function setActive(index) {
+      clearCardStates();
+      const c = cards()[index];
+      if (c) c.classList.add("active");
+    }
+
+    function setStatus(text) {
+      els.status.textContent = text || "";
+    }
+
+    async function playAudio(src) {
+      if (!src) return;
+      els.audio.pause();
+      els.audio.currentTime = 0;
+      els.audio.src = src;
+      try {
+        await els.audio.play();
+      } catch (err) {
+        setStatus("Tap 🔊 Play to start audio on this device.");
+      }
+    }
+
+    function waitForAudioEnd() {
+      return new Promise(resolve => {
+        const done = () => {
+          els.audio.removeEventListener("ended", done);
+          els.audio.removeEventListener("error", done);
+          resolve();
+        };
+        els.audio.addEventListener("ended", done);
+        els.audio.addEventListener("error", done);
+      });
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function playAll() {
+      if (isPlayingAll) return;
+      isPlayingAll = true;
+      quizMode = false;
+      updateQuizUI();
+      els.playAllBtn.disabled = true;
+      setStatus("Listen and repeat.");
+      for (let i = 0; i < items.length; i++) {
+        setActive(i);
+        setStatus(items[i].word || items[i].text || "Listen.");
+        await playAudio(items[i].audio);
+        await waitForAudioEnd();
+        await delay(Number(data.settings.delayMs) || 900);
+      }
+      clearCardStates();
+      setStatus("");
+      els.playAllBtn.disabled = false;
+      isPlayingAll = false;
+    }
+
+    function handleCardClick(index) {
+      if (quizMode) {
+        checkQuizAnswer(index);
+        return;
+      }
+      openFocus(index);
+    }
+
+    function openFocus(index) {
+      focusIndex = index;
+      updateFocus();
+      els.focus.classList.add("show");
+      setActive(index);
+      if (data.settings.autoplayOnFocus) playAudio(items[focusIndex].audio);
+    }
+
+    function closeFocus() {
+      els.focus.classList.remove("show");
+      els.audio.pause();
+      clearCardStates();
+      setStatus("");
+    }
+
+    function updateFocus() {
+      const item = items[focusIndex];
+      els.focusImg.src = item.img;
+      els.focusImg.alt = item.word || item.text || "picture";
+      els.focusWord.textContent = item.word || item.text || "";
+      els.focusWord.classList.toggle("hidden-word", hideText);
+      els.prevBtn.disabled = items.length <= 1;
+      els.nextBtn.disabled = items.length <= 1;
+    }
+
+    function nextFocus(step) {
+      focusIndex = (focusIndex + step + items.length) % items.length;
+      updateFocus();
+      setActive(focusIndex);
+      playAudio(items[focusIndex].audio);
+    }
+
+    function toggleHideText() {
+      hideText = !hideText;
+      data.settings.hideText = hideText;
+      document.querySelectorAll(".label").forEach(label => {
+        label.classList.toggle("hidden-word", hideText);
+      });
+      els.focusWord.classList.toggle("hidden-word", hideText);
+      updateHideTextButton();
+    }
+
+    function updateHideTextButton() {
+      els.hideTextBtn.textContent = hideText ? "👀 Show Text" : "🙈 Hide Text";
+    }
+
+    function shuffleItems() {
+      items = shuffleArray(items);
+      render();
+      setStatus("Cards shuffled.");
+      setTimeout(() => setStatus(""), 900);
+    }
+
+    function startQuiz() {
+      quizMode = true;
+      clearCardStates();
+      updateQuizUI();
+      newQuizQuestion();
+    }
+
+    function exitQuiz() {
+      quizMode = false;
+      quizAnswerIndex = -1;
+      updateQuizUI();
+      clearCardStates();
+      setStatus("");
+    }
+
+    function updateQuizUI() {
+      els.quizPanel.classList.toggle("show", quizMode);
+      els.quizBtn.textContent = quizMode ? "🎧 New Question" : "🎧 Listen & Choose";
+    }
+
+    function newQuizQuestion() {
+      clearCardStates();
+      quizAnswerIndex = Math.floor(Math.random() * items.length);
+      setStatus("Choose the correct picture.");
+      playAudio(items[quizAnswerIndex].audio);
+    }
+
+    function replayQuiz() {
+      if (quizAnswerIndex >= 0) playAudio(items[quizAnswerIndex].audio);
+    }
+
+    async function checkQuizAnswer(index) {
+      const selected = cards()[index];
+      if (!selected) return;
+      if (index === quizAnswerIndex) {
+        selected.classList.add("correct");
+        setStatus("Good! 🎉");
+        await playAudio(items[index].audio);
+        setTimeout(newQuizQuestion, 900);
+      } else {
+        selected.classList.add("wrong");
+        setStatus("Try again. Listen carefully.");
+        setTimeout(() => selected.classList.remove("wrong"), 450);
+        setTimeout(replayQuiz, 500);
+      }
+    }
+
+    function bindEvents() {
+      els.playAllBtn.addEventListener("click", playAll);
+      els.quizBtn.addEventListener("click", () => quizMode ? newQuizQuestion() : startQuiz());
+      els.shuffleBtn.addEventListener("click", shuffleItems);
+      els.hideTextBtn.addEventListener("click", toggleHideText);
+      els.replayQuizBtn.addEventListener("click", replayQuiz);
+      els.exitQuizBtn.addEventListener("click", exitQuiz);
+      els.prevBtn.addEventListener("click", () => nextFocus(-1));
+      els.nextBtn.addEventListener("click", () => nextFocus(1));
+      els.playBtn.addEventListener("click", () => playAudio(items[focusIndex].audio));
+      els.closeBtn.addEventListener("click", closeFocus);
+      els.focus.addEventListener("click", e => { if (e.target === els.focus) closeFocus(); });
+      document.addEventListener("keydown", e => {
+        if (!els.focus.classList.contains("show")) return;
+        if (e.key === "ArrowLeft") nextFocus(-1);
+        if (e.key === "ArrowRight") nextFocus(1);
+        if (e.key === "Escape") closeFocus();
+        if (e.key === " " || e.key === "Enter") playAudio(items[focusIndex].audio);
+      });
+    }
+
+    async function init() {
+      try {
+        data = normalizeData(await loadData());
+        items = data.settings.shuffle ? shuffleArray(data.items) : [...data.items];
+        bindEvents();
+        render();
+      } catch (err) {
+        document.body.innerHTML = `<div class="error">Could not load lesson data.<br>${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
