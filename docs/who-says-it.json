@@ -1,0 +1,12 @@
+{
+  "type": "who-says-it",
+  "title": "Who Says It?",
+  "subtitle": "Listen and choose the speaker.",
+  "speakers": ["A", "B"],
+  "lines": [
+    { "speaker": "A", "text": "Hello.", "audio": "https://..." },
+    { "speaker": "B", "text": "Hi.", "audio": "https://..." },
+    { "speaker": "A", "text": "What’s your name?", "audio": "https://..." },
+    { "speaker": "B", "text": "I’m Ben.", "audio": "https://..." }
+  ]
+}
