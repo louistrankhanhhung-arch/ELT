@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ELT Sentence Player</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --panel: #ffffff;
+      --ink: #173044;
+      --muted: #6b7a86;
+      --accent: #d23b2a;
+      --blue: #0f74a8;
+      --good: #2fa866;
+      --border: rgba(23,48,68,.14);
+      --shadow: 0 10px 28px rgba(23,48,68,.14);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .app {
+      width: min(1120px, 100vw);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(12px, 3vw, 30px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .panel {
+      width: min(980px, 100%);
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(16px, 3vw, 30px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(40px, 7vw, 82px);
+      line-height: 1;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .sentence {
+      width: 100%;
+      text-align: center;
+      font-size: clamp(34px, 6vw, 70px);
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.15;
+      padding: 4px 8px;
+    }
+
+    .word {
+      display: inline-block;
+      border-radius: 14px;
+      padding: 0 .08em;
+      transition: background .12s ease, color .12s ease, transform .12s ease;
+    }
+
+    .word.active {
+      background: rgba(15,116,168,.16);
+      color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    .imageWrap {
+      width: min(680px, 100%);
+      border-radius: 22px;
+      overflow: hidden;
+      background: #eef3f5;
+      box-shadow: 0 4px 12px rgba(23,48,68,.12);
+    }
+
+    .imageWrap img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .controls, .subs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: clamp(16px, 2vw, 21px);
+      font-weight: 800;
+      cursor: pointer;
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 3px 10px rgba(23,48,68,.12);
+      transition: transform .12s ease, opacity .12s ease;
+      user-select: none;
+    }
+
+    button:active { transform: scale(.97); }
+    button.primary { background: var(--blue); color: white; }
+    button.accent { background: var(--accent); color: white; }
+    button.good { background: var(--good); color: white; }
+    button.activeChoice { outline: 4px solid rgba(15,116,168,.22); background: var(--blue); color: white; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .status {
+      min-height: 28px;
+      font-size: clamp(15px, 2vw, 20px);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .subBox {
+      width: min(900px, 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 14px;
+      background: rgba(255,255,255,.74);
+    }
+
+    .subTitle {
+      text-align: center;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 10px;
+      font-size: clamp(16px, 2vw, 20px);
+    }
+
+    .error {
+      margin: auto;
+      max-width: 760px;
+      padding: 20px;
+      border-radius: 22px;
+      background: #fff;
+      color: #d94646;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 640px) {
+      .panel { gap: 12px; }
+      button { padding: 10px 13px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <h1 id="title">Repeat</h1>
+      <div class="sentence" id="sentence"></div>
+      <div class="imageWrap" id="imageWrap"><img id="image" alt="sentence image" /></div>
+      <div class="controls">
+        <button class="primary" id="playBtn">🔊 Play</button>
+        <button class="accent" id="repeatBtn">▶ Auto-repeat</button>
+        <button id="slowBtn">🐢 Slow Mode</button>
+        <button id="highlightBtn">✨ Highlight On</button>
+      </div>
+      <div class="status" id="status"></div>
+    </section>
+
+    <section class="subBox" id="subBox" style="display:none;">
+      <div class="subTitle" id="subTitle">Change the sentence</div>
+      <div class="subs" id="subs"></div>
+    </section>
+  </main>
+
+  <audio id="audio" preload="auto"></audio>
+
+  <script>
+    const DEFAULT_DATA = {
+      title: "Repeat",
+      text: "I'm in class 5A.",
+      img: "img/class-5a.jpg",
+      audio: "audio/im-in-class-5a.mp3",
+      chunks: ["I'm", "in", "class", "5A"],
+      timings: [0, 0.35, 0.75, 1.08],
+      settings: {
+        autoRepeatCount: 2,
+        repeatDelayMs: 900,
+        slowRate: 0.72,
+        highlight: true
+      },
+      substitution: {
+        label: "Class",
+        slot: "{class}",
+        base: "I'm in class {class}.",
+        options: [
+          { value: "5A", img: "img/class-5a.jpg", audio: "audio/im-in-class-5a.mp3", chunks: ["I'm", "in", "class", "5A"], timings: [0, 0.35, 0.75, 1.08] },
+          { value: "5B", img: "img/class-5b.jpg", audio: "audio/im-in-class-5b.mp3", chunks: ["I'm", "in", "class", "5B"], timings: [0, 0.35, 0.75, 1.08] }
+        ]
+      }
+    };
+
+    const els = {
+      title: document.getElementById('title'),
+      sentence: document.getElementById('sentence'),
+      image: document.getElementById('image'),
+      imageWrap: document.getElementById('imageWrap'),
+      playBtn: document.getElementById('playBtn'),
+      repeatBtn: document.getElementById('repeatBtn'),
+      slowBtn: document.getElementById('slowBtn'),
+      highlightBtn: document.getElementById('highlightBtn'),
+      status: document.getElementById('status'),
+      subBox: document.getElementById('subBox'),
+      subTitle: document.getElementById('subTitle'),
+      subs: document.getElementById('subs'),
+      audio: document.getElementById('audio')
+    };
+
+    let data = DEFAULT_DATA;
+    let current = {};
+    let highlightOn = true;
+    let slowMode = false;
+    let highlightTimer = null;
+    let activeSubIndex = 0;
+
+    function getParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    async function loadData() {
+      const dataUrl = getParam('data');
+      if (!dataUrl) return DEFAULT_DATA;
+      const res = await fetch(dataUrl, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Cannot load JSON data: ' + dataUrl);
+      return await res.json();
+    }
+
+    function normalizeData(d) {
+      const safe = { ...DEFAULT_DATA, ...d };
+      safe.settings = { ...DEFAULT_DATA.settings, ...(d.settings || {}) };
+      if (!safe.chunks || !Array.isArray(safe.chunks)) safe.chunks = splitChunks(safe.text);
+      return safe;
+    }
+
+    function splitChunks(text) {
+      return String(text || '').replace(/[.!?]/g, '').split(/\s+/).filter(Boolean);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+      }[c]));
+    }
+
+    function setStatus(msg) { els.status.textContent = msg || ''; }
+
+    function buildSentenceHtml(chunks) {
+      return chunks.map((chunk, i) => `<span class="word" data-i="${i}">${escapeHtml(chunk)}</span>`).join(' ');
+    }
+
+    function render() {
+      els.title.textContent = data.title || 'Repeat';
+      highlightOn = Boolean(data.settings.highlight);
+      current = {
+        text: data.text,
+        img: data.img,
+        audio: data.audio,
+        chunks: data.chunks || splitChunks(data.text),
+        timings: data.timings || null
+      };
+      renderCurrent();
+      renderSubstitution();
+      updateButtons();
+    }
+
+    function renderCurrent() {
+      els.sentence.innerHTML = buildSentenceHtml(current.chunks || splitChunks(current.text));
+      els.image.src = current.img || '';
+      els.imageWrap.style.display = current.img ? 'block' : 'none';
+      clearHighlight();
+    }
+
+    function renderSubstitution() {
+      const sub = data.substitution;
+      if (!sub || !Array.isArray(sub.options) || sub.options.length === 0) {
+        els.subBox.style.display = 'none';
+        return;
+      }
+      els.subBox.style.display = 'block';
+      els.subTitle.textContent = sub.label ? `Change: ${sub.label}` : 'Change the sentence';
+      els.subs.innerHTML = '';
+      sub.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt.value || opt.text || `Option ${index + 1}`;
+        if (index === activeSubIndex) btn.classList.add('activeChoice');
+        btn.addEventListener('click', () => applySubstitution(index));
+        els.subs.appendChild(btn);
+      });
+    }
+
+    function applySubstitution(index) {
+      const sub = data.substitution;
+      const opt = sub.options[index];
+      activeSubIndex = index;
+      const text = opt.text || (sub.base ? sub.base.replace(sub.slot || '{slot}', opt.value || '') : data.text);
+      current = {
+        text,
+        img: opt.img || data.img,
+        audio: opt.audio || data.audio,
+        chunks: opt.chunks || splitChunks(text),
+        timings: opt.timings || null
+      };
+      renderCurrent();
+      renderSubstitution();
+      playCurrent();
+    }
+
+    function updateButtons() {
+      els.slowBtn.textContent = slowMode ? '🐢 Slow On' : '🐢 Slow Mode';
+      els.slowBtn.classList.toggle('activeChoice', slowMode);
+      els.highlightBtn.textContent = highlightOn ? '✨ Highlight On' : '✨ Highlight Off';
+      els.highlightBtn.classList.toggle('activeChoice', highlightOn);
+    }
+
+    async function playCurrent() {
+      if (!current.audio) return;
+      stopAudio();
+      els.audio.src = current.audio;
+      els.audio.playbackRate = slowMode ? Number(data.settings.slowRate || 0.72) : 1;
+      try {
+        await els.audio.play();
+        if (highlightOn) startHighlight();
+      } catch (err) {
+        setStatus('Tap 🔊 Play to start audio on this device.');
+      }
+    }
+
+    function stopAudio() {
+      els.audio.pause();
+      els.audio.currentTime = 0;
+      clearHighlight();
+    }
+
+    function clearHighlight() {
+      if (highlightTimer) clearInterval(highlightTimer);
+      highlightTimer = null;
+      document.querySelectorAll('.word').forEach(w => w.classList.remove('active'));
+    }
+
+    function startHighlight() {
+      clearHighlight();
+      const words = [...document.querySelectorAll('.word')];
+      if (!words.length) return;
+
+      const timings = Array.isArray(current.timings) && current.timings.length
+        ? current.timings
+        : current.chunks.map((_, i) => i * 0.45);
+
+      highlightTimer = setInterval(() => {
+        const t = els.audio.currentTime / (slowMode ? Number(data.settings.slowRate || 0.72) : 1);
+        let active = 0;
+        for (let i = 0; i < timings.length; i++) {
+          if (t >= timings[i]) active = i;
+        }
+        words.forEach((w, i) => w.classList.toggle('active', i === active));
+      }, 60);
+    }
+
+    function waitAudioEnd() {
+      return new Promise(resolve => {
+        const done = () => {
+          els.audio.removeEventListener('ended', done);
+          els.audio.removeEventListener('error', done);
+          resolve();
+        };
+        els.audio.addEventListener('ended', done);
+        els.audio.addEventListener('error', done);
+      });
+    }
+
+    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    async function autoRepeat() {
+      const count = Number(data.settings.autoRepeatCount || 2);
+      els.repeatBtn.disabled = true;
+      setStatus('Listen. Repeat.');
+      for (let i = 0; i < count; i++) {
+        await playCurrent();
+        await waitAudioEnd();
+        await delay(Number(data.settings.repeatDelayMs || 900));
+      }
+      clearHighlight();
+      setStatus('Your turn. Say it again.');
+      els.repeatBtn.disabled = false;
+    }
+
+    function bindEvents() {
+      els.playBtn.addEventListener('click', playCurrent);
+      els.repeatBtn.addEventListener('click', autoRepeat);
+      els.slowBtn.addEventListener('click', () => {
+        slowMode = !slowMode;
+        updateButtons();
+        playCurrent();
+      });
+      els.highlightBtn.addEventListener('click', () => {
+        highlightOn = !highlightOn;
+        updateButtons();
+        if (!highlightOn) clearHighlight();
+      });
+      els.sentence.addEventListener('click', playCurrent);
+      els.image.addEventListener('click', playCurrent);
+      els.audio.addEventListener('ended', clearHighlight);
+      document.addEventListener('keydown', e => {
+        if (e.key === ' ' || e.key === 'Enter') playCurrent();
+      });
+    }
+
+    async function init() {
+      try {
+        data = normalizeData(await loadData());
+        bindEvents();
+        render();
+      } catch (err) {
+        document.body.innerHTML = `<div class="error">Could not load sentence data.<br>${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
