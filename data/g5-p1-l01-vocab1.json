@@ -1,0 +1,21 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "boy",
+      "img": "https://drive.google.com/uc?export=view&id=IMAGE_FILE_ID",
+      "audio": "https://drive.google.com/uc?export=download&id=AUDIO_FILE_ID"
+    },
+    {
+      "word": "girl",
+      "img": "https://drive.google.com/uc?export=view&id=IMAGE_FILE_ID",
+      "audio": "https://drive.google.com/uc?export=download&id=AUDIO_FILE_ID"
+    }
+  ]
+}
