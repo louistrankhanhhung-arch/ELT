@@ -1,0 +1,8 @@
+{
+  "type": "sentence-builder",
+  "title": "Build the Sentence",
+  "subtitle": "Put the words in the correct order.",
+  "target": "I am a student.",
+  "audio": "https://...",
+  "words": ["student", "I", "a", "am"]
+}
