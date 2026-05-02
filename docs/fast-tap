@@ -1,0 +1,15 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 7
+  },
+  "items": [
+    { "word": "boy", "img": "https://...", "audio": "https://..." },
+    { "word": "girl", "img": "https://...", "audio": "https://..." },
+    { "word": "teacher", "img": "https://...", "audio": "https://..." },
+    { "word": "student", "img": "https://...", "audio": "https://..." }
+  ]
+}
