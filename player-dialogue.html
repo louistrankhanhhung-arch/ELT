@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ELT Dialogue Player</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --panel: #ffffff;
+      --ink: #173044;
+      --muted: #6b7a86;
+      --accent: #d23b2a;
+      --blue: #0f74a8;
+      --good: #2fa866;
+      --border: rgba(23,48,68,.14);
+      --shadow: 0 10px 28px rgba(23,48,68,.14);
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .app {
+      width: min(1180px, 100vw);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(12px, 3vw, 30px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(40px, 7vw, 82px);
+      line-height: 1;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .panel {
+      width: min(1080px, 100%);
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(16px, 3vw, 30px);
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: clamp(16px, 3vw, 34px);
+      align-items: center;
+    }
+
+    .imageWrap {
+      border-radius: 22px;
+      overflow: hidden;
+      background: #eef3f5;
+      box-shadow: 0 4px 12px rgba(23,48,68,.12);
+    }
+
+    .imageWrap img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16 / 11;
+      object-fit: cover;
+    }
+
+    .lines {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .line {
+      border: 3px solid transparent;
+      border-radius: 18px;
+      padding: 10px 14px;
+      font-size: clamp(24px, 3.4vw, 44px);
+      line-height: 1.12;
+      color: var(--accent);
+      cursor: pointer;
+      transition: background .12s ease, border-color .12s ease, transform .12s ease;
+      min-height: 54px;
+    }
+
+    .line:hover { background: rgba(15,116,168,.06); }
+    .line.active {
+      background: rgba(15,116,168,.14);
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateX(2px);
+    }
+
+    .speaker {
+      display: inline-block;
+      color: var(--blue);
+      font-weight: 900;
+      margin-right: .35em;
+    }
+
+    .hiddenText .lineText {
+      color: transparent;
+      text-shadow: none;
+      position: relative;
+    }
+
+    .hiddenText .lineText::after {
+      content: "••••••••";
+      color: var(--muted);
+      letter-spacing: 5px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      white-space: nowrap;
+    }
+
+    .subtitleBox {
+      display: none;
+      width: min(1080px, 100%);
+      background: #101820;
+      color: white;
+      border-radius: 24px;
+      padding: 18px 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      min-height: 132px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .subtitleBox.show { display: flex; }
+
+    .subtitleSpeaker {
+      color: #83d4ff;
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 900;
+    }
+
+    .subtitleText {
+      font-size: clamp(32px, 5vw, 64px);
+      line-height: 1.08;
+      font-weight: 800;
+    }
+
+    .subtitleBox.hiddenText .subtitleText {
+      color: transparent;
+      position: relative;
+    }
+
+    .subtitleBox.hiddenText .subtitleText::after {
+      content: "••••••••";
+      color: white;
+      letter-spacing: 7px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: min(1080px, 100%);
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: clamp(16px, 2vw, 21px);
+      font-weight: 800;
+      cursor: pointer;
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 3px 10px rgba(23,48,68,.12);
+      transition: transform .12s ease, opacity .12s ease;
+      user-select: none;
+    }
+
+    button:active { transform: scale(.97); }
+    button.primary { background: var(--blue); color: white; }
+    button.accent { background: var(--accent); color: white; }
+    button.good { background: var(--good); color: white; }
+    button.activeChoice { outline: 4px solid rgba(15,116,168,.22); background: var(--blue); color: white; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .status {
+      min-height: 28px;
+      font-size: clamp(15px, 2vw, 20px);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .error {
+      margin: auto;
+      max-width: 760px;
+      padding: 20px;
+      border-radius: 22px;
+      background: #fff;
+      color: #d94646;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 820px) {
+      .panel { grid-template-columns: 1fr; }
+      .imageWrap img { aspect-ratio: 16 / 9; }
+    }
+
+    @media (max-width: 640px) {
+      button { padding: 10px 13px; }
+      .panel { padding: 12px; }
+      .line { padding: 9px 11px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1 id="title">Listen</h1>
+
+    <section class="panel">
+      <div class="imageWrap" id="imageWrap"><img id="image" alt="dialogue image" /></div>
+      <div class="lines" id="lines"></div>
+    </section>
+
+    <section class="subtitleBox" id="subtitleBox">
+      <div class="subtitleSpeaker" id="subtitleSpeaker"></div>
+      <div class="subtitleText" id="subtitleText"></div>
+    </section>
+
+    <div class="controls">
+      <button class="primary" id="playAllBtn">▶ Play All</button>
+      <button class="accent" id="lineModeBtn">📍 Line Mode</button>
+      <button id="slowBtn">🐢 Slow Mode</button>
+      <button id="hideBtn">🙈 Hide Text</button>
+      <button id="prevBtn">◀ Back</button>
+      <button id="nextBtn">Next ▶</button>
+    </div>
+
+    <div class="status" id="status"></div>
+  </main>
+
+  <audio id="audio" preload="auto"></audio>
+
+  <script>
+    const DEFAULT_DATA = {
+      title: "Listen",
+      img: "img/ben-class.jpg",
+      settings: {
+        slowRate: 0.72,
+        lineModePauseMs: 1100,
+        hideText: false,
+        lineMode: false
+      },
+      lines: [
+        { text: "Hello.", audio: "audio/hello.mp3" },
+        { text: "My name’s Ben.", audio: "audio/my-names-ben.mp3" },
+        { text: "I am a student.", audio: "audio/i-am-a-student.mp3" },
+        { text: "I’m in class 5A.", audio: "audio/im-in-class-5a.mp3" }
+      ]
+    };
+
+    const els = {
+      title: document.getElementById('title'),
+      image: document.getElementById('image'),
+      imageWrap: document.getElementById('imageWrap'),
+      lines: document.getElementById('lines'),
+      subtitleBox: document.getElementById('subtitleBox'),
+      subtitleSpeaker: document.getElementById('subtitleSpeaker'),
+      subtitleText: document.getElementById('subtitleText'),
+      playAllBtn: document.getElementById('playAllBtn'),
+      lineModeBtn: document.getElementById('lineModeBtn'),
+      slowBtn: document.getElementById('slowBtn'),
+      hideBtn: document.getElementById('hideBtn'),
+      prevBtn: document.getElementById('prevBtn'),
+      nextBtn: document.getElementById('nextBtn'),
+      status: document.getElementById('status'),
+      audio: document.getElementById('audio')
+    };
+
+    let data = DEFAULT_DATA;
+    let lines = [];
+    let activeIndex = -1;
+    let slowMode = false;
+    let hideText = false;
+    let lineMode = false;
+    let isPlaying = false;
+
+    function getParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    async function loadData() {
+      const dataUrl = getParam('data');
+      if (!dataUrl) return DEFAULT_DATA;
+      const res = await fetch(dataUrl, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Cannot load JSON data: ' + dataUrl);
+      return await res.json();
+    }
+
+    function normalizeData(d) {
+      const safe = { ...DEFAULT_DATA, ...d };
+      safe.settings = { ...DEFAULT_DATA.settings, ...(d.settings || {}) };
+      safe.lines = Array.isArray(d.lines) ? d.lines : DEFAULT_DATA.lines;
+      return safe;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+      }[c]));
+    }
+
+    function setStatus(msg) { els.status.textContent = msg || ''; }
+
+    function render() {
+      els.title.textContent = data.title || 'Listen';
+      els.image.src = data.img || '';
+      els.imageWrap.style.display = data.img ? 'block' : 'none';
+      lines = data.lines;
+      hideText = Boolean(data.settings.hideText);
+      lineMode = Boolean(data.settings.lineMode);
+      els.lines.innerHTML = '';
+      lines.forEach((line, index) => {
+        const div = document.createElement('div');
+        div.className = 'line';
+        div.dataset.index = index;
+        const speaker = line.speaker ? `<span class="speaker">${escapeHtml(line.speaker)}:</span>` : '';
+        div.innerHTML = `${speaker}<span class="lineText">${escapeHtml(line.text || '')}</span>`;
+        div.addEventListener('click', () => playLine(index));
+        els.lines.appendChild(div);
+      });
+      updateModeUI();
+      setActive(-1);
+    }
+
+    function updateModeUI() {
+      document.body.classList.toggle('hiddenText', hideText);
+      els.lines.classList.toggle('hiddenText', hideText);
+      els.subtitleBox.classList.toggle('hiddenText', hideText);
+      els.hideBtn.textContent = hideText ? '👀 Show Text' : '🙈 Hide Text';
+      els.hideBtn.classList.toggle('activeChoice', hideText);
+      els.slowBtn.textContent = slowMode ? '🐢 Slow On' : '🐢 Slow Mode';
+      els.slowBtn.classList.toggle('activeChoice', slowMode);
+      els.lineModeBtn.textContent = lineMode ? '📍 Line Mode On' : '📍 Line Mode';
+      els.lineModeBtn.classList.toggle('activeChoice', lineMode);
+      els.subtitleBox.classList.toggle('show', lineMode && activeIndex >= 0);
+    }
+
+    function setActive(index) {
+      activeIndex = index;
+      [...document.querySelectorAll('.line')].forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+      if (index >= 0 && lines[index]) {
+        els.subtitleSpeaker.textContent = lines[index].speaker ? lines[index].speaker : '';
+        els.subtitleText.textContent = lines[index].text || '';
+      } else {
+        els.subtitleSpeaker.textContent = '';
+        els.subtitleText.textContent = '';
+      }
+      updateModeUI();
+    }
+
+    function stopAudio() {
+      els.audio.pause();
+      els.audio.currentTime = 0;
+    }
+
+    async function playAudio(src) {
+      if (!src) return;
+      stopAudio();
+      els.audio.src = src;
+      els.audio.playbackRate = slowMode ? Number(data.settings.slowRate || 0.72) : 1;
+      try {
+        await els.audio.play();
+      } catch (err) {
+        setStatus('Tap the line or ▶ Play All to start audio on this device.');
+      }
+    }
+
+    function waitAudioEnd() {
+      return new Promise(resolve => {
+        const done = () => {
+          els.audio.removeEventListener('ended', done);
+          els.audio.removeEventListener('error', done);
+          resolve();
+        };
+        els.audio.addEventListener('ended', done);
+        els.audio.addEventListener('error', done);
+      });
+    }
+
+    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    async function playLine(index) {
+      if (!lines[index]) return;
+      isPlaying = true;
+      setActive(index);
+      setStatus(lineMode ? 'Listen. Repeat.' : 'Listen.');
+      await playAudio(lines[index].audio);
+      await waitAudioEnd();
+      if (lineMode) setStatus('Your turn. Say it again.');
+      isPlaying = false;
+    }
+
+    async function playAll() {
+      if (isPlaying) return;
+      isPlaying = true;
+      els.playAllBtn.disabled = true;
+      setStatus(lineMode ? 'Line Mode: listen, then repeat.' : 'Listen to the whole text.');
+      for (let i = 0; i < lines.length; i++) {
+        setActive(i);
+        await playAudio(lines[i].audio);
+        await waitAudioEnd();
+        if (lineMode) {
+          setStatus('Your turn. Repeat.');
+          await delay(Number(data.settings.lineModePauseMs || 1100));
+        } else {
+          await delay(180);
+        }
+      }
+      setActive(-1);
+      setStatus('');
+      els.playAllBtn.disabled = false;
+      isPlaying = false;
+    }
+
+    function nextLine(step) {
+      const next = activeIndex < 0 ? 0 : (activeIndex + step + lines.length) % lines.length;
+      playLine(next);
+    }
+
+    function bindEvents() {
+      els.playAllBtn.addEventListener('click', playAll);
+      els.lineModeBtn.addEventListener('click', () => {
+        lineMode = !lineMode;
+        updateModeUI();
+        setStatus(lineMode ? 'Line Mode on: listen, then repeat.' : '');
+      });
+      els.slowBtn.addEventListener('click', () => {
+        slowMode = !slowMode;
+        updateModeUI();
+        if (activeIndex >= 0) playLine(activeIndex);
+      });
+      els.hideBtn.addEventListener('click', () => {
+        hideText = !hideText;
+        updateModeUI();
+      });
+      els.prevBtn.addEventListener('click', () => nextLine(-1));
+      els.nextBtn.addEventListener('click', () => nextLine(1));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft') nextLine(-1);
+        if (e.key === 'ArrowRight') nextLine(1);
+        if (e.key === ' ' || e.key === 'Enter') {
+          if (activeIndex >= 0) playLine(activeIndex); else playAll();
+        }
+      });
+    }
+
+    async function init() {
+      try {
+        data = normalizeData(await loadData());
+        bindEvents();
+        render();
+      } catch (err) {
+        document.body.innerHTML = `<div class="error">Could not load dialogue data.<br>${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
