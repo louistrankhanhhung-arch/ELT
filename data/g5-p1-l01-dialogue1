@@ -1,0 +1,16 @@
+{
+  "title": "Listen",
+  "img": "https://...",
+  "settings": {
+    "slowRate": 0.72,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://..." },
+    { "text": "My name’s Ben.", "audio": "https://..." },
+    { "text": "I am a student.", "audio": "https://..." },
+    { "text": "I’m in class 5A.", "audio": "https://..." }
+  ]
+}
