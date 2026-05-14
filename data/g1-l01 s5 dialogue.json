@@ -1,6 +1,6 @@
 {
   "title": "Listen and repeat",
-  "img": "https://drive.google.com/file/d/1HJmQIkJaCCCJ1Ps9zg6UDR32pDeiX5pB/view?usp=sharing",
+  "img": "https://drive.google.com/uc?export=view&id=1HJmQIkJaCCCJ1Ps9zg6UDR32pDeiX5pB",
   "settings": {
     "slowRate": 0.72,
     "lineModePauseMs": 1100,
@@ -8,8 +8,8 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Hello.", "audio": "https://drive.google.com/file/d/10WhRcvK7O6sdWCC7avIclvAe903IxBff/view?usp=drive_link" },
-    { "text": "My name’s Tom.", "audio": "https://drive.google.com/file/d/1kopvh-aKmRqlG1f5YDenX_jzR_lMKuS4/view?usp=drive_link" },
-    { "text": "I am a boy.", "audio": "https://drive.google.com/file/d/1k4cBaYIdEHR7Kl5Cc4m2vt5ZhN2ZyqzC/view?usp=sharing" },
+    { "text": "Hello.", "audio": "https://drive.google.com/uc?export=download&id=10WhRcvK7O6sdWCC7avIclvAe903IxBff" },
+    { "text": "My name’s Tom.", "audio": "https://drive.google.com/uc?export=download&id=1kopvh-aKmRqlG1f5YDenX_jzR_lMKuS4" },
+    { "text": "I am a boy.", "audio": "https://drive.google.com/uc?export=download&id=1k4cBaYIdEHR7Kl5Cc4m2vt5ZhN2ZyqzC" },
   ]
 }
