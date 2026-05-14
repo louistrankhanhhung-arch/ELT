@@ -386,7 +386,7 @@
       if (!src) return;
       stopAudio();
       els.audio.src = src;
-      els.audio.playbackRate = slowMode ? Number(data.settings.slowRate || 0.72) : 1;
+      els.audio.playbackRate = slowMode ? Number(data.settings.slowRate || 0.6) : 1;
       try {
         await els.audio.play();
       } catch (err) {
