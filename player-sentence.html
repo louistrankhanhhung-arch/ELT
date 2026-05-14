@@ -201,7 +201,7 @@
       settings: {
         autoRepeatCount: 2,
         repeatDelayMs: 900,
-        slowRate: 0.72,
+        slowRate: 0.6,
         highlight: true
       },
       substitution: {
@@ -341,7 +341,7 @@
       if (!current.audio) return;
       stopAudio();
       els.audio.src = current.audio;
-      els.audio.playbackRate = slowMode ? Number(data.settings.slowRate || 0.72) : 1;
+      els.audio.playbackRate = slowMode ? Number(data.settings.slowRate || 0.6) : 1;
       try {
         await els.audio.play();
         if (highlightOn) startHighlight();
@@ -372,7 +372,7 @@
         : current.chunks.map((_, i) => i * 0.45);
 
       highlightTimer = setInterval(() => {
-        const t = els.audio.currentTime / (slowMode ? Number(data.settings.slowRate || 0.72) : 1);
+        const t = els.audio.currentTime / (slowMode ? Number(data.settings.slowRate || 0.6) : 1);
         let active = 0;
         for (let i = 0; i < timings.length; i++) {
           if (t >= timings[i]) active = i;
