@@ -4,15 +4,15 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-student.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-student.mp3",
   "chunks": ["I", "am", "a", "student"],
-  "timings": [0, 0.35, 0.75, 1.08],
+  "timings": [0, 0.3, 0.7, 1.0],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
-    "slowRate": 0.72,
+    "slowRate": 0.6,
     "highlight": true
   },
   "substitution": {
-    "label": "a",
+    "label": "noun",
     "slot": "{student}",
     "base": "I am a {student}.",
     "options": [
@@ -21,21 +21,28 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-boy.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-boy.mp3",
         "chunks": ["I", "am", "a", "boy"],
-        "timings": [0, 0.35, 0.75, 1.08]
+        "timings": [0, 0.3, 0.7, 1.0]
       },
       {
         "value": "girl",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-girl.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-girl.mp3",
         "chunks": ["I", "am", "a", "girl"],
-        "timings": [0, 0.35, 0.75, 1.08]
+        "timings": [0, 0.3, 0.7, 1.0]
+      },
+      {
+        "value": "student",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-student.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-student.mp3",
+        "chunks": ["I", "am", "a", "student"],
+        "timings": [0, 0.3, 0.7, 1.0]
       },
       {
         "value": "teacher",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-teacher.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-teacher.mp3",
         "chunks": ["I", "am", "a", "teacher"],
-        "timings": [0, 0.35, 0.75, 1.08]
+        "timings": [0, 0.3, 0.7, 1.0]
       }
     ]
   }
