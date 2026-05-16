@@ -489,17 +489,52 @@
 
     function renderListenComplete() {
       renderShell();
-      const options = shuffle(data.options || []);
+    
+      const items = data.items || [];
+      if (!items.length) {
+        els.game.innerHTML = `<div class="largeText">No items found.</div>`;
+        setStatus('Check JSON: listen-complete needs items[].');
+        return;
+      }
+    
+      const item = items[state.round % items.length];
+      const options = data.shuffleOptions ? shuffle(item.options || []) : (item.options || []);
+    
+      state.answer = item.answer;
+    
       const prompt = document.createElement('div');
       prompt.className = 'largeText';
-      prompt.textContent = data.prompt || 'Listen and complete.';
+      prompt.textContent = item.prompt || 'Listen and complete.';
       els.game.appendChild(prompt);
-      renderGrid(options.map(o => ({ word: o })), (item, idx, card) => {
-        if (item.word === data.answer) { card.classList.add('correct'); setStatus('Correct! 🎉'); state.score += 1; setScore(); }
-        else { card.classList.add('wrong'); setStatus('Try again.'); setTimeout(() => card.classList.remove('wrong'), 450); }
+    
+      renderGrid(options.map(o => ({ word: o })), (opt, idx, card) => {
+        if (opt.word === item.answer) {
+          card.classList.add('correct');
+          state.score += 1;
+          setScore();
+          setStatus('Correct! 🎉');
+    
+          setTimeout(() => {
+            state.round += 1;
+            if (state.round >= items.length) finishGame();
+            else renderListenComplete();
+          }, data.autoNext ? 800 : 0);
+        } else {
+          card.classList.add('wrong');
+          setStatus('Try again.');
+          setTimeout(() => card.classList.remove('wrong'), 450);
+        }
       }, true);
-      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(data.audio)));
-      setTimeout(() => play(data.audio), 250);
+    
+      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(item.audio)));
+      els.controls.appendChild(btn('➡️ Next', '', () => {
+        state.round += 1;
+        if (state.round >= items.length) finishGame();
+        else renderListenComplete();
+      }));
+    
+      setScore();
+      setTimeout(() => play(item.audio), 250);
     }
 
     function renderLineOrdering() {
