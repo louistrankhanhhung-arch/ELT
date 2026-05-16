@@ -1,9 +1,34 @@
 {
   "type": "listen-complete",
   "title": "Listen & Complete",
-  "subtitle": "Listen and choose the missing word.",
-  "prompt": "I am a ____.",
-  "audio": "https://...",
-  "answer": "student",
-  "options": ["student", "teacher", "boy", "girl"]
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I am a ____.",
+      "audio": "https://...",
+      "answer": "student",
+      "options": ["student", "teacher", "boy", "girl"]
+    },
+    {
+      "prompt": "She is a ____.",
+      "audio": "https://...",
+      "answer": "teacher",
+      "options": ["teacher", "student", "boy", "girl"]
+    },
+    {
+      "prompt": "He is a ____.",
+      "audio": "https://...",
+      "answer": "boy",
+      "options": ["boy", "girl", "teacher", "student"]
+    },
+    {
+      "prompt": "I am a ____.",
+      "audio": "https://...",
+      "answer": "girl",
+      "options": ["girl", "boy", "teacher", "student"]
+    }
+  ]
 }
