@@ -2,7 +2,16 @@
   "type": "sentence-builder",
   "title": "Build the Sentence",
   "subtitle": "Put the words in the correct order.",
-  "target": "I am a student.",
-  "audio": "https://...",
-  "words": ["student", "I", "a", "am"]
+  "items": [
+    {
+      "target": "I am a student.",
+      "audio": "https://...",
+      "words": ["student", "I", "a", "am"]
+    },
+    {
+      "target": "I am a teacher.",
+      "audio": "https://...",
+      "words": ["teacher", "I", "a", "am"]
+    }
+  ]
 }
