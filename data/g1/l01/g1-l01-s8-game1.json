@@ -16,7 +16,7 @@
       "prompt": "I am a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-teacher.mp3",
       "answer": "teacher",
-      "options": ["teacher", "student", "boy", "girl"]
+      "options": ["student", "boy", "teacher", "girl"]
     },
     {
       "prompt": "I am a ____.",
