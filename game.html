@@ -445,21 +445,147 @@
     }
 
     function renderSentenceBuilder() {
-      renderShell();
-      const target = data.target || '';
-      const words = shuffle(data.words || target.replace(/[.!?]/g, '').split(/\s+/).filter(Boolean));
-      state.bank = words;
-      state.selected = [];
-      const targetDiv = document.createElement('div');
-      targetDiv.className = 'largeText';
-      targetDiv.textContent = data.settings?.hideTarget ? 'Build the sentence.' : target;
-      const answer = document.createElement('div');
-      answer.className = 'builderAnswer';
-      const bank = document.createElement('div');
-      bank.className = 'builderTarget';
-      els.game.appendChild(targetDiv);
-      els.game.appendChild(answer);
-      els.game.appendChild(bank);
+        renderShell();
+      
+        const items = data.items || [];
+      
+        if (!items.length) {
+          els.game.innerHTML = `<div class="largeText">No items found.</div>`;
+          setStatus('Check JSON: sentence-builder needs items[].');
+          return;
+        }
+      
+        const item = items[state.round % items.length];
+      
+        const target = item.target || '';
+        const words = shuffle(
+          item.words ||
+          target.replace(/[.!?]/g, '').split(/\s+/).filter(Boolean)
+        );
+      
+        state.bank = [...words];
+        state.selected = [];
+      
+        const targetDiv = document.createElement('div');
+        targetDiv.className = 'largeText';
+        targetDiv.textContent =
+          data.settings?.hideTarget
+            ? 'Build the sentence.'
+            : target;
+      
+        const answer = document.createElement('div');
+        answer.className = 'builderAnswer';
+      
+        const bank = document.createElement('div');
+        bank.className = 'builderTarget';
+      
+        els.game.appendChild(targetDiv);
+        els.game.appendChild(answer);
+        els.game.appendChild(bank);
+      
+        function refresh() {
+          answer.innerHTML = '';
+          bank.innerHTML = '';
+      
+          state.selected.forEach((w, i) => {
+            const tile = document.createElement('div');
+            tile.className = 'wordTile';
+            tile.textContent = w;
+      
+            tile.addEventListener('click', () => {
+              state.bank.push(w);
+              state.selected.splice(i, 1);
+              refresh();
+            });
+      
+            answer.appendChild(tile);
+          });
+      
+          state.bank.forEach((w, i) => {
+            const tile = document.createElement('div');
+            tile.className = 'wordTile';
+            tile.textContent = w;
+      
+            tile.addEventListener('click', () => {
+              state.selected.push(w);
+              state.bank.splice(i, 1);
+              refresh();
+            });
+      
+            bank.appendChild(tile);
+          });
+        }
+      
+        refresh();
+      
+        els.controls.appendChild(
+          btn('🔊 Play', 'primary', () => play(item.audio))
+        );
+      
+        els.controls.appendChild(
+          btn('✅ Check', 'good', () => {
+      
+            const built = state.selected
+              .join(' ')
+              .replace(/\s+([.!?])/g, '$1')
+              .trim();
+      
+            const cleanTarget = target
+              .replace(/[.!?]/g, '')
+              .trim()
+              .toLowerCase();
+      
+            const cleanBuilt = built
+              .replace(/[.!?]/g, '')
+              .trim()
+              .toLowerCase();
+      
+            if (cleanBuilt === cleanTarget) {
+      
+              state.score += 1;
+              setScore();
+      
+              setStatus('Good sentence! 🎉');
+      
+              play(item.audio);
+      
+              setTimeout(() => {
+                state.round += 1;
+      
+                if (state.round >= items.length) {
+                  finishGame();
+                } else {
+                  renderSentenceBuilder();
+                }
+      
+              }, data.autoNext ? 900 : 0);
+      
+            } else {
+              setStatus('Not yet. Try again.');
+            }
+          })
+        );
+      
+        els.controls.appendChild(
+          btn('➡️ Next', '', () => {
+      
+            state.round += 1;
+      
+            if (state.round >= items.length) {
+              finishGame();
+            } else {
+              renderSentenceBuilder();
+            }
+      
+          })
+        );
+      
+        els.controls.appendChild(
+          btn('🔁 Reset', '', renderSentenceBuilder)
+        );
+      
+        setScore();
+      }
 
       function refresh() {
         answer.innerHTML = '';
