@@ -1,0 +1,24 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t1-hello.mp3" },
+    { "text": "My name’s Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t2-my-names-tom.mp3" },
+    { "text": "What’s your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t3-whats-your-name.mp3" },
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a1-hello.mp3" },
+    { "text": "My name’s Alice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a2-my-names-alice.mp3" },
+    { "text": "How are you today?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t4-how-are-you-today.mp3" },
+    { "text": "I’m happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a3-im-happy.mp3" },
+    { "text": "And you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a4-and-you.mp3" },
+    { "text": "I’m happy, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t5-im-happy-too.mp3" },
+    { "text": "Are you hungry?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t6-are-you-hungry.mp3" },
+    { "text": "Yes, I am.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a6-yes-i-am.mp3" }
+    { "text": "Me too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t7-me-too.mp3" }
+  ]
+}
