@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I'm ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sad.mp3",
+      "answer": "sad",
+      "options": ["happy", "sad", "good", "sleepy"]
+    },
+    {
+      "prompt": "I'm ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sleepy.mp3",
+      "answer": "sleep",
+      "options": ["hungry", "tired", "good", "sleepy"]
+    },
+    {
+      "prompt": "I'm ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-happy.mp3",
+      "answer": "happy",
+      "options": ["happy", "sad", "hungry", "tired"]
+    },
+    {
+      "prompt": "I'm ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-tired.mp3",
+      "answer": "tired",
+      "options": ["hungry", "sad", "tired", "sleepy"]
+    },
+    {
+      "prompt": "I'm ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-good.mp3",
+      "answer": "good",
+      "options": ["hungry", "good", "tired", "sleepy"]
+    },
+    {
+      "prompt": "I'm ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-hungry.mp3",
+      "answer": "hungry",
+      "options": ["hungry", "sad", "tired", "happy"]
+    }
+  ]
+}
