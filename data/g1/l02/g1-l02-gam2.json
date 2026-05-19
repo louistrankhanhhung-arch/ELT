@@ -4,7 +4,7 @@
   "subtitle": "Listen fast. Tap fast.",
   "settings": {
     "shuffle": true,
-    "rounds": 7
+    "rounds": 8
   },
   "items": [
     { "word": "I'm happy", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-happy.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-happy.mp3" },
