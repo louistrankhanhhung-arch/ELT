@@ -15,7 +15,7 @@
     {
       "prompt": "I'm ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sleepy.mp3",
-      "answer": "sleep",
+      "answer": "sleepy",
       "options": ["hungry", "tired", "good", "sleepy"]
     },
     {
