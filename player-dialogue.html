@@ -229,6 +229,65 @@
     }
 
     /* =========================================================
+       Desktop / Tablet Auto-fit Layout
+       Dialogue Player
+       ========================================================= */
+    
+    /* Default responsive desktop/tablet layout */
+    .panel {
+      grid-template-columns: minmax(280px, 1.05fr) minmax(320px, .95fr);
+    }
+    
+    /* Tablet portrait: stack image above dialogue lines */
+    @media (max-width: 820px) and (orientation: portrait) {
+      .panel {
+        grid-template-columns: 1fr;
+      }
+    
+      .imageWrap img {
+        aspect-ratio: 16 / 9;
+      }
+    }
+    
+    /* Tablet / desktop landscape: use available width better */
+    @media (min-width: 900px) {
+      .panel {
+        width: min(1120px, 100%);
+        grid-template-columns: minmax(360px, 1fr) minmax(420px, 1fr);
+        align-items: stretch;
+      }
+    
+      .imageWrap {
+        height: 100%;
+      }
+    
+      .imageWrap img {
+        height: 100%;
+        aspect-ratio: auto;
+        object-fit: cover;
+      }
+    
+      .lines {
+        justify-content: center;
+      }
+    
+      .line {
+        font-size: clamp(24px, 3vw, 40px);
+      }
+    }
+    
+    /* Wide desktop: let text breathe more */
+    @media (min-width: 1180px) {
+      .panel {
+        grid-template-columns: minmax(420px, 1fr) minmax(460px, 1fr);
+      }
+    
+      .line {
+        font-size: clamp(26px, 2.6vw, 42px);
+      }
+    }
+
+    /* =========================================================
        Nearpod Smartphone Landscape Patch
        Dialogue Player
        ========================================================= */
