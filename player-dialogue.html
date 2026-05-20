@@ -227,6 +227,111 @@
       .panel { padding: 12px; }
       .line { padding: 9px 11px; }
     }
+
+    /* =========================================================
+       Nearpod Smartphone Landscape Patch
+       Dialogue Player
+       ========================================================= */
+    
+    @media (orientation: landscape) and (max-height: 520px) {
+      body {
+        overflow: hidden;
+      }
+    
+      .app {
+        width: 100vw;
+        height: 100dvh;
+        min-height: 0;
+        padding: 6px 10px;
+        gap: 5px;
+        display: grid;
+        grid-template-rows: auto 1fr auto auto;
+        align-items: stretch;
+      }
+    
+      h1 {
+        font-size: clamp(20px, 4vh, 32px);
+        line-height: 1;
+      }
+    
+      .panel {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding: 8px;
+        border-radius: 16px;
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 8px;
+        align-items: stretch;
+        overflow: hidden;
+      }
+    
+      .imageWrap {
+        border-radius: 14px;
+        height: 100%;
+      }
+    
+      .imageWrap img {
+        height: 100%;
+        width: 100%;
+        aspect-ratio: auto;
+        object-fit: cover;
+      }
+    
+      .lines {
+        height: 100%;
+        min-height: 0;
+        gap: 6px;
+        overflow-y: auto;
+        padding-right: 2px;
+      }
+    
+      .line {
+        min-height: 0;
+        padding: 6px 9px;
+        border-radius: 12px;
+        border-width: 2px;
+        font-size: clamp(14px, 3.5vh, 22px);
+        line-height: 1.08;
+      }
+    
+      .speaker {
+        margin-right: .25em;
+      }
+    
+      .subtitleBox {
+        width: 100%;
+        min-height: 0;
+        padding: 8px 10px;
+        border-radius: 14px;
+        gap: 3px;
+      }
+    
+      .subtitleSpeaker {
+        font-size: clamp(12px, 2.6vh, 16px);
+      }
+    
+      .subtitleText {
+        font-size: clamp(18px, 4.8vh, 34px);
+        line-height: 1.05;
+      }
+    
+      .controls {
+        width: 100%;
+        gap: 6px;
+      }
+    
+      button {
+        padding: 7px 11px;
+        font-size: clamp(12px, 2.8vh, 16px);
+      }
+    
+      .status {
+        min-height: 18px;
+        font-size: clamp(11px, 2.5vh, 15px);
+      }
+    }
   </style>
 </head>
 <body>
