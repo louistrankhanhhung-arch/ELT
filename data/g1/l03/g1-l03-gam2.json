@@ -3,11 +3,11 @@
   "title": "Memory Match",
   "subtitle": "Find the matching pairs.",
   "items": [
-    { "word": "I have a book", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-book.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-book.mp3" },
-    { "word": "I have a bag", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-bag.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-bag.mp3" },
-    { "word": "I have a pen", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-pen.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-pen.mp3" },
-    { "word": "i have a pencil", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-pencil.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-pencil.mp3" },
-    { "word": "I have a ruler", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-ruler.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-ruler.mp3" },
-    { "word": "I have a crayon", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-crayon.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-crayon.mp3" }
+    { "word": "book", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-book.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-book.mp3" },
+    { "word": "bag", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-bag.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-bag.mp3" },
+    { "word": "pen", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-pen.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-pen.mp3" },
+    { "word": "pencil", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-pencil.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-pencil.mp3" },
+    { "word": "ruler", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-ruler.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-ruler.mp3" },
+    { "word": "crayon", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-crayon.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-sen-i-have-a-crayon.mp3" }
   ]
 }
