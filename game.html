@@ -113,6 +113,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      container-type: inline-size;
     }
 
     .card:hover { transform: translateY(-2px); }
@@ -151,6 +152,37 @@
       font-weight: 900;
       line-height: 1.08;
       padding: 12px;
+    }
+
+    /* =========================================================
+       Memory Match Text Fit Patch
+       Desktop / Tablet / Smartphone Landscape
+       ========================================================= */
+
+    .memoryGrid {
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    }
+
+    .memoryWord {
+      width: 100%;
+      height: 100%;
+      min-height: 96px;
+      padding: clamp(6px, 1.2vw, 14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--accent);
+      font-weight: 900;
+      line-height: .92;
+      font-size: clamp(24px, 8cqw, 64px);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
+    }
+
+    .memoryQuestion {
+      font-size: clamp(30px, 10cqw, 64px);
     }
 
     .status {
@@ -273,6 +305,16 @@
         padding: 8px 8px 12px;
       }
     }
+
+    .memoryGrid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+
+      .memoryWord {
+        min-height: 130px;
+        font-size: clamp(28px, 9cqw, 68px);
+      }
+     }
     
     /* Desktop landscape: allow 5–6 items to sit in one row */
     @media (min-width: 1050px) {
@@ -288,6 +330,15 @@
         aspect-ratio: 4 / 3;
       }
     }
+
+    .memoryGrid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .memoryWord {
+        min-height: 160px;
+      }
+     }
     
     /* Wider desktop: avoid oversized cards */
     @media (min-width: 1220px) {
@@ -375,6 +426,22 @@
       .largeText {
         font-size: clamp(22px, 5vh, 38px);
         padding: 6px;
+      }
+
+      .memoryGrid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .memoryWord {
+        min-height: 0;
+        padding: 4px;
+        font-size: clamp(18px, 8cqw, 38px);
+        line-height: .9;
+      }
+
+      .memoryQuestion {
+        font-size: clamp(22px, 10cqw, 40px);
       }
     
       .controls {
@@ -572,19 +639,19 @@
       });
       const deck = shuffle(cards);
       const grid = document.createElement('div');
-      grid.className = 'grid';
+      grid.className = 'grid memoryGrid';
       deck.forEach((cardData, idx) => {
         const c = document.createElement('article');
         c.className = 'card';
         c.dataset.pair = cardData.pair;
         c.dataset.open = '0';
-        c.innerHTML = `<div class="largeText">?</div>`;
+        c.innerHTML = `<div class="largeText memoryQuestion">?</div>`;
         c.addEventListener('click', () => {
           if (c.dataset.open === '1' || state.selected.length >= 2) return;
           c.dataset.open = '1';
           c.innerHTML = cardData.kind === 'img'
             ? `<img src="${escapeHtml(cardData.item.img)}"><div class="label">${escapeHtml(cardData.item.word || '')}</div>`
-            : `<div class="largeText">${escapeHtml(cardData.item.word || '')}</div>`;
+            : `<div class="memoryWord">${escapeHtml(cardData.item.word || '')}</div>`;
           if (cardData.item.audio) play(cardData.item.audio);
           state.selected.push(c);
           if (state.selected.length === 2) {
@@ -598,7 +665,7 @@
               a.classList.add('wrong'); b.classList.add('wrong');
               setStatus('Try again.');
               setTimeout(() => {
-                [a, b].forEach(x => { x.dataset.open = '0'; x.className = 'card'; x.innerHTML = `<div class="largeText">?</div>`; });
+                [a, b].forEach(x => { x.dataset.open = '0'; x.className = 'card'; x.innerHTML = `<div class="largeText memoryQuestion">?</div>`; });
                 state.selected = [];
               }, 850);
             }
