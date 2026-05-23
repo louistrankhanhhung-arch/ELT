@@ -1,0 +1,15 @@
+{
+  "type": "line-ordering",
+  "title": "Order the Dialogue",
+  "subtitle": "Put the sentences in the correct order.",
+  "lines": [
+    { "text": "A: Hello, Jill. I have a rabbit.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t1-hello-jill-i-have-a-rabbit.mp3" },
+    { "text": "B: Hello, Tom. Nice. I like rabbits.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j1-hello-tom-nice-i-like-rabbits.mp3" },
+    { "text": "A: Rabbits can jump.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t2-rabbits-can-jump.mp3" },
+    { "text": "B: Yes! Can you jump?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j2-yes-can-you-jump.mp3" },
+    { "text": "A: Yes. I can jump.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t3-yes-i-can-jump.mp3" },
+    { "text": "A: Me too. Look! I have a duck.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j3-me-too-look-i-have-a-duck.mp3" },
+    { "text": "B: Wow! Ducks can swim. Can you swim?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t4-wow-ducks-can-swim-can-you-swim.mp3" },
+    { "text": "B: Yes, I can. And I can dance, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j4-yes-i-can-and-i-can-dance-too.mp3" }
+  ]
+}
