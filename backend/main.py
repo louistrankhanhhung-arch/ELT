@@ -139,6 +139,19 @@ def previous_block(pin: str):
 
     return session
 
+@app.post("/api/sessions/{pin}/block/{index}")
+def set_block(pin: str, index: int):
+    session = sessions.get(pin)
+
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    if index < 0 or index >= session.total_blocks:
+        raise HTTPException(status_code=400, detail="Invalid block index")
+
+    session.current_block_index = index
+
+    return session
 
 @app.post("/api/sessions/{pin}/end")
 def end_session(pin: str):
