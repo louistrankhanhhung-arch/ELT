@@ -35,6 +35,11 @@ class StartSessionRequest(BaseModel):
 class JoinSessionRequest(BaseModel):
     student_name: str
 
+class EventRequest(BaseModel):
+    student_id: str
+    block_index: int
+    block_id: str
+    event_type: str
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -69,6 +74,19 @@ def init_db():
         student_name TEXT NOT NULL,
         joined_at TEXT NOT NULL,
         last_seen_at TEXT NOT NULL,
+        FOREIGN KEY(pin) REFERENCES sessions(pin)
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pin TEXT NOT NULL,
+        student_id TEXT NOT NULL,
+        block_index INTEGER NOT NULL,
+        block_id TEXT NOT NULL,
+        event_type TEXT NOT NULL,
+        created_at TEXT NOT NULL,
         FOREIGN KEY(pin) REFERENCES sessions(pin)
     )
     """)
@@ -113,10 +131,18 @@ def get_session(pin: str):
         (pin,)
     )
     students = [dict(row) for row in cur.fetchall()]
+
+    cur.execute(
+        "SELECT * FROM events WHERE pin = ? ORDER BY created_at ASC",
+        (pin,)
+    )
+    events = [dict(row) for row in cur.fetchall()]
+
     conn.close()
 
     data = dict(session)
     data["students"] = students
+    data["events"] = events
     return data
 
 
@@ -281,6 +307,35 @@ def set_block(pin: str, index: int):
     conn.close()
 
     return get_session(pin)
+
+@app.post("/api/sessions/{pin}/events")
+def log_event(pin: str, payload: EventRequest):
+    session = get_session(pin)
+
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO events (
+            pin, student_id, block_index, block_id, event_type, created_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (
+        pin,
+        payload.student_id,
+        payload.block_index,
+        payload.block_id,
+        payload.event_type,
+        now_iso(),
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"ok": True}
 
 
 @app.post("/api/sessions/{pin}/end")
