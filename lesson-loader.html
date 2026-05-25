@@ -29,6 +29,16 @@
       font-size: 14px;
     }
 
+    .toggle-sidebar {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
     .app {
       display: grid;
       grid-template-columns: 280px 1fr;
@@ -71,6 +81,14 @@
       min-width: 0;
     }
 
+    .app.sidebar-collapsed {
+      grid-template-columns: 0 1fr;
+    }
+
+    .app.sidebar-collapsed .sidebar {
+      display: none;
+    }
+    
     .toolbar {
       padding: 10px 14px;
       background: #ffffff;
@@ -90,16 +108,56 @@
       color: #666;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .app {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-columns: 220px 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 10px 12px;
+      }
+      
+      .app {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 96px);
       }
 
       .sidebar {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
         border-right: none;
         border-bottom: 1px solid #ddd;
-        max-height: 180px;
+        max-height: none;
+        padding: 8px;
+      }
+
+      .block-btn {
+        min-width: 140px;
+        margin-bottom: 0;
+        white-space: nowrap;
+      }
+
+      .toolbar {
+        display: none;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      header {
+        display: none;
+      }
+
+      .app {
+        height: 100vh;
+      }
+
+      .sidebar {
+        max-height: 64px;
       }
     }
   </style>
@@ -108,6 +166,7 @@
   <header>
     <h1 id="lessonTitle">Loading lesson...</h1>
     <p id="lessonMeta"></p>
+    <button id="toggleSidebar" class="toggle-sidebar">☰ Blocks</button>
   </header>
 
   <main class="app">
@@ -137,6 +196,9 @@
     const currentBlock = document.getElementById("currentBlock");
     const playerFrame = document.getElementById("playerFrame");
     const emptyState = document.getElementById("emptyState");
+
+    const toggleSidebar = document.getElementById("toggleSidebar");
+    const app = document.querySelector(".app");
 
     let activeBlockId = null;
 
@@ -202,6 +264,10 @@
       emptyState.style.display = "none";
       playerFrame.style.display = "block";
     }
+
+    toggleSidebar.addEventListener("click", () => {
+      app.classList.toggle("sidebar-collapsed");
+    });
 
     loadLesson();
   </script>
