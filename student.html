@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELT Student Runtime</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background: #f7f3f8;
+      font-family: Arial, sans-serif;
+      color: #222;
+      overflow: hidden;
+    }
+
+    .topbar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
+      background: #ffffff;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    .lesson-info {
+      min-width: 0;
+    }
+
+    .lesson-title {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .block-title {
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .runtime {
+      flex: 1;
+      min-height: 0;
+      min-width: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #ffffff;
+      display: block;
+    }
+
+    .error {
+      padding: 20px;
+      font-size: 16px;
+      color: #b00020;
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+
+      .status {
+        display: none;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .topbar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="lesson-info">
+      <div class="lesson-title" id="lessonTitle">Loading lesson...</div>
+      <div class="block-title" id="blockTitle">Loading block...</div>
+    </div>
+    <div class="status" id="statusText">Student runtime</div>
+  </header>
+
+  <main class="runtime">
+    <iframe id="playerFrame"></iframe>
+    <div class="error" id="errorBox" style="display:none;"></div>
+  </main>
+
+  <script>
+    const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
+
+    const params = new URLSearchParams(window.location.search);
+
+    const lessonPath =
+      params.get("lesson") ||
+      "lessons/g1rec/l02/g1rec-l02.json";
+
+    const blockIndex = Number(params.get("block") || 0);
+
+    const lessonUrl = BASE_URL + lessonPath;
+
+    const lessonTitle = document.getElementById("lessonTitle");
+    const blockTitle = document.getElementById("blockTitle");
+    const statusText = document.getElementById("statusText");
+    const playerFrame = document.getElementById("playerFrame");
+    const errorBox = document.getElementById("errorBox");
+
+    async function loadStudentBlock() {
+      try {
+        const res = await fetch(lessonUrl);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lesson JSON: " + lessonUrl);
+        }
+
+        const lesson = await res.json();
+        const blocks = lesson.blocks || [];
+        const block = blocks[blockIndex];
+
+        if (!block) {
+          throw new Error("Block not found at index: " + blockIndex);
+        }
+
+        if (block.type !== "activity") {
+          throw new Error("Unsupported block type: " + block.type);
+        }
+
+        lessonTitle.textContent = lesson.title || lesson.lesson_id || "Lesson";
+        blockTitle.textContent =
+          `${blockIndex + 1}/${blocks.length} · ${block.title || block.id}`;
+        statusText.textContent = block.activity_kind || block.type;
+
+        const playerUrl = BASE_URL + block.player;
+        const dataUrl = BASE_URL + block.data;
+
+        playerFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+      } catch (err) {
+        console.error(err);
+        playerFrame.style.display = "none";
+        errorBox.style.display = "block";
+        errorBox.textContent = err.message;
+        lessonTitle.textContent = "Failed to load";
+        blockTitle.textContent = "";
+      }
+    }
+
+    loadStudentBlock();
+  </script>
+</body>
+</html>
