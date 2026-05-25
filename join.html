@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join ELT Session</title>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      color: #222;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-sizing: border-box;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 24px;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #222;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error {
+      margin-top: 16px;
+      color: #b00020;
+      font-size: 14px;
+    }
+
+    .success {
+      margin-top: 16px;
+      color: #008a2e;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Join Class</h1>
+
+    <p>
+      Enter your name and classroom PIN to join the lesson.
+    </p>
+
+    <div class="field">
+      <label for="studentName">Your Name</label>
+      <input
+        id="studentName"
+        type="text"
+        placeholder="Enter your name"
+      />
+    </div>
+
+    <div class="field">
+      <label for="sessionPin">Class PIN</label>
+      <input
+        id="sessionPin"
+        type="text"
+        inputmode="numeric"
+        placeholder="1234"
+      />
+    </div>
+
+    <button id="joinBtn">
+      Join Session
+    </button>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8000/api";
+    const BASE_URL =
+      "https://louistrankhanhhung-arch.github.io/ELT/";
+
+    const studentNameInput =
+      document.getElementById("studentName");
+
+    const sessionPinInput =
+      document.getElementById("sessionPin");
+
+    const joinBtn =
+      document.getElementById("joinBtn");
+
+    const message =
+      document.getElementById("message");
+
+    async function joinSession() {
+      const studentName =
+        studentNameInput.value.trim();
+
+      const pin =
+        sessionPinInput.value.trim();
+
+      if (!studentName) {
+        showError("Please enter your name.");
+        return;
+      }
+
+      if (!pin) {
+        showError("Please enter classroom PIN.");
+        return;
+      }
+
+      try {
+        joinBtn.disabled = true;
+        joinBtn.textContent = "Joining...";
+
+        const res = await fetch(
+          `${API_BASE}/sessions/${pin}/join`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              student_name: studentName,
+            }),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Session not found.");
+        }
+
+        const data = await res.json();
+
+        showSuccess(
+          `Joined as ${data.student.student_name}`
+        );
+
+        setTimeout(() => {
+          window.location.href =
+            `${BASE_URL}student.html?pin=${pin}`;
+        }, 700);
+
+      } catch (err) {
+        console.error(err);
+        showError(err.message);
+      } finally {
+        joinBtn.disabled = false;
+        joinBtn.textContent = "Join Session";
+      }
+    }
+
+    function showError(text) {
+      message.className = "error";
+      message.textContent = text;
+    }
+
+    function showSuccess(text) {
+      message.className = "success";
+      message.textContent = text;
+    }
+
+    joinBtn.addEventListener("click", () => {
+      joinSession();
+    });
+
+    sessionPinInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        joinSession();
+      }
+    });
+
+    studentNameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        joinSession();
+      }
+    });
+  </script>
+</body>
+</html>
