@@ -483,11 +483,23 @@
           .map(s => s.student_name)
           .filter(Boolean);
 
+        const previewNames = names.slice(0, 3);
+
+        const remaining =
+          names.length - previewNames.length;
+        
         monitorPanel.innerHTML =
           `<strong>Joined students: ${students.length}</strong>` +
-          (names.length
-            ? `<br>${names.map(name => `• ${name}`).join("<br>")}`
-            : "");
+          (
+            previewNames.length
+              ? `<br>${previewNames.join(", ")}`
+              : ""
+          ) +
+          (
+            remaining > 0
+              ? ` +${remaining} more`
+              : ""
+          );
       } catch (err) {
         console.error(err);
       }
