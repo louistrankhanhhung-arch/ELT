@@ -127,6 +127,7 @@
 
     @media (max-width: 900px), (max-height: 520px) {
       header {
+        
         padding: 10px 12px;
       }
       
@@ -135,6 +136,12 @@
         flex-direction: column;
         flex: 1;
         min-height: 0;
+      }
+
+      .viewer {
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
       }
 
       .app.sidebar-collapsed .sidebar,
@@ -162,6 +169,14 @@
     }
 
     @media (max-width: 600px) {
+      header h1 {
+        font-size: 18px;
+      }
+
+      header p {
+        font-size: 13px;
+      }
+      
       .toggle-sidebar {
         display: none;
       }
