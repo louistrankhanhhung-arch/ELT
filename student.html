@@ -147,6 +147,11 @@
 
     const params = new URLSearchParams(window.location.search);
 
+    const API_BASE =
+      "http://localhost:8000/api";
+
+    const sessionPin = params.get("pin");
+
     const lessonPath =
       params.get("lesson") ||
       "lessons/g1rec/l02/g1rec-l02.json";
@@ -164,6 +169,7 @@
     const nextBtn = document.getElementById("nextBtn");
 
     let currentLesson = null;
+    let lastSessionBlockIndex = null;
 
     async function loadStudentBlock(targetIndex = blockIndex) {
       try {
@@ -231,15 +237,113 @@
       loadStudentBlock(index);
     }
 
+    async function loadSessionFromPin() {
+      if (!sessionPin) {
+        loadStudentBlock();
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+
+        if (!res.ok) {
+          throw new Error("Session not found: " + sessionPin);
+        }
+
+        const session = await res.json();
+
+        if (!session.lesson_path) {
+          throw new Error("Session has no lesson_path");
+        }
+
+        const sessionLessonUrl = BASE_URL + session.lesson_path;
+        const lessonRes = await fetch(sessionLessonUrl);
+
+        if (!lessonRes.ok) {
+          throw new Error("Cannot load lesson JSON: " + sessionLessonUrl);
+        }
+
+        currentLesson = await lessonRes.json();
+        blockIndex = session.current_block_index || 0;
+        lastSessionBlockIndex = blockIndex;
+
+        renderSessionBlock();
+        startSessionPolling();
+      } catch (err) {
+        showStudentError(err);
+      }
+    }
+
+    function renderSessionBlock() {
+      if (!currentLesson) return;
+
+      const blocks = currentLesson.blocks || [];
+      const block = blocks[blockIndex];
+
+      if (!block) {
+        showStudentError(new Error("Block not found at index: " + blockIndex));
+        return;
+      }
+
+      lessonTitle.textContent =
+        currentLesson.title || currentLesson.lesson_id || "Lesson";
+
+      blockTitle.textContent =
+        `${blockIndex + 1}/${blocks.length} · ${block.title || block.id}`;
+
+      statusText.textContent = sessionPin
+        ? `PIN ${sessionPin}`
+        : (block.activity_kind || block.type);
+
+      const playerUrl = BASE_URL + block.player;
+      const dataUrl = BASE_URL + block.data;
+
+      playerFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
+    }
+
+    function startSessionPolling() {
+      setInterval(async () => {
+        try {
+          const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+          if (!res.ok) return;
+
+          const session = await res.json();
+          const nextIndex = session.current_block_index || 0;
+
+          if (nextIndex !== lastSessionBlockIndex) {
+            blockIndex = nextIndex;
+            lastSessionBlockIndex = nextIndex;
+            renderSessionBlock();
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }, 1000);
+    }
+
+    function showStudentError(err) {
+      console.error(err);
+      playerFrame.style.display = "none";
+      errorBox.style.display = "block";
+      errorBox.textContent = err.message;
+      lessonTitle.textContent = "Failed to load";
+      blockTitle.textContent = "";
+    }
+
     prevBtn.addEventListener("click", () => {
+      if (sessionPin) return;
       goToBlock(blockIndex - 1);
     });
 
     nextBtn.addEventListener("click", () => {
+      if (sessionPin) return;
       goToBlock(blockIndex + 1);
     });
 
-    loadStudentBlock();
+    loadSessionFromPin();
   </script>
 </body>
 </html>
