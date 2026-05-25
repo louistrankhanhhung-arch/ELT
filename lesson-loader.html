@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELT Lesson Loader</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      padding: 16px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: calc(100vh - 73px);
+    }
+
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid #ddd;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .block-btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fafafa;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .block-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .block-btn.active {
+      border-color: #222;
+      background: #eaeaea;
+      font-weight: bold;
+    }
+
+    .viewer {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .toolbar {
+      padding: 10px 14px;
+      background: #ffffff;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    iframe {
+      width: 100%;
+      flex: 1;
+      border: none;
+      background: #ffffff;
+    }
+
+    .empty {
+      padding: 24px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        max-height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="lessonTitle">Loading lesson...</h1>
+    <p id="lessonMeta"></p>
+  </header>
+
+  <main class="app">
+    <aside class="sidebar" id="blockList"></aside>
+
+    <section class="viewer">
+      <div class="toolbar" id="currentBlock">Select a block</div>
+      <div class="empty" id="emptyState">No block loaded yet.</div>
+      <iframe id="playerFrame" style="display:none;"></iframe>
+    </section>
+  </main>
+
+  <script>
+    const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
+
+    const params = new URLSearchParams(window.location.search);
+
+    const lessonPath =
+      params.get("lesson") ||
+      "lessons/g1rec/l01/g1rec-l02.json";
+
+    const lessonUrl = BASE_URL + lessonPath;
+
+    const lessonTitle = document.getElementById("lessonTitle");
+    const lessonMeta = document.getElementById("lessonMeta");
+    const blockList = document.getElementById("blockList");
+    const currentBlock = document.getElementById("currentBlock");
+    const playerFrame = document.getElementById("playerFrame");
+    const emptyState = document.getElementById("emptyState");
+
+    let activeBlockId = null;
+
+    async function loadLesson() {
+      try {
+        const res = await fetch(lessonUrl);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lesson JSON: " + lessonUrl);
+        }
+
+        const lesson = await res.json();
+
+        lessonTitle.textContent = lesson.title || lesson.lesson_id;
+        lessonMeta.textContent =
+          `${lesson.lesson_id || ""} · ${lesson.level || ""} · v${lesson.version || ""}`;
+
+        renderBlockList(lesson.blocks || []);
+      } catch (err) {
+        lessonTitle.textContent = "Failed to load lesson";
+        lessonMeta.textContent = err.message;
+        console.error(err);
+      }
+    }
+
+    function renderBlockList(blocks) {
+      blockList.innerHTML = "";
+
+      blocks.forEach((block, index) => {
+        const btn = document.createElement("button");
+        btn.className = "block-btn";
+        btn.textContent = `${index + 1}. ${block.title || block.id}`;
+        btn.onclick = () => loadBlock(block, btn);
+
+        blockList.appendChild(btn);
+      });
+    }
+
+    function loadBlock(block, buttonEl) {
+      activeBlockId = block.id;
+
+      document.querySelectorAll(".block-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      buttonEl.classList.add("active");
+
+      currentBlock.textContent =
+        `${block.title || block.id} · ${block.activity_kind || block.type}`;
+
+      if (block.type !== "activity") {
+        emptyState.style.display = "block";
+        emptyState.textContent = "Unsupported block type: " + block.type;
+        playerFrame.style.display = "none";
+        return;
+      }
+
+      const playerUrl = BASE_URL + block.player;
+      const dataUrl = BASE_URL + block.data;
+
+      playerFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+
+      emptyState.style.display = "none";
+      playerFrame.style.display = "block";
+    }
+
+    loadLesson();
+  </script>
+</body>
+</html>
