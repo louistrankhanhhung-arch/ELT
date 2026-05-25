@@ -3,10 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from random import randint
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import List
+import sqlite3
+import json
 
 
-app = FastAPI(title="ELT Runtime API BLOCK TEST")
+DB_PATH = "elt_runtime.db"
+
+app = FastAPI(title="ELT Runtime API v0.2 SQLite")
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,58 +36,127 @@ class JoinSessionRequest(BaseModel):
     student_name: str
 
 
-class Session(BaseModel):
-    pin: str
-    lesson_id: str
-    lesson_path: str
-    total_blocks: int
-    current_block_index: int = 0
-    status: str = "active"
-    students: List[dict] = []
-    created_at: str
-
-
-sessions: Dict[str, Session] = {}
-
-
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS sessions (
+        pin TEXT PRIMARY KEY,
+        lesson_id TEXT NOT NULL,
+        lesson_path TEXT NOT NULL,
+        total_blocks INTEGER NOT NULL,
+        current_block_index INTEGER NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'active',
+        created_at TEXT NOT NULL
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS session_students (
+        student_id TEXT PRIMARY KEY,
+        pin TEXT NOT NULL,
+        student_name TEXT NOT NULL,
+        joined_at TEXT NOT NULL,
+        last_seen_at TEXT NOT NULL,
+        FOREIGN KEY(pin) REFERENCES sessions(pin)
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+@app.on_event("startup")
+def startup():
+    init_db()
+
+
 def generate_pin() -> str:
+    conn = db()
+    cur = conn.cursor()
+
     for _ in range(20):
         pin = str(randint(1000, 9999))
-        if pin not in sessions:
+        cur.execute("SELECT pin FROM sessions WHERE pin = ?", (pin,))
+        if not cur.fetchone():
+            conn.close()
             return pin
+
+    conn.close()
     raise RuntimeError("Could not generate unique PIN")
+
+
+def get_session(pin: str):
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM sessions WHERE pin = ?", (pin,))
+    session = cur.fetchone()
+
+    if not session:
+        conn.close()
+        return None
+
+    cur.execute(
+        "SELECT * FROM session_students WHERE pin = ? ORDER BY joined_at ASC",
+        (pin,)
+    )
+    students = [dict(row) for row in cur.fetchall()]
+    conn.close()
+
+    data = dict(session)
+    data["students"] = students
+    return data
 
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "service": "ELT Runtime API"}
+    return {"ok": True, "service": "ELT Runtime API SQLite"}
 
 
 @app.post("/api/sessions/start")
 def start_session(payload: StartSessionRequest):
     pin = generate_pin()
 
-    session = Session(
-        pin=pin,
-        lesson_id=payload.lesson_id,
-        lesson_path=payload.lesson_path,
-        total_blocks=payload.total_blocks,
-        current_block_index=payload.current_block_index,
-        created_at=now_iso(),
-    )
+    conn = db()
+    cur = conn.cursor()
 
-    sessions[pin] = session
+    cur.execute("""
+        INSERT INTO sessions (
+            pin, lesson_id, lesson_path, total_blocks,
+            current_block_index, status, created_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (
+        pin,
+        payload.lesson_id,
+        payload.lesson_path,
+        payload.total_blocks,
+        payload.current_block_index,
+        "active",
+        now_iso(),
+    ))
 
-    return session
+    conn.commit()
+    conn.close()
+
+    return get_session(pin)
 
 
 @app.get("/api/sessions/{pin}/state")
 def get_session_state(pin: str):
-    session = sessions.get(pin)
+    session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -93,75 +166,137 @@ def get_session_state(pin: str):
 
 @app.post("/api/sessions/{pin}/join")
 def join_session(pin: str, payload: JoinSessionRequest):
-    session = sessions.get(pin)
+    session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    student_id = f"s{len(session.students) + 1}"
+    if session["status"] == "ended":
+        raise HTTPException(status_code=400, detail="Session has ended")
+
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT COUNT(*) AS count FROM session_students WHERE pin = ?",
+        (pin,)
+    )
+    count = cur.fetchone()["count"]
+
+    student_id = f"{pin}-s{count + 1}"
 
     student = {
         "student_id": student_id,
+        "pin": pin,
         "student_name": payload.student_name,
         "joined_at": now_iso(),
         "last_seen_at": now_iso(),
     }
 
-    session.students.append(student)
+    cur.execute("""
+        INSERT INTO session_students (
+            student_id, pin, student_name, joined_at, last_seen_at
+        )
+        VALUES (?, ?, ?, ?, ?)
+    """, (
+        student["student_id"],
+        student["pin"],
+        student["student_name"],
+        student["joined_at"],
+        student["last_seen_at"],
+    ))
+
+    conn.commit()
+    conn.close()
 
     return {
         "pin": pin,
         "student": student,
-        "session": session,
+        "session": get_session(pin),
     }
 
 
 @app.post("/api/sessions/{pin}/next")
 def next_block(pin: str):
-    session = sessions.get(pin)
+    session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    if session.current_block_index < session.total_blocks - 1:
-        session.current_block_index += 1
+    next_index = min(
+        session["current_block_index"] + 1,
+        session["total_blocks"] - 1
+    )
 
-    return session
+    conn = db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE sessions SET current_block_index = ? WHERE pin = ?",
+        (next_index, pin)
+    )
+    conn.commit()
+    conn.close()
+
+    return get_session(pin)
 
 
 @app.post("/api/sessions/{pin}/previous")
 def previous_block(pin: str):
-    session = sessions.get(pin)
+    session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    if session.current_block_index > 0:
-        session.current_block_index -= 1
+    prev_index = max(session["current_block_index"] - 1, 0)
 
-    return session
+    conn = db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE sessions SET current_block_index = ? WHERE pin = ?",
+        (prev_index, pin)
+    )
+    conn.commit()
+    conn.close()
+
+    return get_session(pin)
+
 
 @app.post("/api/sessions/{pin}/block/{index}")
 def set_block(pin: str, index: int):
-    session = sessions.get(pin)
+    session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    if index < 0 or index >= session.total_blocks:
+    if index < 0 or index >= session["total_blocks"]:
         raise HTTPException(status_code=400, detail="Invalid block index")
 
-    session.current_block_index = index
+    conn = db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE sessions SET current_block_index = ? WHERE pin = ?",
+        (index, pin)
+    )
+    conn.commit()
+    conn.close()
 
-    return session
-    
+    return get_session(pin)
+
+
 @app.post("/api/sessions/{pin}/end")
 def end_session(pin: str):
-    session = sessions.get(pin)
+    session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    session.status = "ended"
+    conn = db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE sessions SET status = ? WHERE pin = ?",
+        ("ended", pin)
+    )
+    conn.commit()
+    conn.close()
 
-    return session
+    return get_session(pin)
