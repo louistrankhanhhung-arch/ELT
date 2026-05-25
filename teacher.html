@@ -509,6 +509,19 @@
         const session = await res.json();
         const students = session.students || [];
 
+        const events = session.events || [];
+
+        const completedStudentIds = new Set(
+          events
+            .filter(e =>
+              e.event_type === "block_completed" &&
+              e.block_index === blockIndex
+            )
+            .map(e => e.student_id)
+        );
+
+const completedCount = completedStudentIds.size;
+
         const names = students
           .map(s => s.student_name)
           .filter(Boolean);
@@ -520,6 +533,7 @@
         
         monitorPanel.innerHTML =
           `<strong>Joined students: ${students.length}</strong>` +
+          `<br><strong>Completed current block: ${completedCount}/${students.length}</strong>` +
           (
             previewNames.length
               ? `<br>${previewNames.join(", ")}`
