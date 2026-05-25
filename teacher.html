@@ -235,6 +235,13 @@
         style="display:none;padding:10px 14px;background:#fff7d6;border-bottom:1px solid #ddd;font-weight:bold;"
       ></div>
 
+      <div
+        id="monitorPanel"
+        style="display:none;padding:10px 14px;background:#eef7ff;border-bottom:1px solid #ddd;font-size:14px;"
+      >
+        Joined students: 0
+      </div>
+
       <iframe id="previewFrame"></iframe>
       <div class="error" id="errorBox" style="display:none;"></div>
     </section>
@@ -264,6 +271,7 @@
     const errorBox = document.getElementById("errorBox");
     const startSessionBtn = document.getElementById("startSessionBtn");
     const sessionBanner = document.getElementById("sessionBanner");
+    const monitorPanel = document.getElementById("monitorPanel");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const openStudentBtn = document.getElementById("openStudentBtn");
@@ -272,6 +280,7 @@
 
     let currentLesson = null;
     let sessionPin = null;
+    let monitorTimer = null;
 
     async function loadLesson() {
       try {
@@ -398,6 +407,9 @@
         sessionBanner.style.display = "block";
         sessionBanner.textContent =
           `LIVE SESSION · PIN: ${session.pin} · BLOCK: ${blockIndex + 1}`;
+
+        monitorPanel.style.display = "block";
+        startMonitorPolling();
         
         startSessionBtn.textContent = "Session Active";
       } catch (err) {
@@ -440,6 +452,45 @@
       }
     
       return await res.json();
+    }
+
+    function startMonitorPolling() {
+      if (!sessionPin) return;
+
+      if (monitorTimer) {
+        clearInterval(monitorTimer);
+      }
+
+      updateMonitor();
+
+      monitorTimer = setInterval(() => {
+        updateMonitor();
+      }, 2000);
+    }
+
+    async function updateMonitor() {
+      if (!sessionPin) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+
+        if (!res.ok) return;
+
+        const session = await res.json();
+        const students = session.students || [];
+
+        const names = students
+          .map(s => s.student_name)
+          .filter(Boolean);
+
+        monitorPanel.innerHTML =
+          `<strong>Joined students: ${students.length}</strong>` +
+          (names.length
+            ? `<br>${names.map(name => `• ${name}`).join("<br>")}`
+            : "");
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     function showError(message) {
