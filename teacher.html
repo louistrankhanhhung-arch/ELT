@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELT Teacher Mock Controller</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      overflow: hidden;
+    }
+
+    header {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .title {
+      min-width: 0;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title p {
+      margin: 4px 0 0;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    button {
+      padding: 8px 11px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .app {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid #ddd;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .block-btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fafafa;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .block-btn.active {
+      border-color: #222;
+      background: #eaeaea;
+      font-weight: bold;
+    }
+
+    .preview {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .current {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+      display: block;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .error {
+      padding: 20px;
+      color: #b00020;
+    }
+
+    @media (max-width: 800px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .controls {
+        flex-wrap: wrap;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .sidebar {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      .block-btn {
+        width: auto;
+        min-width: 150px;
+        margin-bottom: 0;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1 id="lessonTitle">Loading lesson...</h1>
+      <p id="lessonMeta">Teacher Mock Controller</p>
+    </div>
+
+    <div class="controls">
+      <button id="prevBtn">← Previous</button>
+      <button id="nextBtn">Next →</button>
+      <button id="openStudentBtn">Open Student View</button>
+      <button id="copyStudentBtn">Copy Student URL</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <aside class="sidebar" id="blockList"></aside>
+
+    <section class="preview">
+      <div class="current" id="currentBlock">Current block: —</div>
+      <iframe id="previewFrame"></iframe>
+      <div class="error" id="errorBox" style="display:none;"></div>
+    </section>
+  </main>
+
+  <script>
+    const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
+
+    const params = new URLSearchParams(window.location.search);
+
+    const lessonPath =
+      params.get("lesson") ||
+      "lessons/g1rec/l02/g1rec-l02.json";
+
+    let blockIndex = Number(params.get("block") || 0);
+
+    const lessonUrl = BASE_URL + lessonPath;
+
+    const lessonTitle = document.getElementById("lessonTitle");
+    const lessonMeta = document.getElementById("lessonMeta");
+    const blockList = document.getElementById("blockList");
+    const currentBlock = document.getElementById("currentBlock");
+    const previewFrame = document.getElementById("previewFrame");
+    const errorBox = document.getElementById("errorBox");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const openStudentBtn = document.getElementById("openStudentBtn");
+    const copyStudentBtn = document.getElementById("copyStudentBtn");
+
+    let currentLesson = null;
+
+    async function loadLesson() {
+      try {
+        const res = await fetch(lessonUrl);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lesson JSON: " + lessonUrl);
+        }
+
+        currentLesson = await res.json();
+
+        lessonTitle.textContent =
+          currentLesson.title || currentLesson.lesson_id || "Lesson";
+
+        lessonMeta.textContent =
+          `${currentLesson.lesson_id || ""} · ${currentLesson.level || ""} · v${currentLesson.version || ""}`;
+
+        renderBlockList(currentLesson.blocks || []);
+        goToBlock(blockIndex, false);
+      } catch (err) {
+        showError(err.message);
+      }
+    }
+
+    function renderBlockList(blocks) {
+      blockList.innerHTML = "";
+
+      blocks.forEach((block, index) => {
+        const btn = document.createElement("button");
+        btn.className = "block-btn";
+        btn.dataset.index = index;
+        btn.textContent = `${index + 1}. ${block.title || block.id}`;
+        btn.onclick = () => goToBlock(index);
+
+        blockList.appendChild(btn);
+      });
+    }
+
+    function goToBlock(index, updateUrl = true) {
+      if (!currentLesson) return;
+
+      const blocks = currentLesson.blocks || [];
+
+      if (index < 0 || index >= blocks.length) return;
+
+      const block = blocks[index];
+
+      if (block.type !== "activity") {
+        showError("Unsupported block type: " + block.type);
+        return;
+      }
+
+      blockIndex = index;
+
+      document.querySelectorAll(".block-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.index) === blockIndex);
+      });
+
+      currentBlock.textContent =
+        `Current block: ${blockIndex + 1}/${blocks.length} · ${block.title || block.id} · ${block.activity_kind || block.type}`;
+
+      const playerUrl = BASE_URL + block.player;
+      const dataUrl = BASE_URL + block.data;
+
+      previewFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+      previewFrame.style.display = "block";
+      errorBox.style.display = "none";
+
+      prevBtn.disabled = blockIndex <= 0;
+      nextBtn.disabled = blockIndex >= blocks.length - 1;
+
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("lesson", lessonPath);
+        url.searchParams.set("block", blockIndex);
+        window.history.replaceState({}, "", url.toString());
+      }
+    }
+
+    function buildStudentUrl() {
+      const url = new URL(BASE_URL + "student.html");
+      url.searchParams.set("lesson", lessonPath);
+      url.searchParams.set("block", blockIndex);
+      return url.toString();
+    }
+
+    function showError(message) {
+      console.error(message);
+      previewFrame.style.display = "none";
+      errorBox.style.display = "block";
+      errorBox.textContent = message;
+      currentBlock.textContent = "Current block: error";
+    }
+
+    prevBtn.addEventListener("click", () => {
+      goToBlock(blockIndex - 1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      goToBlock(blockIndex + 1);
+    });
+
+    openStudentBtn.addEventListener("click", () => {
+      window.open(buildStudentUrl(), "_blank");
+    });
+
+    copyStudentBtn.addEventListener("click", async () => {
+      const studentUrl = buildStudentUrl();
+
+      try {
+        await navigator.clipboard.writeText(studentUrl);
+        copyStudentBtn.textContent = "Copied!";
+        setTimeout(() => {
+          copyStudentBtn.textContent = "Copy Student URL";
+        }, 1200);
+      } catch (err) {
+        alert(studentUrl);
+      }
+    });
+
+    loadLesson();
+  </script>
+</body>
+</html>
