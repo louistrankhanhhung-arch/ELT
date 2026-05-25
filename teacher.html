@@ -394,8 +394,6 @@
         const session = await res.json();
 
         sessionPin = session.pin;
-
-        await syncSessionSetBlock(blockIndex);
         
         sessionBanner.style.display = "block";
         sessionBanner.textContent =
