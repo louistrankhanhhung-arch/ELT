@@ -395,10 +395,12 @@
 
         sessionPin = session.pin;
 
+        await syncSessionSetBlock(blockIndex);
+        
         sessionBanner.style.display = "block";
         sessionBanner.textContent =
-          `LIVE SESSION · PIN: ${session.pin}`;
-
+          `LIVE SESSION · PIN: ${session.pin} · BLOCK: ${blockIndex + 1}`;
+        
         startSessionBtn.textContent = "Session Active";
       } catch (err) {
         console.error(err);
@@ -425,17 +427,19 @@
 
     async function syncSessionSetBlock(index) {
       if (!sessionPin) return;
-
-      try {
-        await fetch(
-          `${API_BASE}/sessions/${sessionPin}/block/${index}`,
-          {
-            method: "POST",
-          }
-        );
-      } catch (err) {
-        console.error(err);
+    
+      const res = await fetch(
+        `${API_BASE}/sessions/${sessionPin}/block/${index}`,
+        {
+          method: "POST",
+        }
+      );
+    
+      if (!res.ok) {
+        throw new Error("Failed to sync block index: " + index);
       }
+    
+      return await res.json();
     }
 
     function showError(message) {
