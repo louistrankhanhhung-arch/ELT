@@ -25,6 +25,7 @@ class StartSessionRequest(BaseModel):
     lesson_id: str
     lesson_path: str
     total_blocks: int
+    current_block_index: int = 0
 
 
 class JoinSessionRequest(BaseModel):
@@ -71,6 +72,7 @@ def start_session(payload: StartSessionRequest):
         lesson_id=payload.lesson_id,
         lesson_path=payload.lesson_path,
         total_blocks=payload.total_blocks,
+        current_block_index=payload.current_block_index,
         created_at=now_iso(),
     )
 
