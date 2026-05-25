@@ -220,6 +220,7 @@
       <button id="nextBtn">Next →</button>
       <button id="openStudentBtn">Open Student View</button>
       <button id="startSessionBtn">Start Session</button>
+      <button id="endSessionBtn" disabled>End Session</button>
       <button id="copyStudentBtn">Copy Student URL</button>
     </div>
   </header>
@@ -270,6 +271,7 @@
     const previewFrame = document.getElementById("previewFrame");
     const errorBox = document.getElementById("errorBox");
     const startSessionBtn = document.getElementById("startSessionBtn");
+    const endSessionBtn = document.getElementById("endSessionBtn");
     const sessionBanner = document.getElementById("sessionBanner");
     const monitorPanel = document.getElementById("monitorPanel");
     const prevBtn = document.getElementById("prevBtn");
@@ -412,6 +414,7 @@
         startMonitorPolling();
         
         startSessionBtn.textContent = "Session Active";
+        endSessionBtn.disabled = false;
       } catch (err) {
         console.error(err);
         alert("Could not start session");
@@ -452,6 +455,33 @@
       }
     
       return await res.json();
+    }
+
+    async function endSession() {
+      if (!sessionPin) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/end`, {
+          method: "POST",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to end session");
+        }
+
+        sessionBanner.textContent = `SESSION ENDED · PIN: ${sessionPin}`;
+        startSessionBtn.disabled = false;
+        startSessionBtn.textContent = "Start Session";
+        endSessionBtn.disabled = true;
+
+        if (monitorTimer) {
+          clearInterval(monitorTimer);
+          monitorTimer = null;
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Could not end session: " + err.message);
+      }
     }
 
     function startMonitorPolling() {
@@ -525,6 +555,10 @@
 
     startSessionBtn.addEventListener("click", () => {
       startSession();
+    });
+
+    endSessionBtn.addEventListener("click", () => {
+      endSession();
     });
 
     openStudentBtn.addEventListener("click", () => {
