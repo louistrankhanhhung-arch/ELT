@@ -304,7 +304,10 @@
         btn.className = "block-btn";
         btn.dataset.index = index;
         btn.textContent = `${index + 1}. ${block.title || block.id}`;
-        btn.onclick = () => goToBlock(index);
+        btn.onclick = () => {
+          goToBlock(index);
+          syncSessionSetBlock(index);
+        };
 
         blockList.appendChild(btn);
       });
@@ -410,6 +413,21 @@
       try {
         await fetch(
           `${API_BASE}/sessions/${sessionPin}/${direction}`,
+          {
+            method: "POST",
+          }
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function syncSessionSetBlock(index) {
+      if (!sessionPin) return;
+
+      try {
+        await fetch(
+          `${API_BASE}/sessions/${sessionPin}/block/${index}`,
           {
             method: "POST",
           }
