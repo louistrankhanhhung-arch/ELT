@@ -311,6 +311,17 @@
           if (!res.ok) return;
 
           const session = await res.json();
+
+          if (session.status === "ended") {
+            lessonTitle.textContent = "Session ended";
+            blockTitle.textContent = "Please wait for your teacher.";
+            statusText.textContent = `PIN ${sessionPin}`;
+            playerFrame.style.display = "none";
+            errorBox.style.display = "block";
+            errorBox.textContent = "The class session has ended.";
+            return;
+          }
+          
           const nextIndex = session.current_block_index || 0;
 
           if (nextIndex !== lastSessionBlockIndex) {
