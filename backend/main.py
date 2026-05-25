@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
 
-app = FastAPI(title="ELT Runtime API v0.1")
+app = FastAPI(title="ELT Runtime API BLOCK TEST")
 
 app.add_middleware(
     CORSMiddleware,
