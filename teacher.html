@@ -163,6 +163,49 @@
         white-space: nowrap;
       }
     }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      header {
+        padding: 6px 8px;
+        gap: 8px;
+      }
+
+      .title h1 {
+        font-size: 15px;
+      }
+
+      .title p {
+        display: none;
+      }
+
+      .controls {
+        gap: 4px;
+      }
+
+      button {
+        padding: 5px 8px;
+        font-size: 12px;
+      }
+
+      .sidebar {
+        padding: 6px;
+        gap: 6px;
+      }
+
+      .block-btn {
+        min-width: 120px;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      .current {
+        display: none;
+      }
+
+      iframe {
+        min-height: 0;
+      }
+    }
   </style>
 </head>
 <body>
