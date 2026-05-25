@@ -131,6 +131,7 @@
       <div class="block-title" id="blockTitle">Loading block...</div>
     </div>
     <div class="nav-controls">
+      <button class="nav-btn" id="completeBtn">Complete</button>
       <button class="nav-btn" id="prevBtn">← Prev</button>
       <button class="nav-btn" id="nextBtn">Next →</button>
       <div class="status" id="statusText">Student runtime</div>
@@ -151,6 +152,7 @@
       "http://localhost:8000/api";
 
     const sessionPin = params.get("pin");
+    const studentId = params.get("student_id");
 
     const lessonPath =
       params.get("lesson") ||
@@ -167,6 +169,7 @@
     const errorBox = document.getElementById("errorBox");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
+    const completeBtn = document.getElementById("completeBtn");
 
     let currentLesson = null;
     let lastSessionBlockIndex = null;
@@ -302,6 +305,9 @@
 
       prevBtn.disabled = true;
       nextBtn.disabled = true;
+
+      completeBtn.disabled = !sessionPin || !studentId;
+      completeBtn.textContent = "Complete";
     }
 
     function startSessionPolling() {
@@ -335,6 +341,48 @@
       }, 1000);
     }
 
+    async function completeCurrentBlock() {
+      if (!sessionPin || !studentId || !currentLesson) {
+        return;
+      }
+
+      const blocks = currentLesson.blocks || [];
+      const block = blocks[blockIndex];
+
+      if (!block) {
+        return;
+      }
+
+      try {
+        completeBtn.disabled = true;
+        completeBtn.textContent = "Completed";
+
+        const res = await fetch(
+          `${API_BASE}/sessions/${sessionPin}/events`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              student_id: studentId,
+              block_index: blockIndex,
+              block_id: block.id,
+              event_type: "block_completed",
+            }),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Could not complete block.");
+        }
+      } catch (err) {
+        console.error(err);
+        completeBtn.disabled = false;
+        completeBtn.textContent = "Complete";
+      }
+    }
+
     function showStudentError(err) {
       console.error(err);
       playerFrame.style.display = "none";
@@ -352,6 +400,10 @@
     nextBtn.addEventListener("click", () => {
       if (sessionPin) return;
       goToBlock(blockIndex + 1);
+    });
+
+    completeBtn.addEventListener("click", () => {
+      completeCurrentBlock();
     });
 
     loadSessionFromPin();
