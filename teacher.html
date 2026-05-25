@@ -425,6 +425,8 @@
 
     async function syncSessionSetBlock(index) {
       if (!sessionPin) return;
+
+      console.log("SYNC SET BLOCK", index, "PIN", sessionPin);
     
       const res = await fetch(
         `${API_BASE}/sessions/${sessionPin}/block/${index}`,
@@ -450,12 +452,12 @@
 
     prevBtn.addEventListener("click", () => {
       goToBlock(blockIndex - 1);
-      syncSessionBlock("previous");
+      syncSessionSetBlock(blockIndex);
     });
 
     nextBtn.addEventListener("click", () => {
       goToBlock(blockIndex + 1);
-      syncSessionBlock("next");
+      syncSessionSetBlock(blockIndex);
     });
 
     startSessionBtn.addEventListener("click", () => {
