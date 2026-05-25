@@ -57,6 +57,27 @@
       color: #666;
     }
 
+    .nav-controls {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
     .runtime {
       flex: 1;
       min-height: 0;
@@ -86,6 +107,10 @@
       .status {
         display: none;
       }
+
+      .nav-btn {
+        padding: 5px 8px;
+      }
     }
 
     @media (orientation: landscape) and (max-height: 520px) {
@@ -101,7 +126,11 @@
       <div class="lesson-title" id="lessonTitle">Loading lesson...</div>
       <div class="block-title" id="blockTitle">Loading block...</div>
     </div>
-    <div class="status" id="statusText">Student runtime</div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="prevBtn">← Prev</button>
+      <button class="nav-btn" id="nextBtn">Next →</button>
+      <div class="status" id="statusText">Student runtime</div>
+    </div>
   </header>
 
   <main class="runtime">
@@ -118,7 +147,7 @@
       params.get("lesson") ||
       "lessons/g1rec/l02/g1rec-l02.json";
 
-    const blockIndex = Number(params.get("block") || 0);
+    let blockIndex = Number(params.get("block") || 0);
 
     const lessonUrl = BASE_URL + lessonPath;
 
@@ -127,8 +156,12 @@
     const statusText = document.getElementById("statusText");
     const playerFrame = document.getElementById("playerFrame");
     const errorBox = document.getElementById("errorBox");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
-    async function loadStudentBlock() {
+    let currentLesson = null;
+
+    async function loadStudentBlock(targetIndex = blockIndex) {
       try {
         const res = await fetch(lessonUrl);
 
@@ -137,8 +170,10 @@
         }
 
         const lesson = await res.json();
+        currentLesson = lesson;
+        
         const blocks = lesson.blocks || [];
-        const block = blocks[blockIndex];
+        const block = blocks[targetIndex];
 
         if (!block) {
           throw new Error("Block not found at index: " + blockIndex);
@@ -147,6 +182,8 @@
         if (block.type !== "activity") {
           throw new Error("Unsupported block type: " + block.type);
         }
+
+        blockIndex = targetIndex;
 
         lessonTitle.textContent = lesson.title || lesson.lesson_id || "Lesson";
         blockTitle.textContent =
@@ -157,6 +194,10 @@
         const dataUrl = BASE_URL + block.data;
 
         playerFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+
+        prevBtn.disabled = blockIndex <= 0;
+        nextBtn.disabled = blockIndex >= blocks.length - 1;
+        
       } catch (err) {
         console.error(err);
         playerFrame.style.display = "none";
@@ -166,6 +207,33 @@
         blockTitle.textContent = "";
       }
     }
+
+    function updateUrlBlockParam(index) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("block", index);
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    function goToBlock(index) {
+      if (!currentLesson) return;
+
+      const blocks = currentLesson.blocks || [];
+
+      if (index < 0 || index >= blocks.length) {
+        return;
+      }
+
+      updateUrlBlockParam(index);
+      loadStudentBlock(index);
+    }
+
+    prevBtn.addEventListener("click", () => {
+      goToBlock(blockIndex - 1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      goToBlock(blockIndex + 1);
+    });
 
     loadStudentBlock();
   </script>
