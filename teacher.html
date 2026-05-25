@@ -219,6 +219,7 @@
       <button id="prevBtn">← Previous</button>
       <button id="nextBtn">Next →</button>
       <button id="openStudentBtn">Open Student View</button>
+      <button id="startSessionBtn">Start Session</button>
       <button id="copyStudentBtn">Copy Student URL</button>
     </div>
   </header>
@@ -228,6 +229,12 @@
 
     <section class="preview">
       <div class="current" id="currentBlock">Current block: —</div>
+
+      <div
+        id="sessionBanner"
+        style="display:none;padding:10px 14px;background:#fff7d6;border-bottom:1px solid #ddd;font-weight:bold;"
+      ></div>
+
       <iframe id="previewFrame"></iframe>
       <div class="error" id="errorBox" style="display:none;"></div>
     </section>
@@ -235,6 +242,9 @@
 
   <script>
     const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
+
+    const API_BASE =
+      "http://localhost:8000/api";
 
     const params = new URLSearchParams(window.location.search);
 
@@ -252,13 +262,16 @@
     const currentBlock = document.getElementById("currentBlock");
     const previewFrame = document.getElementById("previewFrame");
     const errorBox = document.getElementById("errorBox");
-
+    const startSessionBtn = document.getElementById("startSessionBtn");
+    const sessionBanner = document.getElementById("sessionBanner");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const openStudentBtn = document.getElementById("openStudentBtn");
+    
     const copyStudentBtn = document.getElementById("copyStudentBtn");
 
     let currentLesson = null;
+    let sessionPin = null;
 
     async function loadLesson() {
       try {
@@ -340,9 +353,70 @@
 
     function buildStudentUrl() {
       const url = new URL(BASE_URL + "student.html");
-      url.searchParams.set("lesson", lessonPath);
-      url.searchParams.set("block", blockIndex);
+
+      if (sessionPin) {
+        url.searchParams.set("pin", sessionPin);
+      } else {
+        url.searchParams.set("lesson", lessonPath);
+        url.searchParams.set("block", blockIndex);
+      }
+      
       return url.toString();
+    }
+
+    async function startSession() {
+      if (!currentLesson) return;
+
+      try {
+        startSessionBtn.disabled = true;
+        startSessionBtn.textContent = "Starting...";
+
+        const res = await fetch(`${API_BASE}/sessions/start`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            lesson_id: currentLesson.lesson_id,
+            lesson_path: lessonPath,
+            total_blocks: currentLesson.blocks.length,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to start session");
+        }
+
+        const session = await res.json();
+
+        sessionPin = session.pin;
+
+        sessionBanner.style.display = "block";
+        sessionBanner.textContent =
+          `LIVE SESSION · PIN: ${session.pin}`;
+
+        startSessionBtn.textContent = "Session Active";
+      } catch (err) {
+        console.error(err);
+        alert("Could not start session");
+        startSessionBtn.disabled = false;
+        startSessionBtn.textContent = "Start Session";
+      }
+    }
+
+    async function syncSessionBlock(direction) {
+      if (!sessionPin) return;
+
+      try {
+        await fetch(
+          `${API_BASE}/sessions/${sessionPin}/${direction}`,
+          {
+            method: "POST",
+          }
+        );
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     function showError(message) {
@@ -355,10 +429,16 @@
 
     prevBtn.addEventListener("click", () => {
       goToBlock(blockIndex - 1);
+      syncSessionBlock("previous");
     });
 
     nextBtn.addEventListener("click", () => {
       goToBlock(blockIndex + 1);
+      syncSessionBlock("next");
+    });
+
+    startSessionBtn.addEventListener("click", () => {
+      startSession();
     });
 
     openStudentBtn.addEventListener("click", () => {
