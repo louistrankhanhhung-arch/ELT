@@ -143,9 +143,11 @@
     <div class="error" id="errorBox" style="display:none;"></div>
   </main>
 
-  <script src="/ELT/config.js"></script>
+  <script src="./config.js"></script>
   <script>
-    const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
+    const BASE_URL =
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
 
     const params = new URLSearchParams(window.location.search);
 
