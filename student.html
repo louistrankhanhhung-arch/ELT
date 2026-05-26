@@ -143,13 +143,15 @@
     <div class="error" id="errorBox" style="display:none;"></div>
   </main>
 
-  <script src="config.js"></script>
+  <script src="/ELT/config.js"></script>
   <script>
     const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
 
     const params = new URLSearchParams(window.location.search);
 
-    const API_BASE = window.ELT_CONFIG.API_BASE;
+    const API_BASE =
+      window.ELT_CONFIG?.API_BASE ||
+      "https://elt-production.up.railway.app/api";
 
     const sessionPin = params.get("pin");
     const studentId = params.get("student_id");
