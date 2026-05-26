@@ -248,13 +248,15 @@
     </section>
   </main>
 
-  <script src="./config.js"></script>
+  <script src="./config.js?v=2"></script>
   <script>
     const BASE_URL =
       window.ELT_CONFIG?.BASE_URL ||
       "https://rootenglishhouse.com/";
 
-    const API_BASE = window.ELT_CONFIG.API_BASE;
+    const API_BASE =
+      window.ELT_CONFIG?.API_BASE ||
+      "https://elt-production.up.railway.app/api";
 
     const params = new URLSearchParams(window.location.search);
 
