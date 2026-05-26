@@ -136,7 +136,8 @@
       "https://elt-production.up.railway.app/api";
   
     const BASE_URL =
-      "https://louistrankhanhhung-arch.github.io/ELT/";
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
     
     const studentNameInput =
       document.getElementById("studentName");
