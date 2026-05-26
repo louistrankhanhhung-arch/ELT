@@ -290,15 +290,16 @@
     unlockBtn.addEventListener("click", () => {
       unlockTeacherApp();
     });
-
+    
     teacherPinInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         unlockTeacherApp();
       }
     });
-
+    
+    pinGate.classList.remove("hidden");
+    teacherApp.classList.add("hidden");
     teacherPinInput.focus();
-    }
   </script>
 </body>
 </html>
