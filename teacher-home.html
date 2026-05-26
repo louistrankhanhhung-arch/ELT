@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Lessons | Root English House</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f7fb;
+      font-family: Arial, sans-serif;
+      color: #1f2933;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .shell {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #667085;
+      font-size: 16px;
+    }
+
+    .course {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+      margin-bottom: 20px;
+    }
+
+    .course h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .course p {
+      margin: 0 0 18px;
+      color: #667085;
+      line-height: 1.5;
+    }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .lesson-card {
+      display: block;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      background: #fafafa;
+      color: inherit;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    .lesson-card:hover {
+      background: #eef6ff;
+      border-color: #93c5fd;
+      transform: translateY(-1px);
+    }
+
+    .lesson-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .lesson-meta {
+      color: #667085;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .error {
+      padding: 18px;
+      border-radius: 16px;
+      background: #fff1f2;
+      color: #be123c;
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <h1>Teacher Lessons</h1>
+      <div class="subtitle">
+        Select a lesson to start a classroom session.
+      </div>
+    </header>
+
+    <section id="catalog"></section>
+  </main>
+
+  <script src="./config.js"></script>
+  <script>
+    const BASE_URL =
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
+
+    const catalogEl = document.getElementById("catalog");
+
+    async function loadCatalog() {
+      try {
+        const res = await fetch(`${BASE_URL}lessons/catalog.json`);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lessons/catalog.json");
+        }
+
+        const catalog = await res.json();
+        renderCatalog(catalog);
+      } catch (err) {
+        console.error(err);
+        catalogEl.innerHTML =
+          `<div class="error">${err.message}</div>`;
+      }
+    }
+
+    function renderCatalog(catalog) {
+      const courses = catalog.courses || [];
+
+      if (!courses.length) {
+        catalogEl.innerHTML =
+          `<div class="error">No courses found.</div>`;
+        return;
+      }
+
+      catalogEl.innerHTML = courses.map(course => {
+        const lessons = course.lessons || [];
+
+        return `
+          <article class="course">
+            <h2>${course.course_title || course.course_id}</h2>
+            <p>${course.description || ""}</p>
+
+            <div class="lesson-grid">
+              ${lessons.map(lesson => {
+                const teacherUrl =
+                  `${BASE_URL}teacher.html?lesson=${encodeURIComponent(lesson.path)}`;
+
+                return `
+                  <a class="lesson-card" href="${teacherUrl}">
+                    <div class="lesson-title">${lesson.title || lesson.lesson_id}</div>
+                    <div class="lesson-meta">
+                      ${lesson.lesson_id || ""}<br>
+                      ${lesson.level || ""} · ${lesson.estimated_minutes || ""} min
+                    </div>
+                    <span class="status">${lesson.status || "draft"}</span>
+                  </a>
+                `;
+              }).join("")}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    loadCatalog();
+  </script>
+</body>
+</html>
