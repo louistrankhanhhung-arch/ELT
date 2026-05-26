@@ -143,13 +143,13 @@
     <div class="error" id="errorBox" style="display:none;"></div>
   </main>
 
+  <script src="config.js"></script>
   <script>
     const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
 
     const params = new URLSearchParams(window.location.search);
 
-    const API_BASE =
-      "https://elt-production.up.railway.app/api";
+    const API_BASE = window.ELT_CONFIG.API_BASE;
 
     const sessionPin = params.get("pin");
     const studentId = params.get("student_id");
@@ -173,6 +173,8 @@
 
     let currentLesson = null;
     let lastSessionBlockIndex = null;
+    let isDisconnected = false;
+    let pollingTimer = null;
 
     async function loadStudentBlock(targetIndex = blockIndex) {
       try {
@@ -311,12 +313,21 @@
     }
 
     function startSessionPolling() {
-      setInterval(async () => {
+      if (pollingTimer) clearInterval(pollingTimer);
+
+      pollingTimer = setInterval(async () => {
         try {
           const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
-          if (!res.ok) return;
+          if (!res.ok) {
+            throw new Error("Polling failed: " + res.status);
+          }
 
           const session = await res.json();
+
+          if (isDisconnected) {
+            statusText.textContent = `PIN ${sessionPin}`;
+            isDisconnected = false;
+          }
 
           if (session.status === "ended") {
             lessonTitle.textContent = "Session ended";
@@ -325,6 +336,10 @@
             playerFrame.style.display = "none";
             errorBox.style.display = "block";
             errorBox.textContent = "The class session has ended.";
+            if (pollingTimer) {
+              clearInterval(pollingTimer);
+              pollingTimer = null;
+            }
             return;
           }
           
@@ -337,6 +352,10 @@
           }
         } catch (err) {
           console.error(err);
+          if (!isDisconnected) {
+            statusText.textContent = "Reconnecting...";
+            isDisconnected = true;
+          }
         }
       }, 1000);
     }
