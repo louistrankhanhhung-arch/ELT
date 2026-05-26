@@ -403,7 +403,8 @@
         });
 
         if (!res.ok) {
-          throw new Error("Failed to start session");
+          const text = await res.text();
+          throw new Error(`Failed to start session: ${res.status} ${text}`);
         }
 
         const session = await res.json();
@@ -421,7 +422,7 @@
         endSessionBtn.disabled = false;
       } catch (err) {
         console.error(err);
-        alert("Could not start session");
+        alert("Could not start session: " + err.message);
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";
       }
