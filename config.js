@@ -1,4 +1,5 @@
 window.ELT_CONFIG = {
   API_BASE: "https://elt-production.up.railway.app/api",
-  MEDIA_BASE: "https://media.rootenglishhouse.com",
+  BASE_URL: "https://rootenglishhouse.com/",
+  MEDIA_BASE: "https://media.rootenglishhouse.com"
 };
