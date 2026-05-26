@@ -1,2 +1,106 @@
-<h1>Root English House</h1>
-<a href="/ELT/join.html">Student Join</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Root English House</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f7f3e8, #eef6ff);
+      color: #1f2933;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 36px 28px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #eef6ff;
+      color: #2563eb;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.15;
+    }
+
+    p {
+      margin: 14px 0 28px;
+      color: #5f6b7a;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+    }
+
+    a {
+      display: block;
+      padding: 14px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary {
+      background: #f3f4f6;
+      color: #1f2933;
+    }
+
+    .footer {
+      margin-top: 22px;
+      font-size: 13px;
+      color: #8a94a6;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="badge">Classroom Runtime</div>
+
+    <h1>Root English House</h1>
+
+    <p>
+      Join your English class with a session PIN from your teacher.
+    </p>
+
+    <div class="actions">
+      <a class="primary" href="/ELT/join.html">Student Join</a>
+      <a class="secondary" href="/ELT/teacher.html?lesson=lessons/g1rec/l02/g1rec-l02.json">Teacher Start Class</a>
+    </div>
+
+    <div class="footer">
+      Learn. Speak. Grow.
+    </div>
+  </main>
+</body>
+</html>
