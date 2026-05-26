@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "courses": [
+    {
+      "course_id": "g1rec",
+      "course_title": "G1 Recovery",
+      "description": "Recovery track for Grade 1 Pre-A1 learners.",
+      "lessons": [
+        {
+          "lesson_id": "g1rec-l02",
+          "title": "Lesson 2",
+          "level": "Pre-A1",
+          "estimated_minutes": 60,
+          "path": "lessons/g1rec/l02/g1rec-l02.json",
+          "status": "ready"
+        }
+      ]
+    }
+  ]
+}
