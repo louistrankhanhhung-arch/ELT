@@ -232,8 +232,10 @@
     </section>
   </main>
 
-  <script>
-    const BASE_URL = "https://louistrankhanhhung-arch.github.io/ELT/";
+  <script src="./config.js"></script>
+    const BASE_URL =
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
 
     const params = new URLSearchParams(window.location.search);
 
