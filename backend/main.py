@@ -4,13 +4,21 @@ from pydantic import BaseModel
 from random import randint
 from datetime import datetime, timezone
 from typing import List
+import os
 import sqlite3
-import json
 
+try:
+    import psycopg
+    from psycopg.rows import dict_row
+except ImportError:
+    psycopg = None
+    dict_row = None
 
 DB_PATH = "elt_runtime.db"
+DATABASE_URL = os.getenv("DATABASE_URL")
+USE_POSTGRES = bool(DATABASE_URL)
 
-app = FastAPI(title="ELT Runtime API v0.2 SQLite")
+app = FastAPI(title="ELT Runtime API v0.3 DB")
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,50 +54,78 @@ def now_iso() -> str:
 
 
 def db():
+    if USE_POSTGRES:
+        if psycopg is None:
+            raise RuntimeError("psycopg is not installed")
+
+        return psycopg.connect(
+            DATABASE_URL,
+            row_factory=dict_row,
+        )
+
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
+def sql(query: str) -> str:
+    if USE_POSTGRES:
+        return query.replace("?", "%s")
+
+    return query
 
 def init_db():
     conn = db()
     cur = conn.cursor()
 
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS sessions (
-        pin TEXT PRIMARY KEY,
-        lesson_id TEXT NOT NULL,
-        lesson_path TEXT NOT NULL,
-        total_blocks INTEGER NOT NULL,
-        current_block_index INTEGER NOT NULL DEFAULT 0,
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL
-    )
+        CREATE TABLE IF NOT EXISTS sessions (
+            pin TEXT PRIMARY KEY,
+            lesson_id TEXT NOT NULL,
+            lesson_path TEXT NOT NULL,
+            total_blocks INTEGER NOT NULL,
+            current_block_index INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT 'active',
+            created_at TEXT NOT NULL
+        )
     """)
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS session_students (
-        student_id TEXT PRIMARY KEY,
-        pin TEXT NOT NULL,
-        student_name TEXT NOT NULL,
-        joined_at TEXT NOT NULL,
-        last_seen_at TEXT NOT NULL,
-        FOREIGN KEY(pin) REFERENCES sessions(pin)
-    )
+            student_id TEXT PRIMARY KEY,
+            pin TEXT NOT NULL,
+            student_name TEXT NOT NULL,
+            joined_at TEXT NOT NULL,
+            last_seen_at TEXT NOT NULL,
+            FOREIGN KEY(pin) REFERENCES sessions(pin)
+        )
     """)
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS events (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pin TEXT NOT NULL,
-        student_id TEXT NOT NULL,
-        block_index INTEGER NOT NULL,
-        block_id TEXT NOT NULL,
-        event_type TEXT NOT NULL,
-        created_at TEXT NOT NULL,
-        FOREIGN KEY(pin) REFERENCES sessions(pin)
-    )
-    """)
+    if USE_POSTGRES:
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                id SERIAL PRIMARY KEY,
+                pin TEXT NOT NULL,
+                student_id TEXT NOT NULL,
+                block_index INTEGER NOT NULL,
+                block_id TEXT NOT NULL,
+                event_type TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY(pin) REFERENCES sessions(pin)
+            )
+        """)
+    else:
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                pin TEXT NOT NULL,
+                student_id TEXT NOT NULL,
+                block_index INTEGER NOT NULL,
+                block_id TEXT NOT NULL,
+                event_type TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY(pin) REFERENCES sessions(pin)
+            )
+        """)
 
     conn.commit()
     conn.close()
@@ -106,7 +142,7 @@ def generate_pin() -> str:
 
     for _ in range(20):
         pin = str(randint(1000, 9999))
-        cur.execute("SELECT pin FROM sessions WHERE pin = ?", (pin,))
+        cur.execute(sql("SELECT pin FROM sessions WHERE pin = ?"), (pin,))
         if not cur.fetchone():
             conn.close()
             return pin
@@ -119,7 +155,7 @@ def get_session(pin: str):
     conn = db()
     cur = conn.cursor()
 
-    cur.execute("SELECT * FROM sessions WHERE pin = ?", (pin,))
+    cur.execute(sql("SELECT * FROM sessions WHERE pin = ?"), (pin,))
     session = cur.fetchone()
 
     if not session:
@@ -127,13 +163,13 @@ def get_session(pin: str):
         return None
 
     cur.execute(
-        "SELECT * FROM session_students WHERE pin = ? ORDER BY joined_at ASC",
+        sql("SELECT * FROM session_students WHERE pin = ? ORDER BY joined_at ASC"),
         (pin,)
     )
     students = [dict(row) for row in cur.fetchall()]
 
     cur.execute(
-        "SELECT * FROM events WHERE pin = ? ORDER BY created_at ASC",
+        sql("SELECT * FROM events WHERE pin = ? ORDER BY created_at ASC"),
         (pin,)
     )
     events = [dict(row) for row in cur.fetchall()]
@@ -148,7 +184,11 @@ def get_session(pin: str):
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "service": "ELT Runtime API SQLite"}
+    return {
+        "ok": True,
+        "service": "ELT Runtime API",
+        "db": "postgres" if USE_POSTGRES else "sqlite",
+    }
 
 
 @app.post("/api/sessions/start")
@@ -158,13 +198,13 @@ def start_session(payload: StartSessionRequest):
     conn = db()
     cur = conn.cursor()
 
-    cur.execute("""
+    cur.execute(sql("""
         INSERT INTO sessions (
             pin, lesson_id, lesson_path, total_blocks,
             current_block_index, status, created_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (
+    """), (
         pin,
         payload.lesson_id,
         payload.lesson_path,
@@ -204,7 +244,7 @@ def join_session(pin: str, payload: JoinSessionRequest):
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT COUNT(*) AS count FROM session_students WHERE pin = ?",
+        sql("SELECT COUNT(*) AS count FROM session_students WHERE pin = ?"),
         (pin,)
     )
     count = cur.fetchone()["count"]
@@ -219,12 +259,12 @@ def join_session(pin: str, payload: JoinSessionRequest):
         "last_seen_at": now_iso(),
     }
 
-    cur.execute("""
+    cur.execute(sql("""
         INSERT INTO session_students (
             student_id, pin, student_name, joined_at, last_seen_at
         )
         VALUES (?, ?, ?, ?, ?)
-    """, (
+    """), (
         student["student_id"],
         student["pin"],
         student["student_name"],
@@ -257,7 +297,7 @@ def next_block(pin: str):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        "UPDATE sessions SET current_block_index = ? WHERE pin = ?",
+        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
         (next_index, pin)
     )
     conn.commit()
@@ -278,7 +318,7 @@ def previous_block(pin: str):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        "UPDATE sessions SET current_block_index = ? WHERE pin = ?",
+        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
         (prev_index, pin)
     )
     conn.commit()
@@ -300,7 +340,7 @@ def set_block(pin: str, index: int):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        "UPDATE sessions SET current_block_index = ? WHERE pin = ?",
+        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
         (index, pin)
     )
     conn.commit()
@@ -318,12 +358,12 @@ def log_event(pin: str, payload: EventRequest):
     conn = db()
     cur = conn.cursor()
 
-    cur.execute("""
+    cur.execute(sql("""
         INSERT INTO events (
             pin, student_id, block_index, block_id, event_type, created_at
         )
         VALUES (?, ?, ?, ?, ?, ?)
-    """, (
+    """), (
         pin,
         payload.student_id,
         payload.block_index,
@@ -348,7 +388,7 @@ def end_session(pin: str):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        "UPDATE sessions SET status = ? WHERE pin = ?",
+        sql("UPDATE sessions SET status = ? WHERE pin = ?"),
         ("ended", pin)
     )
     conn.commit()
