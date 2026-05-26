@@ -107,10 +107,70 @@
       background: #fff1f2;
       color: #be123c;
     }
+
+    .pin-card {
+      max-width: 420px;
+      margin: 80px auto 0;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .pin-card h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .pin-card p {
+      margin: 0 0 18px;
+      color: #667085;
+      line-height: 1.5;
+    }
+
+    .pin-card label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .pin-card input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d0d5dd;
+      border-radius: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+
+    .pin-card button {
+      width: 100%;
+      padding: 13px 16px;
+      border: 0;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .pin-error {
+      margin-top: 12px;
+      color: #be123c;
+      font-size: 14px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <main class="shell">
+  <main class="shell hidden" id="teacherApp">
     <header>
       <h1>Teacher Lessons</h1>
       <div class="subtitle">
@@ -121,6 +181,24 @@
     <section id="catalog"></section>
   </main>
 
+  <section class="pin-card" id="pinGate">
+    <h2>Teacher Access</h2>
+    <p>
+      Enter the teacher PIN to open lesson controls.
+    </p>
+
+    <label for="teacherPinInput">Teacher PIN</label>
+    <input
+      id="teacherPinInput"
+      type="password"
+      inputmode="numeric"
+      placeholder="Enter teacher PIN"
+    />
+
+    <button id="unlockBtn">Unlock Teacher Lessons</button>
+    <div class="pin-error" id="pinError">Incorrect PIN. Please try again.</div>
+  </section>
+
   <script src="./config.js"></script>
   <script>
     const BASE_URL =
@@ -128,6 +206,31 @@
       "https://rootenglishhouse.com/";
 
     const catalogEl = document.getElementById("catalog");
+    const teacherApp = document.getElementById("teacherApp");
+    const pinGate = document.getElementById("pinGate");
+    const teacherPinInput = document.getElementById("teacherPinInput");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const pinError = document.getElementById("pinError");
+
+    const TEACHER_PIN =
+      window.ELT_CONFIG?.TEACHER_PIN ||
+      "2468";
+
+    function unlockTeacherApp() {
+      const enteredPin = teacherPinInput.value.trim();
+
+      if (enteredPin !== TEACHER_PIN) {
+        pinError.style.display = "block";
+        teacherPinInput.value = "";
+        teacherPinInput.focus();
+        return;
+      }
+
+      sessionStorage.setItem("teacher_unlocked", "true");
+      pinGate.classList.add("hidden");
+      teacherApp.classList.remove("hidden");
+      loadCatalog();
+    }
 
     async function loadCatalog() {
       try {
@@ -185,7 +288,23 @@
       }).join("");
     }
 
-    loadCatalog();
+    unlockBtn.addEventListener("click", () => {
+      unlockTeacherApp();
+    });
+
+    teacherPinInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        unlockTeacherApp();
+      }
+    });
+
+    if (sessionStorage.getItem("teacher_unlocked") === "true") {
+      pinGate.classList.add("hidden");
+      teacherApp.classList.remove("hidden");
+      loadCatalog();
+    } else {
+      teacherPinInput.focus();
+    }
   </script>
 </body>
 </html>
