@@ -226,7 +226,6 @@
         return;
       }
 
-      sessionStorage.setItem("teacher_unlocked_pin", TEACHER_PIN);
       pinGate.classList.add("hidden");
       teacherApp.classList.remove("hidden");
       loadCatalog();
@@ -298,12 +297,7 @@
       }
     });
 
-    if (sessionStorage.getItem("teacher_unlocked_pin") === TEACHER_PIN) {
-      pinGate.classList.add("hidden");
-      teacherApp.classList.remove("hidden");
-      loadCatalog();
-    } else {
-      teacherPinInput.focus();
+    teacherPinInput.focus();
     }
   </script>
 </body>
