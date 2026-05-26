@@ -248,7 +248,7 @@
     </section>
   </main>
 
-  <script src="./config.js?v=2"></script>
+  <script src="./config.js?v=3"></script>
   <script>
     const BASE_URL =
       window.ELT_CONFIG?.BASE_URL ||
@@ -257,6 +257,10 @@
     const API_BASE =
       window.ELT_CONFIG?.API_BASE ||
       "https://elt-production.up.railway.app/api";
+
+    console.log("ELT_CONFIG", window.ELT_CONFIG);
+    console.log("API_BASE", API_BASE);
+    console.log("BASE_URL", BASE_URL);
 
     const params = new URLSearchParams(window.location.search);
 
