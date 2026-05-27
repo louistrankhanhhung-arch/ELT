@@ -153,7 +153,7 @@
       "id": "free2",
       "order": 13,
       "type": "activity",
-      "activity_kind": "controlled talk",
+      "activity_kind": "output",
       "title": "Record",
       "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-free2.json",
