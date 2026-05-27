@@ -268,8 +268,27 @@
       if (layout === "full_dialogue") return renderFullDialogue(data);
       if (layout === "review_card") return renderReviewCard(data);
       if (layout === "prompt_response") return renderPromptResponse(data);
+      if (layout === "speaking_scaffold") {
+        return renderSpeakingScaffold(data);
+      }
 
       renderError("Unsupported layout: " + layout);
+    }
+
+    function renderSpeakingScaffold(data) {
+      stage.innerHTML = `
+        <section class="card review-card">
+          <h1>${escapeHtml(data.title || "")}</h1>
+    
+          <div class="scaffold-lines">
+            ${(data.lines || []).map(line => `
+              <div class="scaffold-line">
+                ${escapeHtml(line)}
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
     }
 
     function renderPromptResponse(data) {
