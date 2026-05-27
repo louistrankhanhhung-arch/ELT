@@ -120,41 +120,55 @@
       gap: 32px;
       grid-template-columns: minmax(0, 1fr) 280px;
       align-content: start;
+      height: 100%;
+      overflow: hidden;
     }
 
     .talking-dialogue-main {
       min-width: 0;
       align-self: start;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 12px;
     }
 
     .talking-dialogue-lines {
-      font-size: clamp(15px, 1.4vw, 24px);
-      line-height: 1.02;
+      font-size: clamp(22px, 2.2vw, 34px);
+      line-height: 1.14;
       white-space: pre-line;
     }
 
     .talking-dialogue-lines p {
-      margin: 0 0 6px;
+      margin: 0 0 18px;
       white-space: pre-line;
     }
 
     .talking-dialogue-layout .main-title {
-      font-size: clamp(28px, 3vw, 44px);
-      margin-bottom: 10px;
+      font-size: clamp(40px, 4.8vw, 72px);
+      margin-bottom: 32px;
+      position: sticky;
+      top: 0;
+      background: #333;
+      z-index: 2;
+      padding-bottom: 12px;
     }
 
     .talking-dialogue-layout .sub-card {
       padding: 18px 24px;
       align-self: start;
+      position: sticky;
+      top: 0;
+      max-height: 100%;
+      overflow-y: auto;
     }
 
     .talking-dialogue-layout.compact .talking-dialogue-lines {
-      font-size: clamp(13px, 1.2vw, 21px);
-      line-height: 1.02;
+      font-size: clamp(20px, 2vw, 30px);
+      line-height: 1.12;
     }
     
     .talking-dialogue-layout.compact .talking-dialogue-lines p {
-      margin: 0 0 3px;
+      margin: 0 0 14px;
     }
 
     .talking-dialogue-layout .sub-card h2 {
@@ -162,8 +176,8 @@
     }
 
     .talking-dialogue-layout .sub-card ul {
-      font-size: clamp(20px, 2.2vw, 32px);
-      line-height: 1.2;
+      font-size: clamp(22px, 2.3vw, 34px);
+      line-height: 1.25;
     }
 
     .main-title {
@@ -292,6 +306,20 @@
         gap: 24px;
       }
 
+      .talking-dialogue-layout {
+        overflow-y: auto;
+      }
+
+      .talking-dialogue-main {
+        height: auto;
+        overflow: visible;
+      }
+
+      .talking-dialogue-layout .sub-card {
+        position: static;
+        max-height: none;
+      }
+
       .sub-card {
         width: 100%;
         box-sizing: border-box;
@@ -318,8 +346,13 @@
       }
 
       .talking-dialogue-lines {
-        font-size: clamp(18px, 2.2vw, 28px);
-        line-height: 1.08;
+        font-size: clamp(18px, 2vw, 28px);
+        line-height: 1.1;
+      }
+
+      .talking-dialogue-layout .main-title {
+        font-size: clamp(32px, 4vw, 52px);
+        margin-bottom: 18px;
       }
 
       .sub-card {
