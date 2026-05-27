@@ -267,8 +267,31 @@
       if (layout === "split_prompt") return renderSplitPrompt(data);
       if (layout === "full_dialogue") return renderFullDialogue(data);
       if (layout === "review_card") return renderReviewCard(data);
+      if (layout === "prompt_response") return renderPromptResponse(data);
 
       renderError("Unsupported layout: " + layout);
+    }
+
+    function renderPromptResponse(data) {
+      const response = data.response || "";
+      const highlight = data.highlight || "";
+    
+      const renderedResponse = highlight
+        ? escapeHtml(response).replace(
+            escapeHtml(highlight),
+            `<span class="orange">${escapeHtml(highlight)}</span>`
+          )
+        : escapeHtml(response);
+    
+      stage.innerHTML = `
+        <section class="card review-card">
+          <h1>${escapeHtml(data.title || "")}</h1>
+          <div class="prompt">${escapeHtml(data.question || "")}</div>
+          <div class="prompt" style="font-weight:800;">
+            ${renderedResponse}
+          </div>
+        </section>
+      `;
     }
 
     function renderFocusCenter(data) {
