@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "How are you today?",
+  "answers": [
+    "I am ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "happy",
+    "sad",
+    "tired",
+    "hungry",
+    "good",
+    "sleepy"
+  ]
+}
