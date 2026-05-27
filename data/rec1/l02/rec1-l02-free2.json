@@ -1,5 +1,5 @@
 {
-  "layout": "talking_substitution",
+  "layout": "talking_dialogue",
   "title": "Record",
   "lines": [
     {
@@ -27,7 +27,7 @@
       "text": "Are you ____?"
     },
     {
-      "speaker": "B",
+      "speaker": "A",
       "text": "Yes, I am. / No, I am not."
     }
   ],
