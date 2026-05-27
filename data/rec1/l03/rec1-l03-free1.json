@@ -5,11 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. My name’s ____.\nI’m a student."
+      "text": "Hello. My name’s ____. I’m a student."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s ____.\nI’m a student, too."
+      "text": "Hello. My name’s ____. I’m a student, too."
     },
     {
       "speaker": "A",
@@ -17,7 +17,7 @@
     },
     {
       "speaker": "B",
-      "text": "I am happy.\nAnd you?"
+      "text": "I am happy. And you?"
     },
     {
       "speaker": "A",
@@ -37,7 +37,7 @@
     },
     {
       "speaker": "A",
-      "text": "Yes, I do.\nNo, I don't"
+      "text": "Yes, I do. /\nNo, I don't"
     }
   ],
   "substitution_title": "Substitution",
