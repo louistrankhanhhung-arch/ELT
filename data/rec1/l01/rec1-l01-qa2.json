@@ -1,0 +1,7 @@
+{
+  "layout": "prompt_response",
+  "title": "Ask your friend",
+  "question": "What’s your name?",
+  "response": "➜ My name’s ____.",
+  "highlight": "My name’s"
+}
