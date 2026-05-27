@@ -5,19 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. My name’s Tom. What’s your name?"
+      "text": "Hello. My name’s ____. I’m a student."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s Alice."
-    },
-    {
-      "speaker": "A",
-      "text": "Hello. My name’s Ben. I’m a student."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello. My name’s Jill. I’m a student, too."
+      "text": "Hello. My name’s ____. I’m a student, too."
     },
     {
       "speaker": "A",
@@ -33,26 +25,26 @@
     },
     {
       "speaker": "B",
-      "text": "Look! I have a (1) ____."
+      "text": "Look! I have a ____."
     },
     {
       "speaker": "A",
-      "text": "Nice! I have a (2) ____."
+      "text": "Nice! I have a ____."
     },
     {
       "speaker": "B",
-      "text": "Do you have a (3) ____?"
+      "text": "Do you have a ____?"
     },
     {
       "speaker": "A",
-      "text": "Yes. I do."
+      "text": "Yes, I do. / No, I don't"
     }
   ],
   "substitution_title": "Substitution",
   "substitutions": [
     "book",
     "bag",
-    "pen",
+    "pen"
     "pencil",
     "ruler",
     "crayon"
