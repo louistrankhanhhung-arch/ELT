@@ -1,5 +1,6 @@
 {
   "layout": "talking_dialogue",
+  "compact": true,
   "title": "Let’s talk",
   "lines": [
     {
