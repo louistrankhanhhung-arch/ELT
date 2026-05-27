@@ -1,0 +1,165 @@
+{
+  "lesson_id": "rec1-l05",
+  "title": "Recovery 1 – Lesson 5",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l05/rec1-l05-dia1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "vocab",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "vocab",
+      "title": "Vocabulary",
+      "player": "player-grid-v2.html",
+      "data": "data/rec1/l05/rec1-l05-vob.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "sentence",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "sentence",
+      "title": "Sentence Practice",
+      "player": "player-sentence.html",
+      "data": "data/rec1/l05/rec1-l05-sen.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "game1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "Game 1",
+      "player": "game.html",
+      "data": "data/rec1/l05/rec1-l05-gam1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "game2",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "Game 2",
+      "player": "game.html",
+      "data": "data/rec1/l05/rec1-l05-gam2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "qa1",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "q&a",
+      "title": "Ask & Answer 1",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-qa1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "qa2",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "q&a",
+      "title": "Ask & Answer 2",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-qa2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "game3",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "Game 3",
+      "player": "game.html",
+      "data": "data/rec1/l05/rec1-l05-gam3.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "semi controlled",
+      "title": "Let's talk 1",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk 2",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free2",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "output",
+      "title": "Record",
+      "player": "player-text.html",
+      "data": "data/rec1/l05/rec1-l05-free2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
