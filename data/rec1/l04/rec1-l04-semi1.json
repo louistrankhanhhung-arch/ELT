@@ -1,0 +1,47 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello. My name’s Tom.\nI’m a student."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s Ben.\nI’m a student, too."
+    },
+    {
+      "speaker": "A",
+      "text": "I have a (1) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "I have a (2) ____."
+    },
+    {
+      "speaker": "A",
+      "text": "I like (3) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "I like (4) ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Do you like (5) ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, I do."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. dog / cat",
+    "2. duck / rabbit",
+    "3. dogs / cats",
+    "4. ducks / rabbits",
+    "5. cats / fish"
+  ]
+}
