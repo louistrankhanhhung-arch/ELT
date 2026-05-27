@@ -61,6 +61,8 @@
     .focus .text {
       font-size: clamp(28px, 4vw, 48px);
       font-weight: 700;
+      white-space: pre-line;
+      line-height: 1.25;
     }
 
     .review-card {
@@ -79,6 +81,16 @@
 
     .review-card .prompt {
       font-size: clamp(36px, 5vw, 72px);
+    }
+
+    .prompt-question,
+    .prompt-response {
+      white-space: pre-line;
+      line-height: 1.25;
+    }
+
+    .prompt-response {
+      font-weight: 800;
     }
 
     .qa-layout,
@@ -138,10 +150,24 @@
     .talk-lines {
       font-size: clamp(30px, 4vw, 46px);
       line-height: 1.18;
+      white-space: pre-line;
     }
 
     .talk-lines p {
       margin: 8px 0;
+      white-space: pre-line;
+    }
+
+    .scaffold-lines {
+      width: 100%;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .scaffold-line {
+      font-size: clamp(44px, 6vw, 86px);
+      line-height: 1.22;
+      white-space: pre-line;
     }
 
     .split-layout {
@@ -305,8 +331,8 @@
       stage.innerHTML = `
         <section class="card review-card">
           <h1>${escapeHtml(data.title || "")}</h1>
-          <div class="prompt">${escapeHtml(data.question || "")}</div>
-          <div class="prompt" style="font-weight:800;">
+          <div class="prompt prompt-question">${escapeHtml(data.question || "")}</div>
+          <div class="prompt prompt-response">
             ${renderedResponse}
           </div>
         </section>
