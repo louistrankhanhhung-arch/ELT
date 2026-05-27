@@ -1,0 +1,60 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello. My name’s Tom. What’s your name?"
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s Alice."
+    },
+    {
+      "speaker": "A",
+      "text": "Hello. My name’s Ben. I’m a student."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s Jill. I’m a student, too."
+    },
+    {
+      "speaker": "A",
+      "text": "How are you today?"
+    },
+    {
+      "speaker": "B",
+      "text": "I am happy. And you?"
+    },
+    {
+      "speaker": "A",
+      "text": "I am good."
+    },
+    {
+      "speaker": "B",
+      "text": "Look! I have a (1) ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Nice! I have a (2) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Do you have a (3) ____?"
+    },
+    {
+      "speaker": "A",
+      "text": "Yes. I do."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "book",
+    "bag",
+    "pen",
+    "pencil",
+    "ruler",
+    "crayon"
+  ]
+}
