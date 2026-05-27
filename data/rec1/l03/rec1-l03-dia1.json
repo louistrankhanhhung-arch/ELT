@@ -1,6 +1,6 @@
 {
   "title": "Listen and repeat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1.png",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-v2.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,12 +8,14 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: Hello. My name’s Tom. What’s your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t1-3-hello-my-names-tom-whats-your-name.mp3" },
-    { "text": "B: Hello. My name’s Alice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a1-2-hello-my-names-alice.mp3" },
-    { "text": "A: How are you today?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t4-how-are-you-today.mp3" },
-    { "text": "B: I’m happy. And you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a3-4-im-happy-and-you.mp3" },
-    { "text": "A: I’m happy, too. Are you hungry?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t5-6-im-happy-too-are-you-hungry.mp3" },
-    { "text": "B: Yes, I am.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a5-yes-i-am.mp3" },
-    { "text": "A: Me too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t7-me-too.mp3" }
+    { "text": "A: Hello. My name’s Ben. I’m a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-b1-hello-my-names-ben-im-a-student.mp3" },
+    { "text": "B: Hello. My name’s Jill. I’m a student, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-j1-hello-my-names-jill-im-a-student-too.mp3" },
+    { "text": "A: How are you today?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-b2-how-are-you-today.mp3" },
+    { "text": "B: I’m happy. And you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-j2-im-happy-and-you.mp3" },
+    { "text": "A: I am good.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-b3-im-good.mp3" },
+    { "text": "B: Look! I have a bag.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-j3-look-i-have-a-bag.mp3" },
+    { "text": "A: Nice! I have a book.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-b4-nice-i-have-a-book.mp3" },
+    { "text": "B: Do you have a pencil?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-j4-do-you-have-a-pencil.mp3" },
+    { "text": "A: Yes. I do.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-dia1-b5-yes-i-do.mp3" }
   ]
 }
