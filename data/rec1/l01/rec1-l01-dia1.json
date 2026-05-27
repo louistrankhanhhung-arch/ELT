@@ -1,0 +1,15 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-boy.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s5-hello.mp3" },
+    { "text": "My name’s Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s5-my-name-s-tom.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s5-i-am-a-student.mp3" }
+  ]
+}
