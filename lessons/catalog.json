@@ -1,5 +1,6 @@
 {
   "version": "0.1",
+    "courses": [
     {
       "course_id": "rec1",
       "course_title": "Recovery 1",
@@ -23,3 +24,5 @@
         }
       ]
     }
+  ]
+}
