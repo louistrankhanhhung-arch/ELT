@@ -11,7 +11,7 @@
       "type": "activity",
       "activity_kind": "text",
       "title": "Cover",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-cover.json",
       "completion": {
         "mode": "teacher_next"
@@ -23,7 +23,7 @@
       "type": "activity",
       "activity_kind": "review",
       "title": "Review",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-rev1.json",
       "completion": {
         "mode": "teacher_next"
@@ -95,7 +95,7 @@
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-qa1.json",
       "completion": {
         "mode": "teacher_next"
@@ -107,7 +107,7 @@
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-qa2.json",
       "completion": {
         "mode": "teacher_next"
@@ -131,7 +131,7 @@
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Let's talk 1",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-semi1.json",
       "completion": {
         "mode": "teacher_next"
@@ -143,7 +143,7 @@
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk 2",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-free1.json",
       "completion": {
         "mode": "teacher_next"
@@ -155,7 +155,7 @@
       "type": "activity",
       "activity_kind": "output",
       "title": "Record",
-      "player": "player-text.html?v=8",
+      "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-free2.json",
       "completion": {
         "mode": "teacher_next"
