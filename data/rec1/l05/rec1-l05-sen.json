@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "I can run.",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-run.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-run.mp3",
+  "chunks": ["I", "can", "run"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{run}",
+    "base": "I can {run}.",
+    "options": [
+      {
+        "value": "jump",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-jump.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-jump.mp3",
+        "chunks": ["I", "can", "jump"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "swim",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-swim.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-swim.mp3",
+        "chunks": ["I", "can", "swim"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "read",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-read.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-read.mp3",
+        "chunks": ["I", "can", "read"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "draw",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-draw.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-draw.mp3",
+        "chunks": ["I", "can", "draw"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "dance",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-dance.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-dance.mp3",
+        "chunks": ["I", "can", "dance"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "run",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-run.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-run.mp3",
+        "chunks": ["I", "can", "run"],
+        "timings": [0, 0.3, 0.6]
+      }
+    ]
+  }
+}
