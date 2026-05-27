@@ -1,0 +1,34 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I am a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-boy.mp3",
+      "answer": "boy",
+      "options": ["student", "teacher", "boy", "girl"]
+    },
+    {
+      "prompt": "I am a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-teacher.mp3",
+      "answer": "teacher",
+      "options": ["student", "boy", "teacher", "girl"]
+    },
+    {
+      "prompt": "I am a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-student.mp3",
+      "answer": "student",
+      "options": ["boy", "girl", "teacher", "student"]
+    },
+    {
+      "prompt": "I am a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s7-i-am-a-girl.mp3",
+      "answer": "girl",
+      "options": ["girl", "boy", "teacher", "student"]
+    }
+  ]
+}
