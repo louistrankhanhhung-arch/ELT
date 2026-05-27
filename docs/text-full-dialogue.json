@@ -1,0 +1,22 @@
+{
+  "layout": "full_dialogue",
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello. What’s your name?"
+    },
+    {
+      "speaker": "B",
+      "text": "My name’s Alice."
+    },
+    {
+      "speaker": "A",
+      "text": "Can you run?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, I can."
+    }
+  ]
+}
