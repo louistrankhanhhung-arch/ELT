@@ -1,0 +1,40 @@
+{
+  "layout": "talking_dialogue",
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello. My name’s Tom.\nWhat’s your name?"
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s Alice."
+    },
+    {
+      "speaker": "A",
+      "text": "How are you today?"
+    },
+    {
+      "speaker": "B",
+      "text": "I’m (1) ____. And you?"
+    },
+    {
+      "speaker": "A",
+      "text": "I’m (2) ____, too."
+    },
+    {
+      "speaker": "B",
+      "text": "Are you (3) ____?"
+    },
+    {
+      "speaker": "A",
+      "text": "Yes, I am. / No, I am not."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. tired / good",
+    "2. tired / good",
+    "3. hungry / sleepy"
+  ]
+}
