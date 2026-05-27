@@ -1,5 +1,9 @@
 {
-  "layout": "review_card",
+  "layout": "speaking_scaffold",
   "title": "Introduce yourself",
-  "prompt": "Hello.\nMy name's ____.\nI am a ____."
+
+  "lines": [
+    "Hello. My name’s ____.",
+    "I am a ____."
+  ]
 }
