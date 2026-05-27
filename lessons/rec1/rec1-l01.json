@@ -8,7 +8,7 @@
     {
       "id": "cover",
       "order": 1,
-      "type": "text",
+      "type": "activity",
       "activity_kind": "text",
       "title": "Cover",
       "player": "player-text.html",
