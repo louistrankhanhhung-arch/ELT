@@ -15,6 +15,21 @@
           "status": "ready"
         }
       ]
+    },
+    {
+      "course_id": "rec1",
+      "course_title": "Recovery 1",
+      "description": "Recovery track for A1 learners.",
+      "lessons": [
+        {
+          "lesson_id": "rec1-l01",
+          "title": "Lesson 1",
+          "level": "Pre-A1",
+          "estimated_minutes": 60,
+          "path": "lessons/rec1/rec1-l01.json",
+          "status": "ready"
+        }
+      ]
     }
   ]
 }
