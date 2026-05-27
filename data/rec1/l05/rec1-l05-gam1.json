@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-dance.mp3",
+      "answer": "dance",
+      "options": ["dance", "run", "swim", "draw"]
+    },
+    {
+      "prompt": "I can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-run.mp3",
+      "answer": "run",
+      "options": ["run", "swim", "draw", "jump"]
+    },
+    {
+      "prompt": "I can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-swim.mp3",
+      "answer": "swim",
+      "options": ["swim", "run", "dance", "read"]
+    },
+    {
+      "prompt": "I can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-read.mp3",
+      "answer": "read",
+      "options": ["read", "draw", "swim", "jump"]
+    },
+    {
+      "prompt": "I can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-jump.mp3",
+      "answer": "jump",
+      "options": ["jump", "read", "swim", "draw"]
+    },
+    {
+      "prompt": "I can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-draw.mp3",
+      "answer": "draw",
+      "options": ["draw", "run", "read", "dance"]
+    }
+  ]
+}
