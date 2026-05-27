@@ -1,0 +1,44 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello, ____.\nHow are you today?"
+    },
+    {
+      "speaker": "B",
+      "text": "Hello, ____. I’m good.\nAnd you?"
+    },
+    {
+      "speaker": "A",
+      "text": "I’m happy.\nLook! I have a ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Nice. Can you ____?"
+    },
+    {
+      "speaker": "A",
+      "text": "Yes, I can."
+    },
+    {
+      "speaker": "B",
+      "text": "Me too. And I can ____, too.\nCan you ____?"
+    },
+    {
+      "speaker": "A",
+      "text": "Yes, I can.\nNo, I cannot."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "run",
+    "jump",
+    "swim",
+    "read",
+    "draw",
+    "dance"
+  ]
+}
