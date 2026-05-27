@@ -5,11 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. My name’s Ben. I’m a student."
+      "text": "Hello. My name’s Ben.\nI’m a student."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s Jill. I’m a student, too."
+      "text": "Hello. My name’s Jill.\nI’m a student, too."
     },
     {
       "speaker": "A",
@@ -42,8 +42,8 @@
   ],
   "substitution_title": "Substitution",
   "substitutions": [
-    "1. pen / ruler / book",
-    "2. bag / pencil / crayon",
-    "3. crayon / pen / ruler"
+    "1. pen / ruler",
+    "2. bag / pencil",
+    "3. crayon / pen"
   ]
 }
