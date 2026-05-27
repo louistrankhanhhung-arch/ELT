@@ -145,6 +145,15 @@
       align-self: end;
     }
 
+    .talking-dialogue-layout.compact .talking-dialogue-lines {
+      font-size: clamp(17px, 1.8vw, 28px);
+      line-height: 1.04;
+    }
+    
+    .talking-dialogue-layout.compact .talking-dialogue-lines p {
+      margin: 0 0 4px;
+    }
+
     .talking-dialogue-layout .sub-card h2 {
       font-size: clamp(24px, 2.6vw, 36px);
     }
@@ -449,7 +458,7 @@
 
     function renderTalkingDialogue(data) {
       stage.innerHTML = `
-        <section class="card talking-dialogue-layout">
+        <section class="card talking-dialogue-layout ${data.compact ? "compact" : ""}">
           <div class="talking-dialogue-main">
             <div class="main-title">${escapeHtml(data.title || "Let’s talk")}</div>
             <div class="talking-dialogue-lines">
