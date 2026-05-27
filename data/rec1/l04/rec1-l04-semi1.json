@@ -5,11 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. My name’s Tom.\nI’m a student."
+      "text": "Hello. My name’s Tom. I’m a student."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s Ben.\nI’m a student, too."
+      "text": "Hello. My name’s Ben. I’m a student, too."
     },
     {
       "speaker": "A",
