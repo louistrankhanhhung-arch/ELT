@@ -109,8 +109,8 @@
       grid-template-columns: minmax(0, 1fr) 310px;
       gap: 48px;
       align-items: center;
-      background: #333;
-      color: #fff;
+      background: #fff;
+      color: #111;
       box-shadow: none;
       min-height: 0;
     }
@@ -133,13 +133,13 @@
     }
 
     .talking-dialogue-lines {
-      font-size: clamp(30px, 2.8vw, 46px);
-      line-height: 1.18;
+      font-size: clamp(46px, 4.2vw, 72px);
+      line-height: 1.04;
       white-space: pre-line;
     }
 
     .talking-dialogue-lines p {
-      margin: 0 0 14px;
+      margin: 0 0 10px;
       white-space: pre-line;
     }
 
@@ -148,7 +148,7 @@
       margin-bottom: 18px;
       position: sticky;
       top: 0;
-      background: #333;
+      background: #fff;
       z-index: 2;
       padding-bottom: 8px;
     }
@@ -163,8 +163,8 @@
     }
 
     .talking-dialogue-layout.compact .talking-dialogue-lines {
-      font-size: clamp(32px, 3.2vw, 52px);
-      line-height: 1.08;
+      font-size: clamp(48px, 4.4vw, 76px);
+      line-height: 1.02;
     }
     
     .talking-dialogue-layout.compact .talking-dialogue-lines p {
@@ -206,6 +206,7 @@
       padding: 28px 34px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
       align-self: center;
+      border: 1px solid #ddd;
     }
 
     .sub-card h2 {
@@ -326,7 +327,7 @@
       }
     }
 
-    @media (orientation: landscape) and (max-height: 520px) {
+    @media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
       .stage {
         padding: 10px;
       }
@@ -346,8 +347,8 @@
       }
     
       .talking-dialogue-lines {
-        font-size: clamp(26px, 2.7vw, 42px);
-        line-height: 1.12;
+        font-size: clamp(34px, 4vw, 54px);
+        line-height: 1.04;
       }
     
       .talking-dialogue-lines p {
@@ -361,16 +362,6 @@
     
       .sub-card {
         padding: 14px 18px;
-      }
-    }
-
-      .talking-dialogue-layout .main-title {
-        font-size: clamp(32px, 4vw, 52px);
-        margin-bottom: 18px;
-      }
-
-      .sub-card {
-        padding: 18px 24px;
       }
     }
   </style>
