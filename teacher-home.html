@@ -233,7 +233,7 @@
 
     async function loadCatalog() {
       try {
-        const res = await fetch(`${BASE_URL}lessons/catalog.json`);
+        const res = await fetch(`${BASE_URL}lessons/catalog.json?v=${Date.now()}`);
 
         if (!res.ok) {
           throw new Error("Cannot load lessons/catalog.json");
