@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What can you do?",
+  "answers": [
+    "I can ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "run",
+    "jump",
+    "swim",
+    "read",
+    "draw",
+    "dance"
+  ]
+}
