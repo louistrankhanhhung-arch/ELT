@@ -1,0 +1,11 @@
+{
+  "layout": "split_prompt",
+  "left": {
+    "title": "Question",
+    "content": "Can you ____?"
+  },
+  "right": {
+    "title": "Answer",
+    "content": "Yes, I can.\nNo, I can’t."
+  }
+}
