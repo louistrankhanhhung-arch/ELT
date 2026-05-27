@@ -1,0 +1,5 @@
+{
+  "layout": "review_card",
+  "title": "Introduce yourself",
+  "prompt": "Hello.\nMy name's ____.\nI am a ____."
+}
