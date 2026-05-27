@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What do you like?",
+  "answers": [
+    "I like ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "cats",
+    "dogs",
+    "fish",
+    "birds",
+    "ducks",
+    "rabbits"
+  ]
+}
