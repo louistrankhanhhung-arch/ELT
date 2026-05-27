@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Are you ____?",
+  "answers": [
+    "Yes, I am.",
+    "No, I am not."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "happy",
+    "sad",
+    "tired",
+    "hungry",
+    "good",
+    "sleepy"
+  ]
+}
