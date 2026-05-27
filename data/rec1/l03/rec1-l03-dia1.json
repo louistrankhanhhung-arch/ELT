@@ -1,0 +1,19 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello. My name’s Tom. What’s your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t1-3-hello-my-names-tom-whats-your-name.mp3" },
+    { "text": "B: Hello. My name’s Alice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a1-2-hello-my-names-alice.mp3" },
+    { "text": "A: How are you today?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t4-how-are-you-today.mp3" },
+    { "text": "B: I’m happy. And you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a3-4-im-happy-and-you.mp3" },
+    { "text": "A: I’m happy, too. Are you hungry?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t5-6-im-happy-too-are-you-hungry.mp3" },
+    { "text": "B: Yes, I am.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-a5-yes-i-am.mp3" },
+    { "text": "A: Me too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-dia1-t7-me-too.mp3" }
+  ]
+}
