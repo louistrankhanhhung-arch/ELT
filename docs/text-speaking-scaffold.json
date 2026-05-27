@@ -1,0 +1,9 @@
+{
+  "layout": "speaking_scaffold",
+  "title": "Introduce yourself",
+
+  "lines": [
+    "Hello. My name’s ____.",
+    "I am a ____."
+  ]
+}
