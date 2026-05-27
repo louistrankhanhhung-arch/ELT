@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Do you have a ____?",
+  "answers": [
+    "Yes, I do.",
+    "No, I don't."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "book",
+    "bag",
+    "pen",
+    "pencil",
+    "ruler",
+    "crayon"
+  ]
+}
