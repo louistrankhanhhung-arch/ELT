@@ -1,0 +1,48 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello. My name’s ____.\nI’m a student."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s ____.\nI’m a student, too."
+    },
+    {
+      "speaker": "A",
+      "text": "I have a ____."
+    },
+    {
+      "speaker": "B",
+      "text": "I have a ____."
+    },
+    {
+      "speaker": "A",
+      "text": "I like ____."
+    },
+    {
+      "speaker": "B",
+      "text": "I like ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Do you like ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, I do.\nNo, I don't"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "cats",
+    "dogs",
+    "fish",
+    "birds",
+    "ducks",
+    "rabbit"
+  ]
+}
