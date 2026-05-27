@@ -163,12 +163,12 @@
     }
 
     .talking-dialogue-layout.compact .talking-dialogue-lines {
-      font-size: clamp(30px, 3vw, 48px);
-      line-height: 1.16;
+      font-size: clamp(32px, 3.2vw, 52px);
+      line-height: 1.08;
     }
     
     .talking-dialogue-layout.compact .talking-dialogue-lines p {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
     }
 
     .talking-dialogue-layout .sub-card h2 {
@@ -330,25 +330,39 @@
       .stage {
         padding: 10px;
       }
-
+    
       .card {
         height: 100%;
         min-height: 0;
-        padding: 22px;
+        padding: 18px;
       }
-
+    
       .qa-layout,
       .talking-layout,
       .talking-dialogue-layout,
       .split-layout {
-        grid-template-columns: minmax(0, 1fr) 260px;
-        gap: 24px;
+        grid-template-columns: minmax(0, 1fr) 230px;
+        gap: 18px;
       }
-
+    
       .talking-dialogue-lines {
-        font-size: clamp(18px, 2vw, 28px);
-        line-height: 1.1;
+        font-size: clamp(26px, 2.7vw, 42px);
+        line-height: 1.12;
       }
+    
+      .talking-dialogue-lines p {
+        margin: 0 0 8px;
+      }
+    
+      .talking-dialogue-layout .main-title {
+        font-size: clamp(38px, 4.2vw, 64px);
+        margin-bottom: 10px;
+      }
+    
+      .sub-card {
+        padding: 14px 18px;
+      }
+    }
 
       .talking-dialogue-layout .main-title {
         font-size: clamp(32px, 4vw, 52px);
