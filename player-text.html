@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Player</title>
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f45b1f;
+      color: #111;
+    }
+
+    body {
+      box-sizing: border-box;
+    }
+
+    .stage {
+      min-height: 100vh;
+      padding: 28px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: min(1100px, 100%);
+      min-height: 70vh;
+      background: #fff;
+      border-radius: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+      padding: 48px;
+      box-sizing: border-box;
+    }
+
+    .orange {
+      color: #f45b1f;
+    }
+
+    .focus {
+      text-align: center;
+      background: #f45b1f;
+      color: #fff;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 48px;
+    }
+
+    .focus .label {
+      font-size: clamp(44px, 7vw, 76px);
+      font-weight: 800;
+      line-height: 1.15;
+      white-space: pre-line;
+    }
+
+    .focus .text {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+    }
+
+    .review-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      text-align: center;
+    }
+
+    .review-card h1 {
+      margin: 0;
+      font-size: clamp(42px, 6vw, 72px);
+    }
+
+    .review-card .prompt {
+      font-size: clamp(36px, 5vw, 72px);
+    }
+
+    .qa-layout,
+    .talking-layout,
+    .split-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 48px;
+      align-items: center;
+      background: #333;
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .main-title {
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+
+    .big-prompt {
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 800;
+      margin: 24px 0 56px;
+      color: #ff9300;
+    }
+
+    .answers {
+      font-size: clamp(34px, 5vw, 68px);
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ff9300;
+    }
+
+    .sub-card {
+      background: #fff;
+      color: #000;
+      padding: 28px 34px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      align-self: center;
+    }
+
+    .sub-card h2 {
+      margin: 0 0 18px;
+      color: #f45b1f;
+      font-size: clamp(28px, 3vw, 40px);
+    }
+
+    .sub-card ul {
+      margin: 0;
+      padding-left: 24px;
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1.35;
+      font-style: italic;
+    }
+
+    .talk-lines {
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.18;
+    }
+
+    .talk-lines p {
+      margin: 8px 0;
+    }
+
+    .split-layout {
+      background: #fff;
+      color: #111;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    .split-left h1,
+    .split-right h1 {
+      margin-top: 0;
+      font-size: clamp(34px, 4vw, 52px);
+    }
+
+    .split-left .content,
+    .split-right .content {
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1.25;
+      white-space: pre-line;
+    }
+
+    .full-dialogue {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .full-dialogue h1 {
+      margin: 0 0 24px;
+      text-align: center;
+      font-size: clamp(40px, 5vw, 64px);
+    }
+
+    .dialogue-line {
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.25;
+      margin: 6px 0;
+    }
+
+    .speaker-b {
+      color: #f45b1f;
+    }
+
+    @media (max-width: 760px) {
+      .stage {
+        padding: 12px;
+      }
+
+      .card {
+        min-height: calc(100vh - 24px);
+        padding: 28px 22px;
+      }
+
+      .qa-layout,
+      .talking-layout,
+      .split-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .sub-card {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .stage {
+        padding: 10px;
+      }
+
+      .card {
+        min-height: calc(100vh - 20px);
+        padding: 22px;
+      }
+
+      .qa-layout,
+      .talking-layout,
+      .split-layout {
+        grid-template-columns: minmax(0, 1fr) 260px;
+        gap: 24px;
+      }
+
+      .sub-card {
+        padding: 18px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" id="stage"></main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const dataUrl = params.get("data");
+    const stage = document.getElementById("stage");
+
+    async function loadData() {
+      if (!dataUrl) {
+        renderError("Missing ?data= parameter");
+        return;
+      }
+
+      try {
+        const res = await fetch(dataUrl);
+        if (!res.ok) throw new Error("Cannot load JSON: " + dataUrl);
+
+        const data = await res.json();
+        render(data);
+      } catch (err) {
+        console.error(err);
+        renderError(err.message);
+      }
+    }
+
+    function render(data) {
+      const layout = data.layout || "focus_center";
+
+      if (layout === "focus_center") return renderFocusCenter(data);
+      if (layout === "qa_substitution") return renderQaSubstitution(data);
+      if (layout === "talking_substitution") return renderTalkingSubstitution(data);
+      if (layout === "split_prompt") return renderSplitPrompt(data);
+      if (layout === "full_dialogue") return renderFullDialogue(data);
+      if (layout === "review_card") return renderReviewCard(data);
+
+      renderError("Unsupported layout: " + layout);
+    }
+
+    function renderFocusCenter(data) {
+      stage.innerHTML = `
+        <section class="card focus">
+          <div class="label">${escapeHtml(data.title || "")}</div>
+          <div class="text">${escapeHtml(data.text || "")}</div>
+        </section>
+      `;
+    }
+
+    function renderReviewCard(data) {
+      stage.innerHTML = `
+        <section class="card review-card">
+          <h1>${escapeHtml(data.title || "Review")}</h1>
+          <div class="prompt">${escapeHtml(data.prompt || data.text || "")}</div>
+        </section>
+      `;
+    }
+
+    function renderQaSubstitution(data) {
+      stage.innerHTML = `
+        <section class="card qa-layout">
+          <div>
+            <div class="main-title">${escapeHtml(data.title || "Ask & Answer")}</div>
+            <div class="big-prompt">${escapeHtml(data.prompt || "")}</div>
+            <div class="answers">
+              ${(data.answers || []).map(a => `<div>➜ ${escapeHtml(a)}</div>`).join("")}
+            </div>
+          </div>
+          ${renderSubCard(data)}
+        </section>
+      `;
+    }
+
+    function renderTalkingSubstitution(data) {
+      stage.innerHTML = `
+        <section class="card talking-layout">
+          <div>
+            <div class="main-title">${escapeHtml(data.title || "Let’s talk")}</div>
+            <div class="talk-lines">
+              ${(data.lines || []).map(line => `
+                <p class="${line.speaker === "B" ? "speaker-b" : ""}">
+                  ${escapeHtml(line.text || "")}
+                </p>
+              `).join("")}
+            </div>
+          </div>
+          ${renderSubCard(data)}
+        </section>
+      `;
+    }
+
+    function renderSplitPrompt(data) {
+      stage.innerHTML = `
+        <section class="card split-layout">
+          <div class="split-left">
+            <h1>${escapeHtml(data.left?.title || "")}</h1>
+            <div class="content">${escapeHtml(data.left?.content || "")}</div>
+          </div>
+          <div class="split-right">
+            <h1>${escapeHtml(data.right?.title || "")}</h1>
+            <div class="content orange">${escapeHtml(data.right?.content || "")}</div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFullDialogue(data) {
+      stage.innerHTML = `
+        <section class="card full-dialogue">
+          <h1>${escapeHtml(data.title || "Dialogue")}</h1>
+          ${(data.lines || []).map(line => `
+            <div class="dialogue-line ${line.speaker === "B" ? "speaker-b" : ""}">
+              ${escapeHtml(line.speaker || "")}: ${escapeHtml(line.text || "")}
+            </div>
+          `).join("")}
+        </section>
+      `;
+    }
+
+    function renderSubCard(data) {
+      const title = data.substitution_title || "Substitution";
+      const items = data.substitutions || [];
+
+      return `
+        <aside class="sub-card">
+          <h2>${escapeHtml(title)}</h2>
+          <ul>
+            ${items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
+        </aside>
+      `;
+    }
+
+    function renderError(message) {
+      stage.innerHTML = `
+        <section class="card">
+          <h1>Error</h1>
+          <p>${escapeHtml(message)}</p>
+        </section>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
