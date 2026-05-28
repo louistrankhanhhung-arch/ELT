@@ -1,9 +1,10 @@
 {
-  "layout": "speaking_scaffold",
+  "layout": "full_dialogue",
   "title": "Record",
-
   "lines": [
-    "Hello. My name’s ____.",
-    "I am a ____."
+    {
+      "speaker": "A",
+      "text": "Hello.\nMy name's ____.\nI am a ____."
+    }
   ]
 }
