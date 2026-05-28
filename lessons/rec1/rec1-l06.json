@@ -47,7 +47,7 @@
       "type": "activity",
       "activity_kind": "speaking",
       "title": "Let's talk 1",
-      "player": "player-grid-v2.html",
+      "player": "player-text.html",
       "data": "data/rec1/l06/rec1-l06-con1.json",
       "completion": {
         "mode": "teacher_next"
@@ -59,7 +59,7 @@
       "type": "activity",
       "activity_kind": "speaking",
       "title": "Let's talk 2",
-      "player": "player-sentence.html",
+      "player": "player-text.html",
       "data": "data/rec1/l06/rec1-l06-con2.json",
       "completion": {
         "mode": "teacher_next"
@@ -71,7 +71,7 @@
       "type": "activity",
       "activity_kind": "speaking",
       "title": "Let's talk 3",
-      "player": "game.html",
+      "player": "player-text.html",
       "data": "data/rec1/l06/rec1-l06-semi1.json",
       "completion": {
         "mode": "teacher_next"
@@ -83,7 +83,7 @@
       "type": "activity",
       "activity_kind": "speaking",
       "title": "About yourself",
-      "player": "game.html",
+      "player": "player-text.html",
       "data": "data/rec1/l06/rec1-l06-semi2.json",
       "completion": {
         "mode": "teacher_next"
