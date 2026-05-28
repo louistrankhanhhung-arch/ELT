@@ -216,6 +216,7 @@
     </div>
 
     <div class="controls">
+      <button id="homeBtn">⌂ Home</button>
       <button id="prevBtn">← Previous</button>
       <button id="nextBtn">Next →</button>
       <button id="openStudentBtn">Open Student View</button>
@@ -285,6 +286,7 @@
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const openStudentBtn = document.getElementById("openStudentBtn");
+    const homeBtn = document.getElementById("homeBtn");
     
     const copyStudentBtn = document.getElementById("copyStudentBtn");
 
@@ -598,6 +600,21 @@
         }, 1200);
       } catch (err) {
         alert(studentUrl);
+      }
+    });
+
+    homeBtn.addEventListener("click", () => {
+      window.location.href = "./teacher-home.html";
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA"
+      ) return;
+    
+      if (e.key === "h" || e.key === "H") {
+        window.location.href = "./teacher-home.html";
       }
     });
 
