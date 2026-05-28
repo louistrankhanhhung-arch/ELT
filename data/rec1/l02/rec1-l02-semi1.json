@@ -34,8 +34,7 @@
   ],
   "substitution_title": "Substitution",
   "substitutions": [
-    "1. tired / good",
-    "2. tired / good",
-    "3. hungry / sleepy"
+    "tired/good/hungry",
+    "tired/good/sleepy"
   ]
 }
