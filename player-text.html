@@ -272,7 +272,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 12px;
+      gap: 18px;
       overflow-y: auto;
     }
 
@@ -286,9 +286,10 @@
 
     .dialogue-line {
       font-size: var(--dialogue-size);
-      line-height: var(--dialogue-line);
+      line-height: 1.38;
       margin: 0;
       letter-spacing: -0.015em;
+      white-space: pre-line;
     }
 
     .speaker-b {
@@ -601,8 +602,8 @@
             
             <div class="talking-dialogue-lines">
               ${(data.lines || []).map(line => `
-                <div class="talking-dialogue-line ${line.speaker === "B" ? "speaker-b" : ""}">
-                  ${line.speaker ? escapeHtml(line.speaker) + ": " : ""}${escapeHtml(line.text || "")}
+                <div class="dialogue-line ${line.speaker === "B" ? "speaker-b" : ""}">
+                  ${escapeHtml(line.speaker || "")}: ${escapeHtml(line.text || "")}
                 </div>
               `).join("")}
             </div>
