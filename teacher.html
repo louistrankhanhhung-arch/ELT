@@ -613,8 +613,37 @@
         e.target.tagName === "TEXTAREA"
       ) return;
     
+      // HOME
       if (e.key === "h" || e.key === "H") {
         window.location.href = "./teacher-home.html";
+        return;
+      }
+    
+      // NEXT
+      if (
+        e.key === " " ||
+        e.key === "ArrowRight"
+      ) {
+        e.preventDefault();
+    
+        if (blockIndex < currentLesson.blocks.length - 1) {
+          goToBlock(blockIndex + 1);
+          syncSessionSetBlock(blockIndex);
+        }
+    
+        return;
+      }
+    
+      // PREVIOUS
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+    
+        if (blockIndex > 0) {
+          goToBlock(blockIndex - 1);
+          syncSessionSetBlock(blockIndex);
+        }
+    
+        return;
       }
     });
 
