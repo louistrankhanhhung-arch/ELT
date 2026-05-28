@@ -10,9 +10,9 @@
   ],
   "substitution_title": "Substitution",
   "substitutions": [
-    "Tom / birds / draw",
-    "Jill / fish / swim",
-    "Ben / rabbits / jump",
-    "Alice / ducks / read"
+    "Tom, birds, draw",
+    "Jill, fish, swim",
+    "Ben, rabbits, jump",
+    "Alice, ducks, read"
   ]
 }
