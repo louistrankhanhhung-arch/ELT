@@ -11,19 +11,19 @@
       --text: #111;
       --surface: #fff;
       --stage-padding: 18px;
-      --card-max-width: 1100px;
-      --card-padding: 36px;
-      --layout-gap: 48px;
-      --sidebar-width: 310px;
+      --card-max-width: 1320px;
+      --card-padding: 28px;
+      --layout-gap: 32px;
+      --sidebar-width: 300px;
 
-      --title-size: clamp(44px, 5vw, 76px);
+      --title-size: clamp(46px, 5.2vw, 82px);
       --title-line: 1.02;
-      --main-size: clamp(46px, 5.4vw, 82px);
-      --main-line: 1.08;
-      --dialogue-size: clamp(42px, 5vw, 72px);
-      --dialogue-line: 1.08;
-      --sidebar-title-size: clamp(30px, 3vw, 44px);
-      --sidebar-text-size: clamp(26px, 2.4vw, 38px);
+      --main-size: clamp(50px, 5.8vw, 88px);
+      --main-line: 1.06;
+      --dialogue-size: clamp(48px, 5.4vw, 82px);
+      --dialogue-line: 1.04;
+      --sidebar-title-size: clamp(30px, 2.6vw, 42px);
+      --sidebar-text-size: clamp(24px, 2.1vw, 34px);
       --sidebar-line: 1.18;
       --small-size: clamp(26px, 2.8vw, 42px);
     }
@@ -133,9 +133,94 @@
     .talking-layout,
     .talking-dialogue-layout,
     .split-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+      gap: var(--layout-gap);
+      align-items: center;
       background: var(--surface);
       color: var(--text);
       box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+      min-height: 0;
+    }
+
+    .text-panel {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .main-title {
+      margin: 0 0 18px;
+      font-size: var(--title-size);
+      line-height: var(--title-line);
+      font-weight: 800;
+    }
+
+    .big-prompt,
+    .answers,
+    .talk-lines,
+    .scaffold-lines {
+      font-size: var(--dialogue-size);
+      line-height: var(--dialogue-line);
+      letter-spacing: -0.015em;
+      white-space: pre-line;
+    }
+
+    .big-prompt {
+      margin: 0 0 24px;
+      font-weight: 700;
+    }
+
+    .answers {
+      color: var(--brand);
+      font-weight: 800;
+    }
+
+    .answer-line {
+      margin: 0 0 8px;
+    }
+
+    .talk-lines p {
+      margin: 0 0 10px;
+      white-space: pre-line;
+    }
+
+    .scaffold-lines {
+      width: 100%;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .scaffold-line {
+      margin: 0 0 12px;
+    }
+
+    .sub-card {
+      align-self: center;
+      min-width: 0;
+      max-height: 100%;
+      overflow-y: auto;
+      padding: 22px 24px;
+      box-sizing: border-box;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    }
+
+    .sub-card h2 {
+      margin: 0 0 14px;
+      color: var(--brand);
+      font-size: var(--sidebar-title-size);
+      line-height: 1.05;
+      font-weight: 800;
+    }
+
+    .sub-card ul {
+      margin: 0;
+      padding-left: 24px;
+      font-size: var(--sidebar-text-size);
+      line-height: var(--sidebar-line);
+      font-style: italic;
     }
 
     .split-left h1,
@@ -183,14 +268,15 @@
     @media (max-width: 760px) {
       :root {
         --stage-padding: 12px;
-        --card-padding: 28px 22px;
-        --layout-gap: 24px;
+        --card-padding: 22px;
+        --layout-gap: 18px;
         --sidebar-width: 1fr;
-        --title-size: clamp(36px, 10vw, 60px);
-        --main-size: clamp(38px, 10vw, 64px);
-        --dialogue-size: clamp(34px, 9.5vw, 56px);
-        --sidebar-title-size: clamp(22px, 6vw, 32px);
-        --sidebar-text-size: clamp(20px, 5.5vw, 30px);
+        --title-size: clamp(28px, 8vw, 42px);
+        --main-size: clamp(30px, 8vw, 46px);
+        --dialogue-size: clamp(28px, 7.2vw, 40px);
+        --sidebar-title-size: clamp(16px, 4.2vw, 22px);
+        --sidebar-text-size: clamp(16px, 4.2vw, 22px);
+        --sidebar-line: 1.1;
       }
 
       .stage {
@@ -209,14 +295,15 @@
       .split-layout {
         grid-template-columns: 1fr;
         gap: var(--layout-gap);
+        align-content: start;
+        overflow-y: auto;
       }
 
       .talking-dialogue-layout {
         --dialogue-font: var(--dialogue-size);
         --dialogue-title-font: var(--title-size);
         --dialogue-sidebar-width: 1fr;
-        overflow-y: auto;
-        padding-bottom: 150px;
+        padding-bottom: 78px;
       }
 
       .talking-dialogue-main {
@@ -225,70 +312,123 @@
         padding-right: 0;
       }
 
-      .talking-dialogue-layout .sub-card {
-        position: sticky;
-        bottom: 0;
-        z-index: 5;
-        max-height: 140px;
-        overflow-y: auto;
-        background: #fff;
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.18);
+      .main-title {
+        margin-bottom: 10px;
       }
 
-      .talking-dialogue-layout .sub-card h2 {
-         font-size: var(--sidebar-title-size);
-         margin-bottom: 8px;
-       }
-      
-       .talking-dialogue-layout .sub-card ul {
-         display: flex;
-         flex-wrap: wrap;
-         gap: 8px 18px;
-         padding-left: 0;
-         list-style-position: inside;
-         font-size: var(--sidebar-text-size);
-         line-height: 1.1;
-       }
+      .big-prompt {
+        margin-bottom: 14px;
+      }
 
       .sub-card {
         width: 100%;
         box-sizing: border-box;
       }
+
+      .qa-layout .sub-card,
+      .talking-layout .sub-card,
+      .talking-dialogue-layout .sub-card {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        max-height: 76px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 10px 12px;
+        background: #fff;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.16);
+      }
+
+      .qa-layout .sub-card h2,
+      .talking-layout .sub-card h2,
+      .talking-dialogue-layout .sub-card h2 {
+        display: none;
+      }
+
+      .qa-layout .sub-card ul,
+      .talking-layout .sub-card ul,
+      .talking-dialogue-layout .sub-card ul {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0 18px;
+        width: max-content;
+        margin: 0;
+        padding-left: 0;
+        list-style-position: inside;
+        font-size: var(--sidebar-text-size);
+        line-height: var(--sidebar-line);
+        font-style: normal;
+        white-space: nowrap;
+      }
+
+      .qa-layout .sub-card li,
+      .talking-layout .sub-card li,
+      .talking-dialogue-layout .sub-card li {
+        padding-right: 4px;
+      }
     }
 
     @media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
+      :root {
+        --stage-padding: 8px;
+        --card-padding: 14px;
+        --layout-gap: 14px;
+        --sidebar-width: 220px;
+        --title-size: clamp(22px, 4vw, 34px);
+        --main-size: clamp(24px, 4.2vw, 38px);
+        --dialogue-size: clamp(22px, 3.8vw, 34px);
+        --sidebar-title-size: clamp(18px, 3vw, 26px);
+        --sidebar-text-size: clamp(16px, 2.6vw, 22px);
+      }
+
+      html, body {
+        overflow: auto;
+      }
+
       .stage {
-        padding: 10px;
+        align-items: flex-start;
+        justify-content: center;
+        min-height: 100%;
+        height: auto;
+        overflow: visible;
+        padding: var(--stage-padding);
       }
-    
+
       .card {
-        height: 100%;
-        min-height: 0;
-        padding: 18px;
+        height: auto;
+        min-height: calc(100vh - 16px);
+        max-height: none;
+        padding: var(--card-padding);
+        overflow-y: auto;
       }
-    
+
       .qa-layout,
       .talking-layout,
       .talking-dialogue-layout,
       .split-layout {
         grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
         gap: var(--layout-gap);
+        align-items: start;
       }
-    
+
       .talking-dialogue-layout {
         --dialogue-font: var(--dialogue-size);
-        --dialogue-line-height: 0.98;
+        --dialogue-line-height: 1.0;
         --dialogue-gap: 0px;
         --dialogue-title-font: var(--title-size);
-        --dialogue-sidebar-width: 220px;
+        --dialogue-sidebar-width: var(--sidebar-width);
       }
-    
-      .talking-dialogue-layout .main-title {
+
+      .talking-dialogue-layout .main-title,
+      .main-title,
+      .full-dialogue h1,
+      .review-card h1 {
         margin-bottom: 8px;
       }
-    
+
       .sub-card {
-        padding: 14px 18px;
+        padding: 10px 12px;
       }
     }
   </style>
