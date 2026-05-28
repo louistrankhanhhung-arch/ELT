@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "About yourself",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello.\nMy name’s _____.\nI am _____.\nI like _____.\nI have _____.\nI can _____."
+    }
+  ]
+}
