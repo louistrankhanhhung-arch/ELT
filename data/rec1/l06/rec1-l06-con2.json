@@ -1,0 +1,18 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello. My name’s ____.\nI like ____.\nI can ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "Tom / birds / draw",
+    "Jill / fish / swim",
+    "Ben / rabbits / jump",
+    "Alice / ducks / read"
+  ]
+}
