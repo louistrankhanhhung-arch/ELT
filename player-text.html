@@ -143,6 +143,16 @@
       margin: 0 0 14px;
     }
 
+    /* Dialogue speaker colors */
+    .talking-dialogue-line {
+      color: #111; /* Speaker A default */
+      font-weight: 500;
+    }
+
+    .talking-dialogue-line.speaker-b {
+      color: #f45b1f; /* Speaker B orange */
+    }
+
     .talking-dialogue-lines {
       display: flex;
       flex-direction: column;
@@ -528,7 +538,10 @@
       stage.innerHTML = `
         <section class="card talking-dialogue-layout ${data.compact ? "compact" : ""}">
           <div class="talking-dialogue-main">
-            <div class="main-title">${escapeHtml(data.title || "Let’s talk")}</div>
+            <div class="main-title">
+              <strong>${escapeHtml(data.title || "Let’s talk")}</strong>
+            </div>
+            
             <div class="talking-dialogue-lines">
               ${(data.lines || []).map(line => `
                 <div class="talking-dialogue-line ${line.speaker === "B" ? "speaker-b" : ""}">
