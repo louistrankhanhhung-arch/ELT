@@ -132,7 +132,6 @@
     }
 
     .qa-layout,
-    .talking-layout,
     .talking-dialogue-layout,
     .split-layout {
       display: grid;
@@ -145,14 +144,6 @@
       min-height: 0;
     }
 
-    .talking-layout {
-      align-items: center;
-      align-content: start;
-    }
-
-    .talking-layout .text-panel {
-      align-self: start;
-    }
 
     .talking-dialogue-layout {
       --dialogue-font: var(--dialogue-long-size);
@@ -211,9 +202,7 @@
     }
 
     .big-prompt,
-    .answers,
-    .talk-lines,
-    .scaffold-lines {
+    .answers {
       font-size: var(--dialogue-size);
       line-height: var(--dialogue-line);
       letter-spacing: -0.015em;
@@ -234,41 +223,6 @@
       margin: 0 0 8px;
     }
 
-    .talk-lines p {
-      margin: 0 0 10px;
-      white-space: pre-line;
-    }
-
-    .scaffold-lines {
-      width: 100%;
-      text-align: left;
-      font-weight: 700;
-    }
-
-    .scaffold-line {
-      margin: 0 0 12px;
-    }
-
-    .scaffold-card {
-      justify-content: center;
-      gap: 24px;
-      overflow-y: auto;
-    }
-
-    .scaffold-card h1 {
-      margin: 0;
-      text-align: center;
-      font-size: var(--title-size);
-      line-height: var(--title-line);
-      font-weight: 800;
-    }
-
-    .scaffold-card .scaffold-lines {
-      max-width: 100%;
-      margin: 0 auto;
-      font-size: clamp(42px, 4.6vw, 72px);
-      line-height: 1.08;
-    }
 
     .sub-card {
       align-self: center;
@@ -367,7 +321,6 @@
       }
 
       .qa-layout,
-      .talking-layout,
       .talking-dialogue-layout,
       .split-layout {
         grid-template-columns: 1fr;
@@ -381,6 +334,7 @@
         --dialogue-title-font: var(--title-size);
         --dialogue-sidebar-width: 1fr;
         display: block;
+        position: relative;
         overflow: hidden;
         padding-bottom: var(--card-padding);
       }
@@ -389,7 +343,7 @@
         height: 100%;
         overflow-y: auto;
         padding-right: 0;
-        padding-bottom: 84px;
+        padding-bottom: 132px;
       }
 
       .main-title {
@@ -405,8 +359,7 @@
         box-sizing: border-box;
       }
 
-      .qa-layout .sub-card,
-      .talking-layout .sub-card {
+      .qa-layout .sub-card {
         position: sticky;
         bottom: 0;
         z-index: 5;
@@ -420,10 +373,11 @@
 
       .talking-dialogue-layout .sub-card {
         position: absolute;
-        left: var(--card-padding);
-        right: var(--card-padding);
-        bottom: var(--card-padding);
+        left: 12px;
+        right: 12px;
+        bottom: 16px;
         z-index: 10;
+        max-width: calc(100% - 24px);
         max-height: 68px;
         overflow-x: auto;
         overflow-y: hidden;
@@ -433,13 +387,11 @@
       }
 
       .qa-layout .sub-card h2,
-      .talking-layout .sub-card h2,
       .talking-dialogue-layout .sub-card h2 {
         display: none;
       }
 
       .qa-layout .sub-card ul,
-      .talking-layout .sub-card ul,
       .talking-dialogue-layout .sub-card ul {
         display: flex;
         flex-wrap: nowrap;
@@ -456,19 +408,8 @@
       }
 
       .qa-layout .sub-card li,
-      .talking-layout .sub-card li,
       .talking-dialogue-layout .sub-card li {
         padding-right: 4px;
-      }
-
-      .scaffold-card {
-        justify-content: center;
-        gap: 18px;
-      }
-
-      .scaffold-card .scaffold-lines {
-        font-size: clamp(34px, 8.4vw, 52px);
-        line-height: 1.08;
       }
     }
 
@@ -508,7 +449,6 @@
       }
 
       .qa-layout,
-      .talking-layout,
       .talking-dialogue-layout,
       .split-layout {
         grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
@@ -531,13 +471,14 @@
         height: calc(100vh - 44px);
         overflow-y: auto;
         padding-right: calc(var(--sidebar-width) + 22px);
+        padding-bottom: 32px;
       }
 
       .talking-dialogue-layout .sub-card {
         position: absolute;
         right: var(--card-padding);
-        top: 50%;
-        transform: translateY(-50%);
+        top: calc(var(--card-padding) + 58px);
+        transform: none;
         width: var(--sidebar-width);
         max-height: calc(100% - 28px);
         z-index: 10;
@@ -552,15 +493,6 @@
 
       .sub-card {
         padding: 10px 12px;
-      }
-
-      .scaffold-card {
-        justify-content: flex-start;
-      }
-
-      .scaffold-card .scaffold-lines {
-        font-size: clamp(28px, 4.2vw, 44px);
-        line-height: 1.06;
       }
     }
   </style>
@@ -596,33 +528,12 @@
 
       if (layout === "focus_center") return renderFocusCenter(data);
       if (layout === "qa_substitution") return renderQaSubstitution(data);
-      if (layout === "talking_substitution") return renderTalkingSubstitution(data);
       if (layout === "talking_dialogue") return renderTalkingDialogue(data);
       if (layout === "split_prompt") return renderSplitPrompt(data);
       if (layout === "full_dialogue") return renderFullDialogue(data);
       if (layout === "review_card") return renderReviewCard(data);
       if (layout === "prompt_response") return renderPromptResponse(data);
-      if (layout === "speaking_scaffold") {
-        return renderSpeakingScaffold(data);
-      }
-
       renderError("Unsupported layout: " + layout);
-    }
-
-    function renderSpeakingScaffold(data) {
-      stage.innerHTML = `
-        <section class="card scaffold-card">
-          <h1>${escapeHtml(data.title || "")}</h1>
-    
-          <div class="scaffold-lines">
-            ${(data.lines || []).map(line => `
-              <div class="scaffold-line">
-                ${escapeHtml(line)}
-              </div>
-            `).join("")}
-          </div>
-        </section>
-      `;
     }
 
     function renderPromptResponse(data) {
@@ -673,24 +584,6 @@
             <div class="big-prompt">${escapeHtml(data.prompt || "")}</div>
             <div class="answers">
               ${(data.answers || []).map(a => `<div class="answer-line">➜ ${escapeHtml(a)}</div>`).join("")}
-            </div>
-          </div>
-          ${renderSubCard(data)}
-        </section>
-      `;
-    }
-
-    function renderTalkingSubstitution(data) {
-      stage.innerHTML = `
-        <section class="card talking-layout">
-          <div class="text-panel">
-            <div class="main-title">${escapeHtml(data.title || "Let’s talk")}</div>
-            <div class="talk-lines">
-              ${(data.lines || []).map(line => `
-                <p class="${line.speaker === "B" ? "speaker-b" : ""}">
-                  ${escapeHtml(line.text || "")}
-                </p>
-              `).join("")}
             </div>
           </div>
           ${renderSubCard(data)}
