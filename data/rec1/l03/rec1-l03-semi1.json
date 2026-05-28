@@ -42,7 +42,8 @@
   ],
   "substitution_title": "Substitution",
   "substitutions": [
-    "pen/bag/crayon",
-    "ruler/pencil/pen"
+    "1. pen / ruler",
+    "2. bag / pencil",
+    "3. crayon / pen"
   ]
 }
