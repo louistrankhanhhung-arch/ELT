@@ -1,0 +1,21 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Alice. Can you introduce yourself?.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-t1-hello-alice-can-you-introduce-yourself.mp3" },
+    { "text": "B: Yes. Hello. My name’s Alice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a1-yes-hello-my-names-alice.mp3" },
+    { "text": "I am happy today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a2-im-happy-today.mp3" },
+    { "text": "I like dogs.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a3-i-like-dogs.mp3" },
+    { "text": "I have a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a4-i-have-a-dog.mp3" },
+    { "text": "I can swim. ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a5-i-can-swim.mp3" },
+    { "text": "I can dance, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a6-i-can-dace-too.mp3" },
+    { "text": "B: Wow! Can your dog swim?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-t2-wow-can-your-dog-swim.mp3" },
+    { "text": "A: Yes, he can. He can run fast!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l06/g1-l06-dia1-a7-yes-he-can-he-can-run-fast.mp3" }
+  ]
+}
