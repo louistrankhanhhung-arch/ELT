@@ -271,23 +271,26 @@
     .full-dialogue {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      gap: 6px;
+      justify-content: flex-start;
+      gap: 10px;
+      height: 100%;
+      min-height: 0;
       overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     .full-dialogue h1 {
-      margin: 0 0 18px;
+      margin: 0 0 24px;
       text-align: center;
-      font-size: var(--title-size);
-      line-height: var(--title-line);
-      font-weight: 800;
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1;
     }
 
     .dialogue-line {
-      font-size: var(--dialogue-size);
-      line-height: var(--dialogue-line);
-      margin: 0;
+      font-size: clamp(36px, 4.2vw, 60px);
+      line-height: 1.12;
+      margin: 0 0 10px;
       letter-spacing: -0.015em;
       white-space: pre-line;
     }
