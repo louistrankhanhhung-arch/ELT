@@ -38,55 +38,55 @@
       "player": "player-dialogue.html",
       "data": "data/rec1/l06/rec1-l06-dia1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "control1",
       "order": 4,
       "type": "activity",
-      "activity_kind": "activity",
+      "activity_kind": "speaking",
       "title": "Let's talk 1",
       "player": "player-grid-v2.html",
       "data": "data/rec1/l06/rec1-l06-con1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "control2",
       "order": 5,
       "type": "activity",
-      "activity_kind": "activity",
+      "activity_kind": "speaking",
       "title": "Let's talk 2",
       "player": "player-sentence.html",
       "data": "data/rec1/l06/rec1-l06-con2.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "semi1",
       "order": 6,
       "type": "activity",
-      "activity_kind": "activity",
+      "activity_kind": "speaking",
       "title": "Let's talk 3",
       "player": "game.html",
       "data": "data/rec1/l06/rec1-l06-semi1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "semi2",
       "order": 7,
       "type": "activity",
-      "activity_kind": "activity",
+      "activity_kind": "speaking",
       "title": "About yourself",
       "player": "game.html",
       "data": "data/rec1/l06/rec1-l06-semi2.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
