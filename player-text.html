@@ -21,6 +21,7 @@
       --main-size: clamp(50px, 5.8vw, 88px);
       --main-line: 1.06;
       --dialogue-size: clamp(48px, 5.4vw, 82px);
+      --dialogue-long-size: clamp(34px, 3.6vw, 56px);
       --dialogue-line: 1.04;
       --sidebar-title-size: clamp(30px, 2.6vw, 42px);
       --sidebar-text-size: clamp(24px, 2.1vw, 34px);
@@ -143,6 +144,59 @@
       min-height: 0;
     }
 
+    .talking-layout {
+      align-items: start;
+      align-content: center;
+    }
+
+    .talking-layout .text-panel {
+      align-self: center;
+    }
+
+    .talking-dialogue-layout {
+      --dialogue-font: var(--dialogue-long-size);
+      --dialogue-line-height: 1.04;
+      --dialogue-gap: 2px;
+      --dialogue-title-font: var(--title-size);
+      --dialogue-sidebar-width: var(--sidebar-width);
+      grid-template-columns: minmax(0, 1fr) var(--dialogue-sidebar-width);
+      align-items: stretch;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .talking-dialogue-main {
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .talking-dialogue-layout .main-title {
+      font-size: var(--dialogue-title-font);
+      margin-bottom: 12px;
+    }
+
+    .talking-dialogue-lines {
+      display: flex;
+      flex-direction: column;
+      gap: var(--dialogue-gap);
+      font-size: var(--dialogue-font);
+      line-height: var(--dialogue-line-height);
+      letter-spacing: -0.015em;
+    }
+
+    .talking-dialogue-line {
+      margin: 0;
+      white-space: pre-line;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .talking-dialogue-line.speaker-b {
+      color: var(--brand);
+    }
+
     .text-panel {
       min-width: 0;
       overflow: hidden;
@@ -192,6 +246,25 @@
 
     .scaffold-line {
       margin: 0 0 12px;
+    }
+
+    .scaffold-card {
+      justify-content: center;
+      gap: 32px;
+      overflow-y: auto;
+    }
+
+    .scaffold-card h1 {
+      margin: 0;
+      text-align: center;
+      font-size: var(--title-size);
+      line-height: var(--title-line);
+      font-weight: 800;
+    }
+
+    .scaffold-card .scaffold-lines {
+      max-width: 100%;
+      margin: 0 auto;
     }
 
     .sub-card {
@@ -274,8 +347,9 @@
         --title-size: clamp(28px, 8vw, 42px);
         --main-size: clamp(30px, 8vw, 46px);
         --dialogue-size: clamp(28px, 7.2vw, 40px);
+        --dialogue-long-size: clamp(30px, 7.8vw, 44px);
         --sidebar-title-size: clamp(16px, 4.2vw, 22px);
-        --sidebar-text-size: clamp(16px, 4.2vw, 22px);
+        --sidebar-text-size: clamp(18px, 4.8vw, 26px);
         --sidebar-line: 1.1;
       }
 
@@ -303,7 +377,7 @@
         --dialogue-font: var(--dialogue-size);
         --dialogue-title-font: var(--title-size);
         --dialogue-sidebar-width: 1fr;
-        padding-bottom: 78px;
+        padding-bottom: 72px;
       }
 
       .talking-dialogue-main {
@@ -331,7 +405,7 @@
         position: sticky;
         bottom: 0;
         z-index: 5;
-        max-height: 76px;
+        max-height: 68px;
         overflow-x: auto;
         overflow-y: hidden;
         padding: 10px 12px;
@@ -378,6 +452,7 @@
         --title-size: clamp(22px, 4vw, 34px);
         --main-size: clamp(24px, 4.2vw, 38px);
         --dialogue-size: clamp(22px, 3.8vw, 34px);
+        --dialogue-long-size: clamp(24px, 3.4vw, 36px);
         --sidebar-title-size: clamp(18px, 3vw, 26px);
         --sidebar-text-size: clamp(16px, 2.6vw, 22px);
       }
@@ -479,7 +554,7 @@
 
     function renderSpeakingScaffold(data) {
       stage.innerHTML = `
-        <section class="card review-card">
+        <section class="card scaffold-card">
           <h1>${escapeHtml(data.title || "")}</h1>
     
           <div class="scaffold-lines">
