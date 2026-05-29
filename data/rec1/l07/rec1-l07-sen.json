@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-chair.mp3",
   "chunks": ["This", "is", "a", "chair"],
-  "timings": [0, 0.3, 0.6, 0.9],
+  "timings": [0, 0.3, 0.5, 0.8],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -21,42 +21,42 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-table.mp3",
         "chunks": ["This", "is", "a", "table"],
-        "timings": [0, 0.3, 0.6, 0.9]
+        "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "door",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-door.mp3",
         "chunks": ["This", "is", "a", "door"],
-        "timings": [0, 0.3, 0.6, 0.9]
+        "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "window",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-window.mp3",
         "chunks": ["This", "is", "a", "window"],
-        "timings": [0, 0.3, 0.6, 0.9]
+        "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "tree",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-tree.mp3",
         "chunks": ["This", "is", "a", "tree"],
-        "timings": [0, 0.3, 0.6, 0.9]
+        "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "flower",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-flower.mp3",
         "chunks": ["This", "is", "a", "flower"],
-        "timings": [0, 0.3, 0.6, 0.9]
+        "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "chair",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-chair.mp3",
         "chunks": ["This", "is", "a", "chair"],
-        "timings": [0, 0.3, 0.6, 0.9]
+        "timings": [0, 0.3, 0.5, 0.8]
       }
     ]
   }
