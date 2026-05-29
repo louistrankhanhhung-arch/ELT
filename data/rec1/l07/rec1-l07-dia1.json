@@ -1,0 +1,22 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Welcome to my garden, Alice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-b1-welcome-to-my-garden-alice.mp3" },
+    { "text": "B: Wow! Really nice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-a1-wow-really-nice.mp3" },
+    { "text": "A: This is a chair.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-b2-this-is-a-chair.mp3" },
+    { "text": "And this is a table.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-b3-and-this-is-a-table.mp3" },
+    { "text": "You can sit here.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-b4-you-can-sit-here.mp3" },
+    { "text": "B: Thank you. What is this, Ben?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-a2-thank-you-what-is-this-ben.mp3" },
+    { "text": "A: This is a flower.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-b5-this-is-a-flower.mp3" },
+    { "text": "B: Look! What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-a3-look-what-is-that.mp3" },
+    { "text": "A: That is a tree. A big tree.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-b6-that-is-a-tree-a-big-tree.mp3" },
+    { "text": "B: Awesome!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia1-a4-awesome.mp3" }
+  ]
+}
