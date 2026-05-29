@@ -1,0 +1,42 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Welcome to my (1)____, Alice."
+    },
+    {
+      "speaker": "B",
+      "text": "Wow! Really nice."
+    },
+    {
+      "speaker": "A",
+      "text": "This is a (2) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "What is this, Ben?"
+    },
+    {
+      "speaker": "A",
+      "text": "This is a (3) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Look! What is that?"
+    },
+    {
+      "speaker": "A",
+      "text": "That is a (4) ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. house / garden",
+    "2. door / table",
+    "3. window / chair",
+    "4. tree / flower"
+  ]
+}
