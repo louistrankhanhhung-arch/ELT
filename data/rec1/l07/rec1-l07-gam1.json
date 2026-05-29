@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-tree.mp3",
+      "answer": "tree",
+      "options": ["tree", "chair", "window", "flower"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-table.mp3",
+      "answer": "table",
+      "options": ["table", "tree", "door", "flower"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-window.mp3",
+      "answer": "window",
+      "options": ["window", "table", "door", "tree"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-door.mp3",
+      "answer": "door",
+      "options": ["door", "flower", "tree", "window"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-chair.mp3",
+      "answer": "chair",
+      "options": ["chair", "tree", "window", "table"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-flower.mp3",
+      "answer": "flower",
+      "options": ["flower", "door", "table", "tree"]
+    }
+  ]
+}
