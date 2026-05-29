@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Is this a ____?\nIs that a ____?",
+  "answers": [
+    "Yes, it is.",
+    "No, it isn't."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "chair",
+    "table",
+    "door",
+    "window",
+    "tree",
+    "flower"
+  ]
+}
