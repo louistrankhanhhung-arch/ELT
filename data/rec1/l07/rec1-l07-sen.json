@@ -27,35 +27,35 @@
         "value": "door",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-door.mp3",
-        "chunks": ["This", "is", "a" "door"],
+        "chunks": ["This", "is", "a", "door"],
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
         "value": "window",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-window.mp3",
-        "chunks": ["This", "is", "a" "window"],
+        "chunks": ["This", "is", "a", "window"],
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
         "value": "tree",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-tree.mp3",
-        "chunks": ["This", "is", "a" "tree"],
+        "chunks": ["This", "is", "a", "tree"],
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
         "value": "flower",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-flower.mp3",
-        "chunks": ["This", "is", "a" "flower"],
+        "chunks": ["This", "is", "a", "flower"],
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
         "value": "chair",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-chair.mp3",
-        "chunks": ["This", "is", "a" "chair"],
+        "chunks": ["This", "is", "a", "chair"],
         "timings": [0, 0.3, 0.6, 0.9]
       }
     ]
