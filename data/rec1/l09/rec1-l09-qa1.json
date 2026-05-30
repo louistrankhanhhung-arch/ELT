@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Is the ball ____?",
+  "answers": [
+    "Yes, it is.",
+    "No, it isn't."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "on",
+    "in",
+    "under",
+    "next to",
+    "behind",
+    "between"
+  ]
+}
