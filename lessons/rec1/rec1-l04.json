@@ -148,18 +148,6 @@
       "completion": {
         "mode": "teacher_next"
       }
-    },
-    {
-      "id": "free2",
-      "order": 13,
-      "type": "activity",
-      "activity_kind": "output",
-      "title": "Record",
-      "player": "player-text.html",
-      "data": "data/rec1/l04/rec1-l04-free2.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
     }
   ]
 }
