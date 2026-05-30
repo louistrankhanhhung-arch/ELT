@@ -1,0 +1,15 @@
+{
+  "type": "line-ordering",
+  "title": "Order the Dialogue",
+  "subtitle": "Put the sentences in the correct order.",
+  "lines": [
+    { "text": "A: Welcome to my school, Ben!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-t1-welcome-to-my-school-ben.mp3" },
+    { "text": "B: Wow!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-b1-wow.mp3" },
+    { "text": "A: There is a classroom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-t2-there-is-a-classroom.mp3" },
+    { "text": "A: There is a playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-t3-there-is-a-playground.mp3" },
+    { "text": "B: There is a ball in the playground, Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-b2-there-is-a-ball-in-the-playground-tom.mp3" },
+    { "text": "A: Yes. And there is a bicycle, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-t4-yes-and-there-is-a-bicycle-too.mp3" },
+    { "text": "A: Look! There is a garden. Can you see it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-t5-look-there-is-a-garden-can-you-see-it.mp3" },
+    { "text": "B: Yes. It's beautiful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia1-b3-yes-its-beautiful.mp3" }
+  ]
+}
