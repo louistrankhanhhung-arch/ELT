@@ -1,0 +1,52 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "____, can you help me?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes."
+    },
+    {
+      "speaker": "A",
+      "text": "Where is the ball?"
+    },
+    {
+      "speaker": "A",
+      "text": "It is ____ the table."
+    },
+    {
+      "speaker": "B",
+      "text": "Good. Where is the bicycle?"
+    },
+    {
+      "speaker": "A",
+      "text": "It is ____ the door."
+    },
+    {
+      "speaker": "A",
+      "text": "Great. Where is the bag?"
+    },
+    {
+      "speaker": "B",
+      "text": "It is ____ the chair."
+    },
+    {
+      "speaker": "A",
+      "text": "Excellent!"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "on",
+    "in",
+    "under",
+    "next to",
+    "behind",
+    "between"
+  ]
+}
