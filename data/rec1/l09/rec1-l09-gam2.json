@@ -1,0 +1,17 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 8
+  },
+  "items": [
+    { "word": "The ball is on the table", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-vob-on.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-on-the-table.mp3" },
+    { "word": "The ball is in the bag", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-vob-in.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-in-the-bag.mp3" },
+    { "word": "The ball is under the table", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-vob-under.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-under-the-table.mp3" },
+    { "word": "The ball is next to the chair", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-vob-next-to.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-next-to-the-chair.mp3" },
+    { "word": "The ball is behind the chair", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-vob-behind.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-behind-the-chair.mp3" },
+    { "word": "The ball is between the table and the chair", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-vob-between.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-between-the-table-and-the-chair.mp3" }
+  ]
+}
