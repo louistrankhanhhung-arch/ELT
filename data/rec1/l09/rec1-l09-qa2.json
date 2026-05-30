@@ -1,9 +1,9 @@
 {
   "layout": "qa_substitution",
   "title": "Ask & Answer",
-  "prompt": "Where is the ___?",
+  "prompt": "Where is the ball?",
   "answers": [
-    "it is ____."
+    "It is ____."
   ],
   "substitution_title": "Substitution",
   "substitutions": [
