@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "The ball is ____ the table.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-under-the-table.mp3",
+      "answer": "under",
+      "options": ["under", "on", "behind", "between"]
+    },
+    {
+      "prompt": "The ball is ____ the bag.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-in-the-bag.mp3",
+      "answer": "in",
+      "options": ["in", "on", "next to", "behind"]
+    },
+    {
+      "prompt": "The ball is ____ the chair.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-next-to-the-chair.mp3",
+      "answer": "next to",
+      "options": ["next to", "behind", "on", "in"]
+    },
+    {
+      "prompt": "The ball is ____ the table and the chair.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-between-the-table-and-the-chair.mp3",
+      "answer": "between",
+      "options": ["between", "on", "in", "next to"]
+    },
+    {
+      "prompt": "The ball is ____ the chair.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-behind-the-chair.mp3",
+      "answer": "behind",
+      "options": ["behind", "between", "on", "in"]
+    },
+    {
+      "prompt": "The ball is ____ the table.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-on-the-table.mp3",
+      "answer": "on",
+      "options": ["on", "in", "under", "next to"]
+    }
+  ]
+}
