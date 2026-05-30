@@ -13,31 +13,31 @@
       "options": ["garden", "school", "ball", "playground"]
     },
     {
-      "prompt": "there is a ____.",
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-classroom.mp3",
       "answer": "classroom",
       "options": ["classroom", "school", "garden", "bicycle"]
     },
     {
-      "prompt": "there is a ____.",
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-ball.mp3",
       "answer": "ball",
       "options": ["ball", "bicycle", "classroom", "school"]
     },
     {
-      "prompt": "there is a ____.",
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-playground.mp3",
       "answer": "playground",
       "options": ["playground", "school", "ball", "bicycle"]
     },
     {
-      "prompt": "there is a ____.",
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-school.mp3",
       "answer": "school",
       "options": ["school", "garden", "playground", "ball"]
     },
     {
-      "prompt": "there is a ____.",
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-bicycle.mp3",
       "answer": "bicycle",
       "options": ["bicycle", "school", "ball", "garden"]
