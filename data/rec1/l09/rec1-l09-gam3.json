@@ -1,0 +1,16 @@
+{
+  "type": "line-ordering",
+  "title": "Order the Dialogue",
+  "subtitle": "Put the sentences in the correct order.",
+  "lines": [
+    { "text": "A: Ben, can you help me? ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-j1-ben-can-you-help-me.mp3" },
+    { "text": "B: Yes.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-b1-yes.mp3" },
+    { "text": "A: Where is the ball?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-j2-where-is-the-ball.mp3" },
+    { "text": "B: It is under the table.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-b2-it-is-under-the-table.mp3" },
+    { "text": "A: Good. Where is the bicycle?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-j3-good-where-is-the-bicycle.mp3" },
+    { "text": "B: It is next to the door. ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-b3-it-is-next-to-the-door.mp3" },
+    { "text": "A: Great. Where is the bag?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-j4-great-where-is-the-bag.mp3" },
+    { "text": "B: It is on the chair.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-b4-it-is-on-the-chair.mp3" },
+    { "text": "A: Excellent.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia1-j5-excellent.mp3" }
+  ]
+}
