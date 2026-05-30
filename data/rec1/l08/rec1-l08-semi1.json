@@ -1,0 +1,48 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Welcome to my (1) ____, Ben!"
+    },
+    {
+      "speaker": "B",
+      "text": "Wow!"
+    },
+    {
+      "speaker": "A",
+      "text": "There is a (2) ____."
+    },
+    {
+      "speaker": "A",
+      "text": "There is a (3) ____. "
+    },
+    {
+      "speaker": "B",
+      "text": "There is a (4) ____, Tom."
+    },
+    {
+      "speaker": "A",
+      "text": "Yes. And there is a (5) ____, too."
+    },
+    {
+      "speaker": "A",
+      "text": "Look! There is a (6) ____. Can you see it?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes. It's beautiful."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. school / house",
+    "2. classroom / table",
+    "3. playground / chair",
+    "4. ball / door",
+    "5. bicycle / window",
+    "6. garden / flower"
+  ]
+}
