@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Where is the ___?",
+  "answers": [
+    "it is ____."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "on",
+    "in",
+    "under",
+    "next to",
+    "behind",
+    "between"
+  ]
+}
