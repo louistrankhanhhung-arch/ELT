@@ -275,16 +275,18 @@
       }
     
       .label {
-        font-size: clamp(24px, 3vw, 38px);
-        min-height: 54px;
-        padding: 8px 8px 12px;
+        font-size: clamp(22px, 1.8vw, 30px);
+        line-height: 1.05;
+        min-height: 48px;
+        padding: 8px 6px 10px;
+        white-space: nowrap;
       }
     }
     
     /* Very wide desktop: allow 5–6 cards in one row */
     @media (min-width: 1100px) {
       .grid {
-        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       }
     }
 
