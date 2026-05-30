@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Is there a ____?",
+  "answers": [
+    "Yes, there is.",
+    "No, there isn't."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "classroom",
+    "school",
+    "garden",
+    "playground",
+    "bicycle",
+    "ball"
+  ]
+}
