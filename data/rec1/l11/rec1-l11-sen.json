@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "He is my father",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-father.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-father.mp3",
+  "chunks": ["He", "is", "my", "father"],
+  "timings": [0, 0.3, 0.5, 0.9],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{father}",
+    "base": "He is my {father}.",
+    "options": [
+      {
+        "value": "mother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-mother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-she-is-my-mother.mp3",
+        "chunks": ["She", "is", "my", "father"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
+      {
+        "value": "brother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-brother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-brother.mp3",
+        "chunks": ["He", "is", "my", "brother"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
+      {
+        "value": "sister",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-sister.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-she-is-my-sister.mp3",
+        "chunks": ["She", "is", "my", "sister"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
+      {
+        "value": "family",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-family.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-this-is-my-family.mp3",
+        "chunks": ["This", "is", "my", "family"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
+      {
+        "value": "friend",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-friend.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-friend.mp3",
+        "chunks": ["He", "is", "my", "father"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
+      {
+        "value": "father",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-father.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-father.mp3",
+        "chunks": ["He", "is", "my", "father"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      }
+    ]
+  }
+}
