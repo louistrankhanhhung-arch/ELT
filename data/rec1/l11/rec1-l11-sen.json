@@ -20,7 +20,7 @@
         "value": "mother",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-mother.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-she-is-my-mother.mp3",
-        "chunks": ["She", "is", "my", "father"],
+        "chunks": ["She", "is", "my", "mother"],
         "timings": [0, 0.3, 0.5, 0.9]
       },
       {
@@ -48,7 +48,7 @@
         "value": "friend",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-friend.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-friend.mp3",
-        "chunks": ["He", "is", "my", "father"],
+        "chunks": ["He", "is", "my", "friend"],
         "timings": [0, 0.3, 0.5, 0.9]
       },
       {
