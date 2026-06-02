@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-she-is-my-sister.mp3",
+      "answer": "sister",
+      "options": ["sister", "mother", "father", "brother"]
+    },
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-father.mp3",
+      "answer": "father",
+      "options": ["father", "sister", "brother", "family"]
+    },
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-friend.mp3",
+      "answer": "friend",
+      "options": ["friend", "mother", "sister", "family"]
+    },
+    {
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-she-is-my-mother.mp3",
+      "answer": "between",
+      "options": ["mother", "brother", "father", "family"]
+    },
+    {
+      "prompt": "This is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-this-is-my-family.mp3",
+      "answer": "family",
+      "options": ["family", "playground", "school", "classroom"]
+    },
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-he-is-my-brother.mp3",
+      "answer": "brother",
+      "options": ["brother", "sister", "mother", "family"]
+    }
+  ]
+}
