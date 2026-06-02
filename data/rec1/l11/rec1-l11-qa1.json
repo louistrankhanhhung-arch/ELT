@@ -1,11 +1,10 @@
 {
   "layout": "qa_substitution",
   "title": "Ask & Answer",
-  "prompt": "Is he your ____?\nIs she your ____?\nIs this your ____?",
+  "prompt": "Is he your ____?\nIs she your ____?",
   "answers": [
     "Yes, he is. >< No, he isn't.",
-    "Yes, she is. >< No, she isn't.",
-    "Yes, it is. >< No, it isn't."
+    "Yes, she is. >< No, she isn't."
   ],
   "substitution_title": "Substitution",
   "substitutions": [
@@ -13,7 +12,6 @@
     "mother",
     "brother",
     "sister",
-    "family",
     "friend"
   ]
 }
