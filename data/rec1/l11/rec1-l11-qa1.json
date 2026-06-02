@@ -3,8 +3,8 @@
   "title": "Ask & Answer",
   "prompt": "Is he your ____?\nIs she your ____?",
   "answers": [
-    "Yes, he is. >< No, he isn't.",
-    "Yes, she is. >< No, she isn't."
+    "Yes, he/she is.",
+    "No, he/she isn't."
   ],
   "substitution_title": "Substitution",
   "substitutions": [
