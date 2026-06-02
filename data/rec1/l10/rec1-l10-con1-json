@@ -1,0 +1,18 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "This is my classroom.\nThere is a ____.\nIt is ____ the ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "book, on, table",
+    "bag, next to, chair",
+    "crayon, under, table",
+    "pen, in, bag"
+  ]
+}
