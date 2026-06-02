@@ -27,7 +27,7 @@
     {
       "prompt": "She is my ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-sen-she-is-my-mother.mp3",
-      "answer": "between",
+      "answer": "mother",
       "options": ["mother", "brother", "father", "family"]
     },
     {
