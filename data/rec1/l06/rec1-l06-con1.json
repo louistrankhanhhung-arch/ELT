@@ -5,7 +5,7 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "My name’s ____.\nI am a  ____.\nI have a ____."
+      "text": "My name’s ____.\n➜ I am a  ____.\n➜ I have a ____."
     }
   ],
   "substitution_title": "Substitution",
