@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Who is he?\nWho is she?",
+  "answers": [
+    "He is my ____.",
+    "She is my ____."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father",
+    "mother",
+    "brother",
+    "sister",
+    "friend"
+  ]
+}
