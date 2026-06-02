@@ -1,0 +1,17 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Welcome to my school.\nThis is a ____.\nThere is a ____.\nIt is ____ the ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "classroom, book, on, chair",
+    "playground, ball, next to, bicycle",
+    "garden, tree, behind, window"
+  ]
+}
