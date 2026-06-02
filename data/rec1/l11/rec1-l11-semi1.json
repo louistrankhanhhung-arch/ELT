@@ -1,0 +1,45 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What is this, Tom?"
+    },
+    {
+      "speaker": "B",
+      "text": "It is my photo."
+    },
+    {
+      "speaker": "A",
+      "text": "Wow! Who is he?"
+    },
+    {
+      "speaker": "A",
+      "text": "He is my (1) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "And who is she?"
+    },
+    {
+      "speaker": "A",
+      "text": "She is my (2) ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Who is he?"
+    },
+    {
+      "speaker": "B",
+      "text": "He is my (3) ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. father / brother",
+    "2. mother / sister",
+    "3. teacher / friend"
+  ]
+}
