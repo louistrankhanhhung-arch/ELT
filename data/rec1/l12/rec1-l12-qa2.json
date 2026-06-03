@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Is he/she ____ or ____?",
+  "answers": [
+    "He is ____.",
+    "She is ____."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "tall",
+    "short",
+    "kind",
+    "funny",
+    "strong",
+    "beautiful"
+  ]
+}
