@@ -1,0 +1,41 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "tall",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.mp3"
+    },
+    {
+      "word": "short",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-short.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-short.mp3"
+    },
+    {
+      "word": "kind",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-kind.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-kind.mp3"
+    },
+    {
+      "word": "funny",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-funny.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-funny.mp3"
+    },
+    {
+      "word": "strong",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-strong.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-strong.mp3"
+    },
+    {
+      "word": "beautiful",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-beautiful.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-beautiful.mp3"
+    }
+  ]
+}
