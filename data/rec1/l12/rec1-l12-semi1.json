@@ -1,0 +1,61 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Who is he, Jill?"
+    },
+    {
+      "speaker": "B",
+      "text": "He is my father."
+    },
+    {
+      "speaker": "A",
+      "text": "Is he (1) ____?"
+    },
+    {
+      "speaker": "A",
+      "text": "Yes, he is."
+    },
+    {
+      "speaker": "B",
+      "text": "Who is she?"
+    },
+    {
+      "speaker": "A",
+      "text": "She is my mother."
+    },
+    {
+      "speaker": "A",
+      "text": "She is (2) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, she is."
+    },
+    {
+      "speaker": "A",
+      "text": "And who is that girl?"
+    },
+    {
+      "speaker": "B",
+      "text": "She is my sister."
+    },
+    {
+      "speaker": "A",
+      "text": "Is she (3) ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, she is."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. strong / tall",
+    "2. beautiful / short",
+    "3. kind / funny"
+  ]
+}
