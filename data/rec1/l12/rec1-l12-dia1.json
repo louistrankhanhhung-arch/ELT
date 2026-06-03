@@ -1,0 +1,24 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Who is he, Jill?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-a1-who-is-he-jill.mp3" },
+    { "text": "B: He is my father.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-j1-he-is-my-father.mp3" },
+    { "text": "A: Is he strong?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-a2-is-he-strong.mp3" },
+    { "text": "B: Yes. He is strong.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-j2-yes-he-is-strong.mp3" },
+    { "text": "A: Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-a3-who-is-she.mp3" },
+    { "text": "B: She is my mother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-j3-she-is-my-mother.mp3" },
+    { "text": "A: She is beautiful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-a4-she-is-beautiful.mp3" },
+    { "text": "B: Yes. She is beautiful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-j4-yes-she-is-beautiful.mp3" },
+    { "text": "A: And who is that girl?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-a5-and-who-is-that-girl.mp3" },
+    { "text": "B: She is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-j5-she-is-my-sister.mp3" },
+    { "text": "A: Is she kind?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-a6-is-she-kind.mp3" },
+    { "text": "B: Yes. She is very kind.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1-j6-yes-she-is-kind.mp3" }
+  ]
+}
