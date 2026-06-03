@@ -1,0 +1,60 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Look at my ____."
+    },
+    {
+      "speaker": "B",
+      "text": "He is cool."
+    },
+    {
+      "speaker": "A",
+      "text": "Yes. He has ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Nice!"
+    },
+    {
+      "speaker": "A",
+      "text": "And she is my _____."
+    },
+    {
+      "speaker": "B",
+      "text": "She is beautiful."
+    },
+    {
+      "speaker": "A",
+      "text": "She has ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Wow!"
+    },
+    {
+      "speaker": "A",
+      "text": "Look at my ____."
+    },
+    {
+      "speaker": "B",
+      "text": "He has ____ and ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Yes!"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "hat",
+    "watch",
+    "glasses",
+    "kite",
+    "camera",
+    "guitar"
+  ]
+}
