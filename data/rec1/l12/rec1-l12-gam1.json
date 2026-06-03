@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-short.mp3",
+      "answer": "short",
+      "options": ["short", "tall", "funny", "kind"]
+    },
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-beautiful.mp3",
+      "answer": "beautiful",
+      "options": ["beautiful", "strong", "kind", "tall"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-funny.mp3",
+      "answer": "funny",
+      "options": ["funny", "tall", "short", "strong"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-tall.mp3",
+      "answer": "tall",
+      "options": ["tall", "short", "beautiful", "funny"]
+    },
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-kind.mp3",
+      "answer": "kind",
+      "options": ["kind", "beautiful", "strong", "funny"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-strong.mp3",
+      "answer": "strong",
+      "options": ["strong", "tall", "short", "kind"]
+    }
+  ]
+}
