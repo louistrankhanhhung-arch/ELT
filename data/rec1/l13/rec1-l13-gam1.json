@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "He has a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-has-a-guitar.mp3",
+      "answer": "guitar",
+      "options": ["guitar", "kite", "watch", "camera"]
+    },
+    {
+      "prompt": "She has a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-has-a-camera.mp3",
+      "answer": "camera",
+      "options": ["camera", "watch", "glasses", "kite"]
+    },
+    {
+      "prompt": "He has a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-has-a-watch.mp3",
+      "answer": "watch",
+      "options": ["watch", "guitar", "glasses", "hat"]
+    },
+    {
+      "prompt": "She has a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-has-a-kite.mp3",
+      "answer": "kite",
+      "options": ["kite", "camera", "hat", "glasses"]
+    },
+    {
+      "prompt": "He has ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-has-glasses.mp3",
+      "answer": "glasses",
+      "options": ["glasses", "kite", "hat", "watch"]
+    },
+    {
+      "prompt": "She has a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-has-a-hat.mp3",
+      "answer": "hat",
+      "options": ["hat", "kite", "camera", "glasses"]
+    }
+  ]
+}
