@@ -1,0 +1,13 @@
+{
+  "type": "memory-match",
+  "title": "Memory Match",
+  "subtitle": "Find the matching pairs.",
+  "items": [
+    { "word": "She has a hat", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-hat.mp3" },
+    { "word": "He has a watch", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-a-watch.mp3" },
+    { "word": "He has glasses", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-glasses.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-glasses.mp3" },
+    { "word": "She has a kite", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-kite.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-kite.mp3" },
+    { "word": "She has a camera", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-camera.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-camera.mp3" },
+    { "word": "He has a guitar", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-guitar.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-a-guitar.mp3" }
+  ]
+}
