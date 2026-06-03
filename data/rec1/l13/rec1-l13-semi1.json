@@ -1,0 +1,58 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Look at my brother."
+    },
+    {
+      "speaker": "B",
+      "text": "He is cool."
+    },
+    {
+      "speaker": "A",
+      "text": "Yes. He has (1) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Nice!"
+    },
+    {
+      "speaker": "A",
+      "text": "And she is my sister."
+    },
+    {
+      "speaker": "B",
+      "text": "She is beautiful."
+    },
+    {
+      "speaker": "A",
+      "text": "She has (2) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Wow!"
+    },
+    {
+      "speaker": "A",
+      "text": "Look at my father."
+    },
+    {
+      "speaker": "B",
+      "text": "He has (3) ____ and (4) ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Yes!"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. a guitar / a book",
+    "2. a kite / a hat",
+    "3. glasses / a ball",
+    "4. a watch / a camera"
+  ]
+}
