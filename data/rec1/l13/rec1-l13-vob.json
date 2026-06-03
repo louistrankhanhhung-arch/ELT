@@ -1,0 +1,41 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "hat",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.mp3"
+    },
+    {
+      "word": "watch",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.mp3"
+    },
+    {
+      "word": "glasses",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-glasses.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-glasses.mp3"
+    },
+    {
+      "word": "kite",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-kite.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-kite.mp3"
+    },
+    {
+      "word": "camera",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-camera.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-camera.mp3"
+    },
+    {
+      "word": "guitar",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-guitar.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-guitar.mp3"
+    }
+  ]
+}
