@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "She has a hat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-hat.mp3",
+  "chunks": ["She", "has", "a", "hat"],
+  "timings": [0, 0.3, 0.5, 0.8],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{hat}",
+    "base": "She has a {hat}.",
+    "options": [
+      {
+        "value": "watch",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-a-watch.mp3",
+        "chunks": ["He", "has", "a", "watch"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "glasses",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-glasses.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-glasses.mp3",
+        "chunks": ["He", "has", "glasses"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "kite",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-kite.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-kite.mp3",
+        "chunks": ["She", "has", "a", "kite"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "camera",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-camera.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-camera.mp3",
+        "chunks": ["She", "has", "a", "camera"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "guitar",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-guitar.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-a-guitar.mp3",
+        "chunks": ["He", "has", "a", "guitar"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "hat",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-hat.mp3",
+        "chunks": ["She", "has", "a", "hat"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      }
+    ]
+  }
+}
