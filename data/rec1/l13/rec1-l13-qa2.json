@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What does he/she have?",
+  "answers": [
+    "He has ____.",
+    "She has ____."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "hat",
+    "watch",
+    "glasses",
+    "kite",
+    "camera",
+    "guitar"
+  ]
+}
