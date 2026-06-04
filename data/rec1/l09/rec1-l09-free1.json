@@ -16,16 +16,16 @@
       "text": "Where is the ball?"
     },
     {
-      "speaker": "A",
-      "text": "It is ____ the table."
+      "speaker": "B",
+      "text": "It is ____."
     },
     {
-      "speaker": "B",
+      "speaker": "A",
       "text": "Good. Where is the bicycle?"
     },
     {
-      "speaker": "A",
-      "text": "It is ____ the door."
+      "speaker": "B",
+      "text": "It is ____."
     },
     {
       "speaker": "A",
@@ -33,7 +33,7 @@
     },
     {
       "speaker": "B",
-      "text": "It is ____ the chair."
+      "text": "It is ____."
     },
     {
       "speaker": "A",
