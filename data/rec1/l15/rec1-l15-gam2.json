@@ -1,0 +1,17 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 8
+  },
+  "items": [
+    { "word": "She can sing", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-sing.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-she-can-sing.mp3" },
+    { "word": "He can cook", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-cook.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-he-can-cook.mp3" },
+    { "word": "He can ride a bicycle", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-ride-a-bicycle.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-he-can-ride-a-bicycle.mp3" },
+    { "word": "She can fly a kite", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-fly-a-kite.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-she-can-fly-a-kite.mp3" },
+    { "word": "He can play the guitar", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-play-the-guitar.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-he-can-play-the-guitar.mp3" },
+    { "word": "She can climb a tree", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-climb-a-tree.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-she-can-climb-a-tree.mp3" }
+  ]
+}
