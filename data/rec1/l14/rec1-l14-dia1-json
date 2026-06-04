@@ -1,0 +1,25 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Welcome to my home, Jill!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t1-welcome-to-my-home-jill.mp3" },
+    { "text": "B: Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-j1-thank-you.mp3" },
+    { "text": "A: We have chicken, rice, and noodles for dinner.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t2-we-have-chicken-rice-and-noodles-for-dinner.mp3" },
+    { "text": "B: Yum! What does your father like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-j2-yum-what-does-your-father-like.mp3" },
+    { "text": "A: He likes chicken.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t3-he-likes-chicken.mp3" },
+    { "text": "B: What does your mother like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-j3-what-does-your-mother-like.mp3" },
+    { "text": "A: She likes rice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t4-she-likes-rice.mp3" },
+    { "text": "B: What does your sister like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-j4-what-does-your-sister-like.mp3" },
+    { "text": "A: She likes noodles.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t5-she-likes-noodles.mp3" },
+    { "text": "B: And your brother?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-j5-and-your-brother.mp3" },
+    { "text": "A: He likes bananas.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t6-he-likes-bananas.mp3" },
+    { "text": "B: What about you, Tom?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-j6-what-about-you-tom.mp3" },
+    { "text": "A: I like milk.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-dia1-t7-i-like-milk.mp3" }
+  ]
+}
