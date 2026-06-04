@@ -1,0 +1,80 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "That is my father."
+    },
+    {
+      "speaker": "B",
+      "text": "What can he do?"
+    },
+    {
+      "speaker": "A",
+      "text": "He can ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Nice!"
+    },
+    {
+      "speaker": "A",
+      "text": "That is my mother."
+    },
+    {
+      "speaker": "B",
+      "text": "What can she do?"
+    },
+    {
+      "speaker": "A",
+      "text": "She can ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Great!"
+    },
+    {
+      "speaker": "A",
+      "text": "That is my brother."
+    },
+    {
+      "speaker": "B",
+      "text": "What can he do?"
+    },
+    {
+      "speaker": "A",
+      "text": "He can  ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Cool!"
+    },
+    {
+      "speaker": "A",
+      "text": "And that is my sister."
+    },
+    {
+      "speaker": "B",
+      "text": "What can she do?"
+    },
+    {
+      "speaker": "A",
+      "text": "She can ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Wow! Your family is fun!"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "sing",
+    "cook",
+    "ride a bicycle",
+    "fly a kite",
+    "play the guitar",
+    "climb a tree"
+  ]
+}
