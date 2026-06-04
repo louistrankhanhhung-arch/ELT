@@ -5,15 +5,15 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello, ____. How are you today?"
+      "text": "Hello. How are you today?"
     },
     {
       "speaker": "B",
-      "text": "Hello, ____. I’m good. And you?"
+      "text": "Hello. I’m good. And you?"
     },
     {
       "speaker": "A",
-      "text": "I’m happy. Look! I have a ____."
+      "text": "I’m happy.
     },
     {
       "speaker": "B",
@@ -25,11 +25,11 @@
     },
     {
       "speaker": "B",
-      "text": "Me too. And I can ____, too. Can you ____?"
+      "text": "Can you ____?"
     },
     {
       "speaker": "A",
-      "text": "Yes, I can. /\nNo, I cannot."
+      "text": "No, I can't."
     }
   ],
   "substitution_title": "Substitution",
