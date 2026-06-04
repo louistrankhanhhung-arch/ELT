@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "She likes apples",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-apples.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-apples.mp3",
+  "chunks": ["She", "likes", "apples"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{apples}",
+    "base": "She likes {apples}.",
+    "options": [
+      {
+        "value": "bananas",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-bananas.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-he-likes-bananas.mp3",
+        "chunks": ["He", "likes", "bananas"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "milk",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-milk.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-he-likes-milk.mp3",
+        "chunks": ["He", "likes", "milk"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "noodles",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-noodles.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-noodles.mp3",
+        "chunks": ["She", "likes", "noodles"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "chicken",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-chicken.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-he-likes-chicken.mp3",
+        "chunks": ["He", "likes", "chicken"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "rice",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-rice.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-rice.mp3",
+        "chunks": ["She", "likes", "rice"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "apples",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-apples.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-apples.mp3",
+        "chunks": ["She", "likes", "apples"],
+        "timings": [0, 0.3, 0.6]
+      }
+    ]
+  }
+}
