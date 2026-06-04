@@ -20,19 +20,15 @@
       "text": "There is a ____. "
     },
     {
-      "speaker": "B",
-      "text": "There is a ____."
-    },
-    {
       "speaker": "A",
-      "text": "Yes. And there is a ____, too."
+      "text": "And there is a ____, too."
     },
     {
       "speaker": "A",
       "text": "Look! There is a ____. Can you see it?"
     },
     {
-      "speaker": "A",
+      "speaker": "B",
       "text": "Yes. It's beautiful."
     }
   ],
