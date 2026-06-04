@@ -1,0 +1,17 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 8
+  },
+  "items": [
+    { "word": "She likes apples", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-apples.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-apples.mp3" },
+    { "word": "He likes bananas", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-bananas.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-he-likes-bananas.mp3" },
+    { "word": "He likes milk", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-milk.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-he-likes-milk.mp3" },
+    { "word": "She likes noodles", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-noodles.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-noodles.mp3" },
+    { "word": "He likes chicken", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-chicken.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-he-likes-chicken.mp3" },
+    { "word": "She likes rice", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-rice.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-sen-she-likes-rice.mp3" }
+  ]
+}
