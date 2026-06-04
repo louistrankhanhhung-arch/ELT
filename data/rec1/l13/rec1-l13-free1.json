@@ -5,7 +5,7 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Look at my ____."
+      "text": "Look at my brother."
     },
     {
       "speaker": "B",
@@ -21,7 +21,7 @@
     },
     {
       "speaker": "A",
-      "text": "And she is my _____."
+      "text": "And she is my sister."
     },
     {
       "speaker": "B",
@@ -37,7 +37,7 @@
     },
     {
       "speaker": "A",
-      "text": "Look at my ____."
+      "text": "Look at my father."
     },
     {
       "speaker": "B",
