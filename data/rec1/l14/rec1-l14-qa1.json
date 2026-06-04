@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Does he like ____?\nDoes she like ____?",
+  "answers": [
+    "Yes, he/she does.",
+    "No, he/she doesn't."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "apples",
+    "bananas",
+    "milk",
+    "noodles",
+    "chicken",
+    "rice"
+  ]
+}
