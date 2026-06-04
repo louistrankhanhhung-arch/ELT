@@ -1,0 +1,83 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Look, Ben! My family is at the picnic."
+    },
+    {
+      "speaker": "B",
+      "text": "Wow!"
+    },
+    {
+      "speaker": "A",
+      "text": "That is my father. He can (1) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Nice!"
+    },
+    {
+      "speaker": "A",
+      "text": "That is my mother."
+    },
+    {
+      "speaker": "B",
+      "text": "What can she do?"
+    },
+    {
+      "speaker": "A",
+      "text": "She can (2) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Great!"
+    },
+    {
+      "speaker": "A",
+      "text": "That is my brother."
+    },
+    {
+      "speaker": "B",
+      "text": "What can he do?"
+    },
+    {
+      "speaker": "A",
+      "text": "He can (3) ____."
+    },
+    {
+      "speaker": "B",
+      "text": "Cool!"
+    },
+    {
+      "speaker": "A",
+      "text": "And that is my sister."
+    },
+    {
+      "speaker": "B",
+      "text": "What can she do?"
+    },
+    {
+      "speaker": "A",
+      "text": "She can (4) ____. "
+    },
+    {
+      "speaker": "A",
+      "text": "She can (5) ____, too."
+    },
+    {
+      "speaker": "B",
+      "text": "Wow! Your family is fun!"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "1. cook / read",
+    "2. sing / dance",
+    "3. play the guitar / swim",
+    "4. fly a kite / draw",
+    "5. climb a tree / jump"
+  ]
+}
