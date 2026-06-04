@@ -2,7 +2,7 @@
   "type": "line-ordering",
   "title": "Order the Dialogue",
   "subtitle": "Put the sentences in the correct order.",
-  lines": [
+  "lines": [
     { "text": "A: Look, Ben! My family is at the picnic.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t1-look-ben-my-family-is-at-the-picnic.mp3" },
     { "text": "B: Wow!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b1-wow.mp3" },
     { "text": "A: That is my father. He can cook.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t2-that-is-my-father-he-can-cook.mp3" },
