@@ -1,0 +1,29 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Look, Ben! My family is at the picnic.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t1-look-ben-my-family-is-at-the-picnic.mp3" },
+    { "text": "B: Wow!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b1-wow.mp3" },
+    { "text": "A: That is my father. He can cook.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t2-that-is-my-father-he-can-cook.mp3" },
+    { "text": "B: Nice!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b2-nice.mp3" },
+    { "text": "A: That is my mother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t3-that-is-my-mother.mp3" },
+    { "text": "B: What can she do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b3-what-can-she-do.mp3" },
+    { "text": "A: She can sing.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t4-she-can-sing.mp3" },
+    { "text": "B: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b4-great.mp3" },
+    { "text": "A: That is my brother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t5-that-is-my-brother.mp3" },
+    { "text": "B: What can he do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b5-what-can-he-do.mp3" },
+    { "text": "A: He can play the guitar.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t6-he-can-play-the-guitar.mp3" },
+    { "text": "B: Cool!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b6-cool.mp3" },
+    { "text": "A: And that is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t7-and-that-is-my-sister.mp3" },
+    { "text": "B: Yes. What can she do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b6-yes-what-can-she-do.mp3" },
+    { "text": "A: She can fly a kite.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t8-she-can-fly-a-kite.mp3" },
+    { "text": "A: She can climb a tree, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-t9-she-can-climb-a-tree-too.mp3" },
+    { "text": "B: Wow! Your family is fun!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-dia1-b8-wow-your-family-is-fun.mp3" }
+  ]
+}
