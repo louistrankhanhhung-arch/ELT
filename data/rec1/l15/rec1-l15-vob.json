@@ -1,0 +1,41 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "sing",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-sing.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-sing.mp3"
+    },
+    {
+      "word": "cook",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-cook.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-cook.mp3"
+    },
+    {
+      "word": "ride a bicycle",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-ride-a-bicycle.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-ride-a-bicycle.mp3"
+    },
+    {
+      "word": "fly a kite",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-fly-a-kite.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-fly-a-kite.mp3"
+    },
+    {
+      "word": "play the guitar",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-play-the-guitar.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-play-the-guitar.mp3"
+    },
+    {
+      "word": "climb a tree",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-climb-a-tree.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-climb-a-tree.mp3"
+    }
+  ]
+}
