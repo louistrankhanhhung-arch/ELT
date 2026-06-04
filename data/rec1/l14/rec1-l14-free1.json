@@ -5,54 +5,42 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Welcome to my home"
+      "text": "What does your father like?"
     },
     {
       "speaker": "B",
-      "text": "Thank you."
-    },
-    {
-      "speaker": "A",
-      "text": "We have chicken, rice, and noodles for dinner."
-    },
-    {
-      "speaker": "B",
-      "text": "Yum! What does your father like?"
-    },
-    {
-      "speaker": "A",
       "text": "He likes ____."
     },
     {
-      "speaker": "B",
+      "speaker": "A",
       "text": "What does your mother like?"
     },
     {
-      "speaker": "A",
+      "speaker": "B",
       "text": "She likes ____."
     },
     {
-      "speaker": "B",
+      "speaker": "A",
       "text": "What does your sister like?"
     },
     {
-      "speaker": "A",
+      "speaker": "B",
       "text": "She likes ____."
     },
     {
-      "speaker": "B",
+      "speaker": "A",
       "text": "And your brother?"
     },
     {
-      "speaker": "A",
+      "speaker": "B",
       "text": "He likes ____."
     },
     {
-      "speaker": "B",
+      "speaker": "A",
       "text": "What about you?"
     },
     {
-      "speaker": "A",
+      "speaker": "B",
       "text": "I like ____."
     }
   ],
