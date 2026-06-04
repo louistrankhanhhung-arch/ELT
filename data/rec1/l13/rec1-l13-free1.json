@@ -9,11 +9,11 @@
     },
     {
       "speaker": "B",
-      "text": "He is cool."
+      "text": "What does he have?"
     },
     {
       "speaker": "A",
-      "text": "Yes. He has ____."
+      "text": "He has ____."
     },
     {
       "speaker": "B",
@@ -21,11 +21,11 @@
     },
     {
       "speaker": "A",
-      "text": "And she is my sister."
+      "text": "Look at my sister."
     },
     {
       "speaker": "B",
-      "text": "She is beautiful."
+      "text": "What does she have?"
     },
     {
       "speaker": "A",
@@ -41,11 +41,11 @@
     },
     {
       "speaker": "B",
-      "text": "He has ____ and ____."
+      "text": "What does he have?"
     },
     {
       "speaker": "A",
-      "text": "Yes!"
+      "text": "He has ____ and ____."
     }
   ],
   "substitution_title": "Substitution",
