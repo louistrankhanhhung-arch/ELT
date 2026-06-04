@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What does he/she like?",
+  "answers": [
+    "He likes ____.",
+    "She likes ____."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "apples",
+    "bananas",
+    "milk",
+    "noodles",
+    "chicken",
+    "rice"
+  ]
+}
