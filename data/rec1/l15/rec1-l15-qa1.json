@@ -1,0 +1,18 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Can he ____?\nCan she ____?",
+  "answers": [
+    "Yes, he/she can.",
+    "No, he/she can't."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "sing",
+    "cook",
+    "ride a bicycle",
+    "fly a kite",
+    "play the guitar",
+    "climb a tree"
+  ]
+}
