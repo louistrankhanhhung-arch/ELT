@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "He can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-he-can-ride-a-bicycle.mp3",
+      "answer": "ride a bicycle",
+      "options": ["ride a bicycle", "sing", "cook", "climb a tree"]
+    },
+    {
+      "prompt": "She can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-she-can-climb-a-tree.mp3",
+      "answer": "climb a tree",
+      "options": ["climb a tree", "ride a bicycle", "sing", "cook"]
+    },
+    {
+      "prompt": "She can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-she-can-sing.mp3",
+      "answer": "sing",
+      "options": ["sing", "fly a kite", "play the guitar", "cook"]
+    },
+    {
+      "prompt": "She can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-she-can-fly-a-kite.mp3",
+      "answer": "fly a kite",
+      "options": ["fly a kite", "play the guitar", "sing", "cook"]
+    },
+    {
+      "prompt": "He can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-he-can-play-the-guitar.mp3",
+      "answer": "play the guitar",
+      "options": ["play the guitar", "sing", "cook", "ride a bicycle"]
+    },
+    {
+      "prompt": "He can ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-sen-he-can-cook.mp3",
+      "answer": "cook",
+      "options": ["cook", "sing", "fly a kite", "climb a tree"]
+    }
+  ]
+}
