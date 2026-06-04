@@ -1,0 +1,68 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Welcome to my home"
+    },
+    {
+      "speaker": "B",
+      "text": "Thank you."
+    },
+    {
+      "speaker": "A",
+      "text": "We have chicken, rice, and noodles for dinner."
+    },
+    {
+      "speaker": "B",
+      "text": "Yum! What does your father like?"
+    },
+    {
+      "speaker": "A",
+      "text": "He likes ____."
+    },
+    {
+      "speaker": "B",
+      "text": "What does your mother like?"
+    },
+    {
+      "speaker": "A",
+      "text": "She likes ____."
+    },
+    {
+      "speaker": "B",
+      "text": "What does your sister like?"
+    },
+    {
+      "speaker": "A",
+      "text": "She likes ____."
+    },
+    {
+      "speaker": "B",
+      "text": "And your brother?"
+    },
+    {
+      "speaker": "A",
+      "text": "He likes ____."
+    },
+    {
+      "speaker": "B",
+      "text": "What about you, Tom?"
+    },
+    {
+      "speaker": "A",
+      "text": "I like ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "apples",
+    "bananas",
+    "milk",
+    "noodles",
+    "chicken",
+    "rice"
+  ]
+}
