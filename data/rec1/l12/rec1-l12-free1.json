@@ -5,15 +5,15 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Who is he, ____?"
+      "text": "Who is he?"
     },
     {
       "speaker": "B",
-      "text": "He is my ____."
+      "text": "He is my father."
     },
     {
       "speaker": "A",
-      "text": "Is he (1) ____?"
+      "text": "Is he ____?"
     },
     {
       "speaker": "B",
@@ -25,11 +25,11 @@
     },
     {
       "speaker": "B",
-      "text": "She is my ____."
+      "text": "She is my mother."
     },
     {
       "speaker": "A",
-      "text": "She is (2) ____."
+      "text": "She is ____."
     },
     {
       "speaker": "B",
@@ -37,15 +37,15 @@
     },
     {
       "speaker": "A",
-      "text": "And who is ____?"
+      "text": "And who is that girl?"
     },
     {
       "speaker": "B",
-      "text": "She is my ____."
+      "text": "She is my sister."
     },
     {
       "speaker": "A",
-      "text": "Is she (3) ____?"
+      "text": "Is she ____?"
     },
     {
       "speaker": "B",
