@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Report",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about your friend."
+    },
+    {
+      "speaker": "B",
+      "text": "His/her name is ____.\n➜  He/She is ____.\n➜ He/She likes ____.\n➜ He/She can ____."
+    }
+  ]
+}
