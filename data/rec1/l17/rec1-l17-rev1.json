@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Review",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What’s your name?\nDo you like cats?\nCan you swim?"
+    }
+  ]
+}
