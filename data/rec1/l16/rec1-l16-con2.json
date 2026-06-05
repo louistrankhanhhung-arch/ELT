@@ -1,0 +1,18 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "➜ He/She is my ____.\n➜ He/She likes ____.\n➜ He/She can ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father, noodles, cook",
+    "mother, rice, dance",
+    "brother, chicken, climb a tree",
+    "sister, bananas, swim"
+  ]
+}
