@@ -1,0 +1,23 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-t1-hello.mp3" },
+    { "text": "B: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-b1-hello.mp3" },
+    { "text": "A: What's your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-t2-whats-your-name.mp3" },
+    { "text": "B: My name is Ben.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-b2-my-name-is-ben.mp3" },
+    { "text": "A: Are you a student?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-t3-are-you-a-student.mp3" },
+    { "text": "B: Yes, I am.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-b3-yes-i-am.mp3" },
+    { "text": "A: Do you like dogs?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-t4-do-you-like-dogs.mp3" },
+    { "text": "B: Yes, I do.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-b4-yes-i-do.mp3" },
+    { "text": "A: Can you swim?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-t5-can-you-swim.mp3" },
+    { "text": "B: Yes, I can.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-b5-yes-i-can.mp3" },
+    { "text": "A: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l17/g1-l17-dia1-t6-great.mp3" }
+  ]
+}
