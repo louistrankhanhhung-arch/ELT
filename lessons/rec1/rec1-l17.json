@@ -12,7 +12,7 @@
       "activity_kind": "text",
       "title": "Cover",
       "player": "player-text.html",
-      "data": "data/rec1/17/rec1-l17-cover.json",
+      "data": "data/rec1/l17/rec1-l17-cover.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -24,7 +24,7 @@
       "activity_kind": "review",
       "title": "Review",
       "player": "player-text.html",
-      "data": "data/rec1/17/rec1-l17-rev1.json",
+      "data": "data/rec1/l17/rec1-l17-rev1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -36,7 +36,7 @@
       "activity_kind": "dialogue",
       "title": "Dialogue",
       "player": "player-dialogue.html",
-      "data": "data/rec1/17/rec1-l17-dia1.json",
+      "data": "data/rec1/l17/rec1-l17-dia1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -48,7 +48,7 @@
       "activity_kind": "speaking",
       "title": "Let's talk 1",
       "player": "player-text.html",
-      "data": "data/rec1/17/rec1-l17-con1.json",
+      "data": "data/rec1/l17/rec1-l17-con1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -60,7 +60,7 @@
       "activity_kind": "speaking",
       "title": "Ask your friend",
       "player": "player-text.html",
-      "data": "data/rec1/17/rec1-l17-con2.json",
+      "data": "data/rec1/l17/rec1-l17-con2.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -72,7 +72,7 @@
       "activity_kind": "speaking",
       "title": "Interview",
       "player": "player-text.html",
-      "data": "data/rec1/17/rec1-l17-semi1.json",
+      "data": "data/rec1/l17/rec1-l17-semi1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -84,7 +84,7 @@
       "activity_kind": "free",
       "title": "Report",
       "player": "player-text.html",
-      "data": "data/rec1/17/rec1-l17-free1.json",
+      "data": "data/rec1/l17/rec1-l17-free1.json",
       "completion": {
         "mode": "teacher_next"
       }
