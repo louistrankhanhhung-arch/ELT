@@ -4,11 +4,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. Can you introduce yourself?"
+      "text": "Tell me about yourself?"
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s _____.\n➜ I am _____.\n➜ I like _____.\n➜ I have _____.\n➜ I can _____."
+      "text": "My name’s _____.\n➜ I am _____.\n➜ I like _____.\n➜ I have _____.\n➜ I can _____."
     }
   ]
 }
