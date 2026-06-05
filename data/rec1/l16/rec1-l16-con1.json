@@ -1,0 +1,18 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let’s talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "➜ He/She is my ____.\n➜ He/She is ____.\n➜ He/She has ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father, tall, watch",
+    "mother, kind, hat",
+    "brother, funny, bicycle",
+    "sister, beautiful, kite"
+  ]
+}
