@@ -1,0 +1,30 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Look at this picture, Alice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b1-look-at-this-picture-alice.mp3" },
+    { "text": "B: Wow! Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a1-wow-who-is-she.mp3" },
+    { "text": "A: She is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b2-she-is-my-sister.mp3" },
+    { "text": "B: She is beautiful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a2-she-is-beautiful.mp3" },
+    { "text": "A: Yes. She has a camera.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b3-yes-she-has-a-camera.mp3" },
+    { "text": "B: Nice! What does she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a3-nice-what-does-she-like.mp3" },
+    { "text": "A: She likes apples.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b4-she-likes-apples.mp3" },
+    { "text": "B: Can she take photos?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a4-can-she-take-photos.mp3" },
+    { "text": "A: Yes, she can.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b5-yes-she-can.mp3" },
+    { "text": "B: Cool!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a5-cool.mp3" },
+    { "text": "A: And this is my father.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b6-and-this-is-my-father.mp3" },
+    { "text": "B: He is tall.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a6-he-is-tall.mp3" },
+    { "text": "A: Yes. He has glasses.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b6-yes-he-has-glasses.mp3" },
+    { "text": "B: What does he like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a6-what-does-he-likes.mp3" },
+    { "text": "A: He likes chicken.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b8-he-likes-chicken.mp3" },
+    { "text": "B: Can he play the guitar?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a8-can-he-play-the-guitar.mp3" },
+    { "text": "A: No, he can't. But he can cook.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-b9-no-he-cant-but-he-can-cook.mp3" },
+    { "text": "B: That's great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l16/g1-l16-dia1-a9-thats-great.mp3" }
+  ]
+}
