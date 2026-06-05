@@ -1,0 +1,117 @@
+{
+  "lesson_id": "rec1-l16",
+  "title": "Recovery 1 – Lesson 10",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l16/rec1-l16-dia1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "control1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Let's talk 1",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "control2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Let's talk 2",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Let's talk 3",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "semi2",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "About your school",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-semi2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "free",
+      "title": "Ask your friend",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free2",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "free",
+      "title": "Record",
+      "player": "player-text.html",
+      "data": "data/rec1/l16/rec1-l16-free2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
