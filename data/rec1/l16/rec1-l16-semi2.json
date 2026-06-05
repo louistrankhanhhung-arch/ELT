@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "About my family!",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "He/She is my ____.\n➜ He/She is ____.\n➜ He/She has ____.\n➜ He/She likes ____.\n➜ He/She can ____."
+    }
+  ]
+}
