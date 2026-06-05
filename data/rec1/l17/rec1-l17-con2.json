@@ -1,0 +1,38 @@
+{
+  "layout": "full_dialogue",
+  "title": "Ask your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What's your name?"
+    },
+    {
+      "speaker": "B",
+      "text": "My name’s ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Are you a ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, I am. / No, I am not."
+    },
+    {
+      "speaker": "A",
+      "text": "Do you like ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, I do. / No, I don’t."
+    },
+    {
+      "speaker": "A",
+      "text": "Can you ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "Yes, I can. / No, I can’t."
+    }
+  ]
+}
