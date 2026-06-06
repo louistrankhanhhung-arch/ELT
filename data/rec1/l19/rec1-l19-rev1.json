@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "Who is he?",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-watch.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-who-is-he.mp3",
+  "chunks": ["Who is he"],
+  "timings": [0],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{sing}",
+    "base": "{Who} is he?",
+    "options": [
+      {
+        "value": "What does he like?",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-chicken.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-what-does-he-like.mp3",
+        "chunks": ["What does he like?"],
+        "timings": [0]
+      },
+      {
+        "value": "What can he do?",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-cook.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-what-can-he-do.mp3",
+        "chunks": ["What can he do?"],
+        "timings": [0]
+      },
+      {
+        "value": "Who is she?",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-who-is-she.mp3",
+        "chunks": ["Who is she?"],
+        "timings": [0]
+      },
+      {
+        "value": "What does she like?",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-noodles.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-what-does-she-like.mp3",
+        "chunks": ["What does she like?"],
+        "timings": [0]
+      },
+      {
+        "value": "What can she do?",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-climb-a-tree.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-what-can-she-do.mp3",
+        "chunks": ["What can she do?"],
+        "timings": [0]
+      },
+      {
+        "value": "Who is he?",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-watch.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-who-is-he.mp3",
+        "chunks": ["Who is he?"],
+        "timings": [0]
+      }
+    ]
+  }
+}
