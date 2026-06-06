@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from random import randint
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import List
 import os
 import sqlite3
@@ -17,6 +17,7 @@ except ImportError:
 DB_PATH = "elt_runtime.db"
 DATABASE_URL = os.getenv("DATABASE_URL")
 USE_POSTGRES = bool(DATABASE_URL)
+SESSION_TTL_HOURS = 4
 
 app = FastAPI(title="ELT Runtime API v0.3 DB")
 
@@ -54,6 +55,11 @@ class EventRequest(BaseModel):
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
+def parse_iso(value: str):
+    if not value:
+        return None
+
+    return datetime.fromisoformat(value)
 
 def db():
     if USE_POSTGRES:
@@ -88,8 +94,25 @@ def init_db():
             current_block_index INTEGER NOT NULL DEFAULT 0,
             status TEXT NOT NULL DEFAULT 'active',
             created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            expires_at TEXT,
+            ended_at TEXT
         )
     """)
+
+    # Migration for existing DBs created before auto-expiry existed.
+    if USE_POSTGRES:
+        cur.execute("ALTER TABLE sessions ADD COLUMN IF NOT EXISTS expires_at TEXT")
+        cur.execute("ALTER TABLE sessions ADD COLUMN IF NOT EXISTS ended_at TEXT")
+    else:
+        cur.execute("PRAGMA table_info(sessions)")
+        columns = {row["name"] for row in cur.fetchall()}
+
+        if "expires_at" not in columns:
+            cur.execute("ALTER TABLE sessions ADD COLUMN expires_at TEXT")
+
+        if "ended_at" not in columns:
+            cur.execute("ALTER TABLE sessions ADD COLUMN ended_at TEXT")
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS session_students (
@@ -183,6 +206,57 @@ def get_session(pin: str):
     data["events"] = events
     return data
 
+def update_session_status(pin: str, status: str):
+    conn = db()
+    cur = conn.cursor()
+
+    cur.execute(
+        sql("UPDATE sessions SET status = ?, ended_at = ? WHERE pin = ?"),
+        (status, now_iso(), pin)
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def apply_session_expiry(session):
+    if not session:
+        return None
+
+    if session["status"] != "active":
+        return session
+
+    expires_at = session.get("expires_at")
+
+    # Backward compatibility for old rows without expires_at.
+    if not expires_at:
+        created_at = parse_iso(session["created_at"])
+        expires_at_dt = created_at + timedelta(hours=SESSION_TTL_HOURS)
+    else:
+        expires_at_dt = parse_iso(expires_at)
+
+    if datetime.now(timezone.utc) >= expires_at_dt:
+        update_session_status(session["pin"], "expired")
+        session = get_session(session["pin"])
+
+    return session
+
+
+def require_active_session(pin: str):
+    session = get_session(pin)
+
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    session = apply_session_expiry(session)
+
+    if session["status"] != "active":
+        raise HTTPException(
+            status_code=409,
+            detail=f"Session is {session['status']}"
+        )
+
+    return session
 
 @app.get("/api/health")
 def health():
@@ -196,6 +270,8 @@ def health():
 @app.post("/api/sessions/start")
 def start_session(payload: StartSessionRequest):
     pin = generate_pin()
+    created_at = datetime.now(timezone.utc)
+    expires_at = created_at + timedelta(hours=SESSION_TTL_HOURS)
 
     conn = db()
     cur = conn.cursor()
@@ -203,9 +279,9 @@ def start_session(payload: StartSessionRequest):
     cur.execute(sql("""
         INSERT INTO sessions (
             pin, lesson_id, lesson_path, total_blocks,
-            current_block_index, status, created_at
+            current_block_index, status, created_at, expires_at, ended_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """), (
         pin,
         payload.lesson_id,
@@ -213,7 +289,9 @@ def start_session(payload: StartSessionRequest):
         payload.total_blocks,
         payload.current_block_index,
         "active",
-        now_iso(),
+        created_at.isoformat(),
+        expires_at.isoformat(),
+        None,
     ))
 
     conn.commit()
@@ -229,19 +307,13 @@ def get_session_state(pin: str):
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    return session
+    return apply_session_expiry(session)
 
 
 @app.post("/api/sessions/{pin}/join")
 def join_session(pin: str, payload: JoinSessionRequest):
-    session = get_session(pin)
-
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
-
-    if session["status"] == "ended":
-        raise HTTPException(status_code=400, detail="Session has ended")
-
+    session = require_active_session(pin)
+    
     conn = db()
     cur = conn.cursor()
 
@@ -286,10 +358,7 @@ def join_session(pin: str, payload: JoinSessionRequest):
 
 @app.post("/api/sessions/{pin}/next")
 def next_block(pin: str):
-    session = get_session(pin)
-
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+    session = require_active_session(pin)
 
     next_index = min(
         session["current_block_index"] + 1,
@@ -310,10 +379,7 @@ def next_block(pin: str):
 
 @app.post("/api/sessions/{pin}/previous")
 def previous_block(pin: str):
-    session = get_session(pin)
-
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+    session = require_active_session(pin)
 
     prev_index = max(session["current_block_index"] - 1, 0)
 
@@ -331,10 +397,7 @@ def previous_block(pin: str):
 
 @app.post("/api/sessions/{pin}/block/{index}")
 def set_block(pin: str, index: int):
-    session = get_session(pin)
-
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+    session = require_active_session(pin)
 
     if index < 0 or index >= session["total_blocks"]:
         raise HTTPException(status_code=400, detail="Invalid block index")
@@ -352,10 +415,7 @@ def set_block(pin: str, index: int):
 
 @app.post("/api/sessions/{pin}/events")
 def log_event(pin: str, payload: EventRequest):
-    session = get_session(pin)
-
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+    session = require_active_session(pin)
 
     conn = db()
     cur = conn.cursor()
@@ -390,8 +450,8 @@ def end_session(pin: str):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        sql("UPDATE sessions SET status = ? WHERE pin = ?"),
-        ("ended", pin)
+        sql("UPDATE sessions SET status = ?, ended_at = ? WHERE pin = ?"),
+        ("ended", now_iso(), pin)
     )
     conn.commit()
     conn.close()
