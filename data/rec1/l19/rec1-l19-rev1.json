@@ -1,9 +1,9 @@
 {
   "title": "Repeat",
   "text": "Who is he?",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-watch.png",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-sen-who-is-he.mp3",
-  "chunks": ["Who is he"],
+  "chunks": ["Who is he?"],
   "timings": [0],
   "settings": {
     "autoRepeatCount": 2,
