@@ -93,7 +93,7 @@ def init_db():
             total_blocks INTEGER NOT NULL,
             current_block_index INTEGER NOT NULL DEFAULT 0,
             status TEXT NOT NULL DEFAULT 'active',
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
             created_at TEXT NOT NULL,
             expires_at TEXT,
             ended_at TEXT
