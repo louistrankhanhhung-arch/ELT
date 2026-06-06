@@ -90,7 +90,7 @@
       width: 100%;
       display: block;
       box-sizing: border-box;
-      border: 3px solid transparent;
+      border: 0;
       border-radius: 18px;
       padding: 10px 14px;
       font-size: clamp(24px, 3.4vw, 44px);
@@ -104,7 +104,6 @@
     .line:hover { background: rgba(15,116,168,.06); }
     .line.active {
       background: rgba(15,116,168,.14);
-      border-color: var(--blue);
       color: var(--blue);
       transform: translateX(2px);
     }
@@ -360,7 +359,6 @@
         min-height: 0;
         padding: 6px 9px;
         border-radius: 12px;
-        border-width: 2px;
         font-size: clamp(14px, 3.5vh, 22px);
         line-height: 1.08;
       }
