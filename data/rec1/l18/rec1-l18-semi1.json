@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Interview your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Name: ____.\nHave: ____.\nWhere: ____."
+    }
+  ]
+}
