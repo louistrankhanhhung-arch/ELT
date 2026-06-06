@@ -398,6 +398,94 @@
       }
     }
 
+    /* =========================================================
+       Laptop Low-Height Patch
+       ASUS X515EP / 1366x768 / Windows Scaling
+       ========================================================= */
+
+    @media (min-width: 900px) and (max-height: 760px) {
+
+      body {
+        overflow: hidden;
+      }
+
+      .app {
+        width: min(1180px, 100vw);
+        height: 100dvh;
+        min-height: 0;
+
+        padding: 10px 14px;
+        gap: 8px;
+
+        display: grid;
+        grid-template-rows: auto 1fr auto auto;
+
+        align-items: stretch;
+      }
+
+      h1 {
+        font-size: clamp(34px, 6vh, 58px);
+        line-height: 1;
+      }
+
+      .panel {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+
+        padding: 18px;
+
+        overflow: hidden;
+        align-items: stretch;
+      }
+
+      .imageWrap {
+        height: 100%;
+        min-height: 0;
+      }
+
+      .imageWrap img {
+        width: 100%;
+        height: 100%;
+
+        aspect-ratio: auto;
+        object-fit: cover;
+      }
+
+      .lines {
+        height: 100%;
+        min-height: 0;
+
+        gap: 6px;
+        overflow-y: auto;
+
+        justify-content: center;
+      }
+
+      .line {
+        min-height: 0;
+
+        padding: 7px 11px;
+
+        font-size: clamp(24px, 4.3vh, 34px);
+        line-height: 1.08;
+      }
+
+      .controls {
+        gap: 8px;
+      }
+
+      button {
+        padding: 9px 14px;
+        font-size: clamp(14px, 2.4vh, 18px);
+      }
+
+      .status {
+        min-height: 20px;
+        font-size: 15px;
+      }
+    }
+
     @media (min-width: 900px) and (max-height: 760px) {
       .imageWrap img {
         object-fit: contain;
