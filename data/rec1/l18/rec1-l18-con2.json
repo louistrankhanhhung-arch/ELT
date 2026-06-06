@@ -1,0 +1,41 @@
+{
+  "title": "What is this? Where is ____?",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-book-on-the-chair.png",
+      "audio": ""
+    },
+    {
+      "word": "",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-hat-under-the-table.png",
+      "audio": ""
+    },
+    {
+      "word": "",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-ruler-between-the-pen-and-the-pencil.png",
+      "audio": ""
+    },
+    {
+      "word": "",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-tree-next-to-the-door.png",
+      "audio": ""
+    },
+    {
+      "word": "",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-watch-in-the-bag.png",
+      "audio": ""
+    },
+    {
+      "word": "",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-kite-behind-the-window.png",
+      "audio": ""
+    }
+  ]
+}
