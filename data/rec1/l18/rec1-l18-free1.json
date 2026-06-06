@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Report",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about what your friend has and where it is."
+    },
+    {
+      "speaker": "B",
+      "text": "His/her name is ____.\n➜  He/She has ____.\n➜ It is ____."
+    }
+  ]
+}
