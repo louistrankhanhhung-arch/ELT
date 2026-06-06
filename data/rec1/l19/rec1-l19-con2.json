@@ -1,0 +1,17 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWho is he/she?\nWhat does he/she like?\nWhat can he/she do?"
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father, mother, brother, sister",
+    "apples, milk, noodles, bananas",
+    "swim, dance, draw, read"
+  ]
+}
