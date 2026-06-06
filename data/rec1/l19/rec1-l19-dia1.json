@@ -1,0 +1,21 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-a1-who-is-she.mp3" },
+    { "text": "B: She is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-j1-she-is-my-sister.mp3" },
+    { "text": "A: Is she kind?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-a2-is-she-kind.mp3" },
+    { "text": "B: Yes, she is.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-j2-yes-she-is.mp3" },
+    { "text": "A: What does she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-a3-what-does-she-like.mp3" },
+    { "text": "B: She likes apples.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-j3-she-likes-apples.mp3" },
+    { "text": "A: What can she do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-a4-what-can-she-do.mp3" },
+    { "text": "B: She can dance.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-j4-she-can-dance.mp3" },
+    { "text": "A: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l19/g1-l19-dia1-a5-great.mp3" }
+  ]
+}
