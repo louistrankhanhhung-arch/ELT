@@ -59,7 +59,7 @@
       "type": "activity",
       "activity_kind": "speaking",
       "title": "Ask your friend",
-      "player": "player-grid-v2.html",
+      "player": "player-text.html",
       "data": "data/rec1/l19/rec1-l19-con2.json",
       "completion": {
         "mode": "teacher_next"
