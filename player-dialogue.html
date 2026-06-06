@@ -83,9 +83,13 @@
       flex-direction: column;
       gap: 10px;
       width: 100%;
+      align-items: stretch;
     }
 
     .line {
+      width: 100%;
+      display: block;
+      box-sizing: border-box;
       border: 3px solid transparent;
       border-radius: 18px;
       padding: 10px 14px;
@@ -632,6 +636,16 @@
       [...document.querySelectorAll('.line')].forEach((el, i) => {
         el.classList.toggle('active', i === index);
       });
+
+      if (index >= 0) {
+        document
+          .querySelector(`.line[data-index="${index}"]`)
+          ?.scrollIntoView({
+            block: 'center',
+            behavior: 'smooth'
+          });
+      }
+    
       if (index >= 0 && lines[index]) {
         els.subtitleSpeaker.textContent = lines[index].speaker ? lines[index].speaker : '';
         els.subtitleText.textContent = lines[index].text || '';
