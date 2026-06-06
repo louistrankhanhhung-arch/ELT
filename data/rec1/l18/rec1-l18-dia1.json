@@ -1,0 +1,24 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Jill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-t1-hello-jill.mp3" },
+    { "text": "B: Hello, Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-j1-hello-tom.mp3" },
+    { "text": "A: What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-t2-whats-is-this.mp3" },
+    { "text": "B: This is a camera.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-j2-this-is-a-camera.mp3" },
+    { "text": "A: Wow!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-t3-wow.mp3" },
+    { "text": "B: What do you have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-j3-what-do-you-have.mp3" },
+    { "text": "A: I have a ball.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-t4-i-have-a-ball.mp3" },
+    { "text": "B: Nice!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-j4-nice.mp3" },
+    { "text": "A: Look! There is a bicycle.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-t5-look-there-is-a-bicycle.mp3" },
+    { "text": "B: Where is the bicycle?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-j5-where-is-the-bicycle.mp3" },
+    { "text": "A: It is next to the tree.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-t6-it-is-next-to-the-tree.mp3" },
+    { "text": "B: Cool.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-dia1-j6-cool.mp3" }
+  ]
+}
