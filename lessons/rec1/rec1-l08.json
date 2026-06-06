@@ -1,6 +1,6 @@
 {
   "lesson_id": "rec1-l08",
-  "title": "Recovery 1 – Lesson 7",
+  "title": "Recovery 1 – Lesson 8",
   "level": "Pre-A1",
   "version": "0.1",
   "estimated_minutes": 60,
@@ -114,20 +114,8 @@
       }
     },
     {
-      "id": "game3",
-      "order": 10,
-      "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 3",
-      "player": "game.html",
-      "data": "data/rec1/l08/rec1-l08-gam3.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
       "id": "semi1",
-      "order": 11,
+      "order": 10,
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Let's talk 1",
@@ -139,7 +127,7 @@
     },
     {
       "id": "free1",
-      "order": 12,
+      "order": 11,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk 2",
