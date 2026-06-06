@@ -65,13 +65,17 @@
       overflow: hidden;
       background: #eef3f5;
       box-shadow: 0 4px 12px rgba(23,48,68,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .imageWrap img {
       width: 100%;
       display: block;
       aspect-ratio: 16 / 11;
-      object-fit: cover;
+      object-fit: contain;
+      background: #eef3f5;
     }
 
     .lines {
@@ -264,7 +268,8 @@
       .imageWrap img {
         height: 100%;
         aspect-ratio: auto;
-        object-fit: cover;
+        object-fit: contain;
+        background: #eef3f5;
       }
     
       .lines {
@@ -335,7 +340,8 @@
         height: 100%;
         width: 100%;
         aspect-ratio: auto;
-        object-fit: cover;
+        object-fit: contain;
+        background: #eef3f5;
       }
     
       .lines {
