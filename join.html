@@ -186,7 +186,7 @@
         );
 
         if (!res.ok) {
-          throw new Error("Session not found.");
+          throw new Error("Session not found, ended, or expired.");
         }
 
         const data = await res.json();
