@@ -333,13 +333,22 @@
             isDisconnected = false;
           }
 
-          if (session.status === "ended") {
+          if (
+            session.status === "ended" ||
+            session.status === "expired"
+          ) {
             lessonTitle.textContent = "Session ended";
-            blockTitle.textContent = "Please wait for your teacher.";
+            blockTitle.textContent =
+              session.status === "expired"
+                ? "This PIN has expired."
+                : "Please wait for your teacher.";
             statusText.textContent = `PIN ${sessionPin}`;
             playerFrame.style.display = "none";
             errorBox.style.display = "block";
-            errorBox.textContent = "The class session has ended.";
+            errorBox.textContent =
+              session.status === "expired"
+                ? "The class session has expired."
+                : "The class session has ended.";
             if (pollingTimer) {
               clearInterval(pollingTimer);
               pollingTimer = null;
