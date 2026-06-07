@@ -1,0 +1,22 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello. My name’s Ben.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b1-hello-my-names-ben.mp3" },
+    { "text": "This is my garden.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b2-this-is-my-garden.mp3" },
+    { "text": "That is my bicycle.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b3-that-is-my-bicycle.mp3" },
+    { "text": "It is next to the tree.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b4-it-is-next-to-the-tree.mp3" },
+    { "text": "I can ride it.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b5-i-can-ride-it.mp3" },
+    { "text": "That is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b6-that-is-my-sister.mp3" },
+    { "text": "She likes birds.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b7-she-likes-birds.mp3" },
+    { "text": "She has a camera.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b8-she-has-a-camera.mp3" },
+    { "text": "She can take photos of birds.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b9-she-can-take-photos-of-birds.mp3" },
+    { "text": "Look! There is a bird in the tree.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia1-b10-look-there-is-a-bird-in-the-tree.mp3" }
+  ]
+}
