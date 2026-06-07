@@ -1,0 +1,63 @@
+{
+  "title": "Review",
+  "text": "1",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-strong.png",
+  "audio": "",
+  "chunks": ["Who is he?"],
+  "timings": [0],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{sing}",
+    "base": "{Who} is he?",
+    "options": [
+      {
+        "value": "2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l14/g1-l14-vob-apples.png",
+        "audio": "",
+        "chunks": ["What does she like?"],
+        "timings": [0]
+      },
+      {
+        "value": "3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.png",
+        "audio": "",
+        "chunks": ["What does he have?"],
+        "timings": [0]
+      },
+      {
+        "value": "4",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l15/g1-l15-vob-sing.png",
+        "audio": "",
+        "chunks": ["What can she do?"],
+        "timings": [0]
+      },
+      {
+        "value": "5",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      },
+      {
+        "value": "6",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-bird-in-the-tree.png",
+        "audio": "",
+        "chunks": ["Where is the bird?"],
+        "timings": [0]
+      },
+      {
+        "value": "1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-strong.png",
+        "audio": "",
+        "chunks": ["Who is he?"],
+        "timings": [0]
+      }
+    ]
+  }
+}
