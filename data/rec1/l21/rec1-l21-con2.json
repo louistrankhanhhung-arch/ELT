@@ -1,0 +1,19 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-dia2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Where is this place?", "audio": "" },
+    { "text": "What is this?", "audio": "" },
+    { "text": "Where is it?", "audio": "" },
+    { "text": "What can you do?", "audio": "" },
+    { "text": "Who is she?", "audio": "" },
+    { "text": "Is she kind?", "audio": "" },
+    { "text": "What does she like?", "audio": "" }
+  ]
+}
