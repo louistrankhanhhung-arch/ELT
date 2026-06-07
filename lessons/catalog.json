@@ -165,6 +165,14 @@
           "estimated_minutes": 60,
           "path": "lessons/rec1/rec1-l20.json",
           "status": "ready"
+        },
+        {
+          "lesson_id": "rec1-l21",
+          "title": "Lesson 21",
+          "level": "Pre-A1",
+          "estimated_minutes": 60,
+          "path": "lessons/rec1/rec1-l21.json",
+          "status": "ready"
         }
       ]
     }
