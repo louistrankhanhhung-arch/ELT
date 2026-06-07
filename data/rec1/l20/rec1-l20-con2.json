@@ -1,6 +1,6 @@
 {
   "title": "Ask & Answer.",
-  "text": "Where is the dog?",
+  "text": "1",
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-dog-behind-the-tree.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-dog.mp3",
   "chunks": ["Where is the dog?"],
@@ -17,42 +17,42 @@
     "base": "{Where} is the dog?",
     "options": [
       {
-        "value": "Where is your sister?",
+        "value": "2",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-sister-in-the-playground.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-your-sister.mp3",
         "chunks": ["Where is your sister?"],
         "timings": [0]
       },
       {
-        "value": "Where is the bird?",
+        "value": "3",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-bird-in-the-tree.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-bird.mp3",
         "chunks": ["Where is the bird?"],
         "timings": [0]
       },
       {
-        "value": "Where is your mother?",
+        "value": "4",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-mother-in-the-house.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-your-mother.mp3",
         "chunks": ["Where is your mother?"],
         "timings": [0]
       },
       {
-        "value": "Where is the book?",
+        "value": "5",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-book-on-the-chair.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-book.mp3",
         "chunks": ["Where is the book?"],
         "timings": [0]
       },
       {
-        "value": "Where is the watch?",
+        "value": "6",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-watch-in-the-bag.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-watch.mp3",
         "chunks": ["Where is the watch?"],
         "timings": [0]
       },
       {
-        "value": "Where is the dog?",
+        "value": "1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-dog-behind-the-tree.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-dog.mp3",
         "chunks": ["Where is the dog?"],
