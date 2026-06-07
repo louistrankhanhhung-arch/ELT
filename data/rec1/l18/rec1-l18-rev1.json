@@ -1,41 +1,63 @@
 {
   "title": "Review",
+  "text": "1",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
+  "audio": "",
+  "chunks": ["What is this?"],
+  "timings": [0],
   "settings": {
-    "shuffle": false,
-    "hideText": false,
-    "autoplayOnFocus": true,
-    "delayMs": 900
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
   },
-  "items": [
-    {
-      "word": "What is this?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-sen-what-is-this.mp3"
-    },
-    {
-      "word": "What is this?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-sen-what-is-this.mp3"
-    },
-    {
-      "word": "What is this?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-sen-what-is-this.mp3"
-    },
-    {
-      "word": "What is this?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-sen-what-is-this.mp3"
-    },
-    {
-      "word": "What is this?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-bicycle.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-sen-what-is-this.mp3"
-    },
-    {
-      "word": "What is this?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-ball.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-sen-what-is-this.mp3"
-    }
-  ]
+  "substitution": {
+    "label": "activities",
+    "slot": "{sing}",
+    "base": "{What} is this?",
+    "options": [
+      {
+        "value": "2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      },
+      {
+        "value": "3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      },
+      {
+        "value": "4",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      },
+      {
+        "value": "5",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-bicycle.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      },
+      {
+        "value": "6",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-ball.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      },
+      {
+        "value": "1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l11/g1-l11-vob-watch.png",
+        "audio": "",
+        "chunks": ["What is this?"],
+        "timings": [0]
+      }
+    ]
+  }
 }
