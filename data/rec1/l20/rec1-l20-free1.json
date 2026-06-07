@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Report",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Report about your friend’s picture."
+    },
+    {
+      "speaker": "B",
+      "text": "This is Tom’s picture.\n➜ His father is in the house.\n➜ His cat is on the chair.\n➜ His camera is under the table."
+    }
+  ]
+}
