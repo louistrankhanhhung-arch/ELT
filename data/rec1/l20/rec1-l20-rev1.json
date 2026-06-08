@@ -1,63 +1,41 @@
 {
-  "title": "Review",
-  "text": "1",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-who-is-he.mp3",
-  "chunks": ["Who is he?"],
-  "timings": [0],
+  "title": "Reivew",
   "settings": {
-    "autoRepeatCount": 2,
-    "repeatDelayMs": 900,
-    "slowRate": 0.6,
-    "highlight": true
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
   },
-  "substitution": {
-    "label": "activities",
-    "slot": "{sing}",
-    "base": "{Who} is he?",
-    "options": [
-      {
-        "value": "2",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-is-he-tall.mp3",
-        "chunks": ["Is he tall?"],
-        "timings": [0]
-      },
-      {
-        "value": "3",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-dog-behind-the-tree.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-what-is-it.mp3",
-        "chunks": ["What is it?"],
-        "timings": [0]
-      },
-      {
-        "value": "4",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-dog-behind-the-tree.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-dog.mp3",
-        "chunks": ["Where is the dog?"],
-        "timings": [0]
-      },
-      {
-        "value": "5",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-bag-on-the-chair.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-what-is-it.mp3",
-        "chunks": ["What is it?"],
-        "timings": [0]
-      },
-      {
-        "value": "6",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-bag-on-the-chair.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-bag.mp3",
-        "chunks": ["Where is the bag?"],
-        "timings": [0]
-      },
-      {
-        "value": "1",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-who-is-he.mp3",
-        "chunks": ["Who is he?"],
-        "timings": [0]
-      }
-    ]
-  }
+  "items": [
+    {
+      "word": "1",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-who-is-he.mp3"
+    },
+    {
+      "word": "2",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-is-he-tall.mp3"
+    },
+    {
+      "word": "3",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-dog-behind-the-tree.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-what-is-it.mp3"
+    },
+    {
+      "word": "4",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-dog-behind-the-tree.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-dog.mp3"
+    },
+    {
+      "word": "5",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-bag-on-the-chair.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-what-is-it.mp3"
+    },
+    {
+      "word": "6",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-vob-bag-on-the-chair.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-where-is-the-bag.mp3"
+    }
+  ]
 }
