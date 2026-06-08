@@ -1,9 +1,9 @@
 {
-  "title": "Collect information from a friend.",
-  "text": "1. Where is ____?",
+  "title": "Collect information",
+  "text": "1",
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-father-dog-ball.png",
-  "audio": "",
-  "chunks": ["1. Where is ____?"],
+  "audio": ""https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-father-dog-ball.mp3",
+  "chunks": ["1. Father, dog, ball"],
   "timings": [0],
   "settings": {
     "autoRepeatCount": 2,
@@ -14,48 +14,48 @@
   "substitution": {
     "label": "activities",
     "slot": "{sing}",
-    "base": "1. {Where} is the dog?",
+    "base": "1. {Father,} dog, ball",
     "options": [
       {
-        "value": "2. Where is ____?",
+        "value": "2",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-sister-rabbit-apple.png",
-        "audio": "",
-        "chunks": ["2. Where is ____?"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-sister-rabbit-apple.mp3",
+        "chunks": ["2. Sister, rabbit, apple"],
         "timings": [0]
       },
       {
-        "value": "3. Where is ____?",
+        "value": "3",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-brother-bag-watch.png",
-        "audio": "",
-        "chunks": ["3. Where is ____?"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-brother-bag-watch.mp3",
+        "chunks": ["3. Brother, bag, watch"],
         "timings": [0]
       },
       {
-        "value": "4. Where is ____?",
+        "value": "4",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-friend-bird-kite.png",
-        "audio": "",
-        "chunks": ["4. Where is ____?"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-friend-bird-kite.mp3",
+        "chunks": ["4. Friend, bird, kite"],
         "timings": [0]
       },
       {
-        "value": "5. Where is ____?",
+        "value": "5",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-mother-cat-camera.png",
-        "audio": "",
-        "chunks": ["5. Where is ____?"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-mother-cat-camera.mp3",
+        "chunks": ["5. Mother, cat, camera"],
         "timings": [0]
       },
       {
-        "value": "6. Where is ____?",
+        "value": "6",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-girl-duck-hat.png",
-        "audio": "",
-        "chunks": ["6. Where is ____?"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-girl-duck-hat.mp3",
+        "chunks": ["6. Girl, duck, hat"],
         "timings": [0]
       },
       {
-        "value": "1. Where is ____?",
+        "value": "1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-father-dog-ball.png",
-        "audio": "",
-        "chunks": ["1. Where is ____?"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l20/g1-l20-sen-father-dog-ball.mp3",
+        "chunks": ["1. Father, dog, ball"],
         "timings": [0]
       }
     ]
