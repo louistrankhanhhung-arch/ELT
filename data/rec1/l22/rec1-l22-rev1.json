@@ -1,0 +1,41 @@
+{
+  "title": "Review",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "1",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-girl.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-who-are-you.mp3"
+    },
+    {
+      "word": "2",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-bag.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-what-do-you-have.mp3"
+    },
+    {
+      "word": "3",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dog.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-what-do-you-like.mp3"
+    },
+    {
+      "word": "4",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-swim.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-what-can-you-do.mp3"
+    },
+    {
+      "word": "5",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-what-is-this.mp3"
+    },
+    {
+      "word": "6",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-in.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-where-is-the-ball.mp3"
+    }
+  ]
+}
