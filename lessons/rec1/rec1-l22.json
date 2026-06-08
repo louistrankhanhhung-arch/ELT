@@ -1,0 +1,93 @@
+{
+  "lesson_id": "rec1-l22",
+  "title": "Recovery 1 – Lesson 22",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/rec1/l21/rec1-l21-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-grid-v2.html",
+      "data": "data/rec1/l21/rec1-l21-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l21/rec1-l21-dia1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "control1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Let's talk 1",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l21/rec1-l21-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "control2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Ask your friend",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l21/rec1-l21-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Interview",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l21/rec1-l21-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "free",
+      "title": "Report",
+      "player": "player-text.html",
+      "data": "data/rec1/l21/rec1-l21-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
