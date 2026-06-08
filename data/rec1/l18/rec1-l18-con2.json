@@ -8,34 +8,34 @@
   },
   "items": [
     {
-      "word": "",
+      "word": "1",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-book-on-the-chair.png",
-      "audio": ""
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-what-is-this-where-is-the-book.mp3"
     },
     {
-      "word": "",
+      "word": "2",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-hat-under-the-table.png",
-      "audio": ""
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-what-is-this-where-is-the-hat.mp3"
     },
     {
-      "word": "",
+      "word": "3",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-ruler-between-the-pen-and-the-pencil.png",
-      "audio": ""
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-what-is-this-where-is-the-ruler.mp3"
     },
     {
-      "word": "",
+      "word": "4",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-tree-next-to-the-door.png",
-      "audio": ""
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-what-is-this-where-is-the-tree.mp3"
     },
     {
-      "word": "",
+      "word": "5",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-watch-in-the-bag.png",
-      "audio": ""
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-what-is-this-where-is-the-watch.mp3"
     },
     {
-      "word": "",
+      "word": "6",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-vob-kite-behind-the-window.png",
-      "audio": ""
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l18/g1-l18-what-is-this-where-is-the-kite.mp3"
     }
   ]
 }
