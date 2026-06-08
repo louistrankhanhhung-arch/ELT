@@ -46,7 +46,7 @@
       "order": 4,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Let's talk 1",
+      "title": "Role play 1",
       "player": "player-dialogue.html",
       "data": "data/rec1/l22/rec1-l22-con1.json",
       "completion": {
@@ -58,7 +58,7 @@
       "order": 5,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Ask your friend",
+      "title": "Role play 2",
       "player": "player-dialogue.html",
       "data": "data/rec1/l22/rec1-l22-con2.json",
       "completion": {
@@ -70,7 +70,7 @@
       "order": 6,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Interview",
+      "title": "Role play 3",
       "player": "player-dialogue.html",
       "data": "data/rec1/l22/rec1-l22-semi1.json",
       "completion": {
