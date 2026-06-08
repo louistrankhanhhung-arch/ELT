@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Role Play Challenge",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Ask 4 questions."
+    },
+    {
+      "speaker": "B",
+      "text": "TAnswer 4 questions."
+    }
+  ]
+}
