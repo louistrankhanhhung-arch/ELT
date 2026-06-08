@@ -8,12 +8,12 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Where is this place?", "audio": "" },
-    { "text": "What is this?", "audio": "" },
-    { "text": "Where is it?", "audio": "" },
-    { "text": "What can you do?", "audio": "" },
-    { "text": "Who is she?", "audio": "" },
-    { "text": "Is she kind?", "audio": "" },
-    { "text": "What does she like?", "audio": "" }
+    { "text": "Where is this place?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-where-is-this-place.mp3" },
+    { "text": "What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-what-is-this.mp3" },
+    { "text": "Where is it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-where-is-it.mp3" },
+    { "text": "What can you do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-what-can-you-do.mp3" },
+    { "text": "Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-who-is-she.mp3" },
+    { "text": "Is she kind?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-is-she-kind.mp3" },
+    { "text": "What does she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l21/g1-l21-sen-what-does-she-like.mp3" }
   ]
 }
