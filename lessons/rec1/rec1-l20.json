@@ -23,7 +23,7 @@
       "type": "activity",
       "activity_kind": "review",
       "title": "Review",
-      "player": "player-sentence.html",
+      "player": "player-grid-v2.html",
       "data": "data/rec1/l20/rec1-l20-rev1.json",
       "completion": {
         "mode": "teacher_next"
@@ -59,7 +59,7 @@
       "type": "activity",
       "activity_kind": "speaking",
       "title": "Ask your friend",
-      "player": "player-grid-v2.html",
+      "player": "player-sentence.html",
       "data": "data/rec1/l20/rec1-l20-con2.json",
       "completion": {
         "mode": "teacher_next"
