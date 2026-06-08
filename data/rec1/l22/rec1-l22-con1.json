@@ -1,0 +1,13 @@
+{
+  "title": "Role play",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-dia2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Welcome to my school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l22/g1-l22-sen-welcome-to-my-school.mp3" }
+  ]
+}
