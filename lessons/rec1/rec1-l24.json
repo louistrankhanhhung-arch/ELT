@@ -1,0 +1,93 @@
+{
+  "lesson_id": "rec1-l24",
+  "title": "Recovery 1 – Lesson 24",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-dia1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "control1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Role play 1",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "control2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Role play 2",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Role play 3",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "free",
+      "title": "Report",
+      "player": "player-text.html",
+      "data": "data/rec1/l24/rec1-l24-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
