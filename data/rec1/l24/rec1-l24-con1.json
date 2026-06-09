@@ -1,0 +1,5 @@
+{
+  "layout": "review_card",
+  "title": "My favorite lesson",
+  "prompt": "I like ____."
+}
