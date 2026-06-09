@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Planning sheet",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Name: Tom\nhappy\nmy house\nhave a dog\nlike noodles\ncan ride a bicycle\n\nFather\nstrong\nlikes chicken\ncan cook"
+    }
+  ]
+}
