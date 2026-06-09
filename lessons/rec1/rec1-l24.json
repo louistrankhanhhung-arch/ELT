@@ -34,7 +34,7 @@
       "order": 3,
       "type": "activity",
       "activity_kind": "dialogue",
-      "title": "Dialogue",
+      "title": "Before vs. After",
       "player": "player-text.html",
       "data": "data/rec1/l24/rec1-l24-dia1.json",
       "completion": {
@@ -46,7 +46,7 @@
       "order": 4,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Role play 1",
+      "title": "Favorite moment",
       "player": "player-text.html",
       "data": "data/rec1/l24/rec1-l24-con1.json",
       "completion": {
@@ -58,7 +58,7 @@
       "order": 5,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Role play 2",
+      "title": "Recovery challenge",
       "player": "player-text.html",
       "data": "data/rec1/l24/rec1-l24-con2.json",
       "completion": {
@@ -70,7 +70,7 @@
       "order": 6,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Role play 3",
+      "title": "English talent show",
       "player": "player-text.html",
       "data": "data/rec1/l24/rec1-l24-semi1.json",
       "completion": {
@@ -82,7 +82,7 @@
       "order": 7,
       "type": "activity",
       "activity_kind": "free",
-      "title": "Report",
+      "title": "Class awards",
       "player": "player-text.html",
       "data": "data/rec1/l24/rec1-l24-free1.json",
       "completion": {
