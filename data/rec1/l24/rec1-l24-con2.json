@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Who are you?\nWhat do you like?\nCan you read?\nWho is he?\nWhat does she like?\nWhere is the ball?\nWhat is this?"
+    }
+  ]
+}
