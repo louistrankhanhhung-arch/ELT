@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Choose topics",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\n1. Introduce yourself\n2. Introduce your family\n3. Introduce your little world\n4. Meet a friend"
+    }
+  ]
+}
