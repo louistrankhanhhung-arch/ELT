@@ -1,0 +1,25 @@
+{
+  "title": "Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-hello.mp3" },
+    { "text": "My name is Ann.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-my-name-is-ann.mp3" },
+    { "text": "I am a teacher.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-i-am-a-teacher.mp3" },
+    { "text": "I am happy today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-i-am-happy-today.mp3" },
+    { "text": "This is my classroom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-this-is-my-classroom.mp3" },
+    { "text": "There is a table.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-there-is-a-table.mp3" },
+    { "text": "There is a chair.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-there-is-a-chair.mp3" },
+    { "text": "This is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-this-is-tom.mp3" },
+    { "text": "He is my student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-he-is-my-student.mp3" },
+    { "text": "He is kind.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-he-is-kind.mp3" },
+    { "text": "He likes fish.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-he-likes-fish.mp3" },
+    { "text": "He can swim.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-he-can-swim.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l23/g1-l23-dia1-thank-you.mp3" }
+  ]
+}
