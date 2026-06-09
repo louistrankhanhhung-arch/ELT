@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Build my little world",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nSELF\n→ My name is____.\n→ I am a ____.\n→ I am ____.\n→ I like ____.\n→ I have ____.\n→ I can ____.\nTHINGS\n→ This is my ____.\n→ There is a ____.\n→ It is ____.\nPEOPLE\n→ He/She is my ____.\n→ He/She is ____.\n→ He/She likes ____.\n→ He/She can ____."
+    }
+  ]
+}
