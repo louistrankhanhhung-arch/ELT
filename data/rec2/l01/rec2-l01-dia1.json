@@ -1,0 +1,20 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Bill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-t1-hello-bill.mp3" },
+    { "text": "B: Hello, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-b1-hello-tony.mp3" },
+    { "text": "A: What time do you get up?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-t2-what-time-do-you-get-up.mp3" },
+    { "text": "B: I get up at six o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-b2-i-get-up-at-six-oclock.mp3" },
+    { "text": "A: What do you do in the morning?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-t3-what-do-you-do-in-the-morning.mp3" },
+    { "text": "B: I have breakfast and I go to school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-b3-i-have-breakfast-and-i-go-to-school.mp3" },
+    { "text": "A: What time do you go to bed?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-t4-what-time-do-you-go-to-bed.mp3" },
+    { "text": "B: I go to bed at nine o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-dia1-b4-i-go-to-bed-at-nine-oclock.mp3" }
+  ]
+}
