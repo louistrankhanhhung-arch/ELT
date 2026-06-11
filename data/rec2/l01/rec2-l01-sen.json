@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "I get up at six o’clock",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up-at-six-oclock.mp3",
+  "chunks": ["I", "get up", "at", "six", "o'clock"],
+  "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.2],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "Routine",
+    "slot": "{get up}",
+    "base": "I {get up} at six o’clock.",
+    "options": [
+      {
+        "value": "go to school",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-school.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-school-at-seven-oclock.mp3",
+        "chunks": ["I", "go to school", "at", "seven", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.8, 1.0. 1.2]
+      },
+      {
+        "value": "go to bed",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-bed.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed-at-nine-oclock.mp3",
+        "chunks": ["I", "go to bed", "at", "nine", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.8, 1.0. 1.2]
+      },
+      {
+        "value": "go home",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-home.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-home.mp3",
+        "chunks": ["I", "go home"],
+        "timings": [0, 0.3]
+      },
+      {
+        "value": "have breakfast",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-have-breakfast.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-have-breakfast.mp3",
+        "chunks": ["I", "have breakfast"],
+        "timings": [0, 0.3]
+      },
+      {
+        "value": "do homework",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-do-homework.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-do-my-homework.mp3",
+        "chunks": ["I", "do my homework"],
+        "timings": [0, 0.3]
+      },
+      {
+        "value": "get up",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up-at-six-oclock.mp3",
+        "chunks": ["I", "get up", "at", "six", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.2]
+      }
+    ]
+  }
+}
