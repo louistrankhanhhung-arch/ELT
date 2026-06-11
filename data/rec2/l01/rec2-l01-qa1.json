@@ -1,0 +1,14 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What time do you get up?\nWhat time do you go to school?\nWhat time do you go to bed?",
+  "answers": [
+    "I ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "6 o'clock",
+    "7 o'clock",
+    "9 o'clock"
+  ]
+}
