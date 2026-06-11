@@ -199,6 +199,21 @@
           "status": "ready"
         }
       ]
+    },
+    {
+      "course_id": "rec2",
+      "course_title": "Recovery 2",
+      "description": "Recovery track for A2 learners.",
+      "lessons": [
+        {
+          "lesson_id": "rec2-l01",
+          "title": "Lesson 1",
+          "level": "A1",
+          "estimated_minutes": 60,
+          "path": "lessons/rec2/rec2-l01.json",
+          "status": "ready"
+        }
+      ]
     }
   ]
 }
