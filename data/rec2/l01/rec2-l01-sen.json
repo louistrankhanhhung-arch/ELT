@@ -21,14 +21,14 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-school.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-school-at-seven-oclock.mp3",
         "chunks": ["I", "go to school", "at", "seven", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.8, 1.0. 1.2]
+        "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.2]
       },
       {
         "value": "go to bed",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-bed.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed-at-nine-oclock.mp3",
         "chunks": ["I", "go to bed", "at", "nine", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.8, 1.0. 1.2]
+        "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.2]
       },
       {
         "value": "go home",
