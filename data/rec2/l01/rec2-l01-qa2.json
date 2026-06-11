@@ -1,9 +1,12 @@
 {
-  "layout": "qa_substitution",
+  "layout": "talking_dialogue",
+  "compact": true,
   "title": "Ask & Answer",
-  "prompt": "What do you do in the morning?\nWhat do you do after school?\nWhat do you do at home?",
-  "answers": [
-    "I ____"
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat do you do in the morning?\nWhat do you do after school?\nWhat do you do at home?"
+    }
   ],
   "substitution_title": "Substitution",
   "substitutions": [
