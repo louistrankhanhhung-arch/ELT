@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-i-have-breakfast.mp3",
+      "answer": "have breakfast",
+      "options": ["have breakfast", "do my homework", "get up", "go home"]
+    },
+    {
+      "prompt": "I ____ at nine o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-i-go-to-bed-at-nine-oclock.mp3",
+      "answer": "go to bed",
+      "options": ["go to bed", "go home", "go to school", "get up"]
+    },
+    {
+      "prompt": "I ____ at seven o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-i-go-to-school-at-seven-oclock.mp3",
+      "answer": "go to school",
+      "options": ["go to school", "go to bed", "go home", "get up"]
+    },
+    {
+      "prompt": "I ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-i-go-home.mp3",
+      "answer": "go home",
+      "options": ["go home", "have breakfast", "go to school", "go to bed"]
+    },
+    {
+      "prompt": "I ____ at six o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-i-get-up-at-six-oclock.mp3",
+      "answer": "get up",
+      "options": ["get up", "do my homework", "go to school", "go to bed"]
+    },
+    {
+      "prompt": "I ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-i-do-my-homework.mp3",
+      "answer": "do my homework",
+      "options": ["do my homework", "go home", "have breakfast", "go to bed"]
+    }
+  ]
+}
