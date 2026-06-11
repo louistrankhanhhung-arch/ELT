@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nI get up at ______.\nI have ______.\nI go to school at ______.\nI go home at ______.\nI do ______.\nI go to bed at ______."
+    }
+  ]
+}
