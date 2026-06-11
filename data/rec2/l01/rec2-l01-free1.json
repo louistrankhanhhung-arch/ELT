@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\n☀️ Morning\n🏫 School\n🏠 Home\n🌙 Night"
+    }
+  ]
+}
