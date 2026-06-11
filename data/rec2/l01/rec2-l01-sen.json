@@ -34,7 +34,7 @@
         "value": "go home",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-home.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-home.mp3",
-        "chunks": ["I", "go", home"],
+        "chunks": ["I", "go", "home"],
         "timings": [0, 0.3, 0.6]
       },
       {
