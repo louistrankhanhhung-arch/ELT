@@ -1,0 +1,16 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What do you do in the morning?\nWhat do you do after school?\nWhat do you do at home?",
+  "answers": [
+    "I ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have breakfast",
+    "go to school",
+    "go home",
+    "do my homework",
+    "go to bed"
+  ]
+}
