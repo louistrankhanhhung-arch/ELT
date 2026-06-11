@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up-at-six-oclock.mp3",
   "chunks": ["I", "get", "up", "at", "six", "o'clock"],
-  "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5],
+  "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.2],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -28,7 +28,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-bed.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed-at-nine-oclock.mp3",
         "chunks": ["I", "go", "to", "bed", "at", "nine", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.1, 1.3, 1.5]
       },
       {
         "value": "go home",
