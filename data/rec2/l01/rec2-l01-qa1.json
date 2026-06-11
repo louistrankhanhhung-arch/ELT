@@ -1,9 +1,12 @@
 {
-  "layout": "qa_substitution",
+  "layout": "talking_dialogue",
+  "compact": true,
   "title": "Ask & Answer",
-  "prompt": "What time do you get up?\nWhat time do you go to school?\nWhat time do you go to bed?",
-  "answers": [
-    "I ____"
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat time do you get up?\nWhat time do you go to school?\nWhat time do you go to bed?"
+    }
   ],
   "substitution_title": "Substitution",
   "substitutions": [
