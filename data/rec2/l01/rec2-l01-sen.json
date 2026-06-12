@@ -14,7 +14,7 @@
   "substitution": {
     "label": "Routine",
     "slot": "{get up}",
-    "base": "I {get up} at six o’clock.",
+    "base": "I {get up}.",
     "options": [
       {
         "value": "go to school",
