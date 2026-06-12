@@ -1,10 +1,19 @@
 {
-  "layout": "full_dialogue",
+  "layout": "talking_dialogue",
+  "compact": true,
   "title": "Let's talk",
   "lines": [
     {
       "speaker": "A",
-      "text": "\n☀️ In the morning, ____.\n🏫 Affter school, ____.\n🌙 At night, ____."
+      "text": "\nHello.\nMy name's ____.\n☀️ In the morning, ____.\n🏫 Affter school, ____.\n🌙 At night, ____.\Thank you."
     }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have breakfast",
+    "go to school",
+    "go home",
+    "do my homework",
+    "go to bed"
   ]
 }
