@@ -5,13 +5,20 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "\nWhat time do you get up?\nWhat time do you go to school?\nWhat time do you go to bed?"
+      "text": "\nDo you ____ in the morning?\nDo you ____ after school?\nDo you ____ at night?"
+    },
+    {
+      "speaker": "B",
+      "text": "\n→ Yes, I do.\n→ No, I don’t."
     }
   ],
   "substitution_title": "Substitution",
   "substitutions": [
-    "6 o'clock",
-    "7 o'clock",
-    "9 o'clock"
+    "get up",
+    "have breakfast",
+    "go to school",
+    "go home",
+    "do homework",
+    "go to bed"
   ]
 }
