@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat time do you ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "\n→ I ____ at ____ o’clock."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have lunch",
+    "have dinner",
+    "watch TV",
+    "play games",
+    "play football",
+    "take a shower"
+  ]
+}
