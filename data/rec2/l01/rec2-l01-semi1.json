@@ -4,7 +4,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "\nI get up at ______.\nI have ______.\nI go to school at ______.\nI go home at ______.\nI do ______.\nI go to bed at ______."
+      "text": "\nWhat do you do in the morning?\nWhat do you do after school?\nWhat do you do at night?"
+    },
+    {
+      "speaker": "B",
+      "text": "\n→ In the morning, I ____. I ____.\n→ After school, I ____. I ____.\n→ At night, I ____."
     }
   ]
 }
