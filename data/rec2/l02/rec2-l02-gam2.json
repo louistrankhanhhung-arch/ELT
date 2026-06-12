@@ -1,0 +1,17 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 8
+  },
+  "items": [
+    { "word": "I have lunch at 11 o’clock", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-lunch.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-lunch-at-11-oclock.mp3" },
+    { "word": "I play football at 4 o’clock", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-football.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-play-football-at-4-oclock.mp3" },
+    { "word": "I take a shower at 5 o’clock", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-take-a-shower.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-htake-a-shower-at-5-oclock.mp3" },
+    { "word": "I have dinner at 6 o’clock", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-dinner.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-dinner-at-6-oclock.mp3" },
+    { "word": "I watch TV at 7 o’clock", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-watch-tv.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-watch-tv-at-7-oclock.mp3" },
+    { "word": "I play games at 8 o’clock", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-games.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-play-games-at-8-oclock.mp3" }
+  ]
+}
