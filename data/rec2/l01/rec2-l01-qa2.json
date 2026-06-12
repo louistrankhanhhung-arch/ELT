@@ -6,6 +6,10 @@
     {
       "speaker": "A",
       "text": "\nWhat do you do in the morning?\nWhat do you do after school?\nWhat do you do at home?"
+    },
+    {
+      "speaker": "B",
+      "text": "\n→ I ____."
     }
   ],
   "substitution_title": "Substitution",
