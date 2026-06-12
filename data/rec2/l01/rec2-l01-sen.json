@@ -1,10 +1,10 @@
 {
   "title": "Repeat",
-  "text": "I get up at six o’clock",
+  "text": "I get up",
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up-at-six-oclock.mp3",
-  "chunks": ["I", "get", "up", "at", "six", "o'clock"],
-  "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.2],
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up.mp3",
+  "chunks": ["I", "get", "up"],
+  "timings": [0, 0.3, 0.6],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -19,16 +19,16 @@
       {
         "value": "go to school",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-school.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-school-at-seven-oclock.mp3",
-        "chunks": ["I", "go", "to", "school", "at", "seven", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-school.mp3",
+        "chunks": ["I", "go", "to", "school"],
+        "timings": [0, 0.3, 0.6, 0.9]
       },
       {
         "value": "go to bed",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-bed.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed-at-nine-oclock.mp3",
-        "chunks": ["I", "go", "to", "bed", "at", "nine", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.1, 1.3, 1.5]
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed.mp3",
+        "chunks": ["I", "go", "to", "bed"],
+        "timings": [0, 0.3, 0.6, 0.9]
       },
       {
         "value": "go home",
@@ -54,9 +54,9 @@
       {
         "value": "get up",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up-at-six-oclock.mp3",
-        "chunks": ["I", "get", "up", "at", "six", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up.mp3",
+        "chunks": ["I", "get", "up"],
+        "timings": [0, 0.3, 0.6]
       }
     ]
   }
