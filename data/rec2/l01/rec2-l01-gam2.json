@@ -3,11 +3,11 @@
   "title": "Order the Dialogue",
   "subtitle": "Put activities in correct order.",
   "lines": [
-    { "text": "I get up at six o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up-at-six-oclock.mp3" },
+    { "text": "I get up.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up.mp3" },
     { "text": "I have breakfast.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-have-breakfast.mp3" },
-    { "text": "I go to school at seven o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-school-at-seven-oclock.mp3" },
+    { "text": "I go to school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-school.mp3" },
     { "text": "I go home.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-home.mp3" },
     { "text": "I do my homework.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-do-my-homework.mp3" },
-    { "text": "I go to bed at nine o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed-at-nine-oclock.mp3" }
+    { "text": "I go to bed.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-to-bed.mp3" }
   ]
 }
