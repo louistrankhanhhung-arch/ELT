@@ -1,0 +1,41 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "have lunch",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-lunch.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-lunch.mp3"
+    },
+    {
+      "word": "have dinner",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-dinner.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-dinner.mp3"
+    },
+    {
+      "word": "watch TV",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-watch-tv.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-watch-tv.mp3"
+    },
+    {
+      "word": "play games",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-games.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-games.mp3"
+    },
+    {
+      "word": "play football",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-football.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-football.mp3"
+    },
+    {
+      "word": "take a shower",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-go-take-a-shower.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-take-a-shower.mp3"
+    }
+  ]
+}
