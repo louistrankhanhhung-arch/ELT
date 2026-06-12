@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "I have lunch at 11 o’clock",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-lunch.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-lunch-at-11-oclock.mp3",
+  "chunks": ["I", "have", "lunch", "at", "11", "o'clock"],
+  "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "Routine",
+    "slot": "{have lunch}",
+    "base": "I {have lunch} at 11 o’clock.",
+    "options": [
+      {
+        "value": "play football",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-football.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-play-football-at-4-oclock.mp3",
+        "chunks": ["I", "play", "football", "at", "4", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+      },
+      {
+        "value": "take a shower",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-take-a-shower.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-take-a-shower-at-5-oclock.mp3",
+        "chunks": ["I", "take", "a", "shower", "at", "5", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "have dinner",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-dinner.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-dinner-at-6-oclock.mp3",
+        "chunks": ["I", "have", "dinner", "at", "6", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+      },
+      {
+        "value": "watch TV",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-watch-tv.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-watch-tv-at-7-oclock.mp3",
+        "chunks": ["I", "watch", "TV", "at", "7", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+      },
+      {
+        "value": "play games",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-games.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-play-games-at-8-oclock.mp3",
+        "chunks": ["I", "play", "games", "at", "8", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+      },
+      {
+        "value": "have lunch",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-lunch.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-lunch-at-11-oclock.mp3",
+        "chunks": ["I", "have", "lunch", "at", "11", "o'clock"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+      }
+    ]
+  }
+}
