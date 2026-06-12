@@ -21,7 +21,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-play-football.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-play-football-at-4-oclock.mp3",
         "chunks": ["I", "play", "football", "at", "4", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "timings": [0, 0.3, 0.6, 1.0, 1.3, 1.6]
       },
       {
         "value": "take a shower",
@@ -42,7 +42,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-watch-tv.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-watch-tv-at-7-oclock.mp3",
         "chunks": ["I", "watch", "TV", "at", "7", "o'clock"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.6]
       },
       {
         "value": "play games",
