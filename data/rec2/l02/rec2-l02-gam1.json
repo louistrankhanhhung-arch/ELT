@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I ____ at 7 o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-watch-tv-at-7-oclock.mp3",
+      "answer": "watch TV",
+      "options": ["watch TV", "have dinner", "play games", "take a shower"]
+    },
+    {
+      "prompt": "I ____ at 5 o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-take-a-shower-at-5-oclock.mp3",
+      "answer": "take a shower",
+      "options": ["take a shower", "have lunch", "watch TV", "play football"]
+    },
+    {
+      "prompt": "I ____ at 8 o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-play-games-at-8-oclock.mp3",
+      "answer": "play games",
+      "options": ["play games", "play football", "have lunch", "watch TV"]
+    },
+    {
+      "prompt": "I ____ at 11 o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-go-home.mp3",
+      "answer": "have lunch",
+      "options": ["have lunch", "have dinner", "play games", "take a shower"]
+    },
+    {
+      "prompt": "I ____ at 6 o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-get-up.mp3",
+      "answer": "have dinner",
+      "options": ["have dinner", "play football", "take a shower", "have lunch"]
+    },
+    {
+      "prompt": "I ____ at 4 o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-sen-i-do-my-homework.mp3",
+      "answer": "play football",
+      "options": ["play football", "watch TV", "have lunch", "play games"]
+    }
+  ]
+}
