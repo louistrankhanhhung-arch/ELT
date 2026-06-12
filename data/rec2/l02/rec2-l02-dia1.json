@@ -1,0 +1,24 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Bill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l1-hello-bill.mp3" },
+    { "text": "B: Hello, Lucy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-b1-hello-lucy.mp3" },
+    { "text": "A: What do you do after school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l2-what-do-you-do-after-school.mp3" },
+    { "text": "B: I go home. Then I play football.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-b2-i-go-home-then-i-play-football.mp3" },
+    { "text": "A: What time do you play football?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l3-what-time-do-you-play-football.mp3" },
+    { "text": "B: I play football at 4 o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-b3-i-play-football-at-4-oclock.mp3" },
+    { "text": "A: Great! What time do you have dinner?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l4-great-what-time-do-you-have-dinner.mp3" },
+    { "text": "B: I have dinner at 6 o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-b4-i-have-dinner-at-6-oclock.mp3" },
+    { "text": "A: Really? I have dinner at 7 o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l5-really-i-have-dinner-at-7-oclock.mp3" },
+    { "text": "A: Do you watch TV?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l6-do-you-watch-tv.mp3" },
+    { "text": "B: Yes, I do. I watch TV at 7 o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-b5-yes-i-do-i-watch-tv-at-7-oclock.mp3" },
+    { "text": "A: Nice!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-dia1-l7-nice.mp3" }
+  ]
+}
