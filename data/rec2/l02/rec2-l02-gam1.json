@@ -26,19 +26,19 @@
     },
     {
       "prompt": "I ____ at 11 o’clock.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-go-home.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-lunch-at-11-oclock.mp3",
       "answer": "have lunch",
       "options": ["have lunch", "have dinner", "play games", "take a shower"]
     },
     {
       "prompt": "I ____ at 6 o’clock.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-get-up.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-have-dinner-at-6-oclock.mp3",
       "answer": "have dinner",
       "options": ["have dinner", "play football", "take a shower", "have lunch"]
     },
     {
       "prompt": "I ____ at 4 o’clock.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-do-my-homework.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-sen-i-play-football-at-4-oclock.mp3",
       "answer": "play football",
       "options": ["play football", "watch TV", "have lunch", "play games"]
     }
