@@ -1,5 +1,6 @@
 {
-  "layout": "full_dialogue",
+  "layout": "talking_dialogue",
+  "compact": true,
   "title": "Take note and talk to your friend",
   "lines": [
     {
@@ -10,5 +11,13 @@
       "speaker": "B",
       "text": "\n→ In the morning, I ____. I ____.\n→ After school, I ____. I ____.\n→ At night, I ____."
     }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have breakfast",
+    "go to school",
+    "go home",
+    "do my homework",
+    "go to bed"
   ]
 }
