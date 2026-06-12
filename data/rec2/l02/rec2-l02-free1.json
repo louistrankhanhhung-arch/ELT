@@ -1,20 +1,10 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk.",
+  "layout": "full_dialogue",
+  "title": "Let’s talk",
   "lines": [
     {
       "speaker": "A",
       "text": "\nHello. My name’s ____.\n→ Have breakfast: ____.\n→ Go to school: ____.\n→ Have lunch: ____.\n→ Play football: ____.\n→ Take a shower: ____.\n→ Have dinner: ____.\n→ Watch TV: ____.\n→ Play games: ____.\n→ Go to bed: ____.\nThank you."
     }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "have lunch",
-    "have dinner",
-    "watch TV",
-    "play games",
-    "play football",
-    "take a shower"
   ]
 }
