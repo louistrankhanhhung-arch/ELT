@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Talk to your friend and take note",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat time do you ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "\n→ Have breakfast: ____.\n→ Have lunch: ____.\n→ Play games: ____.\n→ Play football: ____.\n→ Take a shower: ____.\n→ Have dinner: ____.\n→ Watch TV: ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have lunch",
+    "have dinner",
+    "watch TV",
+    "play games",
+    "play football",
+    "take a shower"
+  ]
+}
