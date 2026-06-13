@@ -5,7 +5,7 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "\nWhat do you ____ in the morning?\nWhat do you ____ in the afternoon?\nWhat do you ____ in the evening?\nWhat do you ____ at night?"
+      "text": "\nWhat do you do in the morning?\nWhat do you do in the afternoon?\nWhat do you do in the evening?\nWhat do you do at night?"
     },
     {
       "speaker": "B",
@@ -22,6 +22,6 @@
     "play games",
     "play football",
     "take a shower",
-    "take a shower"
+    "go to bed"
   ]
 }
