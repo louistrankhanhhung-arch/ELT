@@ -1,0 +1,17 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 8
+  },
+  "items": [
+    { "word": "In the morning, I get up", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-morning-i-get-up.mp3" },
+    { "word": "In the afternoon, I go home", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-home.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-afternoon-i-go-home.mp3" },
+    { "word": "In the evening, I have dinner", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-dinner.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-evening-i-have-dinner.mp3" },
+    { "word": "At night, I go to bed", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-bed.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-at-night-i-go-to-bed.mp3" },
+    { "word": "On weekdays, I go to school", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-weekdays.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-on-weekdays-i-go-to-school.mp3" },
+    { "word": "On weekends, I play football", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-weekends.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-on-weekends-i-play-football.mp3" }
+  ]
+}
