@@ -1,10 +1,5 @@
 {
-  "layout": "full_dialogue",
+  "layout": "review_card",
   "title": "Review",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "What time do you get up?\nWhat time do you have lunch?\nWhat time do you have dinner?\nWhat time do you play football?\nWhat time do you take a shower?\nWhat time do you go to bed?"
-    }
-  ]
+  "prompt": "What time do you get up?"
 }
