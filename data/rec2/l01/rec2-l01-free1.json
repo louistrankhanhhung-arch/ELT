@@ -5,7 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "\nHello.\nMy name's ____.\n☀️ In the morning, ____.\n🏫 Affter school, ____.\n🌙 At night, ____.\nThank you."
+      "text": "\nTell me about your day."
+    },
+    {
+      "speaker": "B",
+      "text": "\nHello.\nMy name's ____.\nThis is my day.\n☀️ In the morning, ____.\n🏫 Affter school, ____.\n🌙 At night, ____.\nThank you."
     }
   ],
   "substitution_title": "Substitution",
