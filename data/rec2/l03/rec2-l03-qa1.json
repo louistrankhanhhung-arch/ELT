@@ -1,0 +1,27 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat do you ____ in the morning?\nWhat do you ____ in the afternoon?\nWhat do you ____ in the evening?\nWhat do you ____ at night?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nI ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have breakfast",
+    "have lunch",
+    "have dinner",
+    "go to school",
+    "watch TV",
+    "play games",
+    "play football",
+    "take a shower",
+    "take a shower"
+  ]
+}
