@@ -4,6 +4,10 @@
   "lines": [
     {
       "speaker": "A",
+      "text": "\nWhat time do you do these things?"
+    },
+    {
+      "speaker": "B",
       "text": "\nHello. My name’s ____.\nHave breakfast: ____.\nGo to school: ____.\nHave lunch: ____.\nPlay football: ____.\nTake a shower: ____.\nHave dinner: ____.\nWatch TV: ____.\nPlay games: ____.\nGo to bed: ____.\nThank you."
     }
   ]
