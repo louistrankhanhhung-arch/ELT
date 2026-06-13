@@ -1,0 +1,22 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat do you ____ on weekdays?\nWhat do you ____ on weekends?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nI ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "go to school",
+    "watch TV",
+    "play games",
+    "play football"
+  ]
+}
