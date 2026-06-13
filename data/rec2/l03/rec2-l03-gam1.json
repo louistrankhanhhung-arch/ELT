@@ -9,38 +9,38 @@
     {
       "prompt": "____, I go to school.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-on-weekdays-i-go-to-school.mp3",
-      "answer": "on weekdays",
-      "options": ["on weekdays", "on weekends", "at night", "in the morning"]
+      "answer": "On weekdays",
+      "options": ["On weekdays", "On weekends", "At night", "In the morning"]
     },
     {
       "prompt": "____, I go to bed.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-at-night-i-go-to-bed.mp3",
-      "answer": "at night",
-      "options": ["at night", "in the afternoon", "in the evening", "on weekdays"]
+      "answer": "At night",
+      "options": ["At night", "In the afternoon", "In the evening", "On weekdays"]
     },
     {
       "prompt": "____, I have dinner.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-evening-i-have-dinner.mp3",
-      "answer": "in the evening",
-      "options": ["in the evening", "at night", "on weekends", "in the morning"]
+      "answer": "In the evening",
+      "options": ["In the evening", "At night", "On weekends", "In the morning"]
     },
     {
       "prompt": "____, I get up.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-morning-i-get-up.mp3",
-      "answer": "in the morning",
-      "options": ["in the morning", "in the evening", "in the afternoon", "at night"]
+      "answer": "In the morning",
+      "options": ["In the morning", "In the evening", "In the afternoon", "At night"]
     },
     {
       "prompt": "____, I go home.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-afternoon-i-go-home.mp3",
-      "answer": "in the afternoon",
-      "options": ["in the afternoon", "at night", "on weekends", "on weekdays"]
+      "answer": "In the afternoon",
+      "options": ["In the afternoon", "At night", "On weekends", "On weekdays"]
     },
     {
       "prompt": "____, I play football.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-on-weekends-i-play-football.mp3",
-      "answer": "on weekends",
-      "options": ["on weekends", "in the afternoon", "in the evening", "on weekdays"]
+      "answer": "On weekends",
+      "options": ["On weekends", "In the afternoon", "In the evening", "On weekdays"]
     }
   ]
 }
