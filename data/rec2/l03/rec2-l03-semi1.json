@@ -1,0 +1,27 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat do you do in the morning?\nWhat do you do in the afternoon?\nWhat do you do in the evening?\nWhat do you do at night?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nFirst, in the morning, ____.\nThen, ____.\nIn the afternoon, ____.\nAfter that, ____.\nIn the evening, ____.\nFinally, at night, ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have breakfast",
+    "have lunch",
+    "have dinner",
+    "go to school",
+    "watch TV",
+    "play games",
+    "play football",
+    "take a shower",
+    "take a shower"
+  ]
+}
