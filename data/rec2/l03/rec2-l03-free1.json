@@ -1,0 +1,27 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about your day."
+    },
+    {
+      "speaker": "B",
+      "text": "\nHello. My name's ____.\nThis is my day.\nFirst, in the morning, ____.\nThen, ____.\nIn the afternoon, ____.\nAfter that, ____.\nIn the evening, ____.\nFinally, at night, ____.\nThank you."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "have breakfast",
+    "have lunch",
+    "have dinner",
+    "go to school",
+    "watch TV",
+    "play games",
+    "play football",
+    "take a shower",
+    "go to bed"
+  ]
+}
