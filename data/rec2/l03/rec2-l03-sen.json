@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-morning-i-get-up.mp3",
   "chunks": ["In", "the", "morning", "I", "get", "up"],
-  "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5],
+  "timings": [0, 0.3, 0.6, 1.2, 1.5, 1.8],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -21,42 +21,42 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-home.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-afternoon-i-go-home.mp3",
         "chunks": ["In", "the", "afternoon", "I", "go", "home"],
-        "timings": [0, 0.3, 0.6, 1.0, 1.3, 1.6]
+        "timings": [0, 0.3, 0.6, 1.3, 1.5, 1.8]
       },
       {
         "value": "In the evening",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l02/r2-l02-vob-have-dinner.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-evening-i-have-dinner.mp3",
-        "chunks": ["In", "the", "afternoon", "I", "have", "dinner"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "chunks": ["In", "the", "evening", "I", "have", "dinner"],
+        "timings": [0, 0.3, 0.6, 1.2, 1.5, 1.8]
       },
       {
         "value": "at night",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-go-to-bed.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-at-night-i-go-to-bed.mp3",
         "chunks": ["At", "night", "I", "go", "to", "bed"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
       },
       {
         "value": "on weekdays",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-weekdays.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-on-weekdays.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-on-weekdays-i-go-to-school.mp3",
         "chunks": ["On", "weekdays", "I", "go", "to", "school"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.6]
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
       },
       {
         "value": "on weekends",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-weekends.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-on-weekends.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-on-weekends-i-play-football.mp3",
         "chunks": ["On", "weekends", "i", "play", "football"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+        "timings": [0, 0.3, 0.9, 1.2, 1.5]
       },
       {
         "value": "in the morning",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-r2-l01-vob-get-up.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-morning-i-get-up.mp3",
         "chunks": ["In", "the", "morning", "I", "get", "up"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "timings": [0, 0.3, 0.6, 1.2, 1.5, 1.8]
       }
     ]
   }
