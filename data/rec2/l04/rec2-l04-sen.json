@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "There are five people in my family.",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-5-people-family.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-there-are-five-people-in-my-family.mp3",
+  "chunks": ["There", "are", "five", "people", "in", "my", "family"],
+  "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "Routine",
+    "slot": "{five people}",
+    "base": "There are {five people} in my family.",
+    "options": [
+      {
+        "value": "two people",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-2-people-family.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-there-are-two-people-in-my-family.mp3",
+        "chunks": ["There", "are", "two", "people", "in", "my", "family"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "parents",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-live-with.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-i-live-with-my-parents.mp3",
+        "chunks": ["I", "live", "with", "my", "parents"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "father, mother, brother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-live-with-father-mother-brother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-i-live-with-my-father-mother-and-brother.mp3",
+        "chunks": ["I", "live", "live", "with", "my", "father", "mother", "and", "brother"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "grandparents",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-live-with-my-grandparents.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-i-live-with-my-grandparents.mp3",
+        "chunks": ["i", "live", "with", "my", "grandparents"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "love my family",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-love-my-family.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-on-weekends-i-play-football.mp3",
+        "chunks": ["I", "love", "my", "family"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "five people",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-r2-l04-vob-5-people-family.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-there-are-five-people-in-my-family.mp3",
+        "chunks": ["There", "are", "five", "people", "in", "my", "family"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      }
+    ]
+  }
+}
