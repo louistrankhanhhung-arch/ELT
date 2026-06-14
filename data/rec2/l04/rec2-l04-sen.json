@@ -34,14 +34,14 @@
         "value": "father, mother, brother",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-live-with-father-mother-brother.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-i-live-with-my-father-mother-and-brother.mp3",
-        "chunks": ["I", "live", "live", "with", "my", "father", "mother", "and", "brother"],
+        "chunks": ["I", "live", "live", "with", "my", "father,", "mother,", "and", "brother"],
         "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "grandparents",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-live-with-my-grandparents.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-vob-live-with-grandparents.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-sen-i-live-with-my-grandparents.mp3",
-        "chunks": ["i", "live", "with", "my", "grandparents"],
+        "chunks": ["I", "live", "with", "my", "grandparents"],
         "timings": [0, 0.3, 0.6, 0.9, 1.2]
       },
       {
