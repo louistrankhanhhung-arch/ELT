@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nTell me about your family."
+    },
+    {
+      "speaker": "B",
+      "text": "\nHello. My name’s ____.\nThere are ____.\nI live with ____.\nI love my family.\nThank you."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father",
+    "mother",
+    "brother",
+    "sister",
+    "parents",
+    "grandparents"
+  ]
+}
