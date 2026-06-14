@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Who do you live with?",
+  "answers": [
+    "I live with ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father",
+    "mother",
+    "brother",
+    "sister",
+    "parents",
+    "grantparents"
+  ]
+}
