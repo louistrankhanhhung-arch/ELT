@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "How many people are there in your family?"
+    },
+    {
+      "speaker": "B",
+      "text": "There are ____ people in my family."
+    }
+  ]
+}
