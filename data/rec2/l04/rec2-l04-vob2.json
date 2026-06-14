@@ -1,0 +1,21 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "live with",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-live-with.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-live-with.mp3"
+    },
+    {
+      "word": "love my family",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-love-my-family.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-vob-love-my-family.mp3"
+    }
+  ]
+}
