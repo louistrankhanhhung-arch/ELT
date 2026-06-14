@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nHow many people are there in your family?\nWho do you live with?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nPeople: ____.\nI live with: ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "father",
+    "mother",
+    "brother",
+    "sister",
+    "parents",
+    "grandparents"
+  ]
+}
