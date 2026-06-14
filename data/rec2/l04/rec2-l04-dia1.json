@@ -1,0 +1,25 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-l1-hello-tony.mp3" },
+    { "text": "B: Hello, Lucy. ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t1-hello-lucy.mp3" },
+    { "text": "A: How many people are there in your family?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-l2-how-many-people-are-there-in-your-family.mp3" },
+    { "text": "B: There are five people in my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t2-there-are-five-people-in-my-family.mp3" },
+    { "text": "A: Who do you live with?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-l3-who-do-you-live-with.mp3" },
+    { "text": "B: I live with my father, mother, brother and sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t3-i-live-with-my-father-mother-brother-and-sister.mp3" },
+    { "text": "A: That’s nice!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-l4-thats-nince.mp3" },
+    { "text": "B: What about you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t4-what-about-you.mp3" },
+    { "text": "B: How many people are there in your family?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t5-how-many-people-are-there-in-your-family.mp3" },
+    { "text": "A: There are three people in my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-l5-there-are-three-people-in-my-family.mp3" },
+    { "text": "B: Who do you live with?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t6-who-do-you-live-with.mp3" },
+    { "text": "A: I live with my parents. I love my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-l6-i-live-with-my-parents.mp3" },
+    { "text": "B: That’s great! ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-t7-thats-great.mp3" }
+  ]
+}
