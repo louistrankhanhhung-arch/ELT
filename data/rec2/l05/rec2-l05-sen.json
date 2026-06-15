@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "She is a teacher",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-teacher.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-teacher.mp3",
+  "chunks": ["She", "is", "a", "teacher"],
+  "timings": [0, 0.3, 0.6, 0.9],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "Routine",
+    "slot": "{teacher}",
+    "base": "She is a {teacher}",
+    "options": [
+      {
+        "value": "doctor",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-doctor.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-doctor.mp3",
+        "chunks": ["He", "is", "a", "doctor"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "farmer",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-farmer.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-farmer.mp3",
+        "chunks": ["He", "is", "a", "farmer"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "driver",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-driver.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-driver.mp3",
+        "chunks": ["He", "is", "a", "driver"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "worker",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-worker.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-worker.mp3",
+        "chunks": ["She", "is", "a", "worker"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "shopkeeper",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-shopkeeper.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-shopkeeper.mp3",
+        "chunks": ["She", "is", "a", "shopkeeper"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "teacher",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-vob-teacher.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-teacher.mp3",
+        "chunks": ["She", "is", "a", "teacher"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      }
+    ]
+  }
+}
