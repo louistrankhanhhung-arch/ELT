@@ -53,7 +53,7 @@
       },
       {
         "value": "in the morning",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-r2-l01-vob-get-up.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l01/r2-l01-vob-get-up.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l03/r2-l03-sen-in-the-morning-i-get-up.mp3",
         "chunks": ["In", "the", "morning,", "I", "get", "up"],
         "timings": [0, 0.3, 0.6, 1.2, 1.5, 1.8]
