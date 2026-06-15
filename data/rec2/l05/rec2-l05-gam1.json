@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "She is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-shopkeeper.mp3",
+      "answer": "shopkeeper",
+      "options": ["shopkeeper", "teacher", "doctor", "farmer"]
+    },
+    {
+      "prompt": "He is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-doctor.mp3",
+      "answer": "doctor",
+      "options": ["doctor", "worker", "shopkeeper", "farmer"]
+    },
+    {
+      "prompt": "She is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-teacher.mp3",
+      "answer": "teacher",
+      "options": ["teacher", "farmer", "driver", "worker"]
+    },
+    {
+      "prompt": "He is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-farmer.mp3",
+      "answer": "farmer",
+      "options": ["farmer", "driver", "shopkeeper", "doctor"]
+    },
+    {
+      "prompt": "She is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-worker.mp3",
+      "answer": "worker",
+      "options": ["worker", "teacher", "doctor", "driver"]
+    },
+    {
+      "prompt": "He is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-driver.mp3",
+      "answer": "driver",
+      "options": ["driver", "farmer", "worker", "shopkeeper"]
+    }
+  ]
+}
