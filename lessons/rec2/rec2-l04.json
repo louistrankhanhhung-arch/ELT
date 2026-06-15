@@ -58,7 +58,7 @@
       "order": 5,
       "type": "activity",
       "activity_kind": "vocab",
-      "title": "Sequences",
+      "title": "Family chunks",
       "player": "player-grid-v2.html",
       "data": "data/rec2/l04/rec2-l04-vob2.json",
       "completion": {
