@@ -12,7 +12,7 @@
     "highlight": true
   },
   "substitution": {
-    "label": "Routine",
+    "label": "",
     "slot": "{five people}",
     "base": "There are {five people} in my family.",
     "options": [
