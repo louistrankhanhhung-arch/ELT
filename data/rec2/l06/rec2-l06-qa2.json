@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat is your father like?\nWhat is your mother like?\nWhat is your brother like?\nWhat is your sister like?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nHe is ____.\nShe is ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "smart",
+    "friendly",
+    "hardworking",
+    "helpful",
+    "strict",
+    "funny"
+  ]
+}
