@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "He is smart",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-smart.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-smart.mp3",
+  "chunks": ["He", "is", "smart"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{smart}",
+    "base": "He is a {smart}",
+    "options": [
+      {
+        "value": "friendly",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-friendly.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-friendly.mp3",
+        "chunks": ["She", "is", "friendly"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "hardworking",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-hardworking.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-hardworking.mp3",
+        "chunks": ["She", "is", "hardworking"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "helpful",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-helpful.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-helpful.mp3",
+        "chunks": ["She", "is", "helpful"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "strict",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-strict.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-strict.mp3",
+        "chunks": ["He", "is", "strict"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "funny",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-funny.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-funny.mp3",
+        "chunks": ["He", "is", "funny"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "smart",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-smart.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-smart.mp3",
+        "chunks": ["He", "is", "smart"],
+        "timings": [0, 0.3, 0.6]
+      }
+    ]
+  }
+}
