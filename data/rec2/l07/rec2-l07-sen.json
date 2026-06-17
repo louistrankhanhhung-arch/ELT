@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-study.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-study-in-the-classroom.mp3",
   "chunks": ["I", "study", "in", "the", "classroom"],
-  "timings": [0, 0.3, 0.6, 0.9, 1.2],
+  "timings": [0, 0.3, 0.6, 0.8, 1.0],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -21,42 +21,42 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-library.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-read-books-in-the-library.mp3",
         "chunks": ["I", "read", "books", "in", "the", "library"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "timings": [0, 0.3, 0.6, 0.8, 1.0, 1.3]
       },
       {
         "value": "playground",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-playground.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-play-with-my-friends-in-the-playground.mp3",
         "chunks": ["I", "play", "with", "my", "friends", "in", "the", "playground"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1]
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.7, 1.9]
       },
       {
         "value": "computer room",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-computer-room.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-use-computers-in-the-computer-room.mp3",
         "chunks": ["I", "use", "computers", "in", "the", "computer", "room"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.2, 1.4, 1.6, 2.2]
       },
       {
         "value": "canteen",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-canteen.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-have-lunch-in-the-canteen.mp3",
         "chunks": ["I", "have", "lunch", "in", "the", "canteen"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+        "timings": [0, 0.3, 0.6, 0.9, 1.1, 1.4]
       },
       {
         "value": "toilet",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-wash-hands.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-wash-my-hands-in-the-toilet.mp3",
         "chunks": ["I", "wash", "my", "hands", "in", "the", "toilet"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.4, 1.7]
       },
       {
         "value": "study",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-study.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-study-in-the-classroom.mp3",
         "chunks": ["I", "study", "in", "the", "classroom"],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+        "timings": [0, 0.3, 0.6, 0.8, 1.0]
       }
     ]
   }
