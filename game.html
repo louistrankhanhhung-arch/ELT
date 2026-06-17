@@ -269,6 +269,112 @@
       line-height: 1.45;
     }
 
+
+
+    /* =========================================================
+       Foundation Games: Spin Wheel / Lucky Box / Missing / Find
+       ========================================================= */
+
+    .singleCardWrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 360px;
+    }
+
+    .singleCardWrap .card {
+      width: min(620px, 100%);
+      cursor: default;
+    }
+
+    .wheelStage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .wheelPointer {
+      width: 0;
+      height: 0;
+      border-left: 22px solid transparent;
+      border-right: 22px solid transparent;
+      border-top: 34px solid var(--accent);
+      filter: drop-shadow(0 4px 8px rgba(23,48,68,.18));
+    }
+
+    .wheelResult {
+      width: min(620px, 100%);
+      border-radius: 999px;
+      padding: clamp(12px, 2vw, 20px);
+      background: rgba(15,116,168,.08);
+      border: 4px dashed rgba(15,116,168,.22);
+      text-align: center;
+      color: var(--blue);
+      font-weight: 900;
+      font-size: clamp(22px, 4vw, 44px);
+    }
+
+    .spinning .card {
+      transform: scale(1.02);
+      border-color: var(--blue);
+    }
+
+    .boxGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: clamp(12px, 3vw, 24px);
+    }
+
+    .luckyBox {
+      min-height: 160px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fff, #fff2f5);
+      box-shadow: var(--shadow);
+      border: 4px solid rgba(210,59,42,.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(54px, 10vw, 96px);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .14s ease, border-color .14s ease;
+    }
+
+    .luckyBox:hover { transform: translateY(-3px); }
+    .luckyBox.opened {
+      font-size: initial;
+      display: block;
+      overflow: hidden;
+      background: white;
+      border-color: var(--good);
+    }
+
+    .missingCard.hiddenPicture img { filter: blur(10px); opacity: .12; }
+    .missingCard.hiddenPicture .label { color: transparent; }
+    .missingCard.hiddenPicture::after {
+      content: '?';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(64px, 12vw, 120px);
+      color: var(--accent);
+      font-weight: 900;
+      background: rgba(255,255,255,.72);
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .singleCardWrap { min-height: 0; height: 100%; }
+      .singleCardWrap .card { width: min(360px, 100%); }
+      .wheelStage { gap: 6px; height: 100%; justify-content: center; }
+      .wheelPointer { border-left-width: 14px; border-right-width: 14px; border-top-width: 20px; }
+      .wheelResult { font-size: clamp(14px, 3.2vh, 22px); padding: 6px; }
+      .boxGrid { grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 7px; height: 100%; }
+      .luckyBox { min-height: 0; font-size: clamp(34px, 9vh, 54px); border-radius: 14px; }
+    }
+
     @media (max-width: 700px) {
       .grid { gap: 10px; }
       button { padding: 10px 13px; }
@@ -872,6 +978,205 @@
       setTimeout(() => play(line.audio), 250);
     }
 
+
+
+    function itemText(item) {
+      return item.prompt || item.sentence || item.text || item.word || '';
+    }
+
+    function renderSingleCard(item, showText = true, extraClass = '') {
+      const wrap = document.createElement('div');
+      wrap.className = 'singleCardWrap';
+      const c = document.createElement('article');
+      c.className = `card ${extraClass}`.trim();
+      c.innerHTML = cardHTML({ ...item, word: itemText(item) }, showText);
+      wrap.appendChild(c);
+      els.game.appendChild(wrap);
+      return c;
+    }
+
+    function renderSpinWheel() {
+      renderShell();
+      const items = data.items || [];
+      if (!items.length) {
+        els.game.innerHTML = `<div class="largeText">No items found.</div>`;
+        setStatus('Check JSON: spin-wheel needs items[].');
+        return;
+      }
+
+      const stage = document.createElement('div');
+      stage.className = 'wheelStage';
+      const pointer = document.createElement('div');
+      pointer.className = 'wheelPointer';
+      const result = document.createElement('div');
+      result.className = 'wheelResult';
+      result.textContent = data.settings?.prompt || 'Spin and say.';
+      const cardWrap = document.createElement('div');
+      cardWrap.className = 'singleCardWrap';
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `<div class="largeText">?</div>`;
+      cardWrap.appendChild(card);
+      stage.appendChild(pointer);
+      stage.appendChild(cardWrap);
+      stage.appendChild(result);
+      els.game.appendChild(stage);
+
+      let current = null;
+      let spinning = false;
+
+      function show(item) {
+        current = item;
+        card.innerHTML = cardHTML({ ...item, word: itemText(item) }, data.settings?.showText !== false);
+        result.textContent = data.settings?.outputPrompt || 'Say it!';
+        if (item.audio && data.settings?.autoPlay !== false) play(item.audio);
+      }
+
+      function spin() {
+        if (spinning) return;
+        spinning = true;
+        setStatus('Spinning...');
+        stage.classList.add('spinning');
+        const spins = Number(data.settings?.spins || 18);
+        const delay = Number(data.settings?.spinDelayMs || 90);
+        let count = 0;
+        const timer = setInterval(() => {
+          const item = items[Math.floor(Math.random() * items.length)];
+          card.innerHTML = cardHTML({ ...item, word: itemText(item) }, data.settings?.showText !== false);
+          count += 1;
+          if (count >= spins) {
+            clearInterval(timer);
+            const finalItem = items[Math.floor(Math.random() * items.length)];
+            show(finalItem);
+            state.round += 1;
+            setScore();
+            setStatus('Your turn!');
+            stage.classList.remove('spinning');
+            spinning = false;
+          }
+        }, delay);
+      }
+
+      els.controls.appendChild(btn('🎡 Spin', 'primary', spin));
+      els.controls.appendChild(btn('🔊 Play', '', () => current && play(current.audio)));
+      els.controls.appendChild(btn('🔁 Reset', '', renderSpinWheel));
+    }
+
+    function renderLuckyBox() {
+      renderShell();
+      const items = data.items || [];
+      if (!items.length) {
+        els.game.innerHTML = `<div class="largeText">No items found.</div>`;
+        setStatus('Check JSON: lucky-box needs items[].');
+        return;
+      }
+
+      const count = Number(data.settings?.boxes || Math.min(6, items.length));
+      const chosen = shuffle(items).slice(0, count);
+      const grid = document.createElement('div');
+      grid.className = 'boxGrid';
+      chosen.forEach((item, idx) => {
+        const box = document.createElement('div');
+        box.className = 'luckyBox';
+        box.textContent = data.settings?.boxIcon || '🎁';
+        box.addEventListener('click', () => {
+          if (box.classList.contains('opened')) return;
+          box.classList.add('opened');
+          box.innerHTML = cardHTML({ ...item, word: itemText(item) }, data.settings?.showText !== false);
+          state.round += 1;
+          setScore();
+          setStatus(data.settings?.outputPrompt || 'Say it!');
+          if (item.audio && data.settings?.autoPlay !== false) play(item.audio);
+        });
+        grid.appendChild(box);
+      });
+      els.game.appendChild(grid);
+      els.controls.appendChild(btn('🔁 New Boxes', 'primary', renderLuckyBox));
+    }
+
+    function renderFindPicture() {
+      renderShell();
+      const items = data.items || [];
+      if (!items.length) {
+        els.game.innerHTML = `<div class="largeText">No items found.</div>`;
+        setStatus('Check JSON: find-picture needs items[].');
+        return;
+      }
+      state.round += 1;
+      const poolSize = Number(data.settings?.choices || Math.min(6, items.length));
+      const pool = shuffle(items).slice(0, poolSize);
+      state.answer = pool[Math.floor(Math.random() * pool.length)];
+      const prompt = data.settings?.prompt || 'Find';
+      els.subtitle.textContent = `${prompt}: ${itemText(state.answer)}`;
+      renderGrid(pool, (item, idx, card) => {
+        if (item === state.answer || itemText(item) === itemText(state.answer)) {
+          card.classList.add('correct');
+          state.score += 1;
+          setScore();
+          setStatus('Good! 🎉');
+          if (state.answer.audio && data.settings?.playOnCorrect === true) play(state.answer.audio);
+          if (data.settings?.autoNext === true) setTimeout(renderFindPicture, 850);
+        } else {
+          card.classList.add('wrong');
+          setStatus('Try again.');
+          setTimeout(() => card.classList.remove('wrong'), 450);
+        }
+      }, data.settings?.showText === true);
+      els.controls.appendChild(btn('🔊 Play', 'primary', () => play(state.answer.audio)));
+      els.controls.appendChild(btn('➡️ New', '', renderFindPicture));
+      setScore();
+      if (state.answer.audio && data.settings?.autoPlay === true) setTimeout(() => play(state.answer.audio), 250);
+    }
+
+    function renderMissingPicture() {
+      renderShell();
+      const items = data.items || [];
+      if (!items.length) {
+        els.game.innerHTML = `<div class="largeText">No items found.</div>`;
+        setStatus('Check JSON: missing-picture needs items[].');
+        return;
+      }
+      const poolSize = Number(data.settings?.choices || Math.min(6, items.length));
+      const pool = shuffle(items).slice(0, poolSize);
+      state.answer = pool[Math.floor(Math.random() * pool.length)];
+      let hidden = false;
+      els.subtitle.textContent = data.settings?.studyPrompt || 'Look carefully.';
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      const cardRefs = [];
+      pool.forEach((item) => {
+        const c = document.createElement('article');
+        c.className = 'card missingCard';
+        c.innerHTML = cardHTML({ ...item, word: itemText(item) }, data.settings?.showText !== false);
+        grid.appendChild(c);
+        cardRefs.push({ item, card: c });
+      });
+      els.game.appendChild(grid);
+
+      function hideOne() {
+        if (hidden) return;
+        hidden = true;
+        const target = cardRefs.find(x => x.item === state.answer || itemText(x.item) === itemText(state.answer));
+        if (target) target.card.classList.add('hiddenPicture');
+        els.subtitle.textContent = data.settings?.answerPrompt || "What's missing?";
+        setStatus('Say the missing picture.');
+      }
+
+      function reveal() {
+        cardRefs.forEach(x => x.card.classList.remove('hiddenPicture'));
+        setStatus(`Missing: ${itemText(state.answer)}`);
+        if (state.answer.audio && data.settings?.autoPlay !== false) play(state.answer.audio);
+      }
+
+      els.controls.appendChild(btn('🙈 Hide', 'primary', hideOne));
+      els.controls.appendChild(btn('👀 Reveal', 'good', reveal));
+      els.controls.appendChild(btn('➡️ New', '', renderMissingPicture));
+
+      const autoHideMs = Number(data.settings?.autoHideMs || 0);
+      if (autoHideMs > 0) setTimeout(hideOne, autoHideMs);
+    }
+
     function finishGame() {
       renderShell();
       els.game.innerHTML = `<div class="largeText">Great job! 🎉</div>`;
@@ -889,6 +1194,10 @@
         case 'listen-complete': return renderListenComplete();
         case 'line-ordering': return renderLineOrdering();
         case 'who-says-it': return renderWhoSaysIt();
+        case 'spin-wheel': return renderSpinWheel();
+        case 'lucky-box': return renderLuckyBox();
+        case 'find-picture': return renderFindPicture();
+        case 'missing-picture': return renderMissingPicture();
         default:
           renderShell();
           els.game.innerHTML = `<div class="largeText">Unknown game type</div>`;
