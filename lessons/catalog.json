@@ -252,6 +252,14 @@
           "estimated_minutes": 60,
           "path": "lessons/rec2/rec2-l06.json",
           "status": "ready"
+        },
+        {
+          "lesson_id": "rec2-l07",
+          "title": "Lesson 7",
+          "level": "A1",
+          "estimated_minutes": 60,
+          "path": "lessons/rec2/rec2-l07.json",
+          "status": "ready"
         }
       ]
     }
