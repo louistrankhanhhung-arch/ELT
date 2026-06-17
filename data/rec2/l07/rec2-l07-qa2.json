@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Where do you ____?",
+  "answers": [
+    "I ____ in the ____."
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "study - classroom",
+    "read books - library",
+    "play with friends - playground",
+    "use computers - computer room",
+    "have lunch - canteen",
+    "wash your hands - toilet"
+  ]
+}
