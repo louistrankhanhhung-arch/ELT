@@ -14,11 +14,11 @@
   ],
   "substitution_title": "Substitution",
   "substitutions": [
-    "study, classroom",
-    "read books, library",
-    "play with friends, playground",
-    "use computers, computer room",
-    "have lunch, canteen",
-    "wash your hands, toilet"
+    "classroom, study",
+    "library, read books",
+    "playground, play with friends",
+    "computer room, use computers",
+    "canteen, have lunch",
+    "toilet, wash my hands"
   ]
 }
