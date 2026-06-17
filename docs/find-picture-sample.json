@@ -1,0 +1,51 @@
+{
+  "type": "find-picture",
+  "title": "Find Picture",
+  "subtitle": "Listen or read. Find the picture.",
+  "settings": {
+    "choices": 6,
+    "showText": false,
+    "autoPlay": false,
+    "playOnCorrect": true,
+    "autoNext": false,
+    "prompt": "Find"
+  },
+  "items": [
+    {
+      "word": "football",
+      "text": "I like football.",
+      "img": "img/football.jpg",
+      "audio": "audio/i-like-football.mp3"
+    },
+    {
+      "word": "music",
+      "text": "I like music.",
+      "img": "img/music.jpg",
+      "audio": "audio/i-like-music.mp3"
+    },
+    {
+      "word": "cats",
+      "text": "I like cats.",
+      "img": "img/cats.jpg",
+      "audio": "audio/i-like-cats.mp3"
+    },
+    {
+      "word": "dogs",
+      "text": "I like dogs.",
+      "img": "img/dogs.jpg",
+      "audio": "audio/i-like-dogs.mp3"
+    },
+    {
+      "word": "ice cream",
+      "text": "I like ice cream.",
+      "img": "img/ice-cream.jpg",
+      "audio": "audio/i-like-ice-cream.mp3"
+    },
+    {
+      "word": "apples",
+      "text": "I like apples.",
+      "img": "img/apples.jpg",
+      "audio": "audio/i-like-apples.mp3"
+    }
+  ]
+}
