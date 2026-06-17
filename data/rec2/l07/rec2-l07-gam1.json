@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I read books in the ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-read-books-in-the-library.mp3",
+      "answer": "library",
+      "options": ["library", "toilet", "classroom", "canteen"]
+    },
+    {
+      "prompt": "I have lunch in the ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-have-lunch-in-the-canteen.mp3",
+      "answer": "canteen",
+      "options": ["canteen", "playground", "library", "computer room"]
+    },
+    {
+      "prompt": "I wash my hands in the ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-wash-my-hands-in-the-toilet.mp3",
+      "answer": "toilet",
+      "options": ["toilet", "computer room", "library", "canteen"]
+    },
+    {
+      "prompt": "I play with my friends in the ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-play-with-my-friends-in-the-playground.mp3",
+      "answer": "playground",
+      "options": ["playground", "classroom", "canteen", "toilet"]
+    },
+    {
+      "prompt": "I study in the ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-study-in-the-classroom.mp3",
+      "answer": "classroom",
+      "options": ["classroom", "computer room", "playground", "canteen"]
+    },
+    {
+      "prompt": "I use computers in the ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-use-computers-in-the-computer-room.mp3",
+      "answer": "computer room",
+      "options": ["computer room", "classroom", "toilet", "playground"]
+    }
+  ]
+}
