@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat do you do in the ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nI ____.\nI ____.\nI ____.\nI ____.\nI ____.\nI ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "study, classroom",
+    "read books, library",
+    "play with friends, playground",
+    "use computers, computer room",
+    "have lunch, canteen",
+    "wash your hands, toilet"
+  ]
+}
