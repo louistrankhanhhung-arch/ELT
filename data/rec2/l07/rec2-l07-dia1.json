@@ -1,0 +1,28 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Welcome to my school, Lucy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a1-welcome-to-my-school-lucy.mp3" },
+    { "text": "B:  Wow. It is so big, Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l1-wow-it-is-so-big-amy.mp3" },
+    { "text": "A: Yes. There are many classrooms here.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a2-yes-there-are-many-classrooms-here.mp3" },
+    { "text": "A: This is my classroom. I study here.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a3-this-is-my-classroom-i-study-here.mp3" },
+    { "text": "A: This is the library.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a4-this-is-the-library.mp3" },
+    { "text": "B: What do you do in the library?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l2-what-do-you-do-in-the-library.mp3" },
+    { "text": "A: I read books.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a5-i-read-books.mp3" },
+    { "text": "A: This is the computer room.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a6-this-is-the-computer-room.mp3" },
+    { "text": "B: What do you do in the computer room?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l3-what-do-you-do-in-the-computer-room.mp3" },
+    { "text": "A: I use computers.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a7-i-use-computer.mp3" },
+    { "text": "B: Where do you have lunch?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l4-where-do-you-have-lunch.mp3" },
+    { "text": "A: I have lunch in the canteen.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a8-i-have-lunch-in-the-canteen.mp3" },
+    { "text": "B: Oh! I need to go to the toilet.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l5-oh-i-need-to-go-to-the-toilet.mp3" },
+    { "text": "B: Where is it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l6-where-is-it.mp3" },
+    { "text": "A: It’s over there! Behind the playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a9-its-over-there-behind-the-playground.mp3" },
+    { "text": "B: Thank you, Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l7-thank-you-amy.mp3" }
+  ]
+}
