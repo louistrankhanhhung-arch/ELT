@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nTell me about your school."
+    },
+    {
+      "speaker": "B",
+      "text": "\nHello. My name’s ____.\nThis is my school.\nI ____.\nI ____.\nI ____.\nI ____.\nI ____.\nI ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "study, classroom",
+    "read books, library",
+    "play with friends, playground",
+    "use computers, computer room",
+    "have lunch, canteen",
+    "wash your hands, toilet"
+  ]
+}
