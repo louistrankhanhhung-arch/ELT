@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "My name is Grace",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-grace.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-sen-my-name-is-grace.mp3",
+  "chunks": ["My", "name", "is", "Grace"],
+  "timings": [0, 0.3, 0.6, 0.9],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{Grace}",
+    "base": "My name is {Grace}.",
+    "options": [
+      {
+        "value": "Kim",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-kim.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-sen-my-name-is-kim.mp3",
+        "chunks": ["My", "name", "is", "Grace"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "Nick",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-nick.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-sen-my-name-is-nick.mp3",
+        "chunks": ["My", "name", "is", "Nick"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "Sam",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-sam.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-sen-my-name-is-sam.mp3",
+        "chunks": ["My", "name", "is", "Sam"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "Grace",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-grace.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-sen-my-name-is-grace.mp3",
+        "chunks": ["My", "name", "is", "Grace"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      }
+    ]
+  }
+}
