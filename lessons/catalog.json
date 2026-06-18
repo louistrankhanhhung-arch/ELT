@@ -262,6 +262,21 @@
           "status": "ready"
         }
       ]
+    },
+    {
+      "course_id": "f01",
+      "course_title": "Foundation 1",
+      "description": "Foundation track for Pre-A1 learners.",
+      "lessons": [
+        {
+          "lesson_id": "f01-l01",
+          "title": "Lesson 1",
+          "level": "Pre-A1",
+          "estimated_minutes": 60,
+          "path": "lessons/f1/f1-l01.json",
+          "status": "ready"
+        },
+      ]
     }
   ]
 }
