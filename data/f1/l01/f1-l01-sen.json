@@ -20,7 +20,7 @@
         "value": "Kim",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-kim.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-sen-my-name-is-kim.mp3",
-        "chunks": ["My", "name", "is", "Grace"],
+        "chunks": ["My", "name", "is", "Kim"],
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
