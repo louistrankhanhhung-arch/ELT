@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I am five years old",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-grace-5.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-sen-i-am-five-years-old.mp3",
+  "chunks": ["I", "am", "five", "years", "old"],
+  "timings": [0, 0.3, 0.6, 0.9, 1.2],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{five}",
+    "base": "I am {five} years old.",
+    "options": [
+      {
+        "value": "six",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-kim-6.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-sen-i-am-six-years-old.mp3",
+        "chunks": ["I", "am", "six", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "seven",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-sam-7.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-sen-i-am-seven-years-old.mp3",
+        "chunks": ["I", "am", "seven", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "eight",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-nick-8.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-sen-i-am-eight-years-old.mp3",
+        "chunks": ["I", "am", "eight", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "five",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-grace-5.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-sen-i-am-five-years-old.mp3",
+        "chunks": ["I", "am", "five", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      }
+    ]
+  }
+}
