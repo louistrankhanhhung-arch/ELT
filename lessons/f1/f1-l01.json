@@ -96,7 +96,7 @@
       "activity_kind": "semi-controlled",
       "title": "Ask & Answer",
       "player": "player-text.html",
-      "data": "data/f1/l01/f1-l01-qa1.json",
+      "data": "data/f1/l01/f1-l01-semi1.json",
       "completion": {
         "mode": "teacher_next"
       }
