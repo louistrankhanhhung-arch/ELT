@@ -1,0 +1,22 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about yourself."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello.\nMy name is ____.\nI am ____ years old."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "five",
+    "six",
+    "seven",
+    "eight"
+  ]
+}
