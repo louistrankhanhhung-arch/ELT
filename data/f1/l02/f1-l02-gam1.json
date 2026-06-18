@@ -1,0 +1,38 @@
+{
+  "type": "lucky-box",
+  "title": "Lucky Box",
+  "subtitle": "",
+  "settings": {
+    "boxes": 4,
+    "boxIcon": "🎁",
+    "showText": true,
+    "autoPlay": true,
+    "outputPrompt": "Your turn!"
+  },
+  "items": [
+    {
+      "word": "five",
+      "text": "I am five years old.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-grace-5.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-five.mp3"
+    },
+    {
+      "word": "six",
+      "text": "I am six years old.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-kim-6.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-six.mp3"
+    },
+    {
+      "word": "seven",
+      "text": "I am seven years old.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-sam-7.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-seven.mp3"
+    },
+    {
+      "word": "eight",
+      "text": "I am eight years old.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-nick-8.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-eight.mp3"
+    }
+  ]
+}
