@@ -1,0 +1,18 @@
+
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1-g1-hello.mp3" },
+    { "text": "B: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1-s1-hello.mp3" },
+    { "text": "A: What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1-g2-what-is-your-name.mp3" },
+    { "text": "B: My name is Sam.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1-s2-my-name-is-sam.mp3" },
+    { "text": "A: Nice to meet you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1-g3-nice-to-meet-you.mp3" },
+    { "text": "B: Nice to meet you, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-dia1-s3-nice-to-meet-you-too.mp3" }
+  ]
+}
