@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What is your name?"
+    },
+    {
+      "speaker": "B",
+      "text": "My name is ____."
+    }
+  ]
+}
