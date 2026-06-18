@@ -1,0 +1,22 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Clap clap clap",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "How old are you?"
+    },
+    {
+      "speaker": "B",
+      "text": "I am ____ years old."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "five",
+    "six",
+    "seven",
+    "eight"
+  ]
+}
