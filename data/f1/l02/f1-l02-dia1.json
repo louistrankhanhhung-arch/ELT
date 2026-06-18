@@ -1,0 +1,16 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Kim.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-dia1-n1-hello-kim.mp3" },
+    { "text": "B: Hello, Nick.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-dia1-k1-hello-nick.mp3" },
+    { "text": "A: How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-dia1-n2-how-old-are-you.mp3" },
+    { "text": "B: I am six years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-dia1-k2-i-am-six-years-old.mp3" }
+  ]
+}
