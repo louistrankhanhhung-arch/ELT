@@ -42,18 +42,6 @@
       }
     },
     {
-      "id": "dialogue",
-      "order": 3,
-      "type": "activity",
-      "activity_kind": "dialogue",
-      "title": "Dialogue",
-      "player": "player-dialogue.html",
-      "data": "data/f1/l01/f1-l01-dia1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
       "id": "vocab",
       "order": 4,
       "type": "activity",
@@ -102,10 +90,10 @@
       }
     },
     {
-      "id": "qa1",
+      "id": "semi1",
       "order": 8,
       "type": "activity",
-      "activity_kind": "q&a",
+      "activity_kind": "semi-controlled",
       "title": "Ask & Answer",
       "player": "player-text.html",
       "data": "data/f1/l01/f1-l01-qa1.json",
