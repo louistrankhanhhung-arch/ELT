@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nHello.\nMy name is ____.\nWhat is your name?\nNice to meet you!"
+    }
+  ]
+}
