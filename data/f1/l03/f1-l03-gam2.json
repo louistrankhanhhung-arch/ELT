@@ -1,0 +1,20 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Two corners",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Are you a boy or a girl?"
+    },
+    {
+      "speaker": "B",
+      "text": "I am a ____ ."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "boy",
+    "girl"
+  ]
+}
