@@ -317,8 +317,13 @@
 
     .wheelStage .card img {
       aspect-ratio: 16 / 9;
-      max-height: 260px;
+      width: 100%;
+      height: clamp(170px, 32vh, 260px);
       object-fit: contain;
+    }
+
+    .wheelStage .singleCardWrap .card {
+      min-height: 220px;
     }
 
     .spinning .card {
@@ -389,6 +394,15 @@
       .singleCardWrap { min-height: 0; height: 100%; }
       .singleCardWrap .card { width: min(360px, 100%); }
       .wheelStage { gap: 6px; height: 100%; justify-content: center; }
+      .wheelStage .singleCardWrap .card {
+        min-height: 0;
+        height: min(42vh, 145px);
+      }
+      .wheelStage .card img {
+        height: min(34vh, 115px);
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+      }
       .wheelPointer { border-left-width: 14px; border-right-width: 14px; border-top-width: 20px; }
       .wheelResult { font-size: clamp(14px, 3.2vh, 22px); padding: 6px; }
       .boxGrid { grid-template-columns: repeat(auto-fit, minmax(86px, 1fr)); gap: 7px; height: 100%; }
@@ -1042,13 +1056,19 @@
 
       let current = null;
       let spinning = false;
+      const imageCache = new Map();
+
+      items.forEach(item => {
+        if (item.img && !imageCache.has(item.img)) {
+          const img = new Image();
+          img.src = item.img;
+          imageCache.set(item.img, img);
+        }
+      });
 
       function show(item) {
         current = item;
-      
-        console.log('SPIN ITEM', item);
-        console.log('SPIN IMG', item.img);
-      
+             
         card.innerHTML = cardHTML(
           { ...item, word: itemText(item) },
           data.settings?.showText !== false
@@ -1067,11 +1087,14 @@
         setStatus('Spinning...');
         stage.classList.add('spinning');
         const spins = Number(data.settings?.spins || 18);
-        const delay = Number(data.settings?.spinDelayMs || 90);
+        const delay = Number(data.settings?.spinDelayMs || 140);
         let count = 0;
         const timer = setInterval(() => {
           const item = items[Math.floor(Math.random() * items.length)];
-          card.innerHTML = cardHTML({ ...item, word: itemText(item) }, data.settings?.showText !== false);
+          card.innerHTML = cardHTML(
+            { ...item, word: itemText(item) },
+            data.settings?.showText !== false
+          );
           count += 1;
           if (count >= spins) {
             clearInterval(timer);
