@@ -1,0 +1,36 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What is your name?"
+    },
+    {
+      "speaker": "B",
+      "text": "My name is ____."
+    }
+    {
+      "speaker": "A",
+      "text": "How old are you?"
+    },
+    {
+      "speaker": "B",
+      "text": "I am ____ years old."
+    },
+    {
+      "speaker": "A",
+      "text": "Are you a boy or a girl?"
+    },
+    {
+      "speaker": "B",
+      "text": "I am a ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "boy",
+    "girl"
+  ]
+}
