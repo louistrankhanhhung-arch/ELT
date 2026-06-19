@@ -12,25 +12,25 @@
   "items": [
     {
       "word": "Grace",
-      "text": "My name is Grace.",
+      "text": "My name is Grace",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-grace.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-grace.mp3"
     },
     {
       "word": "Kim",
-      "text": "My name is Kim.",
+      "text": "My name is Kim",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-kim.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-kim.mp3"
     },
     {
       "word": "Nick",
-      "text": "My name is Nick.",
+      "text": "My name is Nick",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-nick.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-nick.mp3"
     },
     {
       "word": "Sam",
-      "text": "My name is Sam.",
+      "text": "My name is Sam",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-sam.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-sam.mp3"
     }
