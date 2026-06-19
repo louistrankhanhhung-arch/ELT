@@ -12,25 +12,25 @@
   "items": [
     {
       "word": "boy",
-      "text": "I am a boy.",
+      "text": "I am a boy",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-boy.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-boy.mp3"
     },
     {
       "word": "girl",
-      "text": "I am a girl.",
+      "text": "I am a girl",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-girl.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-girl.mp3"
     },
     {
       "word": "student",
-      "text": "I am a student.",
+      "text": "I am a student",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-nick.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-student.mp3"
     },
     {
       "word": "teacher",
-      "text": "I am a teacher.",
+      "text": "I am a teacher",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-teacher.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-teacher.mp3"
     }
