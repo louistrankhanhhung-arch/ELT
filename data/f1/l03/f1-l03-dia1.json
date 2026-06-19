@@ -1,0 +1,19 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello. What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-a1-hello-what-is-your-name.mp3" },
+    { "text": "B: Hello. My name is Nick.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-n1-hello-my-name-is-nick.mp3" },
+    { "text": "A: How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-a2-how-old-are-you.mp3" },
+    { "text": "B: I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-n2-i-am-eight-years-old.mp3" },
+    { "text": "A: Are you a boy or a girl?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-a3-are-you-a-boy-or-a-girl.mp3" },
+    { "text": "B: I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-n3-i-am-a-boy.mp3" },
+    { "text": "A: Thank you!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-dia1-a4-thank-you.mp3" }
+  ]
+}
