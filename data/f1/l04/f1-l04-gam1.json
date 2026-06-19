@@ -1,0 +1,38 @@
+{
+  "type": "lucky-box",
+  "title": "Lucky Box",
+  "subtitle": "",
+  "settings": {
+    "boxes": 4,
+    "boxIcon": "🎁",
+    "showText": true,
+    "autoPlay": true,
+    "outputPrompt": "Your turn!"
+  },
+  "items": [
+    {
+      "word": "happy",
+      "text": "I am happy.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-happy.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-happy.mp3"
+    },
+    {
+      "word": "sad",
+      "text": "I am sad.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-sad.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-sad.mp3"
+    },
+    {
+      "word": "tired",
+      "text": "I am tired.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-tired.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-tired.mp3"
+    },
+    {
+      "word": "hungry",
+      "text": "I am hungry.",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-hungry.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-hungry.mp3"
+    }
+  ]
+}
