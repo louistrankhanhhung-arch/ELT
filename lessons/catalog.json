@@ -283,6 +283,14 @@
           "estimated_minutes": 60,
           "path": "lessons/f1/f1-l02.json",
           "status": "ready"
+        },
+        {
+          "lesson_id": "f01-l03",
+          "title": "Lesson 3",
+          "level": "Pre-A1",
+          "estimated_minutes": 60,
+          "path": "lessons/f1/f1-l03.json",
+          "status": "ready"
         }
       ]
     }
