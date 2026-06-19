@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I am a boy",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-boy.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-sen-i-am-a-boy.mp3",
+  "chunks": ["I", "am", "a", "boy"],
+  "timings": [0, 0.3, 0.6, 0.9],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{boy}",
+    "base": "I am a {boy}.",
+    "options": [
+      {
+        "value": "girl",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-girl.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-sen-i-am-a-girl.mp3",
+        "chunks": ["I", "am", "a", "girl"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "stdent",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-nick.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-sen-i-am-a-student.mp3",
+        "chunks": ["I", "am", "a", "student"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "teacher",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/11-l01-vob-teacher.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-sen-i-am-a-teacher.mp3",
+        "chunks": ["I", "am", "a", "teacher"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "boy",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-boy.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-sen-i-am-a-boy.mp3",
+        "chunks": ["I", "am", "a", "boy"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      }
+    ]
+  }
+}
