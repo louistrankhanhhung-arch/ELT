@@ -1,0 +1,22 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "How are you?"
+    },
+    {
+      "speaker": "B",
+      "text": "I am ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "happy",
+    "sad",
+    "tired",
+    "hungry"
+  ]
+}
