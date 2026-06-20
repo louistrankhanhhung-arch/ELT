@@ -1,0 +1,42 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What subjects do you study?"
+    },
+    {
+      "speaker": "B",
+      "text": "I study ____."
+    },
+    {
+      "speaker": "A",
+      "text": "What is your favorite subject?"
+    },
+    {
+      "speaker": "B",
+      "text": "My favorite subject is ____."
+    },
+    {
+      "speaker": "A",
+      "text": "Why do you like ____?"
+    },
+    {
+      "speaker": "B",
+      "text": "I like ____ because it is ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "English",
+    "Math",
+    "Science",
+    "Art",
+    "Music",
+    "P.E.",
+    "fun",
+    "easy"
+  ]
+}
