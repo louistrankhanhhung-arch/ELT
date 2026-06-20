@@ -1,0 +1,26 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nTell me about your school subjects."
+    },
+    {
+      "speaker": "B",
+      "text": "\nHello. My name’s ____.\nI study ____.\nMy favorite subject is ____.\nI like ____ because it is ____.\nThank you."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "English",
+    "Math",
+    "Science",
+    "Art",
+    "Music",
+    "P.E.",
+    "fun",
+    "easy"
+  ]
+}
