@@ -1,0 +1,22 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Find things",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What do you have?"
+    },
+    {
+      "speaker": "B",
+      "text": "I have ____ ."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "bag",
+    "book",
+    "pencil",
+    "ruler"
+  ]
+}
