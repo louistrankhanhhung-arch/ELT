@@ -1,0 +1,18 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Nick.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1-k1-hello-nick.mp3" },
+    { "text": "B: Hello, Kim.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1-n1-hello-kim.mp3" },
+    { "text": "A: What do you have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1-k2-what-do-you-have.mp3" },
+    { "text": "B: I have a bag.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1-n2-i-have-a-bag.mp3" },
+    { "text": "A: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1-k3-great.mp3" },
+    { "text": "B: I have a book, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia1-n3-i-have-a-book-too.mp3" }
+  ]
+}
