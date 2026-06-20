@@ -1,0 +1,24 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: What subjects do you study, Amy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l1-what-subjects-do-you-study-amy.mp3" },
+    { "text": "B: I study English, Math, and Art.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a1-i-study-english-math-and-art.mp3" },
+    { "text": "A: What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l2-what-is-your-favorite-subject.mp3" },
+    { "text": "B: My favorite subject is Art.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a2-my-favorite-subject-is-art.mp3" },
+    { "text": "A: Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l3-why-do-you-like-it.mp3" },
+    { "text": "B: I like Art because it is fun.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a3-i-like-art-because-it-is-fun.mp3" },
+    { "text": "A: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l4-great.mp3" },
+    { "text": "B: And you, Lucy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a4-and-you-lucy.mp3" },
+    { "text": "B: What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a5-what-is-your-favorite-subject.mp3" },
+    { "text": "A: My favorite subject is English.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l5-my-favorite-subject-is-english.mp3" },
+    { "text": "B: Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a6-why-do-you-like-it.mp3" },
+    { "text": "A: I like English because it is easy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l6-i-like-english-because-it-is-easy.mp3" }
+  ]
+}
