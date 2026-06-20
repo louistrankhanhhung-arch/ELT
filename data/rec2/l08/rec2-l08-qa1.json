@@ -1,0 +1,17 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "What subjects do you study?",
+  "answers": [
+    "I study ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "English",
+    "Math",
+    "Science",
+    "Art",
+    "Music",
+    "P.E."
+  ]
+}
