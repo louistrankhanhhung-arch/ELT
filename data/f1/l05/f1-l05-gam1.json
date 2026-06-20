@@ -1,0 +1,38 @@
+{
+  "type": "spin-wheel",
+  "title": "Spin Wheel",
+  "subtitle": "",
+  "settings": {
+    "showText": true,
+    "autoPlay": true,
+    "spins": 18,
+    "spinDelayMs": 85,
+    "outputPrompt": "Say it!"
+  },
+  "items": [
+    {
+      "word": "bag",
+      "text": "I have a bag",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bag.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bag.mp3"
+    },
+    {
+      "word": "book",
+      "text": "I have a book",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-book.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-book.mp3"
+    },
+    {
+      "word": "pencil",
+      "text": "I have a pencil",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-pencil.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-pencil.mp3"
+    },
+    {
+      "word": "ruler",
+      "text": "I have a ruler",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-ruler.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-ruler.mp3"
+    }
+  ]
+}
