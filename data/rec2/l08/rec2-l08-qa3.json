@@ -1,0 +1,13 @@
+{
+  "layout": "qa_substitution",
+  "title": "Ask & Answer",
+  "prompt": "Why do you  like ____?",
+  "answers": [
+    "I like ____ because it is ____"
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "fun",
+    "easy"
+  ]
+}
