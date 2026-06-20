@@ -19,7 +19,7 @@
       {
         "value": "Math",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-math.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-english.mp3",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-math.mp3",
         "chunks": ["My", "favorite", "subject", "is", "Math"],
         "timings": [0, 0.3, 0.9, 1.2, 1.5]
       },
@@ -52,7 +52,7 @@
         "timings": [0, 0.3, 0.9, 1.2, 1.5]
       },
       {
-        "value": "study",
+        "value": "English",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-english.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-english.mp3",
         "chunks": ["My", "favorite", "subject", "is", "English"],
