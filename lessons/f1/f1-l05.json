@@ -1,0 +1,129 @@
+{
+  "lesson_id": "f01-l05",
+  "title": "Foundation 1 – Lesson 5",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f1/l05/f1-l05-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-text.html",
+      "data": "data/f1/l05/f1-l05-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "sentence",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "sentence",
+      "title": "Sentence Practice",
+      "player": "player-sentence.html",
+      "data": "data/f1/l05/f1-l05-sen.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "vocab",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "vocab",
+      "title": "Vocab",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/l05/f1-l05-vob.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },    
+    {
+      "id": "game1",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "TPR 1",
+      "player": "game.html",
+      "data": "data/f1/l05/f1-l05-gam1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-dialogue.html",
+      "data": "data/f1/l05/f1-l05-dia1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "game2",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "TPR 2",
+      "player": "player-text.html",
+      "data": "data/f1/l05/f1-l05-gam2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "semi-controlled",
+      "title": "Ask & Answer",
+      "player": "player-text.html",
+      "data": "data/f1/l05/f1-l05-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f1/l05/f1-l05-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "bye",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "goodbye",
+      "title": "Goodbye",
+      "player": "player-text.html",
+      "data": "data/f1/l05/f1-l05-bye.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
