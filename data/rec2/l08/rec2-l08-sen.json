@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "My favorite subject is English",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-english.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-english.mp3",
+  "chunks": ["My", "favorite", "subject", "is", "English"],
+  "timings": [0, 0.3, 0.8, 1.1, 1.4],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{English}",
+    "base": "My favorite subject is {English}",
+    "options": [
+      {
+        "value": "Math",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-math.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-english.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Math"],
+        "timings": [0, 0.3, 0.8, 1.1, 1.4]
+      },
+      {
+        "value": "Science",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-science.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-science.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Science"],
+        "timings": [0, 0.3, 0.8, 1.1, 1.4]
+      },
+      {
+        "value": "Art",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-art.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-art.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Art"],
+        "timings": [0, 0.3, 0.8, 1.1, 1.4]
+      },
+      {
+        "value": "Music",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-music.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-music.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Music"],
+        "timings": [0, 0.3, 0.8, 1.1, 1.4]
+      },
+      {
+        "value": "P.E.",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-pe.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-pe.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "P.E."],
+        "timings": [0, 0.3, 0.8, 1.1, 1.4]
+      },
+      {
+        "value": "study",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-vob-english.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-my-favorite-subject-is-english.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "English"],
+        "timings": [0, 0.3, 0.8, 1.1, 1.4]
+      }
+    ]
+  }
+}
