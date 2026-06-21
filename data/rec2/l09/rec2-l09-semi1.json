@@ -1,0 +1,20 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nFirst, I go to school.\nThen I ____.\nAfter that I ____.\nFinally I go home."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "English, classroom",
+    "Math, classroom",
+    "Science, classroom",
+    "read books, library",
+    "use computers, computer room",
+    "have lunch, canteen"
+  ]
+}
