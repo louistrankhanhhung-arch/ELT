@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about your school day."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s _____.\nThis is my school day.\nFirst, I ____.\nThen I ____.\nAfter that I ____.\nFinally, I ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "English, classroom",
+    "Math, classroom",
+    "Science, classroom",
+    "read books, library",
+    "use computers, computer room",
+    "have lunch, canteen"
+  ]
+}
