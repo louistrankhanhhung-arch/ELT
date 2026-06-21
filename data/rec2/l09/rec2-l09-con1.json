@@ -5,8 +5,8 @@
   "lines": [
     { "text": "What do you do at school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-t4-what-do-you-do-at-school.mp3" },
     { "text": "First, I go to school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a4-first-i-go-to-school.mp3" },
-    { "text": "Then I study English.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a5-then-i-study-english-in-the-classroom.mp3" },
-    { "text": "After that I play with my friends.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a6-after-that-i-play-with-my-friends-in-the-playground.mp3" },
-    { "text": "Finally I go home.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a7-finally-i-go-home.mp3" }
+    { "text": "Then I study English in the classroom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a5-then-i-study-english-in-the-classroom.mp3" },
+    { "text": "After that, I play with my friends in the playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a6-after-that-i-play-with-my-friends-in-the-playground.mp3" },
+    { "text": "Finally, I go home.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a7-finally-i-go-home.mp3" }
   ]
 }
