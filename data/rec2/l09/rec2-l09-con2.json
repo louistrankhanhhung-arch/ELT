@@ -1,0 +1,31 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "first",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-first.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-first.mp3"
+    },
+    {
+      "word": "then",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-then.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-then.mp3"
+    },
+    {
+      "word": "after that",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-after-that.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-after-that.mp3"
+    },
+    {
+      "word": "finally",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-finally.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-finally.mp3"
+    }
+  ]
+}
