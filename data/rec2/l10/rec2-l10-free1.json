@@ -1,7 +1,7 @@
 {
   "layout": "talking_dialogue",
   "compact": true,
-  "title": Let's talk",
+  "title": "Let's talk",
   "lines": [
     {
       "speaker": "A",
