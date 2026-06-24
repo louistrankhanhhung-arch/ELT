@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-draw-pictures.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-drawing-pictures.mp3",
   "chunks": ["I", "like", "drawing", "pictures"],
-  "timings": [0, 0.3, 0.6, 1.2],
+  "timings": [0, 0.3, 0.6, 1.0],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -21,7 +21,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-ride-a-bike.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-riding-a-bike.mp3",
         "chunks": ["I", "like", "riding", "a", "bike"],
-        "timings": [0, 0.3, 0.6, 1.2, 1.4]
+        "timings": [0, 0.3, 0.6, 1.0, 1.2]
       },
       {
         "value": "swim",
