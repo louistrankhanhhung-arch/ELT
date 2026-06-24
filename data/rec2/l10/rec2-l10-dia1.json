@@ -17,6 +17,6 @@
     { "text": "A: I like riding a bike.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a4-i-like-riding-a-bike.mp3" },
     { "text": "B: That’s nice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l4-thats-nice.mp3" },
     { "text": "A: I also like cooking.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a5-i-also-like-cooking.mp3" },
-    { "text": "B: Really? I like cooking, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l5-really-i-like-cooking-too.mp3" },
-  ]
+    { "text": "B: Really? I like cooking, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l5-really-i-like-cooking-too.mp3" }
+ ]
 }
