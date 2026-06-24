@@ -1,0 +1,46 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "I like ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-swimming.mp3",
+      "answer": "swimming",
+      "options": ["swimming", "dancing", "singing", "riding a bike"]
+    },
+    {
+      "prompt": "I like ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-drawing-pictures.mp3",
+      "answer": "drawing pictures",
+      "options": ["drawing pictures", "swimming", "cooking", "dancing"]
+    },
+    {
+      "prompt": "I like ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-dancing.mp3",
+      "answer": "dancing",
+      "options": ["dancing", "cooking", "riding a bike", "singing"]
+    },
+    {
+      "prompt": "I like ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-riding-a-bike.mp3",
+      "answer": "riding a bike",
+      "options": ["riding a bike", "swimming", "cooking", "dancing"]
+    },
+    {
+      "prompt": "I like ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-cooking.mp3",
+      "answer": "cooking",
+      "options": ["cooking", "singing", "drawing pictures", "dancing"]
+    },
+    {
+      "prompt": "I like ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-singing.mp3",
+      "answer": "singing",
+      "options": ["singing", "drawing pictures", "swimming", "cooking"]
+    }
+  ]
+}
