@@ -1,0 +1,22 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Lucy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a1-hello-lucy.mp3" },
+    { "text": "B: Hello, Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l1-hello-amy.mp3" },
+    { "text": "A: What do you like doing?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a2-what-do-you-like-doing.mp3" },
+    { "text": "B: I like swimming.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l2-i-like-swimming.mp3" },
+    { "text": "A: Really?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a3-really.mp3" },
+    { "text": "B: Yes. What do you like doing, Amy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l3-yes-what-do-you-like-doing-amy.mp3" },
+    { "text": "A: I like riding a bike.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a4-i-like-riding-a-bike.mp3" },
+    { "text": "B: That’s nice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l4-thats-nice.mp3" },
+    { "text": "A: I also like cooking.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-a5-i-also-like-cooking.mp3" },
+    { "text": "B: Really? I like cooking, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-dia1-l5-really-i-like-cooking-too.mp3" },
+  ]
+}
