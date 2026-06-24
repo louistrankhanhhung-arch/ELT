@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What do you like doing?"
+    },
+    {
+      "speaker": "B",
+      "text": "I like ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "drawing pictures",
+    "riding a bike",
+    "swimming",
+    "dancing",
+    "singing",
+    "cooking"
+  ]
+}
