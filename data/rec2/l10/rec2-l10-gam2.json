@@ -1,0 +1,13 @@
+{
+  "type": "memory-match",
+  "title": "Memory Match",
+  "subtitle": "Find the matching pairs.",
+  "items": [
+    { "word": "I like drawing pictures", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-draw-pictures.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-drawing-pictures.mp3" },
+    { "word": "I like riding a bike", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-ride-a-bike.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-riding-a-bike.mp3" },
+    { "word": "I like swimming", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-swim.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-swimming.mp3" },
+    { "word": "I like dancing", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-dance.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-dacing.mp3" },
+    { "word": "I like singing", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-sing.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-singing.mp3" },
+    { "word": "I like cooking", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-cook.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-cooking.mp3" }
+  ]
+}
