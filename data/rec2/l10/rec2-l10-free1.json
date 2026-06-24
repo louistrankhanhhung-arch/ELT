@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about your hobbies."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello. My name’s ____.\nI like ____.\nI also like ____.\nThank you."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "drawing pictures",
+    "riding a bike",
+    "swimming",
+    "dancing",
+    "singing",
+    "cooking"
+  ]
+}
