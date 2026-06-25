@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I have a ball",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-ball.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-i-have-a-ball.mp3",
+  "chunks": ["I", "have", "a", "ball"],
+  "timings": [0, 0.3, 0.5, 0.7],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{ball}",
+    "base": "I have a {ball}.",
+    "options": [
+      {
+        "value": "doll",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-doll.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-i-have-a-doll.mp3",
+        "chunks": ["I", "have", "a", "doll"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      },
+      {
+        "value": "robot",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-i-have-a-robot.mp3",
+        "chunks": ["I", "have", "a", "robot"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      },
+      {
+        "value": "teddy bear",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-teddy-bear.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-i-have-a-teddy-bear.mp3",
+        "chunks": ["I", "have", "a", "teddy bear"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      },
+      {
+        "value": "ball",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-ball.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-i-have-a-ball.mp3",
+        "chunks": ["I", "have", "a", "ball"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      }
+    ]
+  }
+}
