@@ -1,0 +1,18 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Kim.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1-g1-hello-kim.mp3" },
+    { "text": "B: Hello, Grace.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1-k1-hello-grace.mp3" },
+    { "text": "A: What do you have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1-g2-what-do-you-have.mp3" },
+    { "text": "B: I have a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1-k2-i-have-a-dog.mp3" },
+    { "text": "A: Great! Do you have a fish?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1-g3-great-do-you-have-a-fish.mp3" },
+    { "text": "B: Yes, I do.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-dia1-k3-yes-i-do.mp3" }
+  ]
+}
