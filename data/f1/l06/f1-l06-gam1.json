@@ -1,0 +1,38 @@
+{
+  "type": "lucky-box",
+  "title": "Lucky Box",
+  "subtitle": "",
+  "settings": {
+    "boxes": 4,
+    "boxIcon": "🎁",
+    "showText": true,
+    "autoPlay": true,
+    "outputPrompt": "Your turn!"
+  },
+  "items": [
+    {
+      "word": "ball",
+      "text": "I have a ball",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-ball.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-ball.mp3"
+    },
+    {
+      "word": "doll",
+      "text": "I have a doll",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-doll.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-doll.mp3"
+    },
+    {
+      "word": "robot",
+      "text": "I have a robot",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.mp3"
+    },
+    {
+      "word": "teddy bear",
+      "text": "I have a teddy bear",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-teddy-bear.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-teddy-bear.mp3"
+    }
+  ]
+}
