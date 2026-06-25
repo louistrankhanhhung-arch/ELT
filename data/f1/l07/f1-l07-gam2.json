@@ -1,0 +1,15 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 7
+  },
+  "items": [
+    { "word": "dog", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-dog.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-dog.mp3" },
+    { "word": "cat", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-cat.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-cat.mp3" },
+    { "word": "fish", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-fish.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-fish.mp3" },
+    { "word": "bird", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-bird.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-bird.mp3" }
+  ]
+}
