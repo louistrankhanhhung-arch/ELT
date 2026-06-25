@@ -83,7 +83,7 @@
       "type": "activity",
       "activity_kind": "game",
       "title": "TPR 2",
-      "player": "player-text.html",
+      "player": "game.html",
       "data": "data/f1/l06/f1-l06-gam2.json",
       "completion": {
         "mode": "student_complete"
