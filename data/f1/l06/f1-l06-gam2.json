@@ -1,0 +1,15 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 7
+  },
+  "items": [
+    { "word": "ball", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-ball.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-ball.mp3" },
+    { "word": "doll", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-doll.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-doll.mp3" },
+    { "word": "robot", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.mp3" },
+    { "word": "teddy bear", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-teddy-bear.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-teddy-bear.mp3" }
+  ]
+}
