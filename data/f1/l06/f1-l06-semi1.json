@@ -1,0 +1,22 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What do you have?"
+    },
+    {
+      "speaker": "B",
+      "text": "I have a ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "ball",
+    "doll",
+    "robot",
+    "teddy bear"
+  ]
+}
