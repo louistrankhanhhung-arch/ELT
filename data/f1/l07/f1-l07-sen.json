@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I have a dog",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-dog.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-dog.mp3",
+  "chunks": ["I", "have", "a", "dog"],
+  "timings": [0, 0.3, 0.5, 0.7],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{dog}",
+    "base": "I have a {dog}.",
+    "options": [
+      {
+        "value": "cat",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-cat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-cat.mp3",
+        "chunks": ["I", "have", "a", "cat"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      },
+      {
+        "value": "fish",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-fish.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-fish.mp3",
+        "chunks": ["I", "have", "a", "fish"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      },
+      {
+        "value": "bird",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-bird.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-bird.mp3",
+        "chunks": ["I", "have", "a", "bird"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      },
+      {
+        "value": "dog",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-dog.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-dog.mp3",
+        "chunks": ["I", "have", "a", "dog"],
+        "timings": [0, 0.3, 0.5, 0.7]
+      }
+    ]
+  }
+}
