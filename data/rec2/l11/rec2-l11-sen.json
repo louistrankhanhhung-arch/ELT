@@ -1,0 +1,63 @@
+{
+  "title": "Repeat",
+  "text": "My favorite sport is football",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-football.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-football.mp3",
+  "chunks": ["My", "favorite", "sport", "is", "football"],
+  "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{football}",
+    "base": "My favorite sport is {football}",
+    "options": [
+      {
+        "value": "badminton",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-badminton.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-badminton.mp3",
+        "chunks": ["My", "favorite", "sport", "is", "badminton"],
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "basketball",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-basketball.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-basketball.mp3",
+        "chunks": ["My", "favorite", "sport", "is", "basketball"],
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "volleyball",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-volleyball.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-volleyball.mp3",
+        "chunks": ["My", "favorite", "sport", "is", "volleyball"],
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "tennis",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-tennis.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-tennis.mp3",
+        "chunks": ["My", "favorite", "sport", "is", "tennis"],
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "table tennis",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-table-tennis.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-table-tennis.mp3",
+        "chunks": ["My", "favorite", "sport", "is", "table tennis"],
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "football",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-vob-football.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-my-favorite-sport-is-football.mp3",
+        "chunks": ["My", "favorite", "sport", "is", "football"],
+        "timings": [0, 0.3, 0.9, 1.2, 1.5, 1.8]
+      }
+    ]
+  }
+}
