@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What sport do you play?"
+    },
+    {
+      "speaker": "B",
+      "text": "I play ____.\nI also play ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "football",
+    "badminton",
+    "volleyball",
+    "basketball",
+    "tennis",
+    "table tennis"
+  ]
+}
