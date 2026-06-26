@@ -1,0 +1,22 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Lucy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t1-hello-lucy.mp3" },
+    { "text": "B: Hello, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l1-hello-tony.mp3" },
+    { "text": "A: What sport do you play?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t2-what-sport-so-you-play.mp3" },
+    { "text": "B: I play badminton.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l2-i-play-badminton.mp3" },
+    { "text": "B: I also play tennis.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l3-i-also-play-tennis.mp3" },
+    { "text": "A: Cool! What’s your favorite sport?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t3-cool-whats-your-favorite-sport.mp3" },
+    { "text": "B: My favorite sport is badminton.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l4-my-favorite-sport-is-badminton.mp3" },
+    { "text": "B: What’s your favorite sport, Tony?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l5-whats-your-favorite-sport-tony.mp3" },
+    { "text": "A: My favorite sport is basketball.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t4-my-favorite-sport-is-basketball.mp3" },
+    { "text": "B: That’s nice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l6-thats-nice.mp3" }
+ ]
+}
