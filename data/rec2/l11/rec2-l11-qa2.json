@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What is your favorite sport?"
+    },
+    {
+      "speaker": "B",
+      "text": "My favorite sport is ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "football",
+    "badminton",
+    "volleyball",
+    "basketball",
+    "tennis",
+    "table tennis"
+  ]
+}
