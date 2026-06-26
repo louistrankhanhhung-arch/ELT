@@ -1,0 +1,32 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What sport do you play?"
+    },
+    {
+      "speaker": "B",
+      "text": "I play ____. I also play ____."
+    },
+    {
+      "speaker": "A",
+      "text": "What’s your favorite sport?"
+    },
+    {
+      "speaker": "B",
+      "text": "My favorite sport is ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "football",
+    "badminton",
+    "volleyball",
+    "basketball",
+    "tennis",
+    "table tennis"
+  ]
+}
