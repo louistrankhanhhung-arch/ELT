@@ -5,31 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. How are you today?"
+      "text": "Tell me what you can do."
     },
     {
       "speaker": "B",
-      "text": "Hello. I’m good. And you?"
-    },
-    {
-      "speaker": "A",
-      "text": "I’m happy."
-    },
-    {
-      "speaker": "B",
-      "text": "Nice. Can you ____?"
-    },
-    {
-      "speaker": "A",
-      "text": "Yes, I can."
-    },
-    {
-      "speaker": "B",
-      "text": "Can you ____?"
-    },
-    {
-      "speaker": "A",
-      "text": "No, I can't."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nI’m happy today.\nI can ____.\nI can ____.\nI can ____."
     }
   ],
   "substitution_title": "Substitution",
