@@ -1,14 +1,14 @@
 {
   "layout": "full_dialogue",
-  "title": "Ask your friend",
+  "title": "Let's talk.",
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. Tell me about yourself."
+      "text": "Tell me about yourself."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s _____.\n➜ I am _____.\n➜ I like _____.\n➜ I have _____.\n➜ I can _____."
+      "text": "Hello.\nMy name’s _____.\nI’m a student.\nI’m happy today.\nI like _____.\nI have _____.\nI can _____.\n"
     }
   ]
 }
