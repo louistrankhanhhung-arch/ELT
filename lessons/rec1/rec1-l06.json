@@ -82,7 +82,7 @@
       "order": 7,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "About myself",
+      "title": "Take note",
       "player": "player-text.html",
       "data": "data/rec1/l06/rec1-l06-semi2.json",
       "completion": {
@@ -94,7 +94,7 @@
       "order": 8,
       "type": "activity",
       "activity_kind": "free",
-      "title": "Ask your friend",
+      "title": "Let's talk 4",
       "player": "player-text.html",
       "data": "data/rec1/l06/rec1-l06-free1.json",
       "completion": {
