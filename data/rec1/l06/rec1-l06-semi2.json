@@ -1,10 +1,10 @@
 {
   "layout": "full_dialogue",
-  "title": "About myself",
+  "title": "Take note and talk to your friend.",
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello.My name’s _____.\n➜ I am _____.\n➜ I like _____.\n➜ I have _____.\n➜ I can _____."
+      "text": "Hello.\nMy name’s _____.\nI’m a student.\nI’m happy.\nI like _____.\nI have _____.\nI can _____."
     }
   ]
 }
