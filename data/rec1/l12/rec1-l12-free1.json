@@ -9,7 +9,7 @@
     },
     {
       "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI’m a student.\nLet me tell you about my family.\nHe is my father.\nHe is ____.\nShe is my mother.\nShe is ____?\nHe is my brother.\nHe is ____.\nShe is my sister.\nShe is ____."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nLet me tell you about my family.\nThis is my father.\nHe is ____.\nThis is my mother.\nShe is ____?\nThis is my brother.\nHe is ____.\nThis is my sister.\nShe is ____."
     }
   ],
   "substitution_title": "Substitution",
