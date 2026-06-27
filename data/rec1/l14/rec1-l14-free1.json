@@ -5,43 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "What does your father like?"
+      "text": "What do your family members like?"
     },
     {
       "speaker": "B",
-      "text": "He likes ____."
-    },
-    {
-      "speaker": "A",
-      "text": "What does your mother like?"
-    },
-    {
-      "speaker": "B",
-      "text": "She likes ____."
-    },
-    {
-      "speaker": "A",
-      "text": "What does your sister like?"
-    },
-    {
-      "speaker": "B",
-      "text": "She likes ____."
-    },
-    {
-      "speaker": "A",
-      "text": "And your brother?"
-    },
-    {
-      "speaker": "B",
-      "text": "He likes ____."
-    },
-    {
-      "speaker": "A",
-      "text": "What about you?"
-    },
-    {
-      "speaker": "B",
-      "text": "I like ____."
+      "text": "Hello.\nMy name’s ____.\nLet me tell you about my family.\nThis is my father.\nHe likes ____.\nThis is my mother.\nShe likes ____.\nThis is my brother.\nHe likes ____.\nThis is my sister.\nShe likes ____."
     }
   ],
   "substitution_title": "Substitution",
