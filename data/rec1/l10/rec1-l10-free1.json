@@ -4,11 +4,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. Tell me about your school."
+      "text": "Tell me about your school."
     },
     {
       "speaker": "B",
-      "text": "Hello. This is my school.\n➜ This is a _____.\n➜ There is a _____.\n➜ It is _____."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my school.\nThis is a _____.\nThere is a _____.\nIt is _____."
     }
   ]
 }
