@@ -5,31 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Welcome to my ____!"
+      "text": "Tell me about your school."
     },
     {
       "speaker": "B",
-      "text": "Wow! Really nice."
-    },
-    {
-      "speaker": "A",
-      "text": "There is a ____. "
-    },
-    {
-      "speaker": "A",
-      "text": "There is a ____. "
-    },
-    {
-      "speaker": "A",
-      "text": "And there is a ____, too."
-    },
-    {
-      "speaker": "A",
-      "text": "Look! There is a ____. Can you see it?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes. It's beautiful."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my school!\nThere is a ____. \nThere is a ____.\nAnd there is a ____, too."
     }
   ],
   "substitution_title": "Substitution",
