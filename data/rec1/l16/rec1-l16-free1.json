@@ -1,14 +1,14 @@
 {
   "layout": "full_dialogue",
-  "title": "Ask your friend",
+  "title": "Let's talk",
   "lines": [
     {
       "speaker": "A",
-      "text": "Take note and talk to friends."
+      "text": "Tell me about someone in your family."
     },
     {
       "speaker": "B",
-      "text": "He is my ____.\nHe is ____.\nHe has ____.\nHe likes ____.\nHe can ____.\n\nShe is my ____.\nShe is ____.\nShe has ____.\nShe likes ____.\nShe can ____."
+      "text": "Hello.\nMy name’s ____.\nI’m happy today.\nLet me tell you about my family.\nThis is my ____.\nHe is ____.\nHe has ____.\nHe likes ____.\nHe can ____.\n\nThis is my ____.\nShe is ____.\nShe has ____.\nShe likes ____.\nShe can ____."
     }
   ]
 }
