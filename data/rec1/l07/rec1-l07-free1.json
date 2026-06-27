@@ -5,31 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Welcome to my ____."
+      "text": "Tell me about your house."
     },
     {
       "speaker": "B",
-      "text": "Wow! Really nice."
-    },
-    {
-      "speaker": "A",
-      "text": "This is a ____."
-    },
-    {
-      "speaker": "B",
-      "text": "What is this?"
-    },
-    {
-      "speaker": "A",
-      "text": "This is a ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Look! What is that?"
-    },
-    {
-      "speaker": "A",
-      "text": "That is a ____."
+      "text": "Hello.\nMy name’s ____.\nWelcome to my house.\nThis is a ____.\nThis is a ____.\nThat is a ____."
     }
   ],
   "substitution_title": "Substitution",
