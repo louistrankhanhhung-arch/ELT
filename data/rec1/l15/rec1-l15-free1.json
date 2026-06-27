@@ -5,67 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "That is my father."
+      "text": "What can your family members do?"
     },
     {
       "speaker": "B",
-      "text": "What can he do?"
-    },
-    {
-      "speaker": "A",
-      "text": "He can ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Nice!"
-    },
-    {
-      "speaker": "A",
-      "text": "That is my mother."
-    },
-    {
-      "speaker": "B",
-      "text": "What can she do?"
-    },
-    {
-      "speaker": "A",
-      "text": "She can ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Great!"
-    },
-    {
-      "speaker": "A",
-      "text": "That is my brother."
-    },
-    {
-      "speaker": "B",
-      "text": "What can he do?"
-    },
-    {
-      "speaker": "A",
-      "text": "He can  ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Cool!"
-    },
-    {
-      "speaker": "A",
-      "text": "And that is my sister."
-    },
-    {
-      "speaker": "B",
-      "text": "What can she do?"
-    },
-    {
-      "speaker": "A",
-      "text": "She can ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Wow! Your family is fun!"
+      "text": "Hello.\nMy name’s ____.\nLet me tell you about my family.\nThis is my father.\nHe can ____.\nThis is my mother.\nShe can ____. \nThis is my brother.\nHe can ____.\nThis is my sister.\nShe can ____."
     }
   ],
   "substitution_title": "Substitution",
