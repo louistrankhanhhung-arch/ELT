@@ -5,51 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Who is he?"
+      "text": "Tell me about your family."
     },
     {
       "speaker": "B",
-      "text": "He is my father."
-    },
-    {
-      "speaker": "A",
-      "text": "Is he ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, he is."
-    },
-    {
-      "speaker": "A",
-      "text": "Who is she?"
-    },
-    {
-      "speaker": "B",
-      "text": "She is my mother."
-    },
-    {
-      "speaker": "A",
-      "text": "Is she ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, she is."
-    },
-    {
-      "speaker": "A",
-      "text": "And who is that girl?"
-    },
-    {
-      "speaker": "B",
-      "text": "She is my sister."
-    },
-    {
-      "speaker": "A",
-      "text": "Is she ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, she is."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nLet me tell you about my family.\nHe is my father.\nHe is ____.\nShe is my mother.\nShe is ____?\nHe is my brother.\nHe is ____.\nShe is my sister.\nShe is ____."
     }
   ],
   "substitution_title": "Substitution",
