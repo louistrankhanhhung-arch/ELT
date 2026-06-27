@@ -1,10 +1,10 @@
 {
   "layout": "full_dialogue",
-  "title": "About my family!",
+  "title": "Take note and talk to friends",
   "lines": [
     {
       "speaker": "A",
-      "text": "He/She is my ____.\n➜ He/She is ____.\n➜ He/She has ____.\n➜ He/She likes ____.\n➜ He/She can ____."
+      "text": "He is my ____.\nHe is ____.\nHe has ____.\nHe likes ____.\nHe can ____.\n\nShe is my ____.\nShe is ____.\nShe has ____.\nShe likes ____.\nShe can ____."
     }
   ]
 }
