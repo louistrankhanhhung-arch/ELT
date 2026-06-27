@@ -5,11 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Look at my brother."
+      "text": "What things do your family members have?"
     },
     {
       "speaker": "B",
-      "text": "What does he have?"
+      "text": "Hello.\nMy name’s ____.\nLet me tell you about my family.\nThis is my father.\nHe has a ____.\nThis is my mother.\nShe has a ____.\nThis is my brother.\nHe has a ____.\nThis is my sister.\nShe has a ____."
     },
     {
       "speaker": "A",
