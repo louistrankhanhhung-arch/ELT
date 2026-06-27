@@ -5,35 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. My name’s ____. I’m a student."
+      "text": "Tell me what pets you like."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s ____. I’m a student, too."
-    },
-    {
-      "speaker": "A",
-      "text": "I have a ____."
-    },
-    {
-      "speaker": "B",
-      "text": "I have a ____."
-    },
-    {
-      "speaker": "A",
-      "text": "I like ____."
-    },
-    {
-      "speaker": "B",
-      "text": "I like ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Do you like ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, I do. /\nNo, I don't"
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nI like ____.\nI like ____.\nI like ____."
     }
   ],
   "substitution_title": "Substitution",
@@ -43,6 +19,6 @@
     "fish",
     "birds",
     "ducks",
-    "rabbit"
+    "rabbits"
   ]
 }
