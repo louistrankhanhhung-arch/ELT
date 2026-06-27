@@ -8,7 +8,7 @@
     },
     {
       "speaker": "B",
-      "text": "This is my ____.\n➜ That is ____.\n➜ It is ____.\n➜ I can ____.\n➜ He/She is my ____.\n➜ He/She is ____.\n➜ He/She has/likes/can ____."
+      "text": "This is my ____.\nThat is ____.\nIt is ____.\nI can ____.\n\nHe is my ____.\nHe is ____.\nHe has/likes/can ____.\n\nShe is my ____.\nShe is ____.\nShe has/likes/can ____."
     }
   ]
 }
