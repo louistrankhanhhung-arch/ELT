@@ -5,39 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Hello. My name’s ____. I’m a student."
+      "text": "Tell me what stationery you have at home."
     },
     {
       "speaker": "B",
-      "text": "Hello. My name’s ____. I’m a student, too."
-    },
-    {
-      "speaker": "A",
-      "text": "How are you today?"
-    },
-    {
-      "speaker": "B",
-      "text": "I am happy. And you?"
-    },
-    {
-      "speaker": "A",
-      "text": "I am good."
-    },
-    {
-      "speaker": "B",
-      "text": "Look! I have a ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Nice! I have a ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Do you have a ____?"
-    },
-    {
-      "speaker": "A",
-      "text": "Yes, I do. /\nNo, I don't"
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nI have ____.\nI have ____.\nI have ____."
     }
   ],
   "substitution_title": "Substitution",
