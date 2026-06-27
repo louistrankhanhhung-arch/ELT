@@ -5,39 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "Can you help me?"
+      "text": "Tell me where the thing is."
     },
     {
       "speaker": "B",
-      "text": "Yes."
-    },
-    {
-      "speaker": "A",
-      "text": "Where is the ball?"
-    },
-    {
-      "speaker": "B",
-      "text": "It is ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Good. Where is the bicycle?"
-    },
-    {
-      "speaker": "B",
-      "text": "It is ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Great. Where is the bag?"
-    },
-    {
-      "speaker": "B",
-      "text": "It is ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Excellent!"
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my classroom.\nThere is a ___.\nThere is a ___.\nThere is a ___."
     }
   ],
   "substitution_title": "Substitution",
