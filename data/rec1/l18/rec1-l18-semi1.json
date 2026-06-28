@@ -4,11 +4,11 @@
   "lines": [
     {
       "speaker": "Step 1",
-      "text": "\nAsk:\nWhat’s your name?\nWhat is this?\nWhat do you have?\nWhere is it?"
+      "text": "\nASK:\nWhat’s your name?\nWhat is this?\nWhat do you have?\nWhere is it?"
     },
     {
       "speaker": "Step 2",
-      "text": "\nNote:\nName: ____.\nHave: ____.\nWhere: ____."
+      "text": "\nNOTE:\nName: ____.\nHave: ____.\nWhere: ____."
     }
   ]
 }
