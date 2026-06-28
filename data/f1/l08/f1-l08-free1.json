@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Tell me about yourself."
+    },
+    {
+      "speaker": "B",
+      "text": "Hello.\nMy name is ____.\nI am ____ years old.\nI am a boy/girl.\nI am happy.\nI have a ____.\nThank you."
+    }
+  ]
+}
