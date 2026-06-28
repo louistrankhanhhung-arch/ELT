@@ -4,7 +4,7 @@
   "lines": [
     {
       "speaker": "Step 1",
-      "text": "\nQuestions:\nWhat's your name?\nAre you a boy or a girl?\nDo you like ____?\nCan you ____?"
+      "text": "\nAsk:\nWhat's your name?\nAre you a boy or a girl?\nDo you like ____?\nCan you ____?"
     },
     {
       "speaker": "Step 2",
