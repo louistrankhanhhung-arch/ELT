@@ -3,8 +3,12 @@
   "title": "Talk to a friend. Ask about one family member.",
   "lines": [
     {
-      "speaker": "A",
-      "text": "Who is he/she?  ____.\nIs he/she tall, kind, or funny…? ____.\nWhat does he/she like? ____.\nWhat can he/she do? ____."
+      "speaker": "Step 1",
+      "text": "\nWho is he/she?\nIs he/she tall, kind, or funny?\nWhat does he/she like?\nWhat can he/she do?"
+    },
+    {
+      "speaker": "Step 2",
+      "text": "\nName: ____.\nFamily member: ____.\nTraits: ____.\nLike: ____.\nCan: ____."
     }
   ]
 }
