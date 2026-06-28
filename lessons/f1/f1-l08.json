@@ -1,0 +1,117 @@
+{
+  "lesson_id": "f01-l08",
+  "title": "Foundation 1 – Lesson 8",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f1/l08/f1-l08-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 1",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/l08/f1-l08-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 2",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/l08/f1-l08-rev2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "game1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "TPR 1",
+      "player": "game.html",
+      "data": "data/f1/l08/f1-l08-gam1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "game2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "TPR 2",
+      "player": "game.html",
+      "data": "data/f1/l08/f1-l08-gam2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-dialogue.html",
+      "data": "data/f1/l08/f1-l08-dia1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "semi-controlled",
+      "title": "Ask & Answer",
+      "player": "player-text.html",
+      "data": "data/f1/l08/f1-l08-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f1/l08/f1-l08-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free2",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Record",
+      "player": "player-text.html",
+      "data": "data/f1/l08/f1-l08-free2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
