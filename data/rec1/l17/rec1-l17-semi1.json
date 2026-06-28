@@ -4,11 +4,11 @@
   "lines": [
     {
       "speaker": "Step 1",
-      "text": "\nAsk:\nWhat's your name?\nAre you a boy or a girl?\nDo you like ____?\nCan you ____?"
+      "text": "\nASK:\nWhat's your name?\nAre you a boy or a girl?\nDo you like ____?\nCan you ____?"
     },
     {
       "speaker": "Step 2",
-      "text": "\nNote:\nName: ____ \nBoy or girl: ____.\nLike: ____.\nCan: ____."
+      "text": "\nNOTE:\nName: ____ \nBoy or girl: ____.\nLike: ____.\nCan: ____."
     }
   ]
 }
