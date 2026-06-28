@@ -1,0 +1,20 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k1-hello.mp3" },
+    { "text": "My name’s Kim.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k2-my-names-kim.mp3" },
+    { "text": "I am six years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k3-i-am-six-years-old.mp3" },
+    { "text": "I am a girl.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k4-i-am-a-girl.mp3" },
+    { "text": "I am happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k5-i-am-happy.mp3" },
+    { "text": "I have a bag.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k6-i-have-a-bag.mp3" },
+    { "text": "I have a teddy bear.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k7-i-have-a-teddy-bear.mp3" },
+    { "text": "I have a cat.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-dia1-k8-i-have-a-cat.mp3" }
+  ]
+}
