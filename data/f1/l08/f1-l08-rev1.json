@@ -1,0 +1,31 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "1",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-kim.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-whats-your-name.mp3"
+    },
+    {
+      "word": "2",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-kim-6.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-how-old-are-you.mp3"
+    },
+    {
+      "word": "3",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l03/f1-l03-vob-girl.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-are-you-a-boy-or-a-girl.mp3"
+    },
+    {
+      "word": "4",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-happy.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-how-are-you.mp3"
+    }
+  ]
+}
