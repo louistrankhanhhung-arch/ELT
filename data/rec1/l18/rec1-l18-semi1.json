@@ -3,8 +3,12 @@
   "title": "Interview your friend",
   "lines": [
     {
-      "speaker": "A",
-      "text": "Name: ____.\nHave: ____.\nWhere: ____."
+      "speaker": "Step 1",
+      "text": "\nAsk:\nWhat’s your name?\nWhat is this?\nWhat do you have?\nWhere is it?"
+    },
+    {
+      "speaker": "Step 2",
+      "text": "\nNote:\nName: ____.\nHave: ____.\nWhere: ____."
     }
   ]
 }
