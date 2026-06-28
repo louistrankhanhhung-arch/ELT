@@ -1,0 +1,38 @@
+{
+  "type": "spin-wheel",
+  "title": "Spin Wheel",
+  "subtitle": "",
+  "settings": {
+    "showText": true,
+    "autoPlay": true,
+    "spins": 18,
+    "spinDelayMs": 85,
+    "outputPrompt": "Say it!"
+  },
+  "items": [
+    {
+      "word": "Sam",
+      "text": "Sam",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l01/f1-l01-vob-sam.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-whats-your-name.mp3"
+    },
+    {
+      "word": "seven",
+      "text": "seven",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l02/f1-l02-vob-sam-7.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-how-old-are-you.mp3"
+    },
+    {
+      "word": "boy",
+      "text": "boy",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l03-vob-boy.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-are-you-a-boy-or-a-girl.mp3"
+    },
+    {
+      "word": "hungry",
+      "text": "hungry",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l04/f1-l04-vob-hungry.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-how-are-you.mp3"
+    }
+  ]
+}
