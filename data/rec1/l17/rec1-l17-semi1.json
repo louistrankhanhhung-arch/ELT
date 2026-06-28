@@ -3,8 +3,12 @@
   "title": "Interview your friend",
   "lines": [
     {
-      "speaker": "A",
-      "text": "Name: ____.\nBoy or girl: ____.\nLike: ____.\nCan: ____."
+      "speaker": "Step 1",
+      "text": "\nQuestions:\nWhat's your name?\nAre you a boy or a girl?\nDo you like ____?\nCan you ____?"
+    },
+    {
+      "speaker": "Step 2",
+      "text": "\nNote:\nName: ____ \nBoy or girl: ____.\nLike: ____.\nCan: ____."
     }
   ]
 }
