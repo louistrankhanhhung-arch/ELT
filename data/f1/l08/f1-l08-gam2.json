@@ -1,0 +1,15 @@
+{
+  "type": "fast-tap",
+  "title": "Fast Tap",
+  "subtitle": "Listen fast. Tap fast.",
+  "settings": {
+    "shuffle": true,
+    "rounds": 7
+  },
+  "items": [
+    { "word": "bag", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bag.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-i-have-a-bag.mp3" },
+    { "word": "robot", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-i-have-a-robot.mp3" },
+    { "word": "fish", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-fish.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-fish.mp3" },
+    { "word": "bird", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-bird.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-sen-i-have-a-bird.mp3" }
+  ]
+}
