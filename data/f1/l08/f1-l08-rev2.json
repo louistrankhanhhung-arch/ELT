@@ -1,0 +1,31 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "1",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-book.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-what-do-you-have.mp3"
+    },
+    {
+      "word": "2",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-doll.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-what-do-you-have.mp3"
+    },
+    {
+      "word": "3",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-vob-robot.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-what-do-you-have.mp3"
+    },
+    {
+      "word": "4",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l07/f1-l07-vob-dog.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l08/f1-l08-sen-what-do-you-have.mp3"
+    }
+  ]
+}
