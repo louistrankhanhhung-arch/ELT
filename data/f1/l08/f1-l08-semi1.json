@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "What’s your name?\nHow old are you?\nAre you a boy or a girl?\nHow are you?\nWhat do you have?"
+    }
+  ]
+}
