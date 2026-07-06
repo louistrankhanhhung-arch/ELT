@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>REH Challenge Task Player</title>
+  <style>
+    :root {
+      --bg: #fff7fb;
+      --panel: #ffffff;
+      --ink: #173044;
+      --muted: #6b7a86;
+      --accent: #d23b2a;
+      --blue: #0f74a8;
+      --good: #2fa866;
+      --bad: #d94646;
+      --warn: #f59e0b;
+      --border: rgba(23,48,68,.14);
+      --shadow: 0 10px 28px rgba(23,48,68,.14);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--ink); }
+    .app { width: min(1180px, 100vw); min-height: 100vh; margin: 0 auto; padding: clamp(12px, 3vw, 30px); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    h1 { margin: 0; color: var(--accent); font-size: clamp(34px, 5.8vw, 68px); line-height: 1; font-weight: 600; text-align: center; }
+    .subtitle { color: var(--muted); font-size: clamp(16px, 2vw, 22px); font-weight: 800; text-align: center; min-height: 28px; }
+    .topbar { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:10px; color:var(--muted); font-weight:900; font-size:clamp(14px,2vw,18px); }
+    .pill { background:#fff; border:2px solid var(--border); border-radius:999px; padding:7px 12px; }
+    .panel { width: min(1040px, 100%); background: var(--panel); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(14px, 3vw, 28px); }
+    .controls { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:10px; }
+    button { border:0; border-radius:999px; padding:12px 18px; font-size:clamp(16px,2vw,21px); font-weight:800; cursor:pointer; background:white; color:var(--ink); box-shadow:0 3px 10px rgba(23,48,68,.12); transition:transform .12s ease, opacity .12s ease; user-select:none; }
+    button:active { transform:scale(.97); }
+    button.primary { background:var(--blue); color:white; }
+    button.accent { background:var(--accent); color:white; }
+    button.good { background:var(--good); color:white; }
+    button:disabled { opacity:.45; cursor:not-allowed; }
+    .status { min-height:30px; color:var(--muted); font-size:clamp(15px,2vw,20px); font-weight:800; text-align:center; }
+    .taskHeader { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap; margin-bottom:14px; }
+    .instruction { font-size:clamp(20px,2.5vw,30px); font-weight:900; color:var(--accent); line-height:1.15; }
+    .skillTag { color:var(--blue); font-weight:900; background:rgba(15,116,168,.08); border-radius:999px; padding:8px 12px; }
+    .passage { border:2px solid var(--border); border-radius:18px; padding:14px 16px; background:rgba(15,116,168,.04); font-size:clamp(18px,2vw,24px); line-height:1.45; margin:12px 0 18px; white-space:pre-wrap; }
+    .question { border:2px solid var(--border); border-radius:20px; padding:16px; margin:14px 0; background:#fff; }
+    .question.correct { border-color:rgba(47,168,102,.55); background:rgba(47,168,102,.06); }
+    .question.wrong { border-color:rgba(217,70,70,.55); background:rgba(217,70,70,.06); }
+    .qText { font-size:clamp(18px,2vw,25px); font-weight:900; line-height:1.25; margin-bottom:12px; }
+    .options { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; }
+    .option { display:flex; align-items:center; gap:10px; border:2px solid var(--border); border-radius:16px; padding:11px 12px; font-size:clamp(16px,2vw,21px); font-weight:800; cursor:pointer; background:white; }
+    .option input { transform:scale(1.2); }
+    .option.selected { border-color:var(--blue); box-shadow:0 0 0 4px rgba(15,116,168,.10); }
+    .option.correctOpt { border-color:var(--good); background:rgba(47,168,102,.08); }
+    .option.wrongOpt { border-color:var(--bad); background:rgba(217,70,70,.08); }
+    input[type="text"], select, textarea { width:100%; border:2px solid var(--border); border-radius:16px; padding:12px 14px; font-size:clamp(16px,2vw,22px); font-weight:700; color:var(--ink); outline:none; background:white; }
+    textarea { min-height:90px; resize:vertical; }
+    input[type="text"]:focus, select:focus, textarea:focus { border-color:var(--blue); box-shadow:0 0 0 4px rgba(15,116,168,.10); }
+    .matchGrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:start; }
+    .matchRow { display:grid; grid-template-columns:1fr minmax(170px, .75fr); gap:10px; align-items:center; margin:10px 0; }
+    .matchLeft, .tile { border:2px solid var(--border); border-radius:16px; padding:12px; background:white; font-size:clamp(16px,2vw,22px); font-weight:850; }
+    .tile { cursor:pointer; user-select:none; }
+    .tile.active { border-color:var(--blue); box-shadow:0 0 0 4px rgba(15,116,168,.10); }
+    .tile.used { opacity:.45; }
+    .wordBank { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 14px; }
+    .bankWord { border-radius:999px; padding:9px 14px; background:rgba(15,116,168,.08); color:var(--blue); font-weight:900; }
+    .orderList { display:flex; flex-direction:column; gap:10px; }
+    .lineItem { border-radius:18px; padding:12px 16px; font-size:clamp(17px,2vw,24px); font-weight:850; color:var(--accent); background:white; border:2px solid var(--border); box-shadow:0 3px 10px rgba(23,48,68,.10); cursor:pointer; line-height:1.18; }
+    .lineItem.selected { border-color:var(--blue); color:var(--blue); }
+    table { width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:18px; border:2px solid var(--border); }
+    th, td { border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:10px; font-size:clamp(15px,1.8vw,20px); text-align:left; }
+    th { background:rgba(15,116,168,.08); font-weight:900; color:var(--blue); }
+    tr:last-child td { border-bottom:0; }
+    th:last-child, td:last-child { border-right:0; }
+    .scoreCard { text-align:center; padding:22px; }
+    .scoreBig { font-size:clamp(48px,9vw,96px); color:var(--accent); font-weight:900; line-height:1; }
+    .reviewNote { margin-top:8px; color:var(--muted); font-weight:800; font-size:clamp(15px,2vw,20px); }
+    .answerKey { margin-top:10px; color:var(--good); font-weight:900; }
+    .small { color:var(--muted); font-size:14px; font-weight:700; }
+    .error { margin:auto; max-width:760px; padding:20px; border-radius:22px; background:#fff; color:var(--bad); font-weight:700; line-height:1.45; }
+    @media (max-width: 700px) { .matchGrid { grid-template-columns:1fr; } .matchRow { grid-template-columns:1fr; } .panel { padding:12px; } button { padding:10px 13px; } }
+    @media (orientation: landscape) and (max-height: 520px) {
+      body { overflow:hidden; }
+      .app { width:100vw; height:100dvh; min-height:0; padding:6px 10px; gap:5px; display:grid; grid-template-rows:auto auto auto 1fr auto auto; align-items:stretch; }
+      h1 { font-size:clamp(20px,4vh,32px); }
+      .subtitle, .topbar, .status { font-size:clamp(11px,2.5vh,15px); min-height:0; }
+      .panel { width:100%; height:100%; min-height:0; padding:8px; border-radius:16px; overflow:auto; }
+      button { padding:7px 11px; font-size:clamp(12px,2.8vh,16px); }
+      .instruction { font-size:clamp(15px,3vh,22px); }
+      .qText, .passage, .option, input[type="text"], select, textarea { font-size:clamp(13px,2.8vh,18px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1 id="title">Challenge</h1>
+    <div class="subtitle" id="subtitle"></div>
+    <div class="topbar" id="topbar"></div>
+    <section class="panel" id="task"></section>
+    <div class="controls" id="controls"></div>
+    <div class="status" id="status"></div>
+  </main>
+  <audio id="audio" preload="auto"></audio>
+
+  <script>
+    const DEFAULT_DATA = {
+      type: "challenge-task",
+      title: "Challenge Task",
+      subtitle: "Do all questions. Then submit.",
+      settings: { mode: "challenge", feedback: "submit", showScore: true, allowRetry: true, shuffleQuestions: false, shuffleOptions: false, passPercent: 70 },
+      tasks: [{
+        id: "sample-mc",
+        archetype: "multiple-choice",
+        skill: "reading",
+        instruction: "Choose the correct answer.",
+        passage: "Tom is seven years old. He has a small dog.",
+        items: [{ question: "How old is Tom?", options: ["Six", "Seven", "Eight"], answer: "Seven" }]
+      }]
+    };
+
+    const els = {
+      title: document.getElementById('title'), subtitle: document.getElementById('subtitle'), topbar: document.getElementById('topbar'),
+      task: document.getElementById('task'), controls: document.getElementById('controls'), status: document.getElementById('status'), audio: document.getElementById('audio')
+    };
+
+    let data = DEFAULT_DATA;
+    let state = { currentTaskIndex: 0, answers: {}, submitted: false, result: null };
+
+    function getParam(name) { return new URLSearchParams(location.search).get(name); }
+    async function loadData() { const url = getParam('data'); if (!url) return DEFAULT_DATA; const res = await fetch(url, { cache: 'no-store' }); if (!res.ok) throw new Error('Cannot load JSON data: ' + url); return await res.json(); }
+    function normalizeData(d) { const safe = { ...DEFAULT_DATA, ...d }; safe.settings = { ...DEFAULT_DATA.settings, ...(d.settings || {}) }; safe.tasks = Array.isArray(d.tasks) ? d.tasks : (d.task ? [d.task] : DEFAULT_DATA.tasks); return safe; }
+    function escapeHtml(str) { return String(str ?? '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c])); }
+    function norm(str) { return String(str ?? '').trim().replace(/\s+/g, ' ').toLowerCase(); }
+    function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+    function setStatus(msg) { els.status.textContent = msg || ''; }
+    function btn(label, className, onClick) { const b=document.createElement('button'); b.textContent=label; if(className) b.className=className; b.addEventListener('click', onClick); return b; }
+    async function play(src, rate=1) { if(!src) return; els.audio.pause(); els.audio.currentTime=0; els.audio.src=src; els.audio.playbackRate=rate; try{ await els.audio.play(); } catch { setStatus('Tap Play to start audio on this device.'); } }
+
+    function taskKey(t, suffix='') { return `${t.id || 'task'}${suffix ? ':' + suffix : ''}`; }
+    function itemKey(t, i) { return taskKey(t, i); }
+    function getAnswer(key) { return state.answers[key]; }
+    function setAnswer(key, value) { state.answers[key] = value; }
+
+    function renderShell() {
+      els.title.textContent = data.title || 'Challenge';
+      els.subtitle.textContent = data.subtitle || '';
+      const t = data.tasks[state.currentTaskIndex];
+      els.topbar.innerHTML = `<span class="pill">Task ${state.currentTaskIndex + 1}/${data.tasks.length}</span><span class="pill">${escapeHtml(t.archetype || '')}</span><span class="pill">${escapeHtml(t.skill || '')}</span>`;
+      els.task.innerHTML=''; els.controls.innerHTML=''; setStatus('');
+    }
+
+    function renderTaskHeader(t) {
+      const head = document.createElement('div'); head.className = 'taskHeader';
+      head.innerHTML = `<div class="instruction">${escapeHtml(t.instruction || 'Do the task.')}</div><div class="skillTag">${escapeHtml(t.skill || 'skill')}</div>`;
+      els.task.appendChild(head);
+      if (t.audio) els.controls.appendChild(btn('🔊 Play', 'primary', () => play(t.audio)));
+      if (t.passage) { const p=document.createElement('div'); p.className='passage'; p.textContent=t.passage; els.task.appendChild(p); }
+    }
+
+    function renderCurrentTask() {
+      state.submitted = false; state.result = null;
+      renderShell();
+      const t = data.tasks[state.currentTaskIndex];
+      renderTaskHeader(t);
+      const renderer = TASK_RENDERERS[t.archetype];
+      if (!renderer) { els.task.innerHTML += `<div class="question wrong"><div class="qText">Unknown archetype: ${escapeHtml(t.archetype)}</div></div>`; return; }
+      renderer(t, false);
+      renderControls(false);
+    }
+
+    function renderControls(review=false) {
+      const hasPrev = state.currentTaskIndex > 0;
+      const hasNext = state.currentTaskIndex < data.tasks.length - 1;
+      els.controls.appendChild(btn('⬅️ Back', '', () => { if(hasPrev){ state.currentTaskIndex--; renderCurrentTask(); } }));
+      els.controls.lastChild.disabled = !hasPrev;
+      if (!review) els.controls.appendChild(btn('✅ Submit', 'good', submitCurrentTask));
+      els.controls.appendChild(btn('➡️ Next', '', () => { if(hasNext){ state.currentTaskIndex++; renderCurrentTask(); } else finishAll(); }));
+      els.controls.lastChild.textContent = hasNext ? '➡️ Next Task' : '🏁 Finish';
+      if (data.settings.allowRetry) els.controls.appendChild(btn('🔁 Reset Task', '', () => { clearTaskAnswers(data.tasks[state.currentTaskIndex]); renderCurrentTask(); }));
+    }
+
+    function clearTaskAnswers(t) { Object.keys(state.answers).forEach(k => { if(k.startsWith((t.id || 'task') + ':') || k === (t.id || 'task')) delete state.answers[k]; }); }
+
+    function submitCurrentTask() {
+      const t = data.tasks[state.currentTaskIndex];
+      state.result = gradeTask(t);
+      state.submitted = true;
+      renderShell(); renderTaskHeader(t); TASK_RENDERERS[t.archetype](t, true);
+      showTaskScore(state.result);
+      renderControls(true);
+    }
+
+    function showTaskScore(r) {
+      const box = document.createElement('div'); box.className = 'scoreCard';
+      box.innerHTML = `<div class="scoreBig">${r.correct}/${r.total}</div><div class="reviewNote">${Math.round(r.percent)}% correct. Review the highlighted answers.</div>`;
+      els.task.prepend(box);
+    }
+
+    function finishAll() {
+      const results = data.tasks.map(t => gradeTask(t));
+      const correct = results.reduce((s,r)=>s+r.correct,0); const total = results.reduce((s,r)=>s+r.total,0); const percent = total ? correct/total*100 : 0;
+      renderShell(); els.topbar.innerHTML = '';
+      const pass = percent >= Number(data.settings.passPercent || 70);
+      els.task.innerHTML = `<div class="scoreCard"><div class="scoreBig">${correct}/${total}</div><div class="reviewNote">Final score: ${Math.round(percent)}%. ${pass ? 'Great job!' : 'Try again and review the questions.'}</div></div>`;
+      els.controls.appendChild(btn('🔁 Try Again', 'primary', () => { state = { currentTaskIndex:0, answers:{}, submitted:false, result:null }; renderCurrentTask(); }));
+    }
+
+    function markQuestion(qEl, ok) { if(state.submitted) qEl.classList.add(ok ? 'correct' : 'wrong'); }
+    function showKey(qEl, answer) { if(state.submitted) { const k=document.createElement('div'); k.className='answerKey'; k.textContent='Answer: ' + formatAnswer(answer); qEl.appendChild(k); } }
+    function formatAnswer(a) { if(Array.isArray(a)) return a.join(' / '); if(typeof a === 'object') return JSON.stringify(a); return String(a ?? ''); }
+    function isCorrectText(user, answer) { if (Array.isArray(answer)) return answer.some(a => norm(user) === norm(a)); return norm(user) === norm(answer); }
+
+    function renderMultipleChoice(t, review) {
+      (t.items || []).forEach((it, i) => {
+        const key=itemKey(t,i); const user=getAnswer(key); const ok=isCorrectText(user, it.answer);
+        const q=document.createElement('div'); q.className='question'; markQuestion(q, ok);
+        q.innerHTML = `<div class="qText">${i+1}. ${escapeHtml(it.question || '')}</div>`;
+        const opts=document.createElement('div'); opts.className='options';
+        const options = data.settings.shuffleOptions && !review ? shuffle(it.options || []) : (it.options || []);
+        options.forEach(opt => {
+          const label=document.createElement('label'); label.className='option';
+          if(user === opt) label.classList.add('selected');
+          if(review && isCorrectText(opt, it.answer)) label.classList.add('correctOpt');
+          if(review && user === opt && !isCorrectText(opt, it.answer)) label.classList.add('wrongOpt');
+          label.innerHTML = `<input type="radio" name="${escapeHtml(key)}" ${user===opt?'checked':''} ${review?'disabled':''}> <span>${escapeHtml(opt)}</span>`;
+          label.addEventListener('click', () => { if(!review) { setAnswer(key, opt); renderCurrentTask(); } });
+          opts.appendChild(label);
+        });
+        q.appendChild(opts); showKey(q, it.answer); els.task.appendChild(q);
+      });
+    }
+
+    function renderTrueFalse(t, review) {
+      (t.items || []).forEach((it, i) => {
+        const key=itemKey(t,i); const user=getAnswer(key); const ok=String(user) === String(it.answer);
+        const q=document.createElement('div'); q.className='question'; markQuestion(q, ok);
+        q.innerHTML = `<div class="qText">${i+1}. ${escapeHtml(it.statement || it.question || '')}</div>`;
+        const opts=document.createElement('div'); opts.className='options';
+        ['True','False','Not Given'].slice(0, t.allowNotGiven ? 3 : 2).forEach(opt => {
+          const label=document.createElement('label'); label.className='option';
+          if(user === opt) label.classList.add('selected');
+          if(review && opt === it.answer) label.classList.add('correctOpt');
+          if(review && user === opt && opt !== it.answer) label.classList.add('wrongOpt');
+          label.innerHTML = `<input type="radio" name="${escapeHtml(key)}" ${user===opt?'checked':''} ${review?'disabled':''}> <span>${escapeHtml(opt)}</span>`;
+          label.addEventListener('click', () => { if(!review) { setAnswer(key, opt); renderCurrentTask(); } });
+          opts.appendChild(label);
+        });
+        q.appendChild(opts); showKey(q, it.answer); els.task.appendChild(q);
+      });
+    }
+
+    function renderGapFill(t, review) { renderCompletionLike(t, review, 'sentence'); }
+    function renderSentenceCompletion(t, review) { renderCompletionLike(t, review, 'sentence'); }
+    function renderShortAnswer(t, review) { renderCompletionLike(t, review, 'question'); }
+
+    function renderCompletionLike(t, review, field) {
+      if (t.wordBank?.length) { const wb=document.createElement('div'); wb.className='wordBank'; wb.innerHTML=t.wordBank.map(w=>`<span class="bankWord">${escapeHtml(w)}</span>`).join(''); els.task.appendChild(wb); }
+      (t.items || []).forEach((it, i) => {
+        const key=itemKey(t,i); const user=getAnswer(key) || ''; const ok=isCorrectText(user, it.answer);
+        const q=document.createElement('div'); q.className='question'; markQuestion(q, ok);
+        q.innerHTML = `<div class="qText">${i+1}. ${escapeHtml(it[field] || it.question || it.sentence || '')}</div>`;
+        const input=document.createElement('input'); input.type='text'; input.value=user; input.disabled=review; input.placeholder='Type your answer';
+        input.addEventListener('input', e => setAnswer(key, e.target.value));
+        q.appendChild(input); showKey(q, it.answer); els.task.appendChild(q);
+      });
+    }
+
+    function renderMatching(t, review) {
+      const right = data.settings.shuffleOptions && !review ? shuffle(t.right || []) : (t.right || []);
+      (t.left || []).forEach((l, i) => {
+        const key=taskKey(t,l.id); const user=getAnswer(key) || ''; const ok=user === (t.answers || {})[l.id];
+        const q=document.createElement('div'); q.className='question'; markQuestion(q, ok);
+        q.innerHTML = `<div class="matchRow"><div class="matchLeft">${escapeHtml(l.text || l.id)}</div></div>`;
+        const row=q.querySelector('.matchRow'); const sel=document.createElement('select'); sel.disabled=review;
+        sel.innerHTML = `<option value="">Choose...</option>` + right.map(r=>`<option value="${escapeHtml(r.id)}" ${user===r.id?'selected':''}>${escapeHtml(r.text || r.id)}</option>`).join('');
+        sel.addEventListener('change', e => setAnswer(key, e.target.value)); row.appendChild(sel);
+        const ans = (t.right || []).find(r => r.id === (t.answers || {})[l.id]); showKey(q, ans ? ans.text : (t.answers || {})[l.id]); els.task.appendChild(q);
+      });
+    }
+
+    function renderOrdering(t, review) {
+      const key=taskKey(t,'order'); let user=getAnswer(key);
+      if(!Array.isArray(user)) { user = shuffle((t.items || []).map((_,i)=>i)); setAnswer(key, user); }
+      const q=document.createElement('div'); q.className='question';
+      const ok = JSON.stringify(user) === JSON.stringify((t.items || []).map((_,i)=>i)); markQuestion(q, ok);
+      q.innerHTML = `<div class="qText">Put the lines in the correct order.</div>`;
+      const list=document.createElement('div'); list.className='orderList';
+      user.forEach((idx, pos) => {
+        const line=document.createElement('div'); line.className='lineItem'; line.textContent=(pos+1)+'. '+(t.items[idx]?.text || '');
+        if(!review) line.addEventListener('click', () => { const next=[...user]; if(pos>0){ [next[pos-1],next[pos]]=[next[pos],next[pos-1]]; setAnswer(key,next); renderCurrentTask(); } });
+        list.appendChild(line);
+      });
+      q.appendChild(list); showKey(q, (t.items || []).map(x=>x.text)); els.task.appendChild(q);
+      if(!review) { const note=document.createElement('div'); note.className='small'; note.textContent='Tap a line to move it up.'; q.appendChild(note); }
+    }
+
+    function renderTableCompletion(t, review) {
+      const table=document.createElement('table');
+      table.innerHTML = `<thead><tr>${(t.columns || []).map(c=>`<th>${escapeHtml(c.label || c.key)}</th>`).join('')}</tr></thead><tbody></tbody>`;
+      const tbody=table.querySelector('tbody');
+      (t.rows || []).forEach((row, r) => {
+        const tr=document.createElement('tr');
+        (t.columns || []).forEach(col => {
+          const td=document.createElement('td'); const key=taskKey(t,`${r}-${col.key}`);
+          const answer = row.answers?.[col.key];
+          if(answer !== undefined) {
+            const user=getAnswer(key) || ''; const input=document.createElement('input'); input.type='text'; input.value=user; input.disabled=review; input.placeholder='...';
+            input.addEventListener('input', e => setAnswer(key, e.target.value)); td.appendChild(input);
+            if(review) { td.style.background = isCorrectText(user, answer) ? 'rgba(47,168,102,.08)' : 'rgba(217,70,70,.08)'; const small=document.createElement('div'); small.className='answerKey'; small.textContent='Answer: '+formatAnswer(answer); td.appendChild(small); }
+          } else td.textContent = row[col.key] ?? '';
+          tr.appendChild(td);
+        }); tbody.appendChild(tr);
+      });
+      els.task.appendChild(table);
+    }
+
+    function gradeTask(t) {
+      let correct=0, total=0;
+      if(['multiple-choice','true-false','gap-fill','sentence-completion','short-answer'].includes(t.archetype)) {
+        (t.items || []).forEach((it,i)=>{ total++; if(isCorrectText(getAnswer(itemKey(t,i)), it.answer)) correct++; });
+      } else if(t.archetype === 'matching') {
+        (t.left || []).forEach(l=>{ total++; if((getAnswer(taskKey(t,l.id)) || '') === (t.answers || {})[l.id]) correct++; });
+      } else if(t.archetype === 'ordering') {
+        total = 1; const user=getAnswer(taskKey(t,'order')) || []; correct = JSON.stringify(user) === JSON.stringify((t.items || []).map((_,i)=>i)) ? 1 : 0;
+      } else if(t.archetype === 'table-completion') {
+        (t.rows || []).forEach((row,r)=>{ Object.keys(row.answers || {}).forEach(k=>{ total++; if(isCorrectText(getAnswer(taskKey(t,`${r}-${k}`)), row.answers[k])) correct++; }); });
+      }
+      return { correct, total, percent: total ? correct/total*100 : 0 };
+    }
+
+    const TASK_RENDERERS = {
+      'multiple-choice': renderMultipleChoice,
+      'matching': renderMatching,
+      'gap-fill': renderGapFill,
+      'true-false': renderTrueFalse,
+      'sentence-completion': renderSentenceCompletion,
+      'ordering': renderOrdering,
+      'table-completion': renderTableCompletion,
+      'short-answer': renderShortAnswer
+    };
+
+    async function init() {
+      try { data = normalizeData(await loadData()); renderCurrentTask(); }
+      catch (err) { document.body.innerHTML = `<div class="error">Could not load challenge data.<br>${escapeHtml(err.message)}</div>`; }
+    }
+    init();
+  </script>
+</body>
+</html>
