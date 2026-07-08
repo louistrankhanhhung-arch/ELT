@@ -1,0 +1,10 @@
+{
+  "layout": "full_dialogue",
+  "title": "Take note and talk to your friend",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nFirst, I ____.\nThen, I ____.\nAfter that, I ____.\nNext, I ____.\nAfter school, I ____.\n…\nFinally, I ____."
+    }
+  ]
+}
