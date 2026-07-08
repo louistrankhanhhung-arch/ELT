@@ -38,98 +38,38 @@
       "player": "player-dialogue.html",
       "data": "data/rec2/l04/rec2-l04-dia1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
-      "id": "vocab",
+      "id": "control1",
       "order": 4,
-      "type": "activity",
-      "activity_kind": "vocab",
-      "title": "Vocabulary",
-      "player": "player-grid-v2.html",
-      "data": "data/rec2/l04/rec2-l04-vob1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "vocab",
-      "order": 5,
-      "type": "activity",
-      "activity_kind": "vocab",
-      "title": "Family chunks",
-      "player": "player-grid-v2.html",
-      "data": "data/rec2/l04/rec2-l04-vob2.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "sentence",
-      "order": 6,
-      "type": "activity",
-      "activity_kind": "sentence",
-      "title": "Sentence Practice",
-      "player": "player-sentence.html",
-      "data": "data/rec2/l04/rec2-l04-sen.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "game1",
-      "order": 7,
       "type": "activity",
       "activity_kind": "game",
       "title": "Game 1",
       "player": "game.html",
-      "data": "data/rec2/l04/rec2-l04-gam1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "game2",
-      "order": 8,
-      "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 2",
-      "player": "game.html",
-      "data": "data/rec2/l04/rec2-l04-gam2.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "qa1",
-      "order": 9,
-      "type": "activity",
-      "activity_kind": "q&a",
-      "title": "Ask & Answer 1",
-      "player": "player-text.html",
-      "data": "data/rec2/l04/rec2-l04-qa1.json",
+      "data": "data/rec2/l04/rec2-l04-con1.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "qa2",
-      "order": 10,
+      "id": "control2",
+      "order": 5,
       "type": "activity",
-      "activity_kind": "q&a",
-      "title": "Ask & Answer 2",
-      "player": "player-text.html",
-      "data": "data/rec2/l04/rec2-l04-qa2.json",
+      "activity_kind": "game",
+      "title": "Game 2",
+      "player": "game.html",
+      "data": "data/rec2/l04/rec2-l04-con2.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
       "id": "semi1",
-      "order": 11,
+      "order": 6,
       "type": "activity",
-      "activity_kind": "semi controlled",
+      "activity_kind": "speaking",
       "title": "Take note",
       "player": "player-text.html",
       "data": "data/rec2/l04/rec2-l04-semi1.json",
@@ -139,12 +79,24 @@
     },
     {
       "id": "free1",
-      "order": 12,
+      "order": 7,
       "type": "activity",
-      "activity_kind": "free talk",
-      "title": "Let's talk",
+      "activity_kind": "free",
+      "title": "Free Speaking",
       "player": "player-text.html",
       "data": "data/rec2/l04/rec2-l04-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free2",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "free",
+      "title": "Record",
+      "player": "player-text.html",
+      "data": "data/rec2/l04/rec2-l04-free2.json",
       "completion": {
         "mode": "teacher_next"
       }
