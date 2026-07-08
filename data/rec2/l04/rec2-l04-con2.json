@@ -1,0 +1,52 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "First, I get up at ____ o’clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b3-first-i-get-up-at-six-oclock-in-the-morning.mp3.mp3",
+      "answer": "six",
+      "options": ["six", "seven", "five", "four"]
+    },
+    {
+      "prompt": "Then, I brush my teeth and ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b4-then-i-brush-my-teeth-and-wash-my-face.mp3.mp3",
+      "answer": "wash my face",
+      "options": ["wash my face", "play football", "take a bath", "have breakfast"]
+    },
+    {
+      "prompt": "____, I have breakfast with my family.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b5-after-that-have-breakfast-with-my-family.mp3",
+      "answer": "after that",
+      "options": ["after that", "first", "finally", "after school"]
+    },
+    {
+      "prompt": "Next, I go to ____ and study with my friends.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b6-next-i-go-to-school-and-study-with-my-friends.mp3",
+      "answer": "school",
+      "options": ["school", "home", "garden", "playground"]
+    },
+    {
+      "prompt": "After school, I ____ and take a shower.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b7-after-school-i-play-football-and-take-a-shower.mp3",
+      "answer": "play football",
+      "options": ["play football", "have lunch", "go home", "play games"]
+    },
+    {
+      "prompt": "In the ____, I have dinner and do my homework.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b8-in-the-evening-i-have-dinner-and-do-my-homework.mp3",
+      "answer": "evening",
+      "options": ["evening", "afternoon", "morning", "night"]
+    },
+    {
+      "prompt": "Finally, I play games and go to bed at ____ o'clock.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l04/r2-l04-dia1-b9-finally-i-play-games-and-go-to-bed-at-nine-oclock.mp3",
+      "answer": "nine",
+      "options": ["nine", "ten", "eight", "eleven"]
+    }
+  ]
+}
