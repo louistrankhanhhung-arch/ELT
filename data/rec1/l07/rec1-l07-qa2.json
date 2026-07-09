@@ -9,6 +9,9 @@
   },
   "lines": [
     { "text": "What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-this.mp3" },
-    { "text": "What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-that.mp3" }
+    { "text": "What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-that.mp3" },
+    { "text": "", "audio": "" },
+    { "text": "→ This is ____.", "audio": "" },
+    { "text": "→ That is ____.", "audio": "" }
   ]
 }
