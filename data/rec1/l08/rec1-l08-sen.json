@@ -83,7 +83,7 @@
         "value": "tree",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-tree.mp3",
-        "chunks": ["There", "is", "a", "true"],
+        "chunks": ["There", "is", "a", "tree"],
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
