@@ -39,22 +39,22 @@
     },
     {
       "word": "7. Yes/No?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-book.png",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-book.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-book.mp3"
     },
     {
-      "word": "Yes/No?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-bag.png",
+      "word": "8. Yes/No?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-bag.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-bag.mp3"
     },
     {
-      "word": "Yes/No?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-duck.png",
+      "word": "9. Yes/No?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-duck.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-duck.mp3"
     },
     {
-      "word": "Yes/No?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-cat.png",
+      "word": "10. Yes/No?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-cat.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-rabbit.mp3"
     }
   ]
