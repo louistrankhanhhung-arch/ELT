@@ -10,13 +10,49 @@
       "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-garden.mp3",
       "answer": "garden",
-      "options": ["garden", "school", "ball", "playground"]
+      "options": ["garden", "school", "flower", "playground"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-book.mp3",
+      "answer": "book",
+      "options": ["book", "bird", "dog", "fish"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-bird.mp3",
+      "answer": "bird",
+      "options": ["bird", "school", "flower", "tree"]
     },
     {
       "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-classroom.mp3",
       "answer": "classroom",
       "options": ["classroom", "school", "garden", "bicycle"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-pen.mp3",
+      "answer": "pen",
+      "options": ["pen", "pencil", "bird", "bag"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-flower.mp3",
+      "answer": "flower",
+      "options": ["flower", "school", "rabbit", "playground"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-window.mp3",
+      "answer": "window",
+      "options": ["window", "door", "flower", "bicycle"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-cat.mp3",
+      "answer": "cat",
+      "options": ["cat", "dog", "duck", "chair"]
     },
     {
       "prompt": "There is a ____.",
@@ -32,15 +68,51 @@
     },
     {
       "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-tree.mp3",
+      "answer": "tree",
+      "options": ["tree", "crayon", "flower", "chair"]
+    },
+    {
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-school.mp3",
       "answer": "school",
       "options": ["school", "garden", "playground", "ball"]
     },
     {
       "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-bag.mp3",
+      "answer": "bag",
+      "options": ["bag", "book", "cat", "pen"]
+    },
+    {
+      "prompt": "There is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-bicycle.mp3",
       "answer": "bicycle",
       "options": ["bicycle", "school", "ball", "garden"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-table.mp3",
+      "answer": "table",
+      "options": ["table", "garden", "flower", "playground"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-dog.mp3",
+      "answer": "dog",
+      "options": ["dog", "duck", "ball", "door"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-chair.mp3",
+      "answer": "chair",
+      "options": ["chair", "school", "rabbit", "playground"]
+    },
+    {
+      "prompt": "There is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-door.mp3",
+      "answer": "door",
+      "options": ["door", "school", "dog", "chair"]
     }
   ]
 }
