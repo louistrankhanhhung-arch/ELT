@@ -1,17 +1,16 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "What is there in the ___?",
-  "answers": [
-    "There is a ____."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "classroom",
-    "school",
-    "garden",
-    "playground",
-    "bicycle",
-    "ball"
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia3.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "1. What is there in the school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-what-is-there-in-the-school.mp3" },
+    { "text": "2. What is there in the classroom?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-what-is-there-in-the-classroom.mp3" },
+    { "text": "3. What is there in the playground?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-what-is-there-in-the-playground.mp3" },
+    { "text": "4. What is there in the garden?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-what-is-there-in-the-garden.mp3" }
   ]
 }
