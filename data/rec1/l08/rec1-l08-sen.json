@@ -52,6 +52,90 @@
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
+        "value": "table",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l07-table.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-table.mp3",
+        "chunks": ["There", "is", "a", "table"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "chair",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-chair.mp3",
+        "chunks": ["There", "is", "a", "chair"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "door",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-door.mp3",
+        "chunks": ["There", "is", "a", "door"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "window",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-window.mp3",
+        "chunks": ["There", "is", "a", "window"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "tree",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-tree.mp3",
+        "chunks": ["There", "is", "a", "true"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "flower",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-flower.mp3",
+        "chunks": ["There", "is", "a", "flower"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "book",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-book.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-book.mp3",
+        "chunks": ["There", "is", "a", "book"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "bag",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-bag.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-bag.mp3",
+        "chunks": ["There", "is", "a", "bag"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "pen",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-pen.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-pen.mp3",
+        "chunks": ["There", "is", "a", "pen"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "cat",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-cat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-cat.mp3",
+        "chunks": ["There", "is", "a", "cat"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "dog",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-dog.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-dog.mp3",
+        "chunks": ["There", "is", "a", "dog"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "bird",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-bird.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-bird.mp3",
+        "chunks": ["There", "is", "a", "bird"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
         "value": "classroom",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-vob-classroom.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-there-is-a-classroom.mp3",
