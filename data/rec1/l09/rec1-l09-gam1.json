@@ -13,10 +13,28 @@
       "options": ["under", "on", "behind", "between"]
     },
     {
+      "prompt": "The bicycle is ____ the tree.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-bicycle-is-next-to-the-tree.mp3",
+      "answer": "next to",
+      "options": ["next to", "on", "in", "under"]
+    },
+    {
       "prompt": "The ball is ____ the bag.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-in-the-bag.mp3",
       "answer": "in",
       "options": ["in", "on", "next to", "behind"]
+    },
+    {
+      "prompt": "The pencil is ____ the pen and the ruler.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-pencil-is-between-the-pen-and-the-ruler.mp3",
+      "answer": "between",
+      "options": ["between", "in", "under", "behind"]
+    },
+    {
+      "prompt": "The bag is ____ the table.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-bag-is-on-the-table.mp3",
+      "answer": "on",
+      "options": ["on", "next to", "under", "behind"]
     },
     {
       "prompt": "The ball is ____ the chair.",
@@ -25,16 +43,34 @@
       "options": ["next to", "behind", "on", "in"]
     },
     {
+      "prompt": "The cat is ____ the chair.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-cat-is-under-the-chair.mp3",
+      "answer": "under",
+      "options": ["under", "behing", "on", "next to"]
+    },
+    {
       "prompt": "The ball is ____ the table and the chair.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-between-the-table-and-the-chair.mp3",
       "answer": "between",
       "options": ["between", "on", "in", "next to"]
     },
     {
+      "prompt": "The bird is ____ the tree.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-bird-is-in-the-tree.mp3",
+      "answer": "in",
+      "options": ["in", "between", "on", "behind"]
+    },
+    {
       "prompt": "The ball is ____ the chair.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-ball-is-behind-the-chair.mp3",
       "answer": "behind",
       "options": ["behind", "between", "on", "in"]
+    },
+    {
+      "prompt": "The dog is ____ the door.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-the-dog-is-behind-the-door.mp3",
+      "answer": "behind",
+      "options": ["behind", "next to", "on", "in"]
     },
     {
       "prompt": "The ball is ____ the table.",
