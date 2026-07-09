@@ -1,18 +1,24 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "Is the ball ____?",
-  "answers": [
-    "Yes, it is.",
-    "No, it isn't."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "on",
-    "in",
-    "under",
-    "next to",
-    "behind",
-    "between"
+  "title": "Yes, it is. / No, it isn’t.",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-dia2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "1. Is the ball on the table?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-ball-on-the-table.mp3" },
+    { "text": "2. Is the cat on the table?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-cat-on-the-table.mp3" },
+    { "text": "3. Is the dog under the table?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-dog-under-the-table.mp3" },
+    { "text": "4. Is the bird in the tree?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-bird-in-the-tree.mp3" },
+    { "text": "5. Is the bicycle next to the door?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-bicycle-next-to-the-door.mp3" },
+    { "text": "6. Is the duck between the rabbit and the dog?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-duck-between-the-rabbit-and-the-dog.mp3" },
+    { "text": "7. Is the rabbit under the tree?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-rabbit-under-the-tree.mp3" },
+    { "text": "8. Is the rabbit next to the bicycle?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-rabbit-nex-to-the-bicycle.mp3" },
+    { "text": "9. Is the bag on the chair?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-bag-on-the-chair.mp3" },
+    { "text": "10. Is the bag on the table?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-bag-on-the-table.mp3" },
+    { "text": "11. Is the book between the bag and the cat?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-book-between-the-bag-and-the-cat.mp3" },
+    { "text": "12. Is the ball in the bag?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l09/g1-l09-sen-is-the-ball-in-the-bag.mp3" }
   ]
 }
