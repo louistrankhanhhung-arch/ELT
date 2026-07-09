@@ -10,25 +10,43 @@
       "prompt": "This is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-tree.mp3",
       "answer": "tree",
-      "options": ["tree", "chair", "window", "flower"]
+      "options": ["tree", "chair", "fish", "flower"]
     },
     {
       "prompt": "This is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-table.mp3",
       "answer": "table",
-      "options": ["table", "tree", "door", "flower"]
+      "options": ["table", "bag", "pen", "window"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-pencil.mp3",
+      "answer": "pencil",
+      "options": ["pencil", "pen", "rabbit", "ruler"]
     },
     {
       "prompt": "This is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-window.mp3",
       "answer": "window",
-      "options": ["window", "table", "door", "tree"]
+      "options": ["window", "table", "ruler", "tree"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-bird.mp3",
+      "answer": "bird",
+      "options": ["bird", "crayon", "ruler", "flower"]
     },
     {
       "prompt": "This is a ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-door.mp3",
       "answer": "door",
       "options": ["door", "flower", "tree", "window"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-ruler.mp3",
+      "answer": "ruler",
+      "options": ["ruler", "table", "window", "pencil"]
     },
     {
       "prompt": "This is a ____.",
@@ -41,6 +59,24 @@
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-flower.mp3",
       "answer": "flower",
       "options": ["flower", "door", "table", "tree"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-cat.mp3",
+      "answer": "cat",
+      "options": ["cat", "dog", "duck", "crayon"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-pen.mp3",
+      "answer": "pen",
+      "options": ["pen", "chair", "pencil", "bag"]
+    },
+    {
+      "prompt": "This is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-fish.mp3",
+      "answer": "fish",
+      "options": ["fish", "book", "bag", "cat"]
     }
   ]
 }
