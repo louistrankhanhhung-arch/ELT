@@ -1,5 +1,5 @@
 {
-  "title": "Listen, Ask & Answer",
+  "title": "Yes, it is./No, it isn't.",
   "settings": {
     "shuffle": false,
     "hideText": false,
@@ -8,52 +8,52 @@
   },
   "items": [
     {
-      "word": "1. Yes/No?",
+      "word": "1",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-chair.mp3"
     },
     {
-      "word": "2. Yes/No?",
+      "word": "2",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-table.mp3"
     },
     {
-      "word": "3. Yes/No?",
+      "word": "3",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-door.mp3"
     },
     {
-      "word": "4. Yes/No?",
+      "word": "4",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-window.mp3"
     },
     {
-      "word": "5. Yes/No?",
+      "word": "5",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-tree.mp3"
     },
     {
-      "word": "6. Yes/No?",
+      "word": "6",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-flower.mp3"
     },
     {
-      "word": "7. Yes/No?",
+      "word": "7",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-book.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-book.mp3"
     },
     {
-      "word": "8. Yes/No?",
+      "word": "8",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-bag.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-bag.mp3"
     },
     {
-      "word": "9. Yes/No?",
+      "word": "9",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-duck.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-duck.mp3"
     },
     {
-      "word": "10. Yes/No?",
+      "word": "10",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-cat.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-rabbit.mp3"
     }
