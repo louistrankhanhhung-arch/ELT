@@ -1,17 +1,14 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "What is this?\nWhat is that?",
-  "answers": [
-    "This is a ____.\nThat is a ____."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "chair",
-    "table",
-    "door",
-    "window",
-    "tree",
-    "flower"
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-this.mp3" },
+    { "text": "What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-that.mp3" }
   ]
 }
