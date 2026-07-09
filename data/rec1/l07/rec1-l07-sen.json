@@ -52,6 +52,90 @@
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
+        "value": "book",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-book.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-book.mp3",
+        "chunks": ["This", "is", "a", "book"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "bag",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-bag.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-bag.mp3",
+        "chunks": ["This", "is", "a", "bag"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "pen",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-pen.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-pen.mp3",
+        "chunks": ["This", "is", "a", "pen"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "pencil",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-pencil.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-pencil.mp3",
+        "chunks": ["This", "is", "a", "pencil"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "ruler",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-ruler.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-ruler.mp3",
+        "chunks": ["This", "is", "a", "ruler"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "crayon",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-crayon.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-crayon.mp3",
+        "chunks": ["This", "is", "a", "crayon"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "cat",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-cat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-cat.mp3",
+        "chunks": ["This", "is", "a", "cat"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "dog",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dog.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-dog.mp3",
+        "chunks": ["This", "is", "a", "dog"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "fish",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-fish.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-fish.mp3",
+        "chunks": ["This", "is", "a", "fish"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "bird",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-bird.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-bird.mp3",
+        "chunks": ["This", "is", "a", "bird"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "duck",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-duck.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-duck.mp3",
+        "chunks": ["This", "is", "a", "duck"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
+        "value": "rabbit",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-rabbit.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-rabbit.mp3",
+        "chunks": ["This", "is", "a", "rabbit"],
+        "timings": [0, 0.3, 0.5, 0.8]
+      },
+      {
         "value": "chair",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-this-is-a-chair.mp3",
