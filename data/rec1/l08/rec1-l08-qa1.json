@@ -1,18 +1,24 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "Is there a ____?",
-  "answers": [
-    "Yes, there is.",
-    "No, there isn't."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "classroom",
-    "school",
-    "garden",
-    "playground",
-    "bicycle",
-    "ball"
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-dia2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "1. Is there a school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-school.mp3" },
+    { "text": "2. Is there a classroom?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-classroom.mp3" },
+    { "text": "3. Is there a book?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-book.mp3" },
+    { "text": "4. Is there a playground?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-playground.mp3" },
+    { "text": "5. Is there a garden?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-garden.mp3" },
+    { "text": "6. Is there a duck?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-duck.mp3" },
+    { "text": "7. Is there a dog?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-dog.mp3" },
+    { "text": "8. Is there a bird?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-bird.mp3" },
+    { "text": "9. Is there a tree?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-tree.mp3" },
+    { "text": "10. Is there a teacher?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-teacher.mp3" },
+    { "text": "11. Is there a cat?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-cat.mp3" },
+    { "text": "12. Is there a bicycle?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l08/g1-l08-sen-is-there-a-bicycle.mp3" }
   ]
 }
