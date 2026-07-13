@@ -8,39 +8,99 @@
   "items": [
     {
       "prompt": "She is a ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-shopkeeper.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-a-shopkeeper.mp3",
       "answer": "shopkeeper",
       "options": ["shopkeeper", "teacher", "doctor", "farmer"]
     },
     {
+      "prompt": "My ____ is a driver.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-brother-is-a-driver.mp3",
+      "answer": "brother",
+      "options": ["brother", "sister", "grandfather", "mother"]
+    },
+    {
       "prompt": "He is a ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-doctor.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-a-doctor.mp3",
       "answer": "doctor",
       "options": ["doctor", "worker", "shopkeeper", "farmer"]
     },
     {
+      "prompt": "My ____ is an accountant.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-sister-is-an-accountant.mp3",
+      "answer": "sister",
+      "options": ["sister", "brother", "father", "grandmother"]
+    },
+    {
       "prompt": "She is a ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-teacher.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-a-teacher.mp3",
       "answer": "teacher",
       "options": ["teacher", "farmer", "driver", "worker"]
     },
     {
+      "prompt": "My ____ is a worker.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-grandfather-is-a-worker.mp3",
+      "answer": "grandfather",
+      "options": ["grandfather", "grandmother", "brother", "mother"]
+    },
+    {
       "prompt": "He is a ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-farmer.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-a-farmer.mp3",
       "answer": "farmer",
       "options": ["farmer", "driver", "shopkeeper", "doctor"]
     },
     {
+      "prompt": "My ____ is a teacher.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-father-is-a-teacher.mp3",
+      "answer": "father",
+      "options": ["father", "grandmother", "grandfather", "mother"]
+    },
+    {
       "prompt": "She is a ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-she-is-a-worker.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-a-worker.mp3",
       "answer": "worker",
       "options": ["worker", "teacher", "doctor", "driver"]
     },
     {
+      "prompt": "My ____ is a nurse.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-mother-is-a-nurse.mp3",
+      "answer": "mother",
+      "options": ["mother", "grandmother", "grandfather", "brother"]
+    },
+    {
       "prompt": "He is a ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-sen-he-is-a-driver.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-a-driver.mp3",
       "answer": "driver",
       "options": ["driver", "farmer", "worker", "shopkeeper"]
+    },
+    {
+      "prompt": "My ____ is a doctor.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-sister-is-a-doctor.mp3",
+      "answer": "sister",
+      "options": ["sister", "grandmother", "father", "brother"]
+    },
+    {
+      "prompt": "My ____ is a farmer.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-grandmother-is-a-farmer.mp3",
+      "answer": "grandmother",
+      "options": ["grandmother", "sister", "father", "brother"]
+    },
+    {
+      "prompt": "She is an ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-she-is-an-accountant.mp3",
+      "answer": "accountant",
+      "options": ["accountant", "farmer", "nurse", "shopkeeper"]
+    },
+    {
+      "prompt": "My ____ is a shopkeeper.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-my-father-is-a-shopkeeper.mp3",
+      "answer": "father",
+      "options": ["father", "grandfather", "sister",  "brother"]
+    },
+    {
+      "prompt": "He is a ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-he-is-a-nurse.mp3",
+      "answer": "nurse",
+      "options": ["nurse", "farmer", "worker", "driver"]
     }
   ]
 }
