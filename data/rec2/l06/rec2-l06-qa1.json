@@ -8,12 +8,12 @@
   },
   "items": [
     {
-      "word": "Is he a teacher?",
+      "word": "Is she a teacher?",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-teacher.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-teacher.mp3"
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-she-a-teacher.mp3"
     },
     {
-      "word": "Is he a doctordoctor?",
+      "word": "Is he a doctor?",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-doctor.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-doctor.mp3"
     },
