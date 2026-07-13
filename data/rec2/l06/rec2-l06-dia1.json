@@ -1,0 +1,27 @@
+{
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: Hello, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b1-hello-tony.mp3" },
+    { "text": "B: Hello, Bill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t1-hello-bill.mp3" },
+    { "text": "A: How many people are there in your family?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b2-how-many-people-are-there-in-your-family.mp3" },
+    { "text": "B: There are five people in my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t2-there-are-five-people-in-my-family.mp3" },
+    { "text": "A: Do you have any brothers or sisters?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b3-do-you-have-any-brothers-or-sisters.mp3" },
+    { "text": "B: Yes, I do.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t3-yes-i-do.mp3" },
+    { "text": "B: I have one brother and one sister. ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t4-i-have-one-brother-and-one-sister.mp3" },
+    { "text": "A: Wow! Really?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b4-wow-really.mp3" },
+    { "text": "A: I don’t have any brothers or sisters.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b5-i-dont-have-any-brothers-or-sisters.mp3" },
+    { "text": "A: What does your father do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b6-what-does-your-father-do.mp3" },
+    { "text": "B: He is a doctor.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t5-he-is-a-doctor.mp3" },
+    { "text": "A: What does your mother do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b7-what-does-your-mother-do.mp3" },
+    { "text": "B: She is a shopkeeper.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t6-she-is-a-shopkeeper.mp3" },
+    { "text": "A: That’s great! Thank you, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-b8-thats-great-thank-you-tony.mp3" },
+    { "text": "B: You’re welcome.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l05/r2-l05-dia1-t7-youre-welcome.mp3" }
+  ]
+}

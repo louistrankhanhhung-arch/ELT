@@ -1,0 +1,14 @@
+{
+  "layout": "full_dialogue",
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Do you have any brothers or sisters?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nYes, I do. I have _____.\nNo, I don’t. I don’t have any brothers or sisters."
+    }
+  ]
+}

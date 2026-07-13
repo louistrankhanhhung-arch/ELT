@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Let's talk",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nTell me about your friend’s family."
+    },
+    {
+      "speaker": "B",
+      "text": "\nHello.\nThis is ____.\nThere are ____.\nHe/She has ____.\nHis/Her father is ____.\nHis/Her mother is ____.\nThank you."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "teacher",
+    "doctor",
+    "farmer",
+    "driver",
+    "worker",
+    "shopkeeper"
+  ]
+}

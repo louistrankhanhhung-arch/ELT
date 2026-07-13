@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Ask & Answer",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nWhat does your father do?\nWhat does your mother do?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nHe is a ____.\nShe is a ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "teacher",
+    "doctor",
+    "farmer",
+    "driver",
+    "worker",
+    "shopkeeper"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "layout": "talking_dialogue",
+  "compact": true,
+  "title": "Talk to your friend and take note",
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "\nHow many people are there in your family?\nDo you have any brothers or sisters?\nWhat does your father do?\nWhat does your mother do?"
+    },
+    {
+      "speaker": "B",
+      "text": "\nFriend’s name: ____.\nPeople: ____.\nBrothers/Sisters: ____.\nFather’s job: ____.\nMother’s job: ____."
+    }
+  ],
+  "substitution_title": "Substitution",
+  "substitutions": [
+    "teacher",
+    "doctor",
+    "farmer",
+    "driver",
+    "worker",
+    "shopkeeper"
+  ]
+}
