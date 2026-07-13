@@ -1,14 +1,51 @@
 {
-  "layout": "full_dialogue",
-  "title": "Ask & Answer",
-  "lines": [
+  "title": "Yes, he is. / No, he isn’t. - Yes, she is. / No, she isn’t.",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
     {
-      "speaker": "A",
-      "text": "Do you have any brothers or sisters?"
+      "word": "Is he a teacher?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-teacher.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-teacher.mp3"
     },
     {
-      "speaker": "B",
-      "text": "\nYes, I do. I have _____.\nNo, I don’t. I don’t have any brothers or sisters."
+      "word": "Is he a doctordoctor?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-doctor.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-doctor.mp3"
+    },
+    {
+      "word": "Is he a farmer?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/ r2-l06-vob-father-teacher.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-farmer.mp3"
+    },
+    {
+      "word": "Is he a driver?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-driver.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-driver.mp3"
+    },
+    {
+      "word": "Is she a worker?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-worker.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-worker.mp3"
+    },
+    {
+      "word": "Is she a shopkeeper?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-grandmother-farmer.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-she-a-shopkeeper.mp3"
+    },
+    {
+      "word": "Is he a nurse?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-father-shopkeeper.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-he-a-nurse.mp3"
+    },
+    {
+      "word": "Is she an accountant?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-vob-accountant.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-sen-is-she-an-accountant.mp3"
     }
   ]
 }
