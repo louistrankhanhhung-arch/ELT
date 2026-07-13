@@ -1,7 +1,7 @@
 {
   "layout": "talking_dialogue",
   "compact": true,
-  "title": "Talk to your friend and take note",
+  "title": "Take note and talk to your friend",
   "lines": [
     {
       "speaker": "A",
@@ -9,7 +9,7 @@
     },
     {
       "speaker": "B",
-      "text": "\nFriend’s name: ____.\nPeople: ____.\nBrothers/Sisters: ____.\nFather’s job: ____.\nMother’s job: ____."
+      "text": "\nFamily: ____ people.\nBrothers: ____.\nSisters: ____.\nFather’s job: ____.\nMother’s job: ____.\n"
     }
   ],
   "substitution_title": "Substitution",
@@ -19,6 +19,8 @@
     "farmer",
     "driver",
     "worker",
-    "shopkeeper"
+    "shopkeeper",
+    "nurse",
+    "accountant"
   ]
 }
