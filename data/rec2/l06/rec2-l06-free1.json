@@ -5,11 +5,11 @@
   "lines": [
     {
       "speaker": "A",
-      "text": "\nTell me about your friend’s family."
+      "text": "Tell me about your friend’s family."
     },
     {
       "speaker": "B",
-      "text": "\nHello.\nThis is ____.\nThere are ____.\nHe/She has ____.\nHis/Her father is ____.\nHis/Her mother is ____.\nThank you."
+      "text": "Hello.\nLet me tell you about my family.\nThere are ____ people in my family.\nI have ___ brother(s) / sister(s)\nMy father is a ____.\nMother is a ____.\nThank you."
     }
   ],
   "substitution_title": "Substitution",
