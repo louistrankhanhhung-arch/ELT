@@ -1,17 +1,51 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "What do you  do in the ____?",
-  "answers": [
-    "I ____"
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "classroom, study",
-    "library, read books",
-    "playground, play with friends",
-    "computer room, use computers",
-    "canteen, have lunch",
-    "toilet, wash my hands"
+  "title": "Yes, he is. / No, he isn’t. — Yes, she is. / No, she isn’t.",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "Is he smart?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-smart.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-he-smart.mp3"
+    },
+    {
+      "word": "Is he friendly?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-strict.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-he-friendly.mp3"
+    },
+    {
+      "word": "Is she hardworking?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-hardworking.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-she-hardworking.mp3"
+    },
+    {
+      "word": "Is she helpful?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-helpful.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-she-helpful.mp3"
+    },
+    {
+      "word": "Is he strict?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-friendly.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-he-strict.mp3"
+    },
+    {
+      "word": "Is he funny?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-grandfather-strict.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-he-funny.mp3"
+    },
+    {
+      "word": "Is he brave?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-brave.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-is-he-brave.mp3"
+    },
+    {
+      "word": "Is she beautiful?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-beautiful.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-is-she-beautiful.mp3"
+    }
   ]
 }
