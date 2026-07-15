@@ -1,10 +1,10 @@
 {
   "title": "Repeat",
-  "text": "I have a bag",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bag.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-i-have-a-bag.mp3",
-  "chunks": ["I", "have", "a", "bag"],
-  "timings": [0, 0.3, 0.5, 0.7],
+  "text": "This is my mother.",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-mother.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-my-mother.mp3",
+  "chunks": ["This", "is", "my", "mother"],
+  "timings": [0, 0.3, 0.6, 0.9],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -13,36 +13,50 @@
   },
   "substitution": {
     "label": "",
-    "slot": "{bag}",
-    "base": "I have a {bag}.",
+    "slot": "{mother}",
+    "base": "This is my {mother}.",
     "options": [
       {
-        "value": "book",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-book.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-i-have-a-book.mp3",
-        "chunks": ["I", "have", "a", "book"],
-        "timings": [0, 0.3, 0.5, 0.7]
+        "value": "father",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-father.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-my-father.mp3",
+        "chunks": ["This", "is", "my", "mother"],
+        "timings": [0, 0.3, 0.6, 0.9]
       },
       {
-        "value": "pencil",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-pencil.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-i-have-a-pencil.mp3",
-        "chunks": ["I", "have", "a", "pencil"],
-        "timings": [0, 0.3, 0.5, 0.7]
+        "value": "family",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-family.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-my-family.mp3",
+        "chunks": ["This", "is", "my", "family"],
+        "timings": [0, 0.3, 0.6, 0.9]
       },
       {
-        "value": "ruler",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-ruler.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-i-have-a-ruler.mp3",
-        "chunks": ["I", "have", "a", "ruler"],
-        "timings": [0, 0.3, 0.5, 0.7]
+        "value": "friend",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-friend.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-my-friend.mp3",
+        "chunks": ["This", "is", "my", "friend"],
+        "timings": [0, 0.3, 0.6, 0.9]
       },
       {
-        "value": "bag",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bag.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-i-have-a-bag.mp3",
-        "chunks": ["I", "have", "a", "bag"],
-        "timings": [0, 0.3, 0.5, 0.7]
+        "value": "Alex",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-alex.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-alex.mp3",
+        "chunks": ["This", "is", "Alex"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "Lucy",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-lucy.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-lucy.mp3",
+        "chunks": ["This", "is", "Lucy"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "mother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-mother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-this-is-my-mother.mp3",
+        "chunks": ["This", "is", "my", "mother"],
+        "timings": [0, 0.3, 0.6, 0.9]
       }
     ]
   }
