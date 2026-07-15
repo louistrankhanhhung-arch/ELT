@@ -81,7 +81,7 @@
     {
       "prompt": "He is ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-brave.mp3",
-      "answer": "smart",
+      "answer": "brave",
       "options": ["brave", "smart", "helpful", "beautiful"]
     },
     {
