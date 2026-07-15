@@ -1,5 +1,10 @@
 {
-  "layout": "review_card",
+  "layout": "full_dialogue",
   "title": "Review",
-  "prompt": "How are you?"
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello!\nWhat's your name?\nHow are you?\nHow old are you?"
+    }
+  ]
 }
