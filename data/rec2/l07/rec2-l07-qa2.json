@@ -8,7 +8,6 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Look!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-look.mp3" },
     { "text": "What is he like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-what-is-he-like.mp3" },
     { "text": "What is she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-what-is-she-like.mp3" },
     { "text": "→ He is ____.", "audio": "" },
