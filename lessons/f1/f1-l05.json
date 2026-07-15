@@ -30,13 +30,13 @@
       }
     },
     {
-      "id": "sentence",
+      "id": "leadin",
       "order": 3,
       "type": "activity",
-      "activity_kind": "sentence",
-      "title": "Sentence Practice",
-      "player": "player-sentence.html",
-      "data": "data/f1/l05/f1-l05-sen.json",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/f1/l05/f1-l05-lead.json",
       "completion": {
         "mode": "student_complete"
       }
@@ -58,44 +58,32 @@
       "order": 5,
       "type": "activity",
       "activity_kind": "game",
-      "title": "TPR 1",
-      "player": "game.html",
+      "title": "TPR",
+      "player": "player-text.html",
       "data": "data/f1/l05/f1-l05-gam1.json",
       "completion": {
         "mode": "student_complete"
       }
     },
     {
-      "id": "dialogue",
+      "id": "handouts1",
       "order": 6,
       "type": "activity",
-      "activity_kind": "dialogue",
-      "title": "Dialogue",
+      "activity_kind": "handouts",
+      "title": "YLE challenge",
       "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-dia1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "game2",
-      "order": 7,
-      "type": "activity",
-      "activity_kind": "game",
-      "title": "TPR 2",
-      "player": "player-text.html",
-      "data": "data/f1/l05/f1-l05-gam2.json",
+      "data": "data/f1/l05/f1-l05-hd1.json",
       "completion": {
         "mode": "student_complete"
       }
     },
     {
       "id": "semi1",
-      "order": 8,
+      "order": 7,
       "type": "activity",
       "activity_kind": "semi-controlled",
       "title": "Ask & Answer",
-      "player": "player-text.html",
+      "player": "player-dialogue.html",
       "data": "data/f1/l05/f1-l05-semi1.json",
       "completion": {
         "mode": "teacher_next"
@@ -103,24 +91,12 @@
     },
     {
       "id": "free1",
-      "order": 9,
+      "order": 8,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk",
-      "player": "player-text.html",
+      "player": "player-dialogue.html",
       "data": "data/f1/l05/f1-l05-free1.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
-    },
-    {
-      "id": "bye",
-      "order": 10,
-      "type": "activity",
-      "activity_kind": "goodbye",
-      "title": "Goodbye",
-      "player": "player-text.html",
-      "data": "data/f1/l05/f1-l05-bye.json",
       "completion": {
         "mode": "teacher_next"
       }
