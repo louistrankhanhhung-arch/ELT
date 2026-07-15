@@ -1,22 +1,22 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let's talk",
+  "title": "Let’s talk",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-family.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "Tell me about yourself."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name is ____.\nI am happy.\nI have a ____.\nI have a ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "bag",
-    "book",
-    "pencil",
-    "ruler"
+    { "text": "Tell me about your family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-who-is-this.mp3" },
+    { "text": "", "audio": "" },
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-hello.mp3" }
+    { "text": "My name is Nick.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-my-name-is-nick.mp3" },
+    { "text": "I am happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-i-am-happy.mp3" },
+    { "text": "I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-i-am-eight-years-old.mp3" },
+    { "text": "This is my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-this-is-my-family.mp3" },
+    { "text": "This is my mother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-this-is-my-mother.mp3" },
+    { "text": "This is my father.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-this-is-my-father.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-dia3-thank-you.mp3" }
   ]
 }
