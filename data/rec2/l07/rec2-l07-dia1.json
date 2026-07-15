@@ -1,6 +1,6 @@
 {
   "title": "Listen and repeat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1.png",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,21 +8,20 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: Welcome to my school, Lucy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a1-welcome-to-my-school-lucy.mp3" },
-    { "text": "B: Wow. It is so big, Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l1-wow-it-is-so-big-amy.mp3" },
-    { "text": "A: Yes. There are many classrooms here.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a2-yes-there-are-many-classrooms-here.mp3" },
-    { "text": "A: This is my classroom. I study here.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a3-this-is-my-classroom-i-study-here.mp3" },
-    { "text": "A: This is the library.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a4-this-is-the-library.mp3" },
-    { "text": "B: What do you do in the library?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l2-what-do-you-do-in-the-library.mp3" },
-    { "text": "A: I read books.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a5-i-read-books.mp3" },
-    { "text": "A: This is the computer room.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a6-this-is-the-computer-room.mp3" },
-    { "text": "B: What do you do in the computer room?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l3-what-do-you-do-in-the-computer-room.mp3" },
-    { "text": "A: I use computers.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a7-i-use-computers.mp3" },
-    { "text": "B: Where do you have lunch?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l4-where-do-you-have-lunch.mp3" },
-    { "text": "A: I have lunch in the canteen.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a8-i-have-lunch-in-the-canteen.mp3" },
-    { "text": "B: Oh! I need to go to the toilet.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l5-oh-i-need-to-go-to-the-toilet.mp3" },
-    { "text": "B: Where is it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l6-where-is-it.mp3" },
-    { "text": "A: It’s over there! Behind the playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-a9-its-over-there-behind-the-playground.mp3" },
-    { "text": "B: Thank you, Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia1-l7-thank-you-amy.mp3" }
+    { "text": "A: Hello, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-a1-hello-tony.mp3" },
+    { "text": "B: Hello, Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t1-hello-amy.mp3" },
+    { "text": "A: Can you tell me about your family?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-a2-can-you-tell-me-about-your-family.mp3" },
+    { "text": "B: Sure. There are five people in my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t2-sure-there-are-five-people-in-my-family.mp3" },
+    { "text": "B: I live with my parents, brother and sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t3-i-live-with-my-parents-brother-and-sister.mp3" },
+    { "text": "B: My father is a doctor.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t4-my-father-is-a-doctor.mp3" },
+    { "text": "B: My mother is a shopkeeper.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t5-my-mother-is-a-shopkeeper.mp3" },
+    { "text": "A: Wow! What is your father like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-a3-wow-what-is-your-father-like.mp3" },
+    { "text": "B: He is strict.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t6-he-is-strict.mp3" },
+    { "text": "A: What is your mother like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-a4-what-is-your-mother-like.mp3" },
+    { "text": "B: She is hardworking.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t7-she-is-hardworking.mp3" },
+    { "text": "A: What about your brother and sister?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-a5-what-about-your-brother-and-sister.mp3" },
+    { "text": "B: My brother is smart.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t8-my-brother-is-smart.mp3" },
+    { "text": "B: My sister is helpful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-t9-my-sister-is-helpful.mp3" },
+    { "text": "A: That’s great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l06/r2-l06-dia1-a6-thats-great.mp3" }
   ]
 }
