@@ -1,22 +1,15 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Ask & Answer",
+  "title": "Look, Ask & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "What do you have?"
-    },
-    {
-      "speaker": "B",
-      "text": "I have a ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "bag",
-    "book",
-    "pencil",
-    "ruler"
+    { "text": "Who is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-who-is-this.mp3" },
+    { "text": "", "audio": "" }
+    { "text": "This is ____", "audio": "" }
   ]
 }
