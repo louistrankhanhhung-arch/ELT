@@ -1,17 +1,15 @@
 {
-  "type": "fast-tap",
-  "title": "Fast Tap",
-  "subtitle": "Listen fast. Tap fast.",
-  "settings": {
-    "shuffle": true,
-    "rounds": 8
-  },
+  "type": "memory-match",
+  "title": "Memory Match",
+  "subtitle": "Find the matching pairs.",
   "items": [
-    { "word": "I study in the classroom", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-study.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-study-in-the-classroom.mp3" },
-    { "word": "I read books in the library", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-library.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-read-books-in-the-library.mp3" },
-    { "word": "I play with my friends in the playground", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-playground.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-play-with-my-friends-in-the-playground.mp3" },
-    { "word": "I use computers in the computer room", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-computer-room.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-use-computers-in-the-computer-room.mp3" },
-    { "word": "I have lunch in the canteen", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-canteen.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-have-lunch-in-the-canteen.mp3" },
-    { "word": "I wash my hands in the toilet", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-wash-hands.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-wash-my-hands-in-the-toilet.mp3" }
+    { "word": "He is smart", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-smart.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-smart.mp3" },
+    { "word": "She is friendly", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-friendly.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-friendly.mp3" },
+    { "word": "She is hardworking", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-hardworking.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-hardworking.mp3" },
+    { "word": "She is helpful", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-helpful.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-helpful.mp3" },
+    { "word": "He is strict", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-strict.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-strict.mp3" },
+    { "word": "He is funny", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-funny.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-funny.mp3" },
+    { "word": "He is brave", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-brave.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-brave.mp3" },
+    { "word": "She is beautiful", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-vob-beautiful.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-beautiful.mp3" }
   ]
 }
