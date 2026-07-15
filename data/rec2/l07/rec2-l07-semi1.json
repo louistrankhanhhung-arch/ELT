@@ -1,24 +1,14 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Take note and talk to your friend",
+  "layout": "full_dialogue",
+  "title": "Take note and talk to your friend.",
   "lines": [
     {
       "speaker": "A",
-      "text": "\nWhat do you do in the ____?"
+      "text": "\nHow many people are there in your family?\nWho do you live with?\nWhat does your father/mother/brother/sister do?\nWhat is your father/mother/brother/sister like?"
     },
     {
       "speaker": "B",
-      "text": "\nI ____.\nI ____.\nI ____.\nI ____.\nI ____.\nI ____."
+      "text": "\nFamily: ____ people.\nLive with: ____.\nFather’s job: ____. He is ____.\nMother’s job: ____. She is ____.\nBrother’s job: ____. He is ____.\nSister’s job: ____. She is ____."
     }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "classroom, study",
-    "library, read books",
-    "playground, play with friends",
-    "computer room, use computers",
-    "canteen, have lunch",
-    "toilet, wash my hands"
   ]
 }
