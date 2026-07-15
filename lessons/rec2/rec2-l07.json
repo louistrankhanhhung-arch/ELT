@@ -30,8 +30,20 @@
       }
     },
     {
-      "id": "dialogue",
+      "id": "leadin",
       "order": 3,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l07/rec2-l07-lead.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 4,
       "type": "activity",
       "activity_kind": "dialogue",
       "title": "Dialogue",
@@ -43,24 +55,12 @@
     },
     {
       "id": "vocab",
-      "order": 4,
+      "order": 5,
       "type": "activity",
       "activity_kind": "vocab",
       "title": "Vocabulary",
       "player": "player-grid-v2.html",
       "data": "data/rec2/l07/rec2-l07-vob1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "vocab",
-      "order": 5,
-      "type": "activity",
-      "activity_kind": "vocab",
-      "title": "Functional chunks",
-      "player": "player-grid-v2.html",
-      "data": "data/rec2/l07/rec2-l07-vob2.json",
       "completion": {
         "mode": "student_complete"
       }
@@ -107,7 +107,7 @@
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
-      "player": "player-text.html",
+      "player": "player-grid-v2.html",
       "data": "data/rec2/l07/rec2-l07-qa1.json",
       "completion": {
         "mode": "teacher_next"
@@ -119,7 +119,7 @@
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
-      "player": "player-text.html",
+      "player": "player-dialogue.html",
       "data": "data/rec2/l07/rec2-l07-qa2.json",
       "completion": {
         "mode": "teacher_next"
