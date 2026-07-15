@@ -1,17 +1,16 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "Where do you ____?",
-  "answers": [
-    "I ____ in the ____."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "study, classroom",
-    "read books, library",
-    "play with friends, playground",
-    "use computers, computer room",
-    "have lunch, canteen",
-    "wash your hands, toilet"
+  "title": "Look, Ask & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-dia2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "What is he like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-what-is-he-like.mp3" },
+    { "text": "What is she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-what-is-she-like.mp3" },
+    { "text": "→ He is ____.", "audio": "" },
+    { "text": "→ She is ____.", "audio": "" }
   ]
 }
