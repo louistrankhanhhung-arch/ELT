@@ -60,7 +60,7 @@
       "activity_kind": "vocab",
       "title": "Vocabulary",
       "player": "player-grid-v2.html",
-      "data": "data/rec2/l07/rec2-l07-vob1.json",
+      "data": "data/rec2/l07/rec2-l07-vob.json",
       "completion": {
         "mode": "student_complete"
       }
