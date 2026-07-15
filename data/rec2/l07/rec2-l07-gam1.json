@@ -7,40 +7,100 @@
   "showProgress": true,
   "items": [
     {
-      "prompt": "I read books in the ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-read-books-in-the-library.mp3",
-      "answer": "library",
-      "options": ["library", "toilet", "classroom", "canteen"]
+      "prompt": "My ____ is beautiful.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-mother-is-beautiful.mp3",
+      "answer": "mother",
+      "options": ["mother", "father", "brother", "sister"]
     },
     {
-      "prompt": "I have lunch in the ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-have-lunch-in-the-canteen.mp3",
-      "answer": "canteen",
-      "options": ["canteen", "playground", "library", "computer room"]
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-friendly.mp3",
+      "answer": "friendly",
+      "options": ["friendly", "smart", "hardworking", "strict"]
     },
     {
-      "prompt": "I wash my hands in the ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-wash-my-hands-in-the-toilet.mp3",
-      "answer": "toilet",
-      "options": ["toilet", "computer room", "library", "canteen"]
+      "prompt": "My ____ is strict.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-grandfather-is-strict.mp3",
+      "answer": "grandfather",
+      "options": ["grandfather", "father", "grandmother", "sister"]
     },
     {
-      "prompt": "I play with my friends in the ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-play-with-my-friends-in-the-playground.mp3",
-      "answer": "playground",
-      "options": ["playground", "classroom", "canteen", "toilet"]
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-hardworking.mp3",
+      "answer": "hardworking",
+      "options": ["hardworking", "smart", "funny", "helpful"]
     },
     {
-      "prompt": "I study in the ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-study-in-the-classroom.mp3",
-      "answer": "classroom",
-      "options": ["classroom", "computer room", "playground", "canteen"]
+      "prompt": "My ____ is friendly.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-brother-is-friendly.mp3",
+      "answer": "brother",
+      "options": ["brother", "father", "mother", "sister"]
     },
     {
-      "prompt": "I use computers in the ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-i-use-computers-in-the-computer-room.mp3",
-      "answer": "computer room",
-      "options": ["computer room", "classroom", "toilet", "playground"]
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-helpful.mp3",
+      "answer": "helpful",
+      "options": ["helpful", "hardworking", "friendly", "strict"]
+    },
+    {
+      "prompt": "My ____ is brave.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-father-is-brave.mp3",
+      "answer": "father",
+      "options": ["father", "mother", "brother", "sister"]
+    },
+     {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-strict.mp3",
+      "answer": "strict",
+      "options": ["strict", "friendly", "helpful", "funny"]
+    },
+    {
+      "prompt": "My ____ is funny.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-friend-is-funny.mp3",
+      "answer": "friend",
+      "options": ["friend", "mother", "brother", "sister"]
+    },
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-beautiful.mp3",
+      "answer": "beautiful",
+      "options": ["beautiful", "helpful", "friendly", "strict"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-funny.mp3",
+      "answer": "funny",
+      "options": ["funny", "friendly", "smart", "strict"]
+    },
+    {
+      "prompt": "My ____ is hardworking.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-father-is-hardworking.mp3",
+      "answer": "father",
+      "options": ["father", "mother", "grandfather", "sister"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-brave.mp3",
+      "answer": "smart",
+      "options": ["brave", "smart", "helpful", "beautiful"]
+    },
+    {
+      "prompt": "My ____ is smart.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-sister-is-smart.mp3",
+      "answer": "sister",
+      "options": ["sister", "friend", "mother", "brother"]
+    },
+    {
+      "prompt": "My ____ is helpful.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-grandmother-is-helpful.mp3",
+      "answer": "grandmother",
+      "options": ["grandmother", "grandfather", "mother", "brother"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-smart.mp3",
+      "answer": "smart",
+      "options": ["smart", "helpful", "friendly", "funny"]
     }
   ]
 }
