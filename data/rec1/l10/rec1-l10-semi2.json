@@ -1,10 +1,15 @@
 {
-  "layout": "full_dialogue",
-  "title": "Take note and talk to your friend.",
+  "title": "Look & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-garden.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "Welcome to my school!\nThis is a ____.\nThere is a ____.\nIt is ____."
-    }
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-look-at-the-picture.mp3" },
+    { "text": "What is there in the school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-what-is-there-in-the-garden.mp3" },
+    { "text": "Where is it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-where-is-it.mp3" }
   ]
 }
