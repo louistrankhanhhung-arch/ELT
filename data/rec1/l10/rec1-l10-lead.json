@@ -1,0 +1,13 @@
+{
+  "title": "Let's guess",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-lead.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Look at the picture. What can you see?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-look-at-the-picture-what-can-you-see.mp3" }
+  ]
+}
