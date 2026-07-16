@@ -1,24 +1,14 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
+  "layout": "full_dialogue",
+  "title": "Let's talk",
   "lines": [
     {
       "speaker": "A",
-      "text": "Tell me where the thing is."
+      "text": "Tell me about your classroom."
     },
     {
       "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my classroom.\nThere is a ___.\nIt is ____.\nThere is a ___.\nIt is ____."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my classroom.\nThere is a ___. It is ___.\nThere is a ___. It is ___.\nThere is a ___. It is ___.\nThank you."
     }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "on",
-    "in",
-    "under",
-    "next to",
-    "behind",
-    "between"
   ]
 }
