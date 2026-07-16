@@ -1,18 +1,15 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
+  "title": "Look & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-school.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "This is my classroom.\n➜ There is a ____.\n➜ It is ____ the ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "book, on, table",
-    "bag, next to, chair",
-    "crayon, under, table",
-    "pen, in, bag"
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-look-at-the-picture.mp3" },
+    { "text": "What is there in the school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-what-is-there-in-the-school.mp3" },
+    { "text": "Where is it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-where-is-it.mp3" }
   ]
 }
