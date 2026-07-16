@@ -1,7 +1,6 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
+  "layout": "full_dialogue",
+  "title": "Let's talk",
   "lines": [
     {
       "speaker": "A",
@@ -9,16 +8,7 @@
     },
     {
       "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my school!\nThere is a ____. \nThere is a ____.\nAnd there is a ____, too."
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my school!\nThere is a ____.\nThere is a ____.\nAnd there is a ____, too.\nThank you."
     }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "classroom",
-    "school",
-    "garden",
-    "playground",
-    "bicycle",
-    "ball"
   ]
 }
