@@ -1,17 +1,15 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
+  "title": "Look & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-classroom.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "Welcome to my school.\n➜ This is a ____.\n➜ There is a ____.\n➜ It is ____ the ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "classroom, book, on, chair",
-    "playground, ball, next to, bicycle",
-    "garden, tree, behind, window"
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-look-at-the-picture.mp3" },
+    { "text": "What is there in the school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-what-is-there-in-the-classroom.mp3" },
+    { "text": "Where is it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-where-is-it.mp3" }
   ]
 }
