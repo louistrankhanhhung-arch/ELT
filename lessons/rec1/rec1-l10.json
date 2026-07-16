@@ -30,8 +30,20 @@
       }
     },
     {
-      "id": "dialogue",
+      "id": "leadin",
       "order": 3,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l10/rec1-l10-lead.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 4,
       "type": "activity",
       "activity_kind": "dialogue",
       "title": "Dialogue",
@@ -43,11 +55,11 @@
     },
     {
       "id": "control1",
-      "order": 4,
+      "order": 5,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Let's talk 1",
-      "player": "player-text.html",
+      "title": "Look & Answer 1",
+      "player": "player-dialogue.html",
       "data": "data/rec1/l10/rec1-l10-con1.json",
       "completion": {
         "mode": "teacher_next"
@@ -55,22 +67,34 @@
     },
     {
       "id": "control2",
-      "order": 5,
+      "order": 6,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Let's talk 2",
-      "player": "player-text.html",
+      "title": "Look & Answer 2",
+      "player": "player-dialogue.html",
       "data": "data/rec1/l10/rec1-l10-con2.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "semi1",
-      "order": 6,
+      "id": "control3",
+      "order": 7,
       "type": "activity",
       "activity_kind": "speaking",
-      "title": "Let's talk 3",
+      "title": "Look & Answer 3",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l10/rec1-l10-con3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "speaking",
+      "title": "Take note",
       "player": "player-text.html",
       "data": "data/rec1/l10/rec1-l10-semi1.json",
       "completion": {
@@ -78,24 +102,12 @@
       }
     },
     {
-      "id": "semi2",
-      "order": 7,
-      "type": "activity",
-      "activity_kind": "speaking",
-      "title": "Take note",
-      "player": "player-text.html",
-      "data": "data/rec1/l10/rec1-l10-semi2.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
-    },
-    {
       "id": "free1",
-      "order": 8,
+      "order": 9,
       "type": "activity",
       "activity_kind": "free",
-      "title": "Let's talk 4",
-      "player": "player-text.html",
+      "title": "Let's talk",
+      "player": "player-sentence.html",
       "data": "data/rec1/l10/rec1-l10-free1.json",
       "completion": {
         "mode": "teacher_next"
@@ -103,11 +115,11 @@
     },
     {
       "id": "free2",
-      "order": 9,
+      "order": 10,
       "type": "activity",
       "activity_kind": "free",
       "title": "Record",
-      "player": "player-text.html",
+      "player": "player-sentence.html",
       "data": "data/rec1/l10/rec1-l10-free2.json",
       "completion": {
         "mode": "teacher_next"
