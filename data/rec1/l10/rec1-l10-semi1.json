@@ -1,10 +1,10 @@
 {
   "layout": "full_dialogue",
-  "title": "Let’s talk",
+  "title": "Take note",
   "lines": [
     {
       "speaker": "A",
-      "text": "\n1. classroom / ruler / in the bag\n\n2. school / playground / behind the classroom\n\n3. garden / chair / next to the table\n\n4. house / ball / between the bicycle and the door"
+      "text": "Hello.\nMy name’s ____.\nI’m a student.\nWelcome to my school / classroom / garden.\nThere is a _____. It is _____.\nThere is a _____. It is _____.\nThere is a _____. It is _____.\nThank you."
     }
   ]
 }
