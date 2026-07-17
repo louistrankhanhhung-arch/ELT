@@ -32,7 +32,7 @@
     {
       "id": "leadin",
       "order": 3,
-      "type": "leadin",
+      "type": "activity",
       "activity_kind": "dialogue",
       "title": "Lead-in",
       "player": "player-dialogue.html",
