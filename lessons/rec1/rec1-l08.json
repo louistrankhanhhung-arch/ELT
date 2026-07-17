@@ -30,7 +30,7 @@
       }
     },
     {
-      "id": "leadin",
+      "id": "lead",
       "order": 3,
       "type": "activity",
       "activity_kind": "dialogue",
