@@ -7,8 +7,8 @@
   "showProgress": true,
   "items": [
     {
-      "prompt": "My ____ is beautiful.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-mother-is-beautiful.mp3",
+      "prompt": "My ____ is quiet.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-my-mother-is-quiet.mp3",
       "answer": "mother",
       "options": ["mother", "father", "brother", "sister"]
     },
@@ -61,10 +61,10 @@
       "options": ["friend", "mother", "brother", "sister"]
     },
     {
-      "prompt": "She is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-she-is-beautiful.mp3",
-      "answer": "beautiful",
-      "options": ["beautiful", "helpful", "friendly", "strict"]
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-quiet.mp3",
+      "answer": "quiet",
+      "options": ["quiet", "helpful", "friendly", "strict"]
     },
     {
       "prompt": "He is ____.",
@@ -82,7 +82,7 @@
       "prompt": "He is ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l07/r2-l07-sen-he-is-brave.mp3",
       "answer": "brave",
-      "options": ["brave", "smart", "helpful", "beautiful"]
+      "options": ["brave", "smart", "helpful", "quiet"]
     },
     {
       "prompt": "My ____ is smart.",
