@@ -1,42 +1,19 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Take note and talk to your friend",
+  "title": "Take note!",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "What subjects do you study?"
-    },
-    {
-      "speaker": "B",
-      "text": "I study ____."
-    },
-    {
-      "speaker": "A",
-      "text": "What is your favorite subject?"
-    },
-    {
-      "speaker": "B",
-      "text": "My favorite subject is ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Why do you like ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "I like ____ because it is ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "English",
-    "Math",
-    "Science",
-    "Art",
-    "Music",
-    "P.E.",
-    "fun",
-    "easy"
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-answer-these-questions-and-take-note.mp3" },
+    { "text": "1. How many people are there in your family?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-how-many-people-are-there-in-your-family.mp3" },
+    { "text": "2. Who do you live with?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-who-do-you-live-with.mp3" },
+    { "text": "3. What does your father do? What is he like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-what-does-your-father-do-what-is-he-like.mp3" },
+    { "text": "4. What does your mother do? What is she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-what-does-your-mother-do-what-is-she-like.mp3" },
+    { "text": "5. What does your brother do? What is he like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-what-does-your-brother-do-what-is-he-like.mp3" },
+    { "text": "6. What does your sister do? What is she like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-sen-what-does-your-sister-do-what-is-she-like.mp3" }
   ]
 }
