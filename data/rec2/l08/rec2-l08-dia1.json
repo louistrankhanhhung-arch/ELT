@@ -8,17 +8,15 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: What subjects do you study, Amy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l1-what-subjects-do-you-study-amy.mp3" },
-    { "text": "B: I study English, Math, and Art.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a1-i-study-english-math-and-art.mp3" },
-    { "text": "A: What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l2-what-is-your-favorite-subject.mp3" },
-    { "text": "B: My favorite subject is Art.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a2-my-favorite-subject-is-art.mp3" },
-    { "text": "A: Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l3-why-do-you-like-it.mp3" },
-    { "text": "B: I like Art because it is fun.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a3-i-like-art-because-it-is-fun.mp3" },
-    { "text": "A: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l4-great.mp3" },
-    { "text": "B: And you, Lucy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a4-and-you-lucy.mp3" },
-    { "text": "B: What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a5-what-is-your-favorite-subject.mp3" },
-    { "text": "A: My favorite subject is English.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l5-my-favorite-subject-is-english.mp3" },
-    { "text": "B: Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-a6-why-do-you-like-it.mp3" },
-    { "text": "A: I like English because it is easy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-l6-i-like-english-because-it-is-easy.mp3" }
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t1-hello.mp3" },
+    { "text": "Let me tell you about my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t2-let-me-tell-you-about-my-family.mp3" },
+    { "text": "There are five people in my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t3-there-are-five-people-in-my-family.mp3" },
+    { "text": "I live with my parents, my brother and my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t4-i-live-with-my-parents-my-brother-and-my-sister.mp3" },
+    { "text": "My father is a doctor. He is strict.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t5-my-father-is-a-doctor-he-is-strict.mp3" },
+    { "text": "My mother is a shopkeeper. She is hardworking.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t6-my-mother-is-a-shopkeeper-she-is-hardworking.mp3" },
+    { "text": "My brother is a student. He is smart.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t7-my-brother-is-a-student-he-is-smart.mp3" },
+    { "text": "My sister is a student, too. She is helpful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t8-my-sister-is-a-brother-too-she-is-helpfull.mp3" },
+    { "text": "I love my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t9-i-love-my-family.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l08/r2-l08-dia1-t10-thank-you.mp3" }
   ]
 }
