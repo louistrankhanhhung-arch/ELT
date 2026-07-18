@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-school.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-tell-me-about-your-school.mp3",
   "chunks": ["Tell", "me", "about", "your", "school"],
-  "timings": [],
+  "timings": [0.3, 0.6, 0.9, 1.2, 1.5],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -21,21 +21,21 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-classroom.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-tell-me-about-your-classroom.mp3",
         "chunks": ["Tell", "me", "about", "your", "classroom"],
-        "timings": []
+        "timings": [0.3, 0.6, 0.9, 1.2, 1.5]
       },
       {
         "value": "garden",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-garden.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-tell-me-about-your-garden.mp3",
         "chunks": ["Tell", "me", "about", "your", "garden"],
-        "timings": []
+        "timings": [0.3, 0.6, 0.9, 1.2, 1.5]
       },
       {
         "value": "school",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-free-school.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l10/g1-l10-sen-tell-me-about-your-school.mp3",
         "chunks": ["Tell", "me", "about", "your", "school"],
-        "timings": []
+        "timings": [0.3, 0.6, 0.9, 1.2, 1.5]
       }
     ]
   }
