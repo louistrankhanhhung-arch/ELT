@@ -30,8 +30,44 @@
       }
     },
     {
-      "id": "dialogue",
+      "id": "leadin",
       "order": 3,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l08/rec2-l08-lead.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "controll1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "controll",
+      "title": "Look & tell 1",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l08/rec2-l08-con1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "controll2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "controll",
+      "title": "Look & tell 2",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l08/rec2-l08-con2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 6,
       "type": "activity",
       "activity_kind": "dialogue",
       "title": "Dialogue",
@@ -42,108 +78,12 @@
       }
     },
     {
-      "id": "vocab",
-      "order": 4,
-      "type": "activity",
-      "activity_kind": "vocab",
-      "title": "Vocabulary",
-      "player": "player-grid-v2.html",
-      "data": "data/rec2/l08/rec2-l08-vob1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "vocab",
-      "order": 5,
-      "type": "activity",
-      "activity_kind": "vocab",
-      "title": "Adjectives",
-      "player": "player-grid-v2.html",
-      "data": "data/rec2/l08/rec2-l08-vob2.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "sentence",
-      "order": 6,
-      "type": "activity",
-      "activity_kind": "sentence",
-      "title": "Sentence Practice",
-      "player": "player-sentence.html",
-      "data": "data/rec2/l08/rec2-l08-sen.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "game1",
-      "order": 7,
-      "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 1",
-      "player": "game.html",
-      "data": "data/rec2/l08/rec2-l08-gam1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "game2",
-      "order": 8,
-      "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 2",
-      "player": "game.html",
-      "data": "data/rec2/l08/rec2-l08-gam2.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "qa1",
-      "order": 9,
-      "type": "activity",
-      "activity_kind": "q&a",
-      "title": "Ask & Answer 1",
-      "player": "player-text.html",
-      "data": "data/rec2/l08/rec2-l08-qa1.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
-    },
-    {
-      "id": "qa2",
-      "order": 10,
-      "type": "activity",
-      "activity_kind": "q&a",
-      "title": "Ask & Answer 2",
-      "player": "player-text.html",
-      "data": "data/rec2/l08/rec2-l08-qa2.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
-    },
-    {
-      "id": "qa3",
-      "order": 11,
-      "type": "activity",
-      "activity_kind": "q&a",
-      "title": "Ask & Answer 3",
-      "player": "player-text.html",
-      "data": "data/rec2/l08/rec2-l08-qa3.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
-    },
-    {
       "id": "semi1",
-      "order": 12,
+      "order": 7,
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Take note",
-      "player": "player-text.html",
+      "player": "player-dialogue.html",
       "data": "data/rec2/l08/rec2-l08-semi1.json",
       "completion": {
         "mode": "teacher_next"
@@ -151,7 +91,7 @@
     },
     {
       "id": "free1",
-      "order": 13,
+      "order": 8,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk",
