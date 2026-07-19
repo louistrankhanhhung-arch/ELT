@@ -658,6 +658,9 @@
     let state = { score: 0, round: 0, answer: null, selected: [], bank: [], order: [] };
 
     function getParam(name) { return new URLSearchParams(location.search).get(name); }
+    function isTeacherView() {
+      return (getParam('role') || 'student').toLowerCase() === 'teacher';
+    }
 
     async function loadData() {
       const url = getParam('data');
@@ -929,8 +932,16 @@
       const item = items[state.round % items.length];
       const shuffleOptions = data.shuffleOptions === true || data.settings?.shuffleOptions === true;
       const options = shuffleOptions ? shuffle(item.options || []) : (item.options || []);
+      let roundResolved = false;
     
       state.answer = item.answer;
+      function goNext() {
+        if (roundResolved) return;
+        roundResolved = true;
+        state.round += 1;
+        if (state.round >= items.length) finishGame();
+        else renderListenComplete();
+      }
     
       const prompt = document.createElement('div');
       prompt.className = 'largeText';
@@ -938,18 +949,16 @@
       els.game.appendChild(prompt);
     
       renderGrid(options.map(o => ({ word: o })), (opt, idx, card) => {
+        if (roundResolved) return;
+        
         if (opt.word === item.answer) {
           card.classList.add('correct');
           state.score += 1;
           setScore();
           setStatus('Correct! 🎉');
     
-          setTimeout(() => {
-            state.round += 1;
-            if (state.round >= items.length) finishGame();
-            else renderListenComplete();
-          }, (data.autoNext === true || data.settings?.autoNext === true) ? 800 : 0);
         } else {
+          setTimeout(goNext, 800);
           card.classList.add('wrong');
           setStatus('Try again.');
           setTimeout(() => card.classList.remove('wrong'), 450);
@@ -957,12 +966,10 @@
       }, true);
     
       els.controls.appendChild(btn('🔊 Play', 'primary', () => play(item.audio)));
-      els.controls.appendChild(btn('➡️ Next', '', () => {
-        state.round += 1;
-        if (state.round >= items.length) finishGame();
-        else renderListenComplete();
-      }));
-    
+      if (isTeacherView()) {
+        els.controls.appendChild(btn('➡️ Next', '', goNext));
+      }
+
       setScore();
       setTimeout(() => play(item.audio), 250);
     }
