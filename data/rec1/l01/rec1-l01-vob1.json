@@ -1,0 +1,31 @@
+{
+  "title": "Listen and Repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "eight years old",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eight-years-old.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eight-years-old.mp3"
+    },
+    {
+      "word": "nine years old",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-nine-years-old.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-nine-years-old.mp3"
+    },
+    {
+      "word": "ten years old",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-ten-years-old.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-ten-years-old.mp3"
+    },
+    {
+      "word": "eleven years old",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eleven-years-old.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eleven-years-old.mp3"
+    }
+  ]
+}
