@@ -935,12 +935,17 @@
       let roundResolved = false;
     
       state.answer = item.answer;
-      function goNext() {
-        if (roundResolved) return;
-        roundResolved = true;
+
+      function advanceRound() {
         state.round += 1;
         if (state.round >= items.length) finishGame();
         else renderListenComplete();
+      }
+
+      function goNext() {
+        if (roundResolved) return;
+        roundResolved = true;
+        advanceRound();
       }
     
       const prompt = document.createElement('div');
@@ -952,13 +957,14 @@
         if (roundResolved) return;
         
         if (opt.word === item.answer) {
+          roundResolved = true;
           card.classList.add('correct');
           state.score += 1;
           setScore();
           setStatus('Correct! 🎉');
-    
+          setTimeout(advanceRound, 800);
+
         } else {
-          setTimeout(goNext, 800);
           card.classList.add('wrong');
           setStatus('Try again.');
           setTimeout(() => card.classList.remove('wrong'), 450);
