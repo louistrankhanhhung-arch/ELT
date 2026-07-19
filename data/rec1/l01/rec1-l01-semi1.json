@@ -1,22 +1,18 @@
 {
-  "layout": "full_dialogue",
-  "title": "Let’s talk",
+  "title": "Listen and repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "Hello. What’s your name?"
-    },
-    {
-      "speaker": "B",
-      "text": "My name’s ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Are you you a boy or a girl?"
-    },
-    {
-      "speaker": "B",
-      "text": "I am a ____."
-    }
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-answer-these-questions-and-take-note.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-you-have-an-example.mp3" },
+    { "text": "1. What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-1-what-is-your-name.mp3" },
+    { "text": "2. Are you a boy or a girl?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-2-are-you-a-boy-or-a-girl.mp3" },
+    { "text": "3. Are you a teacher or a student?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-3-are-you-a-teacher-or-a-student.mp3" },
+    { "text": "4. How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-4-how-old-are-you.mp3" }
   ]
 }
