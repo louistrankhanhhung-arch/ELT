@@ -1,6 +1,6 @@
 {
   "title": "Listen and repeat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-boy.png",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-dia1.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,8 +8,10 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s5-hello.mp3" },
-    { "text": "My name’s Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s5-my-name-s-tom.mp3" },
-    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l01/g1-l01-s5-i-am-a-student.mp3" }
+    { "text": "Hello. My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-hello-my-name-is-tom.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-i-am-a-student.mp3" },
+    { "text": "I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-dia1-t3-i-am-a-boy.mp3" },
+    { "text": "I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-i-am-eight-years-old.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-t5-thank-you.mp3" }
   ]
 }
