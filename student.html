@@ -212,7 +212,11 @@
         const playerUrl = BASE_URL + block.player;
         const dataUrl = BASE_URL + block.data;
 
-        playerFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+        const gameUrl = new URL(playerUrl);
+        gameUrl.searchParams.set("data", dataUrl);
+        gameUrl.searchParams.set("role", "student");
+        playerFrame.src = gameUrl.toString();
+
 
         prevBtn.disabled = blockIndex <= 0;
         nextBtn.disabled = blockIndex >= blocks.length - 1;
@@ -307,7 +311,10 @@
       const playerUrl = BASE_URL + block.player;
       const dataUrl = BASE_URL + block.data;
 
-      playerFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+      const gameUrl = new URL(playerUrl);
+      gameUrl.searchParams.set("data", dataUrl);
+      gameUrl.searchParams.set("role", "student");
+      playerFrame.src = gameUrl.toString();
 
       prevBtn.disabled = true;
       nextBtn.disabled = true;
