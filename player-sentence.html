@@ -314,7 +314,9 @@
       <div class="sentence" id="sentence"></div>
       <div class="imageWrap" id="imageWrap"><img id="image" alt="sentence image" /></div>
       <div class="controls">
+        <button id="prevBtn">◀ Prev</button>
         <button class="primary" id="playBtn">🔊 Play</button>
+        <button id="nextBtn">Next ▶</button>
         <button class="accent" id="repeatBtn">▶ Auto-repeat</button>
         <button id="slowBtn">🐢 Slow Mode</button>
         <button id="highlightBtn">✨ Highlight On</button>
@@ -360,7 +362,9 @@
       sentence: document.getElementById('sentence'),
       image: document.getElementById('image'),
       imageWrap: document.getElementById('imageWrap'),
+      prevBtn: document.getElementById('prevBtn'),
       playBtn: document.getElementById('playBtn'),
+      nextBtn: document.getElementById('nextBtn'),
       repeatBtn: document.getElementById('repeatBtn'),
       slowBtn: document.getElementById('slowBtn'),
       highlightBtn: document.getElementById('highlightBtn'),
@@ -470,7 +474,28 @@
       playCurrent();
     }
 
+    function nextSentence() {
+      const sub = data.substitution;
+      if (!sub || !Array.isArray(sub.options) || sub.options.length === 0) return;
+      const nextIndex = (activeSubIndex + 1) % sub.options.length;
+      applySubstitution(nextIndex);
+    }
+
+    function prevSentence() {
+      const sub = data.substitution;
+      if (!sub || !Array.isArray(sub.options) || sub.options.length === 0) return;
+      const prevIndex = (activeSubIndex - 1 + sub.options.length) % sub.options.length;
+      applySubstitution(prevIndex);
+    }
+
     function updateButtons() {
+      const hasSubOptions = Boolean(
+        data.substitution &&
+        Array.isArray(data.substitution.options) &&
+        data.substitution.options.length
+      );
+      els.prevBtn.disabled = !hasSubOptions;
+      els.nextBtn.disabled = !hasSubOptions;
       els.slowBtn.textContent = slowMode ? '🐢 Slow On' : '🐢 Slow Mode';
       els.slowBtn.classList.toggle('activeChoice', slowMode);
       els.highlightBtn.textContent = highlightOn ? '✨ Highlight On' : '✨ Highlight Off';
@@ -550,7 +575,9 @@
     }
 
     function bindEvents() {
+      els.prevBtn.addEventListener('click', prevSentence);
       els.playBtn.addEventListener('click', playCurrent);
+      els.nextBtn.addEventListener('click', nextSentence);
       els.repeatBtn.addEventListener('click', autoRepeat);
       els.slowBtn.addEventListener('click', () => {
         slowMode = !slowMode;
@@ -566,7 +593,16 @@
       els.image.addEventListener('click', playCurrent);
       els.audio.addEventListener('ended', clearHighlight);
       document.addEventListener('keydown', e => {
-        if (e.key === ' ' || e.key === 'Enter') playCurrent();
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          playCurrent();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          prevSentence();
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          nextSentence();
+        }
       });
     }
 
