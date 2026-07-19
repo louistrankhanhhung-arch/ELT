@@ -1,7 +1,0 @@
-{
-  "layout": "prompt_response",
-  "title": "Ask & Answer",
-  "question": "Are you a boy or a girl?\nAre you a student or a teacher?",
-  "response": "➜ I am a ____.",
-  "highlight": "I am a"
-}
