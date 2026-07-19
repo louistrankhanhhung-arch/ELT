@@ -23,7 +23,7 @@
       "type": "activity",
       "activity_kind": "leadin",
       "title": "Lead-in 1",
-      "player": "player-dialogue.html",
+      "player": "player-text.html",
       "data": "data/rec1/l01/rec1-l01-lead1.json",
       "completion": {
         "mode": "teacher_next"
