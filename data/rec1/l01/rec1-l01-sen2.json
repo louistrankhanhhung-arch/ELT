@@ -1,9 +1,9 @@
 {
   "title": "Repeat",
-  "text": "I am a student",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-student.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-a-student.mp3",
-  "chunks": ["I", "am", "a", "student"],
+  "text": "I am a boy",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-boy.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-a-boy.mp3",
+  "chunks": ["I", "am", "a", "boy"],
   "timings": [0, 0.2, 0.4, 0.6],
   "settings": {
     "autoRepeatCount": 2,
