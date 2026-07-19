@@ -360,7 +360,10 @@
       const playerUrl = BASE_URL + block.player;
       const dataUrl = BASE_URL + block.data;
 
-      previewFrame.src = playerUrl + "?data=" + encodeURIComponent(dataUrl);
+      const gameUrl = new URL(playerUrl);
+      gameUrl.searchParams.set("data", dataUrl);
+      gameUrl.searchParams.set("role", "teacher");
+      previewFrame.src = gameUrl.toString();
       previewFrame.style.display = "block";
       errorBox.style.display = "none";
 
