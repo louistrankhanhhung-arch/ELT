@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I am eight years old",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eight-years-old.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-eight-years-old.mp3",
+  "chunks": ["I", "am", "eight", "years", "old"],
+  "timings": [0, 0.3, 0.6, 0.9, 1.2],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "noun",
+    "slot": "{student}",
+    "base": "I am {eight} years old.",
+    "options": [
+      {
+        "value": "nine years old",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-nine-years-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-nine-years-old.mp3",
+        "chunks": ["I", "am", "nine", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "ten years old",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-ten-years-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-ten-years-old.mp3",
+        "chunks": ["I", "am", "ten", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "eleven years old",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eleven-years-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-eleven-years-old.mp3",
+        "chunks": ["I", "am", "eleven", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "eight years old",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-vob-eight-years-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am-eight-years-old.mp3",
+        "chunks": ["I", "am", "eight", "years", "old"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      }
+    ]
+  }
+}
