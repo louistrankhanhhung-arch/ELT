@@ -1,7 +1,18 @@
 {
-  "layout": "prompt_response",
-  "title": "Ask your friend",
-  "question": "What’s your name?",
-  "response": "➜ My name’s ____.",
-  "highlight": "My name’s"
+  "title": "Ask & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-qa2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A: How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-how-old-are-you.mp3" },
+    { "text": "B: I am ____.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-i-am.mp3" },
+    { "text": "- eight years old", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-eight-years-old.mp3" },
+    { "text": "- nine years old", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-nine-years-old.mp3" },
+    { "text": "- ten years old", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-ten-years-old.mp3" },
+    { "text": "- eleven years old", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-sen-eleven-years-old.mp3" }
+  ]
 }
