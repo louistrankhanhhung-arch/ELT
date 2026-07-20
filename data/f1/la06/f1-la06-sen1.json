@@ -42,28 +42,28 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-nick.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-nick-he-is-my-friend.mp3",
         "chunks": ["This", "is", "Nick.", "He", "is", "my", "friend."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "Sam",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-sam.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-sam-he-is-a-boy.mp3",
         "chunks": ["This", "is", "Sam.", "He", "is", "a", "boy."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "Ben",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-ben.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-ben-he-is-a-baby.mp3",
         "chunks": ["This", "is", "Ben.", "He", "is", "a", "baby."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "Alex",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-alex.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-alex-he-is-a-student.mp3",
         "chunks": ["This", "is", "Alex.", "He", "is", "a", "student."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       }
     ]
   }
