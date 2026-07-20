@@ -1,0 +1,94 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-father.mp3",
+      "answer": "father",
+      "options": ["father", "mother", "brother", "sister"]
+    },
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-brother.mp3",
+      "answer": "brother",
+      "options": ["brother", "father", "mother", "sister"]
+    },
+    {
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-mother.mp3",
+      "answer": "mother",
+      "options": ["mother", "brother", "father", "sister"]
+    },
+    {
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-siser.mp3",
+      "answer": "siser",
+      "options": ["sister", "mother", "brother", "father"]
+    },
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-gradnfather.mp3",
+      "answer": "grandfather",
+      "options": ["grandfather", "father", "mother", "grandmother"]
+    },
+    {
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-grandmother.mp3",
+      "answer": "grandmother",
+      "options": ["grandmother", "grandfather", "father", "mother"]
+    },
+    {
+      "prompt": "This is Nick. ____ is my friend.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-nick-he-is-my-friend.mp3",
+      "answer": "He",
+      "options": ["He", "She", "You", "I"]
+    },
+    {
+      "prompt": "This is Grace. ____ is my friend.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-grace-she-is-my-friend.mp3",
+      "answer": "She",
+      "options": ["She", "He", "You", "I"]
+    },
+    {
+      "prompt": "This is Sam. ____ is a boy.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-sam-he-is-a-boy.mp3",
+      "answer": "He",
+      "options": ["He", "She", "You", "I"]
+    },
+    {
+      "prompt": "This is Kim. ____ is a girl.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-kim-she-is-a-girl.mp3",
+      "answer": "She",
+      "options": ["She", "He", "You", "I"]
+    },
+    {
+      "prompt": "This is Ben. ____ is a baby.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-ben-he-is-a-baby.mp3",
+      "answer": "He",
+      "options": ["He", "She", "You", "I"]
+    },
+    {
+      "prompt": "This is Lucy. ____ is a student.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-lucy-she-is-a-student.mp3",
+      "answer": "She",
+      "options": ["She", "He", "You", "I"]
+    },
+    {
+      "prompt": "This is Alex. ____ is a student.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-alex-he-is-a-student.mp3",
+      "answer": "He",
+      "options": ["He", "She", "You", "I"]
+    },
+    {
+      "prompt": "This is Ann. ____ is a teacher.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-ann-she-is-a-teacher.mp3",
+      "answer": "She",
+      "options": ["She", "He", "You", "I"]
+    }
+  ]
+}
