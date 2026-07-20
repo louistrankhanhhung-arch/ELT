@@ -53,7 +53,7 @@
       },
       {
         "value": "Ben",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-ben.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-baby.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-ben-he-is-a-baby.mp3",
         "chunks": ["This", "is", "Ben.", "He", "is", "a", "baby."],
         "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
