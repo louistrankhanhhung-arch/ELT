@@ -42,28 +42,28 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-grace.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-grace-she-is-my-friend.mp3",
         "chunks": ["This", "is", "Grace.", "She", "is", "my", "friend."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "Kim",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-kim.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-kim-she-is-a-girl.mp3",
         "chunks": ["This", "is", "Kim.", "She", "is", "a", "girl."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "Lucy",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-lucy.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-lucy-she-is-a-student.mp3",
         "chunks": ["This", "is", "Lucy.", "She", "is", "a", "student."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       },
       {
         "value": "Ann",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-teacher.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-this-is-ann-she-is-a-teacher.mp3",
         "chunks": ["This", "is", "Ann.", "She", "is", "a", "teacher."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 2.1, 2.4]
       }
     ]
   }
