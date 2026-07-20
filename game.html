@@ -43,7 +43,7 @@
     h1 {
       margin: 0;
       color: var(--accent);
-      font-size: clamp(36px, 6vw, 76px);
+      font-size: clamp(28px, 4vw, 52px);
       line-height: 1;
       font-weight: 500;
       text-align: center;
@@ -152,6 +152,15 @@
       font-weight: 900;
       line-height: 1.08;
       padding: 12px;
+    }
+
+    .builderRevealed {
+      animation: revealAnswer .28s ease-out;
+    }
+
+    @keyframes revealAnswer {
+      from { opacity: 0; transform: translateY(-6px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     /* =========================================================
@@ -844,7 +853,8 @@
 
       const targetDiv = document.createElement('div');
       targetDiv.className = 'largeText';
-      targetDiv.textContent = data.settings?.hideTarget ? 'Build the sentence.' : target;
+      targetDiv.textContent = data.settings?.builderPrompt || 'Build the sentence.';
+      let roundResolved = false;
 
       const answer = document.createElement('div');
       answer.className = 'builderAnswer';
@@ -901,13 +911,17 @@
         const cleanBuilt = built.replace(/[.!?]/g, '').trim().toLowerCase();
 
         if (cleanBuilt === cleanTarget) {
+          if (roundResolved) return;
+          roundResolved = true;
+          targetDiv.textContent = target;
+          targetDiv.classList.add('builderRevealed');
           state.score += 1;
           setScore();
           setStatus('Good sentence! 🎉');
           play(item.audio);
 
           const autoNext = data.autoNext === true || data.settings?.autoNext === true;
-          if (autoNext) setTimeout(goNext, 900);
+          if (autoNext) setTimeout(goNext, 1200);
         } else {
           setStatus('Not yet. Try again.');
         }
