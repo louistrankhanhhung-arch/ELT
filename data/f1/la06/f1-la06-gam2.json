@@ -5,22 +5,22 @@
   "items": [
     {
       "target": "He is my brother",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-he-is-my-brother.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-brother.mp3",
       "words": ["is", "my", "He", "brother"]
     },
     {
       "target": "He is my grandfather",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-he-is-my-grandfather.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-grandfather.mp3",
       "words": ["grandfather", "is", "He", "my"]
     },
     {
       "target": "She is my sister",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-she-is-my-sister.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-sister.mp3",
       "words": ["is", "She", "my", "sister"]
     },
     {
       "target": "She is my grandmother",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l06/f1-l06-sen-she-is-my-grandmother.mp3",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-grandmother.mp3",
       "words": [ "is", "She", "grandmother", "my"]
     }
   ]
