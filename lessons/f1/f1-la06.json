@@ -1,0 +1,177 @@
+{
+  "lesson_id": "f01-la06",
+  "title": "Foundation 1 – Lesson A-06",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f1/la06/f1-la06-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "leadin1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in 1",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-lead1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "vocab",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "vocab",
+      "title": "Vocab",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/la06/f1-la06-vob.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },    
+    {
+      "id": "tpr",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "tpr",
+      "title": "TPR",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-tpr.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "leadin2",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in 2",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-lead2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "sentence1",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "sentence",
+      "title": "Sentence Practice 1",
+      "player": "player-sentence.html",
+      "data": "data/f1/la06/f1-la06-sen1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "sentence2",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "sentence",
+      "title": "Sentence Practice 2",
+      "player": "player-sentence.html",
+      "data": "data/f1/la06/f1-la06-sen2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "game1",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "Game 1",
+      "player": "game.html",
+      "data": "data/f1/la06/f1-la06-gam1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "game2",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "game",
+      "title": "Game 2",
+      "player": "game.html",
+      "data": "data/f1/la06/f1-la06-gam2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "handouts1",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "handouts",
+      "title": "YLE challenge",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-hd1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Dialogue",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-dia1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "semi-controlled",
+      "title": "Take note",
+      "player": "player-dialogue.html",
+      "data": "data/f1/la06/f1-la06-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f1/la06/f1-la06-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
