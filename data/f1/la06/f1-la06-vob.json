@@ -1,0 +1,36 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "brother",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-brother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-brother.mp3"
+    },
+    {
+      "word": "sister",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-sister.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-sister.mp3"
+    },
+    {
+      "word": "grandfather",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-grandfather.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-grandfather.mp3"
+    },
+    {
+      "word": "grandmother",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-grandmother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-grandmother.mp3"
+    },
+    {
+      "word": "baby",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-baby.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-baby.mp3"
+    }
+  ]
+}
