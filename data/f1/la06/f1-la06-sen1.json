@@ -1,8 +1,8 @@
 {
-  "title": "Repeat",
+  "title": "Listen & repeat",
   "text": "He is my father.",
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-father.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-fa.mp3",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-he-is-my-father.mp3",
   "chunks": ["He", "is", "my", "father"],
   "timings": [0, 0.3, 0.6, 0.9],
   "settings": {
