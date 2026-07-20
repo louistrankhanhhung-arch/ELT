@@ -24,10 +24,10 @@
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
-        "value": "siser",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-siser.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-siser.mp3",
-        "chunks": ["She", "is", "my", "siser"],
+        "value": "sister",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-sister.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-sen-she-is-my-sister.mp3",
+        "chunks": ["She", "is", "my", "sister"],
         "timings": [0, 0.3, 0.6, 0.9]
       },
       {
