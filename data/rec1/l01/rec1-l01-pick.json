@@ -1,0 +1,21 @@
+{
+  "title": "Listen & answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-pick.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "[Phone ring]", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-phone.mp3" },
+    { "text": "A: Hello. Teacher Ann is speaking.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-a1-hello-teacher-ann-is-speaking.mp3" },
+    { "text": "B: Hello. My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-t1-hello-my-name-is-tom.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-t2-i-am-a-student.mp3" },
+    { "text": "A: Hello, Tom. Are you a boy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-a2-hello-tom-are-you-a-boy.mp3" },
+    { "text": "B: Yes. I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-t3-yes-i-am-a-boy.mp3" },
+    { "text": "A: How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-a3-how-old-are-you.mp3" },
+    { "text": "B: I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-t4-i-am-eight-years-old.mp3" },
+    { "text": "A: Thank you. See you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l01/r1-l01-lead3-a4-thank-you-see-you.mp3" }
+  ]
+}
