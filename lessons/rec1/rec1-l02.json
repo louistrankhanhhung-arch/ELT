@@ -30,13 +30,13 @@
       }
     },
     {
-      "id": "dialogue",
+      "id": "leadin1",
       "order": 3,
       "type": "activity",
-      "activity_kind": "dialogue",
-      "title": "Dialogue",
+      "activity_kind": "leadin",
+      "title": "Lead-in 1",
       "player": "player-dialogue.html",
-      "data": "data/rec1/l02/rec1-l02-dia1.json",
+      "data": "data/rec1/l02/rec1-l02-lead1.json",
       "completion": {
         "mode": "student_complete"
       }
@@ -54,8 +54,56 @@
       }
     },
     {
-      "id": "sentence",
+      "id": "tpr",
       "order": 5,
+      "type": "activity",
+      "activity_kind": "tpr",
+      "title": "TPR",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l02/rec1-l02-tpr.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "leadin2",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in 2",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l02/rec1-l02-lead2.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "context",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "context",
+      "title": "Context",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l02/rec1-l02-context.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "pick-structure",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "pick-structure",
+      "title": "Pick structure",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l02/rec1-l02-pick.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "sentence",
+      "order": 9,
       "type": "activity",
       "activity_kind": "sentence",
       "title": "Sentence Practice",
@@ -67,7 +115,7 @@
     },
     {
       "id": "game1",
-      "order": 6,
+      "order": 10,
       "type": "activity",
       "activity_kind": "game",
       "title": "Game 1",
@@ -79,7 +127,7 @@
     },
     {
       "id": "game2",
-      "order": 7,
+      "order": 11,
       "type": "activity",
       "activity_kind": "game",
       "title": "Game 2",
@@ -91,7 +139,7 @@
     },
     {
       "id": "qa1",
-      "order": 8,
+      "order": 12,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
@@ -103,7 +151,7 @@
     },
     {
       "id": "qa2",
-      "order": 9,
+      "order": 13,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
@@ -114,12 +162,24 @@
       }
     },
     {
+      "id": "dialogue",
+      "order": 14,
+      "type": "activity",
+      "activity_kind": "dialogue",
+      "title": "Model speaking",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l02/rec1-l02-dia1.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
       "id": "semi1",
-      "order": 10,
+      "order": 15,
       "type": "activity",
       "activity_kind": "semi controlled",
-      "title": "Let's talk 1",
-      "player": "player-text.html",
+      "title": "Take note",
+      "player": "player-dialogue.html",
       "data": "data/rec1/l02/rec1-l02-semi1.json",
       "completion": {
         "mode": "teacher_next"
@@ -127,10 +187,10 @@
     },
     {
       "id": "free1",
-      "order": 11,
+      "order": 16,
       "type": "activity",
       "activity_kind": "free talk",
-      "title": "Let's talk 2",
+      "title": "Let's talk",
       "player": "player-text.html",
       "data": "data/rec1/l02/rec1-l02-free1.json",
       "completion": {
