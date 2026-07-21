@@ -1,24 +1,5 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "Tell me about yourself."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI'm ____ today."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "happy",
-    "sad",
-    "tired",
-    "hungry",
-    "good",
-    "sleepy"
-  ]
+  "layout": "focus_center",
+  "title": "Let's talk",
+  "text": "Tell me about yourself."
 }
