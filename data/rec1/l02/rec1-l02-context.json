@@ -8,15 +8,15 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Tom: Hello. My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t1-hello-my-names-tom.mp3" },
+    { "text": "Tom: Hello. My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t1-hello-my-name-is-tom.mp3" },
     { "text": "Tom: What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t2-what-is-your-name.mp3" },
-    { "text": "Jill: Hello. My name is Jill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-a1-hello-my-name-is-jill.mp3" },
+    { "text": "Jill: Hello. My name is Jill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-j1-hello-my-name-is-jill.mp3" },
     { "text": "Tom: How are you today?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t3-how-are-you-today.mp3" },
-    { "text": "Jill: I am happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-a2-i-am-happy.mp3" },
-    { "text": "Jill: And you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-a3-and-you.mp3" },
+    { "text": "Jill: I am happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-j2-i-am-happy.mp3" },
+    { "text": "Jill: And you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-j3-and-you.mp3" },
     { "text": "Tom: I am happy, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t4-i-am-happy-too.mp3" },
     { "text": "Tom: Are you hungry?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t5-are-you-hungry.mp3" },
-    { "text": "Jill: Yes, I am. I am hungry.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-a4-yes-i-am-i-am-hungry.mp3" },
+    { "text": "Jill: Yes, I am. I am hungry.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-j4-yes-i-am-i-am-hungry.mp3" },
     { "text": "Tom: Me too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-lead2-t6-me-too.mp3" }
   ]
 }
