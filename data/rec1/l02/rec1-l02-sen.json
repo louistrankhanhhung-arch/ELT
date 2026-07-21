@@ -1,10 +1,10 @@
 {
   "title": "Repeat",
-  "text": "I'm happy.",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-happy.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-happy.mp3",
-  "chunks": ["I'm", "happy"],
-  "timings": [0, 0.3],
+  "text": "I am happy.",
+  "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-happy.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-happy.mp3",
+  "chunks": ["I", "am", "happy"],
+  "ti-amings": [0, 0.3, 0.6],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -14,50 +14,92 @@
   "substitution": {
     "label": "feelings",
     "slot": "{happy}",
-    "base": "I'm {happy}.",
+    "base": "I am {happy}.",
     "options": [
       {
+        "value": "happy",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-happy.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-happy.mp3",
+        "chunks": ["I", "am", "happy"],
+        "ti-amings": [0, 0.3, 0.6]
+      },
+      {
         "value": "sad",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-sad.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sad.mp3",
-        "chunks": ["I'm", "sad"],
-        "timings": [0, 0.3]
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-sad.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-sad.mp3",
+        "chunks": ["I", "am", "sad"],
+        "ti-amings": [0, 0.3, 0.6]
       },
       {
         "value": "tired",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-tired.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-tired.mp3",
-        "chunks": ["I'm", "tired"],
-        "timings": [0, 0.3]
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-tired.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-tired.mp3",
+        "chunks": ["I", "am", "tired"],
+        "ti-amings": [0, 0.3, 0.6]
       },
       {
         "value": "hungry",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-hungry.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-hungry.mp3",
-        "chunks": ["I'm", "hungry"],
-        "timings": [0, 0.3]
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-hungry.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-hungry.mp3",
+        "chunks": ["I", "am", "hungry"],
+        "ti-amings": [0, 0.3, 0.6]
       },
       {
         "value": "good",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-good.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-good.mp3",
-        "chunks": ["I'm", "good"],
-        "timings": [0, 0.3]
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-good.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-good.mp3",
+        "chunks": ["I", "am", "good"],
+        "ti-amings": [0, 0.3, 0.6]
       },
       {
         "value": "sleepy",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-sleepy.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sleepy.mp3",
-        "chunks": ["I'm", "sleepy"],
-        "timings": [0, 0.3]
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-sleepy.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-sleepy.mp3",
+        "chunks": ["I", "am", "sleepy"],
+        "ti-amings": [0, 0.3, 0.6]
       },
       {
-        "value": "happy",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-vob-happy.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-happy.mp3",
-        "chunks": ["I'm", "happy"],
-        "timings": [0, 0.3]
-      }
+        "value": "Jill-happy",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-happy.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-jill-i-am-happy.mp3",
+        "chunks": ["My", "name", "is", "Jill.", "I", "am", "happy."],
+        "ti-amings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "Alice-sad",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-sad.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-alice-i-am-sad.mp3",
+        "chunks": ["My", "name", "is", "Alice.", "I", "am", "sad."],
+        "ti-amings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "Tom-tired",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-tired.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-tom-i-am-tired.mp3",
+        "chunks": ["My", "name", "is", "Tom.", "I", "am", "tired."],
+        "ti-amings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "Ben-hungry",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-hungry.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-ben-i-am-hungry.mp3",
+        "chunks": ["My", "name", "is", "Ben.", "I", "am", "hungry."],
+        "ti-amings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "Lucy-good",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-good.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-lucy-i-am-good.mp3",
+        "chunks": ["My", "name", "is", "Lucy.", "I", "am", "good."],
+        "ti-amings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "Nick-sleepy",
+        "i-amg": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-vob-sleepy.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-nick-i-am-sleepy.mp3",
+        "chunks": ["My", "name", "is", "Nick.", "I", "am", "sleepy."],
+        "ti-amings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
     ]
   }
 }
