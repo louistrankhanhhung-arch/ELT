@@ -1,5 +1,10 @@
 {
-  "layout": "review_card",
+  "layout": "full_dialogue",
   "title": "Review",
-  "prompt": "Introduce yourself."
+  "lines": [
+    {
+      "speaker": "A",
+      "text": "Hello!\nWhat's your name?\nHow are you?\nHow old are you?\nAre you a boy or a girl?\nAre you a teacher or a student?"
+    }
+  ]
 }
