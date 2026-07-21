@@ -178,7 +178,7 @@
       "order": 15,
       "type": "activity",
       "activity_kind": "dialogue",
-      "title": "Dialogue",
+      "title": "Model speaking",
       "player": "player-dialogue.html",
       "data": "data/rec1/l01/rec1-l01-dia1.json",
       "completion": {
