@@ -1,46 +1,82 @@
 {
   "type": "listen-complete",
-  "title": "Listen & Complete",
+  "title": "Listen & complete",
   "shuffleQuestions": true,
   "shuffleOptions": true,
   "autoNext": true,
   "showProgress": true,
   "items": [
     {
-      "prompt": "I'm ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sad.mp3",
+      "prompt": "I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-sad.mp3",
       "answer": "sad",
-      "options": ["happy", "sad", "good", "sleepy"]
+      "options": ["sad", "happy", "good", "sleepy"]
     },
     {
-      "prompt": "I'm ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-sleepy.mp3",
+      "prompt": "I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-sleepy.mp3",
       "answer": "sleepy",
-      "options": ["hungry", "tired", "good", "sleepy"]
+      "options": ["sleepy", "hungry", "tired", "good"]
     },
     {
-      "prompt": "I'm ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-happy.mp3",
+      "prompt": "I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-happy.mp3",
       "answer": "happy",
       "options": ["happy", "sad", "hungry", "tired"]
     },
     {
-      "prompt": "I'm ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-tired.mp3",
+      "prompt": "I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-tired.mp3",
       "answer": "tired",
-      "options": ["hungry", "sad", "tired", "sleepy"]
+      "options": ["tired", "hungry", "sad", "sleepy"]
     },
     {
-      "prompt": "I'm ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-good.mp3",
+      "prompt": "I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-good.mp3",
       "answer": "good",
-      "options": ["hungry", "good", "tired", "sleepy"]
+      "options": ["good", "hungry", "tired", "sleepy"]
     },
     {
-      "prompt": "I'm ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l02/g1-l02-sen-im-hungry.mp3",
+      "prompt": "I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-i-am-hungry.mp3",
       "answer": "hungry",
       "options": ["hungry", "sad", "tired", "happy"]
+    },
+    {
+      "prompt": "My name is Nick. I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-nick-i-am-sleepy.mp3",
+      "answer": "sleepy",
+      "options": ["sleepy", "hungry", "tired", "good"]
+    },
+    {
+      "prompt": "My name is Alice. I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-alice-i-am-sad.mp3",
+      "answer": "sad",
+      "options": ["sad", "happy", "good", "sleepy"]
+    },
+    {
+      "prompt": "My name is Tom. I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-tom-i-am-tired.mp3",
+      "answer": "tired",
+      "options": ["tired", "hungry", "sad", "sleepy"]
+    },
+    {
+      "prompt": "My name is Lucy. I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-lucy-i-am-good.mp3",
+      "answer": "good",
+      "options": ["good", "hungry", "tired", "sleepy"]
+    },
+    {
+      "prompt": "My name is Ben. I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-ben-i-am-hungry.mp3",
+      "answer": "hungry",
+      "options": ["hungry", "sad", "tired", "happy"]
+    },
+    {
+      "prompt": "My name is Jill. I am ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-my-name-is-jill-i-am-happy.mp3",
+      "answer": "happy",
+      "options": ["happy", "sad", "hungry", "tired"]
     }
   ]
 }
