@@ -143,7 +143,7 @@
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
-      "player": "player-text.html",
+      "player": "player-grid-v2.html",
       "data": "data/rec1/l02/rec1-l02-qa1.json",
       "completion": {
         "mode": "teacher_next"
@@ -155,7 +155,7 @@
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
-      "player": "player-text.html",
+      "player": "player-grid-v2.html",
       "data": "data/rec1/l02/rec1-l02-qa2.json",
       "completion": {
         "mode": "teacher_next"
