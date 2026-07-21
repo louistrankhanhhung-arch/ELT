@@ -9,11 +9,12 @@
   },
   "lines": [
     { "text": "Teacher: Tell me about yourself.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-sen-tell-me-about-yourself.mp3" },
-    { "text": "Tom: Hello. My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t1-hello-my-name-is-tom.mp3" },
-    { "text": "I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t2-i-am-a-boy.mp3" },
-    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t3-i-am-a-student.mp3" },
-    { "text": "I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t4-i-am-eight-years-old.mp3" },
-    { "text": "I am happy today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t5-i-am-happy-today.mp3" },
-    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t6-thank-you.mp3" }
+    { "text": "Tom: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t1-hello.mp3" },
+    { "text": "My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t2-my-name-is-tom.mp3" },
+    { "text": "I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t3-i-am-a-boy.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t4-i-am-a-student.mp3" },
+    { "text": "I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t5-i-am-eight-years-old.mp3" },
+    { "text": "I am happy today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t6-i-am-happy-today.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l02/r1-l02-dia1-t7-thank-you.mp3" }
   ]
 }
