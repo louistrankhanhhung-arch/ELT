@@ -349,6 +349,14 @@
           "status": "ready"
         },
         {
+          "lesson_id": "f01-la07",
+          "title": "Lesson A-07",
+          "level": "Pre-A1",
+          "estimated_minutes": 60,
+          "path": "lessons/f1/f1-la07.json",
+          "status": "ready"
+        },
+        {
           "lesson_id": "f01-l06",
           "title": "Lesson 6",
           "level": "Pre-A1",
