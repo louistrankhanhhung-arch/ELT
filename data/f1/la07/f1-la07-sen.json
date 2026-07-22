@@ -1,0 +1,105 @@
+{
+  "title": "Listen & repeat",
+  "text": "He is tall.",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-tall.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-tall.mp3",
+  "chunks": ["He", "is", "tall"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{tall}",
+    "base": "He is {tall}.",
+    "options": [
+      {
+        "value": "tall",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-tall.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-tall.mp3",
+        "chunks": ["He", "is", "tall"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "short",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-short.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-short.mp3",
+        "chunks": ["He", "is", "short"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "thin",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-thin.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-she-is-thin.mp3",
+        "chunks": ["She", "is", "thin"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "fat",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-fat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-fat.mp3",
+        "chunks": ["He", "is", "fat"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "young",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-young.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-she-is-young.mp3",
+        "chunks": ["She", "is", "young"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "old",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-she-is-old.mp3",
+        "chunks": ["She", "is", "old"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "father-tall",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-tall.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-father-he-is-tall.mp3",
+        "chunks": ["This", "is", "my", "father." "He", "is", "tall."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "brother-short",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-short.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-brother-he-is-short.mp3",
+        "chunks": ["This", "is", "my", "brother." "He", "is", "short."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "sister-thin",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-thin.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-sister-she-is-thin.mp3",
+        "chunks": ["This", "is", "my", "sister." "She", "is", "thin."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "brother-fat",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-fat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-brother-he-is-fat.mp3",
+        "chunks": ["This", "is", "my", "brother." "He", "is", "fat."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "mother-young",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-young.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-mother-she-is-young.mp3",
+        "chunks": ["This", "is", "my", "mother." "She", "is", "young."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "grandmother-old",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-grandmother-she-is-old.mp3",
+        "chunks": ["This", "is", "my", "grandmother." "She", "is", "old."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      }
+    ]
+  }
+}
