@@ -1,0 +1,82 @@
+{
+  "type": "listen-complete",
+  "title": "Listen & Complete",
+  "shuffleQuestions": true,
+  "shuffleOptions": true,
+  "autoNext": true,
+  "showProgress": true,
+  "items": [
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-she-is-thin.mp3",
+      "answer": "thin",
+      "options": ["thin", "fat", "young", "old"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-tall.mp3",
+      "answer": "tall",
+      "options": ["tall", "old", "short", "young"]
+    },
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-she-is-young.mp3",
+      "answer": "young",
+      "options": ["young", "old", "tall", "fat"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-fat.mp3",
+      "answer": "fat",
+      "options": ["fat", "old", "thin", "short"]
+    },
+    {
+      "prompt": "She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-she-is-old.mp3",
+      "answer": "old",
+      "options": ["old", "short", "thin", "young"]
+    },
+    {
+      "prompt": "He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-he-is-short.mp3",
+      "answer": "short",
+      "options": ["short", "tall", "young", "old"]
+    },
+    {
+      "prompt": "This is my mother. She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-mother-she-is-young.mp3",
+      "answer": "young",
+      "options": ["young", "old", "tall", "fat"]
+    },
+    {
+      "prompt": "This is my brother. He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-brother-he-is-short.mp3",
+      "answer": "short",
+      "options": ["short", "old", "tall", "thin"]
+    },
+    {
+      "prompt": "This is my father. He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-father-he-is-tall.mp3",
+      "answer": "tall",
+      "options": ["tall", "short", "old", "fat"]
+    },
+    {
+      "prompt": "This is my grandmother. She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-grandmother-she-is-old.mp3",
+      "answer": "young",
+      "options": ["old", "young",  "tall", "fat"]
+    },
+    {
+      "prompt": "This is my brother. He is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-brother-he-is-fat.mp3",
+      "answer": "short",
+      "options": ["fat", "short", "old", "thin"]
+    },
+    {
+      "prompt": "This is my sister. She is ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-sister-she-is-thin.mp3",
+      "answer": "thin",
+      "options": ["thin", "old", "tall", "fat"]
+    }
+  ]
+}
