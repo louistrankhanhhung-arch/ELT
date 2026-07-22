@@ -63,13 +63,13 @@
     {
       "prompt": "This is my grandmother. She is ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-grandmother-she-is-old.mp3",
-      "answer": "young",
+      "answer": "old",
       "options": ["old", "young",  "tall", "fat"]
     },
     {
       "prompt": "This is my brother. He is ____.",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-this-is-my-brother-he-is-fat.mp3",
-      "answer": "short",
+      "answer": "fat",
       "options": ["fat", "short", "old", "thin"]
     },
     {
