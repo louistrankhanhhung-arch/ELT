@@ -1,0 +1,15 @@
+{
+  "title": "Let's move",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la07-tpr.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Round 1: Do and say with me.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-tpr-round-1-do-and-say-with-me.mp3" },
+    { "text": "Round 2: I do you say.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-tpr-round-2-i-do-you-say.mp3" },
+    { "text": "Round 3: I say you do.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-tpr-round-3-i-say-you-do.mp3" }
+  ]
+}
