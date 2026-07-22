@@ -1,0 +1,16 @@
+{
+  "title": "Look & tell",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-lead2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
+    { "text": "What do the father and the brother look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-what-do-the-father-and-the-brother-look-like.mp3" },
+    { "text": "What do the brother and the sister look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-what-do-the-brother-and-the-sister-look-like.mp3" },
+    { "text": "What do the mother and the grandmother look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-what-do-the-mother-and-the-grandmother-look-like.mp3" }
+  ]
+}
