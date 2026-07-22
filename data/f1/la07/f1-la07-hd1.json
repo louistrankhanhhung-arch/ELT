@@ -8,6 +8,8 @@
     "lineMode": false
   },
   "lines": [
+    { "text": "Listen and tick the box.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-listen-and-tick-the-box.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-you-have-an-example.mp3" },
     { "text": "Audio", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-hd1.mp3" }
   ]
 }
