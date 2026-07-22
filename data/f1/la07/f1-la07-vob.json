@@ -9,33 +9,33 @@
   "items": [
     {
       "word": "tall",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-tall.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-tall.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-tall.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-tall.mp3"
     },
     {
       "word": "short",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-short.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-short.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-short.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-short.mp3"
     },
     {
       "word": "thin",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-thin.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-thin.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-thin.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-thin.mp3"
     },
     {
       "word": "fat",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-fat.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-fat.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-fat.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-fat.mp3"
     },
     {
       "word": "young",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-young.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-young.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-young.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-young.mp3"
     },
     {
       "word": "old",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-old.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la06/f1-la06-vob-old.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-old.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-vob-old.mp3"
     }
   ]
 }
