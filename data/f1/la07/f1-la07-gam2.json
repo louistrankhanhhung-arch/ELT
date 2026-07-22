@@ -1,0 +1,37 @@
+{
+  "type": "sentence-builder",
+  "title": "Build the Sentence",
+  "subtitle": "",
+  "items": [
+    {
+      "target": "My father is fat",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-my-father-is-fat.mp3",
+      "words": ["is", "My", "fat", "father"]
+    },
+    {
+      "target": "My brother is short",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-my-brother-is-short.mp3",
+      "words": ["brother", "is", "short", "My"]
+    },
+    {
+      "target": "My grandfather is tall",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-my-grandfather-is-tall.mp3",
+      "words": ["is", "grandfather", "My", "tall"]
+    },
+    {
+      "target": "My sister is young",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-my-sister-is-young.mp3",
+      "words": [ "sister", "is", "young", "my"]
+    },
+    {
+      "target": "My mother is thin",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-my-mother-is-thin.mp3",
+      "words": [ "thin", "is", "mother", "My"]
+    },
+    {
+      "target": "My grandmother is old",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/la07/f1-la07-sen-my-grandmother-is-old.mp3",
+      "words": [ "is", "old", "grandmother", "My"]
+    }
+  ]
+}
