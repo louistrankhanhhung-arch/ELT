@@ -66,8 +66,20 @@
       }
     },
     {
-      "id": "sentence",
+      "id": "tpr",
       "order": 6,
+      "type": "activity",
+      "activity_kind": "tpr",
+      "title": "TPR",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l09/rec1-l09-tpr.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "sentence",
+      "order": 7,
       "type": "activity",
       "activity_kind": "sentence",
       "title": "Sentence Practice",
@@ -79,7 +91,7 @@
     },
     {
       "id": "game1",
-      "order": 7,
+      "order": 8,
       "type": "activity",
       "activity_kind": "game",
       "title": "Game 1",
@@ -91,7 +103,7 @@
     },
     {
       "id": "game2",
-      "order": 8,
+      "order": 9,
       "type": "activity",
       "activity_kind": "game",
       "title": "Game 2",
@@ -103,7 +115,7 @@
     },
     {
       "id": "qa1",
-      "order": 9,
+      "order": 10,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
@@ -115,7 +127,7 @@
     },
     {
       "id": "qa2",
-      "order": 10,
+      "order": 11,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
@@ -127,7 +139,7 @@
     },
     {
       "id": "semi1",
-      "order": 11,
+      "order": 12,
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Let's talk 1",
@@ -139,7 +151,7 @@
     },
     {
       "id": "free1",
-      "order": 12,
+      "order": 13,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk 2",
