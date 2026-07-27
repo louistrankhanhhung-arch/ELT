@@ -62,7 +62,7 @@
         "value": "computer room-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-computer-room.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-computer-room.mp3",
-        "chunks": ["playground"],
+        "chunks": ["computer room"],
         "timings": [0]
       },
       {
@@ -70,13 +70,13 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-use-computers-in-the-computer-room.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-use-computers-in-the-computer-room.mp3",
         "chunks": ["use", "computers", "in", "the", "computer room"],
-        "timings": [0, 0.3, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 1.2, 1.5, 2.4, 2.7]
       },
       {
         "value": "canteen-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-canteen.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-canteen.mp3",
-        "chunks": ["playground"],
+        "chunks": ["canteen"],
         "timings": [0]
       },
       {
@@ -90,7 +90,7 @@
         "value": "toilet-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-toilet.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-toilet.mp3",
-        "chunks": ["playground"],
+        "chunks": ["toilet"],
         "timings": [0]
       },
       {
