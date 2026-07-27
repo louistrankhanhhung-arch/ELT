@@ -1,0 +1,29 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Teacher: Tell me about your school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-tell-me-about-your-school.mp3" },
+    { "text": "Amy: Hello. My name’s Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a1-hello-my-names-amy.mp3" },
+    { "text": "Let me tell you about my school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a2-let-me-tell-you-about-my-school.mp3" },
+    { "text": "This is the classroom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a3-this-is-the-classroom.mp3" },
+    { "text": "I study in the classroom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a4-i-study-in-the-classroom.mp3" },
+    { "text": "This is the library.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a5-this-is-the-library.mp3" },
+    { "text": "I read books in the library.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a6-i-read-books-in-the-library.mp3" },
+    { "text": "This is the playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a7-this-is-the-playground.mp3" },
+    { "text": "I play with my friends in the playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a8-i-play-with-my-friends-in-the-playground.mp3" },
+    { "text": "This is the computer room.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a9-this-is-the-computer-room.mp3" },
+    { "text": "I use computers in the computer room.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a10-i-use-computers-in-the-computer-room.mp3" },
+    { "text": "This is the canteen.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a11-this-is-the-canteen.mp3" },
+    { "text": "I buy food and drink in the canteen.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a12-i-buy-food-and-drink-in-the-canteen.mp3" },
+    { "text": "This is the toilet.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a13-this-is-the-toilet.mp3" },
+    { "text": "I wash my hands in the toilet.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a14-i-wash-my-hands-in-the-toilet.mp3" },
+    { "text": "I like my school very much.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a15-i-like-my-school-very-much.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-dia1-a16-thank-you.mp3" }
+  ]
+}
