@@ -8,11 +8,11 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "1. Where do you study?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-1-where-do-you-study.mp3" },
-    { "text": "2. Where do you read books?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-2-where-do-you-read-books.mp3" },
-    { "text": "3. Where do you play with friends?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-3-where-do-you-play-with-friends.mp3" },
-    { "text": "4. Where do you use computers?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-4-where-do-you-use-computers.mp3" },
-    { "text": "5. Where do you buy food and drink?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-5-where-do-you-buy-food-and-drink.mp3" },
-    { "text": "6. Where do you wash your hands?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-6-where-do-you-wash-your-hands.mp3" }
+    { "text": "1. Where do you study?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-where-do-you-study.mp3" },
+    { "text": "2. Where do you read books?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-where-do-you-read-books.mp3" },
+    { "text": "3. Where do you play with friends?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-where-do-you-play-with-friends.mp3" },
+    { "text": "4. Where do you use computers?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-where-do-you-use-computers.mp3" },
+    { "text": "5. Where do you buy food and drink?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-where-do-you-buy-food-and-drink.mp3" },
+    { "text": "6. Where do you wash your hands?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-sen-where-do-you-wash-your-hands.mp3" }
   ]
 }
