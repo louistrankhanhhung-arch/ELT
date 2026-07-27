@@ -1,0 +1,105 @@
+{
+  "title": "Repeat",
+  "text": "classroom",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-classroom.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-classroom.mp3",
+  "chunks": ["He", "is", "smart"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{classroom}",
+    "base": "{classroom}",
+    "options": [
+      {
+        "value": "classroom-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-classroom.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-classroom.mp3",
+        "chunks": ["classroom"],
+        "timings": [0]
+      },
+      {
+        "value": "classroom-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-study-in-the-classroom.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-study-in-the-classroom.mp3",
+        "chunks": ["study", "in", "the", "classroom"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "library-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-library.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-library.mp3",
+        "chunks": ["library"],
+        "timings": [0]
+      },
+      {
+        "value": "library-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-read-books-in-the-library.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-read-books-in-the-library.mp3",
+        "chunks": ["read", "books", "in", "the", "library"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      },
+      {
+        "value": "playground-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-playground.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-playground.mp3",
+        "chunks": ["playground"],
+        "timings": [0]
+      },
+      {
+        "value": "playground-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-play-with-friends-in-the-playground.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-play-with-friends-in-the-playground.mp3",
+        "chunks": ["play", "with", "friends", "in", "the", "playground"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5]
+      },
+      {
+        "value": "computer room-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-computer-room.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-computer-room.mp3",
+        "chunks": ["playground"],
+        "timings": [0]
+      },
+      {
+        "value": "computer room-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-use-computers-in-the-computer-room.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-use-computers-in-the-computer-room.mp3",
+        "chunks": ["use", "computers", "in", "the", "computer room"],
+        "timings": [0, 0.3, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "canteen-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-canteen.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-canteen.mp3",
+        "chunks": ["playground"],
+        "timings": [0]
+      },
+      {
+        "value": "canteen-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-buy-food-and-drink-in-the-canteen.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-buy-food-and-drink-in-the-canteen.mp3",
+        "chunks": ["buy", "food", "and", "drink", "in", "the", "canteen"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "toilet-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-toilet.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-toilet.mp3",
+        "chunks": ["playground"],
+        "timings": [0]
+      },
+      {
+        "value": "toilet-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-wash-hands-in-the-toilet.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l09/r2-l09-vob-wash-hands-in-the-toilet.mp3",
+        "chunks": ["wash", "hands", "in", "the", "toilet"],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2]
+      }
+    ]
+  }
+}
