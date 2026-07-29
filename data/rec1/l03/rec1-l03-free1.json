@@ -1,24 +1,5 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "Tell me what stationery you have at home."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI’m a student.\nI'm happy today.\nI have ____.\nI have ____.\nI have ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "book",
-    "bag",
-    "pen",
-    "pencil",
-    "ruler",
-    "crayon"
-  ]
+  "layout": "focus_center",
+  "title": "Let's talk",
+  "text": "Tell me about yourself and what you have."
 }
