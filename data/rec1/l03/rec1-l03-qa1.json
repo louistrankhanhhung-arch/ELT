@@ -1,18 +1,56 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "Do you have a ____?",
-  "answers": [
-    "Yes, I do.",
-    "No, I don't."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "book",
-    "bag",
-    "pen",
-    "pencil",
-    "ruler",
-    "crayon"
+  "title": "Yes, I do. — No, I don’t.",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "Do you have a book?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-book.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-book.mp3"
+    },
+    {
+      "word": "Do you have a bag?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-crayon.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-bag.mp3"
+    },
+    {
+      "word": "Do you have a pen?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-pen.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-pen.mp3"
+    },
+    {
+      "word": "Do you have a pencil?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-pencil.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-sen-do-you-have-a-pencil.mp3"
+    },
+    {
+      "word": "Do you have a ruler?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-bag.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-ruler.mp3"
+    },
+    {
+      "word": "Do you have a crayon?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-crayon.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-crayon.mp3"
+    },
+    {
+      "word": "Do you have a bag?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-bag.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-bag.mp3"
+    },
+    {
+      "word": "Do you have a book?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-pen.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-book.mp3"
+    },
+    {
+      "word": "Do you have a ruler?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-ruler.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-sen-do-you-have-a-ruler.mp3"
+    }
   ]
 }
