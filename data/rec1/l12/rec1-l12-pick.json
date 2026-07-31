@@ -1,0 +1,24 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-pick.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Ben: What is this, Tom?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-b1-what-is-this-tom.mp3" },
+    { "text": "Tom: It is my family photo.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-t1-it-is-my-family-photo.mp3" },
+    { "text": "Ben: Wow! Who is he?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-b2-wow-who-is-he.mp3" },
+    { "text": "Tom: He is my father.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-t2-he-is-my-father.mp3" },
+    { "text": "Ben: And who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-b3-and-who-is-she.mp3" },
+    { "text": "Tom: She is my mother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-t3-she-is-my-mother.mp3" },
+    { "text": "Ben: Who is he?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-b4-who-is-he.mp3" },
+    { "text": "Tom: He is my brother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-t4-he-is-my-brother.mp3" },
+    { "text": "Ben: Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-b5-who-is-she.mp3" },
+    { "text": "Tom: She is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-t5-she-is-my-sister.mp3" },
+    { "text": "Ben: Nice family!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-b6-nice-family.mp3" },
+    { "text": "Tom: Thank you, my friend.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-lead2-t6-thank-you-my-friend.mp3" }
+  ]
+}
