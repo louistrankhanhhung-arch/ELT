@@ -1,0 +1,25 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Teacher: Tell me about your family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-tell-me-about-your-family.mp3" },
+    { "text": "Tom: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t1-hello.mp3" },
+    { "text": "My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t2-my-name-is-tom.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t3-i-am-a-student.mp3" },
+    { "text": "This is my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t4-this-is-my-family.mp3" },
+    { "text": "He is my father.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t5-he-is-my-father.mp3" },
+    { "text": "She is my mother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t6-she-is-my-mother.mp3" },
+    { "text": "He is my brother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t7-he-is-my-brother.mp3" },
+    { "text": "She is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t8-she-is-my-sister.mp3" },
+    { "text": "He is my grandfather.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t9-he-is-my-grandfather.mp3" },
+    { "text": "She is my grandmother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t10-she-is-my-grandmother.mp3" },
+    { "text": "I love my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t11-i-love-my-family.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-dia1-t12-thank-you.mp3" }
+  ]
+}
