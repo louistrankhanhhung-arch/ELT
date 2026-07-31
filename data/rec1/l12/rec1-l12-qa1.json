@@ -1,18 +1,56 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "Is he ____?\nIs she ____?",
-  "answers": [
-    "Yes, he/she is.",
-    "No, he/she isn't."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "tall",
-    "short",
-    "kind",
-    "funny",
-    "strong",
-    "beautiful"
+  "title": "Yes, he/she is. — No, he/she isn’t.",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "Is he your father?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-father.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-he-your-father.mp3"
+    },
+    {
+      "word": "Is she your mother?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandfather.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-she-your-mother.mp3"
+    },
+    {
+      "word": "Is he your brother?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-mother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-he-your-brother.mp3"
+    },
+    {
+      "word": "Is she your sister?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-sister.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-she-your-sister.mp3"
+    },
+    {
+      "word": "Is he your grandfather?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandfather.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-she-your-grandfather.mp3"
+    },
+    {
+      "word": "Is she your grandmother?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-brother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-she-your-grandmother.mp3"
+    },
+    {
+      "word": "Is she your mother?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-mother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-she-your-mother.mp3"
+    },
+    {
+      "word": "Is he your brother?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-brother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-he-your-brother.mp3"
+    },
+    {
+      "word": "Is she your grandmother?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandmother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-is-she-your-grandmother.mp3"
+    }
   ]
 }
