@@ -1,17 +1,14 @@
 {
-  "type": "fast-tap",
-  "title": "Fast Tap",
-  "subtitle": "Listen fast. Tap fast.",
-  "settings": {
-    "shuffle": true,
-    "rounds": 8
-  },
+  "type": "memory-match",
+  "title": "Memory Match",
+  "subtitle": "Find the matching pairs.",
   "items": [
-    { "word": "He is tall", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-tall.mp3" },
-    { "word": "She is short", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-short.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-short.mp3" },
-    { "word": "She is kind", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-kind.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-kind.mp3" },
-    { "word": "He is funny", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-funny.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-funny.mp3" },
-    { "word": "He is strong", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-strong.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-strong.mp3" },
-    { "word": "She is beautiful", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-beautiful.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-beautiful.mp3" }
+    { "word": "This is my family", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-family.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-this-is-my-family.mp3" },
+    { "word": "He is  my father", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-father.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-father.mp3" },
+    { "word": "She is my mother", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-mother.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-mother.mp3" },
+    { "word": "He is my brother", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-brother.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-brother.mp3" },
+    { "word": "She is my sister", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-sister.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-sister.mp3" },
+    { "word": "He is  my grandfather", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandfather.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-grandfather.mp3" },
+    { "word": "She is my grandmother", "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandmother.png", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-grandmother.mp3" }
   ]
 }
