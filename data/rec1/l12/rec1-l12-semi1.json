@@ -1,61 +1,19 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
+  "title": "Take note",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "Who is he, Jill?"
-    },
-    {
-      "speaker": "B",
-      "text": "He is my father."
-    },
-    {
-      "speaker": "A",
-      "text": "Is he (1) ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, he is."
-    },
-    {
-      "speaker": "A",
-      "text": "Who is she?"
-    },
-    {
-      "speaker": "B",
-      "text": "She is my mother."
-    },
-    {
-      "speaker": "A",
-      "text": "She is (2) ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, she is."
-    },
-    {
-      "speaker": "A",
-      "text": "And who is that girl?"
-    },
-    {
-      "speaker": "B",
-      "text": "She is my sister."
-    },
-    {
-      "speaker": "A",
-      "text": "Is she (3) ____?"
-    },
-    {
-      "speaker": "B",
-      "text": "Yes, she is."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "1. strong / tall",
-    "2. beautiful / short",
-    "3. kind / funny"
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-answer-these-questions-and-take-note.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-you-have-an-example.mp3" },
+    { "text": "1. Tell me about yourself.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-1-tell-me-about-yourself.mp3" },
+    { "text": "2. Who is he?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-2-who-is-he.mp3" },
+    { "text": "Father, brother, grandfather?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-father-brother-grandfather.mp3" },
+    { "text": "3. Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-3-who-is-she.mp3" },
+    { "text": "Mother, sister, grandmother?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-mother-sister-grandmother.mp3" }
   ]
 }
