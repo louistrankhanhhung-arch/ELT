@@ -1,46 +1,52 @@
 {
   "type": "listen-complete",
-  "title": "Listen & Complete",
+  "title": "Listen & complete",
   "shuffleQuestions": true,
   "shuffleOptions": true,
   "autoNext": true,
   "showProgress": true,
   "items": [
     {
-      "prompt": "She is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-short.mp3",
-      "answer": "short",
-      "options": ["short", "tall", "funny", "kind"]
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-grandmother.mp3",
+      "answer": "grandmother",
+      "options": ["grandmother", "brother", "grandfather", "family"]
     },
     {
-      "prompt": "She is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-beautiful.mp3",
-      "answer": "beautiful",
-      "options": ["beautiful", "strong", "kind", "tall"]
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-brother.mp3",
+      "answer": "brother",
+      "options": ["brother", "sister", "mother", "family"]
     },
     {
-      "prompt": "He is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-funny.mp3",
-      "answer": "funny",
-      "options": ["funny", "tall", "short", "strong"]
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-mother.mp3",
+      "answer": "mother",
+      "options": ["mother", "brother", "father", "family"]
     },
     {
-      "prompt": "He is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-tall.mp3",
-      "answer": "tall",
-      "options": ["tall", "short", "beautiful", "funny"]
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-grandfather.mp3",
+      "answer": "grandfather",
+      "options": ["grandfather", "father", "brother", "grandmother"]
     },
     {
-      "prompt": "She is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-kind.mp3",
-      "answer": "kind",
-      "options": ["kind", "beautiful", "strong", "funny"]
+      "prompt": "She is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-sister.mp3",
+      "answer": "sister",
+      "options": ["sister", "mother", "father", "brother"]
     },
     {
-      "prompt": "He is ____.",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-strong.mp3",
-      "answer": "strong",
-      "options": ["strong", "tall", "short", "kind"]
+      "prompt": "This is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-this-is-my-family.mp3",
+      "answer": "family",
+      "options": ["family", "father", "brother", "sister"]
+    },
+    {
+      "prompt": "He is my ____.",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-father.mp3",
+      "answer": "father",
+      "options": ["father", "sister", "brother", "family"]
     }
   ]
 }
