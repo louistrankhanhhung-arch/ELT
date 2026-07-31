@@ -1,24 +1,5 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "Can you describe your family members?"
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI’m a student.\nLet me tell you about my family.\nThis is my father.\nHe is ____.\nThis is my mother.\nShe is ____?\nThis is my brother.\nHe is ____.\nThis is my sister.\nShe is ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "tall",
-    "short",
-    "kind",
-    "funny",
-    "strong",
-    "beautiful"
-  ]
+  "layout": "focus_center",
+  "title": "Let's talk",
+  "text": "Tell me about your family."
 }
