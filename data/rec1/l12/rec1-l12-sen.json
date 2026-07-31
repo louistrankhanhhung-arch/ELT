@@ -1,10 +1,10 @@
 {
   "title": "Repeat",
-  "text": "He is tall",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-tall.mp3",
-  "chunks": ["He", "is", "tall"],
-  "timings": [0, 0.3, 0.6],
+  "text": "This is my family",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-family.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-this-is-my-family.mp3",
+  "chunks": ["This", "is", "my", "family"],
+  "timings": [0, 0.3, 0.5, 0.9],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -13,51 +13,58 @@
   },
   "substitution": {
     "label": "activities",
-    "slot": "{tall}",
-    "base": "He is {tall}.",
+    "slot": "{family}",
+    "base": "This is my {family}.",
     "options": [
       {
-        "value": "short",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-short.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-short.mp3",
-        "chunks": ["She", "is", "short"],
-        "timings": [0, 0.3, 0.6]
+        "value": "family",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-family.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-this-is-my-family.mp3",
+        "chunks": ["This", "is", "my", "family"],
+        "timings": [0, 0.3, 0.5, 0.9]
       },
       {
-        "value": "kind",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-kind.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-kind.mp3",
-        "chunks": ["She", "is", "kind"],
-        "timings": [0, 0.3, 0.6]
+        "value": "father",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-father.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-father.mp3",
+        "chunks": ["He", "is", "my", "father"],
+        "timings": [0, 0.3, 0.5, 0.9]
       },
       {
-        "value": "funny",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-funny.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-funny.mp3",
-        "chunks": ["He", "is", "funny"],
-        "timings": [0, 0.3, 0.6]
+        "value": "mother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-mother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-mother.mp3",
+        "chunks": ["She", "is", "my", "mother"],
+        "timings": [0, 0.3, 0.5, 0.9]
       },
       {
-        "value": "strong",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-strong.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-strong.mp3",
-        "chunks": ["He", "is", "strong"],
-        "timings": [0, 0.3, 0.6]
+        "value": "brother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-brother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-brother.mp3",
+        "chunks": ["He", "is", "my", "brother"],
+        "timings": [0, 0.3, 0.5, 0.9]
       },
       {
-        "value": "beautiful",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-beautiful.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-she-is-beautiful.mp3",
-        "chunks": ["She", "is", "beautiful"],
-        "timings": [0, 0.3, 0.6]
+        "value": "sister",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-sister.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-sister.mp3",
+        "chunks": ["She", "is", "my", "sister"],
+        "timings": [0, 0.3, 0.5, 0.9]
       },
       {
-        "value": "tall",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-vob-tall.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l12/g1-l12-sen-he-is-tall.mp3",
-        "chunks": ["He", "is", "tall"],
-        "timings": [0, 0.3, 0.6]
-      }
+        "value": "grandfather",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandfather.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-he-is-my-grandfather.mp3",
+        "chunks": ["He", "is", "my", "grandfather"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
+      {
+        "value": "grandmother",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-vob-grandmother.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-she-is-my-grandmother.mp3",
+        "chunks": ["She", "is", "my", "grandmother"],
+        "timings": [0, 0.3, 0.5, 0.9]
+      },
     ]
   }
 }
