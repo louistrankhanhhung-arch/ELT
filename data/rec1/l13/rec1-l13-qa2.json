@@ -1,18 +1,41 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "What does he/she have?",
-  "answers": [
-    "He has ____.",
-    "She has ____."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "hat",
-    "watch",
-    "glasses",
-    "kite",
-    "camera",
-    "guitar"
+  "title": "Ask & answer",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "What does he look like?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-grandfather-tall.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-what-does-he-look-like.mp3"
+    },
+    {
+      "word": "What does he look like?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-brother-short.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-what-does-he-look-like.mp3"
+    },
+    {
+      "word": "What does he look like?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-father-fat.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-what-does-he-look-like.mp3"
+    },
+    {
+      "word": "What does she look like?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-sister-thin.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-what-does-she-look-like.mp3"
+    },
+    {
+      "word": "What does she look like?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-mother-young.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-what-does-she-look-like.mp3"
+    },
+    {
+      "word": "What does she look like?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-grandmother-old.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-what-does-she-look-like.mp3"
+    }
   ]
 }
