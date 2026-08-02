@@ -1,6 +1,6 @@
 {
-  "title": "Listen and repeat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1.png",
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,16 +8,18 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: Look at my brother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-t1-look-at-my-brother.mp3" },
-    { "text": "B: He is cool.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-a1-he-is-cool.mp3" },
-    { "text": "A: Yes. He has a guitar.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-t2-yes-he-has-a-guitar.mp3" },
-    { "text": "B: Nice!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-a2-nice.mp3" },
-    { "text": "A: And she is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-t3-and-she-is-my-sister.mp3" },
-    { "text": "B: She is beautiful.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-a3-she-is-beautiful.mp3" },
-    { "text": "A: She has a camera.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-t4-she-has-a-camera.mp3" },
-    { "text": "B: Wow!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-a4-wow.mp3" },
-    { "text": "A: Look at my father.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-t5-look-at-my-father.mp3" },
-    { "text": "B: He has glasses and a watch.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-a5-he-has-glasses-and-a-watch.mp3" },
-    { "text": "A: Yes!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-dia1-t6-yes.mp3" }
+    { "text": "Teacher: Tell me about your family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-sen-tell-me-about-your-family.mp3" },
+    { "text": "Tom: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t1-hello.mp3" },
+    { "text": "My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t2-my-name-is-tom.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t3-i-am-a-student.mp3" },
+    { "text": "Let me tell you about my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t4-let-me-tell-you-about-my-family.mp3" },
+    { "text": "This is my father. He is tall.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t5-this-is-my-father-he-is-tall.mp3" },
+    { "text": "This is my mother. She is young.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t6-this-is-my-mother-she-is-young.mp3" },
+    { "text": "This is my brother. He is short.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t7-this-is-my-brother-he-is-short.mp3" },
+    { "text": "This is my sister. She is thin.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t8-this-is-my-sister-she-is-thin.mp3" },
+    { "text": "This is my grandfather. He is old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t9-this-is-my-grandfather-he-is-old.mp3" },
+    { "text": "And this is my grandmother. She is fat.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t10-and-this-is-my-grandmother-she-is-fat.mp3" },
+    { "text": "I love my family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t11-i-love-my-family.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-dia1-t12-thank-you.mp3" }
   ]
 }
