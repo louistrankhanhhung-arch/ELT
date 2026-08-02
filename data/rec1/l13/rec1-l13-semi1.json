@@ -1,58 +1,17 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
+  "title": "Take note",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "Look at my brother."
-    },
-    {
-      "speaker": "B",
-      "text": "He is cool."
-    },
-    {
-      "speaker": "A",
-      "text": "Yes. He has (1) ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Nice!"
-    },
-    {
-      "speaker": "A",
-      "text": "And she is my sister."
-    },
-    {
-      "speaker": "B",
-      "text": "She is beautiful."
-    },
-    {
-      "speaker": "A",
-      "text": "She has (2) ____."
-    },
-    {
-      "speaker": "B",
-      "text": "Wow!"
-    },
-    {
-      "speaker": "A",
-      "text": "Look at my father."
-    },
-    {
-      "speaker": "B",
-      "text": "He has (3) ____ and (4) ____."
-    },
-    {
-      "speaker": "A",
-      "text": "Yes!"
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "1. a guitar / a book",
-    "2. a kite / a hat",
-    "3. glasses / a ball",
-    "4. a watch / a camera"
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-answer-these-questions-and-take-note.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-you-have-an-example.mp3" },
+    { "text": "1. Tell me about yourself.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-1-tell-me-about-yourself.mp3" },
+    { "text": "2. Who do you live with?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-2-who-do-you-live-with.mp3" },
+    { "text": "3. What do they look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-3-what-do-they-look-like.mp3" }
   ]
 }
