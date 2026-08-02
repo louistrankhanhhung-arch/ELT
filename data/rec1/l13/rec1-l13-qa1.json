@@ -9,13 +9,13 @@
   "items": [
     {
       "word": "Is he fat?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-fat.png",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-father-fat.png",
       "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-is-he-fat.mp3"
     },
     {
       "word": "Is she old?",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-mother-young.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-is-she-old.mp3"
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-is-she-old.mp3"
     },
     {
       "word": "Is he tall?",
@@ -25,12 +25,12 @@
     {
       "word": "Is she thin?",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-sister-thin.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-is-she-thin.mp3"
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-is-she-thin.mp3"
     },
     {
       "word": "Is she tall?",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-mother-young.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-is-she-tall.mp3"
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-is-she-tall.mp3"
     },
     {
       "word": "Is he young?",
@@ -40,7 +40,7 @@
     {
       "word": "Is she young?",
       "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-mother-young.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-is-she-young.mp3"
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-is-she-young.mp3"
     },
     {
       "word": "Is he short?",
