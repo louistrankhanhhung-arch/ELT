@@ -1,10 +1,10 @@
 {
   "title": "Repeat",
-  "text": "She has a hat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-hat.mp3",
-  "chunks": ["She", "has", "a", "hat"],
-  "timings": [0, 0.3, 0.5, 0.8],
+  "text": "My father is fat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-fat.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-father-is-fat.mp3",
+  "chunks": ["My", "father", "is", "fat"],
+  "timings": [0, 0.3, 0.8, 1.1],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -17,46 +17,88 @@
     "base": "She has a {hat}.",
     "options": [
       {
-        "value": "watch",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-watch.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-a-watch.mp3",
-        "chunks": ["He", "has", "a", "watch"],
-        "timings": [0, 0.3, 0.5, 0.8]
+        "value": "fat-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-fat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-father-is-fat.mp3",
+        "chunks": ["My", "father", "is", "fat"],
+        "timings": [0, 0.3, 0.8, 1.1]
       },
       {
-        "value": "glasses",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-glasses.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-glasses.mp3",
-        "chunks": ["He", "has", "glasses"],
-        "timings": [0, 0.3, 0.6]
+        "value": "fat-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-father-fat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-this-is-my-father-he-is-fat.mp3",
+        "chunks": ["This", "is", "my", "father.", "He", "is", "fat."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
-        "value": "kite",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-kite.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-kite.mp3",
-        "chunks": ["She", "has", "a", "kite"],
-        "timings": [0, 0.3, 0.5, 0.8]
+        "value": "young-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-young.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-mother-is-young.mp3",
+        "chunks": ["My", "mother", "is", "young"],
+        "timings": [0, 0.3, 0.8, 1.1]
       },
       {
-        "value": "camera",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-camera.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-camera.mp3",
-        "chunks": ["She", "has", "a", "camera"],
-        "timings": [0, 0.3, 0.5, 0.8]
+        "value": "young-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-mother-young.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-this-is-my-mother-she-is-young.mp3",
+        "chunks": ["This", "is", "my", "mother.", "She", "is", "young."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
-        "value": "guitar",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-guitar.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-he-has-a-guitar.mp3",
-        "chunks": ["He", "has", "a", "guitar"],
-        "timings": [0, 0.3, 0.5, 0.8]
+        "value": "short-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-short.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-brother-is-short.mp3",
+        "chunks": ["My", "brother", "is", "short"],
+        "timings": [0, 0.3, 0.8, 1.1]
       },
       {
-        "value": "hat",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-vob-hat.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l13/g1-l13-sen-she-has-a-hat.mp3",
-        "chunks": ["She", "has", "a", "hat"],
-        "timings": [0, 0.3, 0.5, 0.8]
+        "value": "short-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-brother-short.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-this-is-my-brother-he-is-short.mp3",
+        "chunks": ["This", "is", "my", "brother.", "He", "is", "short."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "thin-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-thin.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-sister-is-thin.mp3",
+        "chunks": ["My", "sister", "is", "thin"],
+        "timings": [0, 0.3, 0.8, 1.1]
+      },
+      {
+        "value": "thin-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-sister-thin.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-this-is-my-sister-she-is-thin.mp3",
+        "chunks": ["This", "is", "my", "sister.", "She", "is", "thin."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
+      },
+      {
+        "value": "tall-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-tall.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-grandfather-is-tall.mp3",
+        "chunks": ["My", "grandfather", "is", "tall"],
+        "timings": [0, 0.3, 1.2, 1.5]
+      },
+      {
+        "value": "tall-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-grandfather-tall.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-this-is-my-grandfather-he-is-tall.mp3",
+        "chunks": ["This", "is", "my", "grandfather.", "He", "is", "tall."],
+        "timings": [0, 0.3, 0.6, 0.9, 2.1, 2.4, 2.7]
+      },
+      {
+        "value": "old-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-my-grandmother-is-old.mp3",
+        "chunks": ["My", "grandmother", "is", "old"],
+        "timings": [0, 0.3, 1.2, 1.5]
+      },
+      {
+        "value": "old-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-grandmother-old.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-sen-this-is-my-grandmother-she-is-old.mp3",
+        "chunks": ["This", "is", "my", "grandmother.", "She", "is", "old."],
+        "timings": [0, 0.3, 0.6, 0.9, 2.1, 2.4, 2.7]
       }
     ]
   }
