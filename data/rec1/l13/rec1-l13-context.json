@@ -1,0 +1,24 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Tom: Hello, Ben. Who do you live with?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-t1-hello-ben-who-do-you-live-with.mp3" },
+    { "text": "Ben: I live with my father, mother, brother and sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-b1-i-live-with-my-father-mother-brother-and-sister.mp3" },
+    { "text": "Tom: Nice! What does your father look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-t2-nice-what-does-your-father-look-like.mp3" },
+    { "text": "Ben: He is fat.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-b2-he-is-fat.mp3" },
+    { "text": "Tom: What does your mother look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-t3-what-does-your-mother-look-like.mp3" },
+    { "text": "Ben: She is tall.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-b3-she-is-tall.mp3" },
+    { "text": "Tom: What does your brother look like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-t4-what-does-your-brother-look-like.mp3" },
+    { "text": "Ben: He is short.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-b4-he-is-short.mp3" },
+    { "text": "Tom: And what about your sister?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-t5-what-does-your-sister-look-like.mp3" },
+    { "text": "Ben: She is thin.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-b5-she-is-thin.mp3" },
+    { "text": "Tom: Nice family!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-t6-nice-family.mp3" },
+    { "text": "Ben: Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-lead2-b6-thank-you.mp3" }
+  ]
+}
