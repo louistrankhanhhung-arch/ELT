@@ -1,9 +1,9 @@
 {
   "title": "Repeat",
-  "text": "My favorite subject is English",
+  "text": "My favourite subject is English",
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-english.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-english.mp3",
-  "chunks": ["My", "favorite", "subject", "is", "English"],
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-english.mp3",
+  "chunks": ["My", "favourite", "subject", "is", "English"],
   "timings": [0, 0.3, 0.9, 1.5, 1.8],
   "settings": {
     "autoRepeatCount": 2,
@@ -14,13 +14,13 @@
   "substitution": {
     "label": "",
     "slot": "{English}",
-    "base": "My favorite subject is {English}",
+    "base": "My favourite subject is {English}",
     "options": [
       {
         "value": "English-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-english.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-english.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "English"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-english.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "English"],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
@@ -33,8 +33,8 @@
       {
         "value": "Maths-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-maths.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-maths.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "Maths"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-maths.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "Maths"],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
@@ -47,8 +47,8 @@
       {
         "value": "Vietnamese-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-vietnamese.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-vietnamese.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "Vietnamese"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-vietnamese.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "Vietnamese"],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
@@ -61,8 +61,8 @@
       {
         "value": "Science-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-science.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-science.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "Science"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-science.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "Science"],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
@@ -75,8 +75,8 @@
       {
         "value": "Art-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-art.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-art.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "Art"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-art.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "Art"],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
@@ -89,8 +89,8 @@
       {
         "value": "Music-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-music.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-music.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "Music"],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-music.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "Music"],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
@@ -103,8 +103,8 @@
       {
         "value": "P.E.-1",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-pe.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-pe.mp3",
-        "chunks": ["My", "favorite", "subject", "is", "P.E."],
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favourite-subject-is-pe.mp3",
+        "chunks": ["My", "favourite", "subject", "is", "P.E."],
         "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
