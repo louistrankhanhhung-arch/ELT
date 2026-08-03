@@ -1,0 +1,26 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "fun",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-fun.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-fun.mp3"
+    },
+    {
+      "word": "easy",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-easy.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-easy.mp3"
+    },
+    {
+      "word": "important",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-important.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-important.mp3"
+    }
+  ]
+}
