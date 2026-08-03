@@ -28,7 +28,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-english.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-english-because-it-is-fun.mp3",
         "chunks": ["I", "like", "English", "because", "it", "is", "fun"],
-        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 1.9, 2.2]
       },
       {
         "value": "Maths-1",
@@ -42,7 +42,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-maths.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-maths-because-it-is-important.mp3",
         "chunks": ["I", "like", "Maths", "because", "it", "is", "important"],
-        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+        "timings": [0, 0.3, 0.6, 1.2, 1.8, 1.9, 2.2]
       },
       {
         "value": "Vietnamese-1",
@@ -56,7 +56,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-vietnamese.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-vietnamese-because-it-is-important.mp3",
         "chunks": ["I", "like", "Vietnamese", "because", "it", "is", "important"],
-        "timings": [0, 0.3, 0.6, 1.8, 2.7, 3.0, 3.3]
+        "timings": [0, 0.3, 0.6, 1.8, 2.1, 2.2, 2.5]
       },
       {
         "value": "Science-1",
@@ -70,7 +70,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-science.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-science-because-it-is-fun.mp3",
         "chunks": ["I", "like", "Science", "because", "it", "is", "fun"],
-        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 1.9, 2.2]
       },
       {
         "value": "Art-1",
@@ -84,7 +84,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-art.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-art-because-it-is-easy.mp3",
         "chunks": ["I", "like", "Art", "because", "it", "is", "easy"],
-        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+        "timings": [0, 0.3, 0.6, 1.2, 1.8, 1.9, 2.2]
       },
       {
         "value": "Music-1",
@@ -98,7 +98,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-music.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-music-because-it-is-easy.mp3",
         "chunks": ["I", "like", "Music", "because", "it", "is", "easy"],
-        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 1.9, 2.2]
       },
       {
         "value": "P.E.-1",
@@ -112,7 +112,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-pe.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-pe-because-it-is-fun.mp3",
         "chunks": ["I", "like", "P.E.", "because", "it", "is", "fun"],
-        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+        "timings": [0, 0.3, 0.6, 1.5, 1.8, 1.9, 2.2]
       }
     ]
   }
