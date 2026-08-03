@@ -1,24 +1,18 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Take note and talk to your friend",
+  "title": "Take note",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l10/r1-l10-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "What do you like doing?"
-    },
-    {
-      "speaker": "B",
-      "text": "I like ____.\nI also like ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "drawing pictures",
-    "riding a bike",
-    "swimming",
-    "dancing",
-    "singing",
-    "cooking"
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-answer-these-questions-and-take-note.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-you-have-an-example.mp3" },
+    { "text": "1. What subjects do you study at school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l10/r1-l10-sen-1-what-subjects-do-you-study-at-school.mp3" },
+    { "text": "2. What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l10/r1-l10-sen-2-what-is-your-favourite-subject.mp3" },
+    { "text": "3. Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l10/r1-l10-sen-3-why-do-you-like-it.mp3" },
+    { "text": "4. Where do you study that subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l10/r1-l10-sen-4-where-do-you-study-that-subject.mp3" }
   ]
 }
