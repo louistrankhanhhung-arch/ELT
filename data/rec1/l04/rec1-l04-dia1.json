@@ -1,6 +1,6 @@
 {
-  "title": "Listen and repeat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1.png",
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,13 +8,17 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: Hello. My name’s Tom. I’m a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-t1-hello-my-names-tom-im-a-student.mp3" },
-    { "text": "B: Hello. My name’s Ben. I’m a student, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-b1-hello-my-names-ben-im-a-student-too.mp3" },
-    { "text": "A: I have a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-t2-i-have-a-dog.mp3" },
-    { "text": "B: I have a cat.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-b2-i-have-a-cat.mp3" },
-    { "text": "A: I like dogs.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-t3-i-like-dogs.mp3" },
-    { "text": "B: I like cats.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-b3-i-like-cats.mp3" },
-    { "text": "A: Do you like birds?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-t4-do-you-like-birds.mp3" },
-    { "text": "B: No. I like fish.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-dia1-b4-no-i-like-fish.mp3" }
+    { "text": "Teacher: Tell me about yourself.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-tell-me-about-yourself.mp3" },
+    { "text": "Tom: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t1-hello.mp3" },
+    { "text": "My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t2-my-name-is-tom.mp3" },
+    { "text": "I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t3-i-am-a-boy.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t4-i-am-a-student.mp3" },
+    { "text": "I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t5-i-am-eight-years-old.mp3" },
+    { "text": "I am happy today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t6-i-am-happy-today.mp3" },
+    { "text": "I have a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t7-i-have-a-dog.mp3" },
+    { "text": "I like dogs.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t8-i-like-dogs.mp3" },
+    { "text": "And I have two fish.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t9-and-i-have-two-fish.mp3" },
+    { "text": "I like fish, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t10-i-like-fish-too.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-dia1-t11-thank-you.mp3" }
   ]
 }
