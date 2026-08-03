@@ -1,0 +1,20 @@
+{
+  "title": "Listen & answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-pick.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Tom: Hello. My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-t1-hello-my-name-is-tom.mp3" },
+    { "text": "Ben: Hello. My name is Ben.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-b1-hello-my-name-is-ben.mp3" },
+    { "text": "Tom: I have a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-t2-i-have-a-dog.mp3" },
+    { "text": "Tom: I like dogs.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-t3-i-like-dogs.mp3" },
+    { "text": "Ben:  I have a cat.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-b2-i-have-a-cat.mp3" },
+    { "text": "Ben: I like cats.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-b3-i-like-cats.mp3" },
+    { "text": "Tom:  Do you like birds?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-t4-do-you-like-birds.mp3" },
+    { "text": "Ben: No. I like fish.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-lead2-b4-no-i-like-fish.mp3" }
+  ]
+}
