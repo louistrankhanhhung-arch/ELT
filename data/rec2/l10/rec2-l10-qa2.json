@@ -1,24 +1,16 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
   "title": "Ask & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-qa2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "What do you like doing?"
-    },
-    {
-      "speaker": "B",
-      "text": "I like ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "drawing pictures",
-    "riding a bike",
-    "swimming",
-    "dancing",
-    "singing",
-    "cooking"
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-hello.mp3" },
+    { "text": "What subjects do you study at school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-what-subjects-do-you-study-at-school.mp3" },
+    { "text": "What is your favourite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-what-is-your-favourite-subject.mp3" },
+    { "text": "Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-why-do-you-like-it.mp3" }
   ]
 }
