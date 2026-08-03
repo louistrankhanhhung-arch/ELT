@@ -1,8 +1,8 @@
 {
   "title": "Repeat",
   "text": "I like cats.",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-cat.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-cats.mp3",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-cat.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-cats.mp3",
   "chunks": ["I", "like", "cats"],
   "timings": [0, 0.3, 0.6],
   "settings": {
@@ -17,46 +17,88 @@
     "base": "I like {cats}.",
     "options": [
       {
-        "value": "dogs",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-dog.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-dogs.mp3",
+        "value": "cats-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-cat.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-cats.mp3",
+        "chunks": ["I", "like", "cats"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "cats-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-cats.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-cat-i-like-cats.mp3",
+        "chunks": ["I", "have", "a", "cat.", "I", "like", "cats."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "dogs-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-dog.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-dogs.mp3",
         "chunks": ["I", "like", "dogs"],
         "timings": [0, 0.3, 0.6]
       },
       {
-        "value": "fish",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-fish.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-fish.mp3",
+        "value": "dogs-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-dogs.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-dog-i-like-dogs.mp3",
+        "chunks": ["I", "have", "a", "dog.", "I", "like", "dogs."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "fish-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-fish.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-fish.mp3",
         "chunks": ["I", "like", "fish"],
         "timings": [0, 0.3, 0.6]
       },
       {
-        "value": "birds",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-bird.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-birds.mp3",
+        "value": "fish-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-fish.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-fish-i-like-fish.mp3",
+        "chunks": ["I", "have", "a", "fish.", "I", "like", "fish."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "birds-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-bird.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-birds.mp3",
         "chunks": ["I", "like", "birds"],
         "timings": [0, 0.3, 0.6]
       },
       {
-        "value": "ducks",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-duck.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-ducks.mp3",
+        "value": "birds-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-birds.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-bird-i-like-birds.mp3",
+        "chunks": ["I", "have", "a", "bird.", "I", "like", "birds."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "ducks-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-duck.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-ducks.mp3",
         "chunks": ["I", "like", "ducks"],
         "timings": [0, 0.3, 0.6]
       },
       {
+        "value": "ducks-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-ducks.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-duck-i-like-ducks.mp3",
+        "chunks": ["I", "have", "a", "duck.", "I", "like", "ducks."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+      },
+      {
         "value": "rabbits",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-rabbit.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-rabbits.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-rabbit.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-like-rabbits.mp3",
         "chunks": ["I", "like", "rabbits"],
         "timings": [0, 0.3, 0.6]
       },
       {
-        "value": "cats",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-cat.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-sen-i-like-cats.mp3",
-        "chunks": ["I", "like", "cats"],
-        "timings": [0, 0.3, 0.6]
+        "value": "rabbits-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-rabbits.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-rabbit-i-like-rabbits.mp3",
+        "chunks": ["I", "have", "a", "rabbit.", "I", "like", "rabbits."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
       }
     ]
   }
