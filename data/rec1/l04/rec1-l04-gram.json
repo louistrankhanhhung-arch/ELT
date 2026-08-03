@@ -52,11 +52,11 @@
         "timings": [0, 0.2, 1.2, 1.5, 1.8]
       },
       {
-        "value": "a rabbit / six rabbits",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-six-rabbits.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-a-rabbit-six-rabbits.mp3",
+        "value": "a rabbit / seven rabbits",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-seven-rabbits.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-a-rabbit-seven-rabbits.mp3",
         "chunks": ["a", "rabbit", "/", "six", "rabbits"],
-        "timings": [0, 0.2, 1.5, 1.8, 2.1]
+        "timings": [0, 0.2, 1.5, 1.8, 2.4]
       }
     ]
   }
