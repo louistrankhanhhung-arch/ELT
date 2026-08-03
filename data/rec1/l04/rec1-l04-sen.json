@@ -28,7 +28,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-cats.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-cat-i-like-cats.mp3",
         "chunks": ["I", "have", "a", "cat.", "I", "like", "cats."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
         "value": "dogs-1",
@@ -42,7 +42,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-dogs.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-dog-i-like-dogs.mp3",
         "chunks": ["I", "have", "a", "dog.", "I", "like", "dogs."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
         "value": "fish-1",
@@ -56,7 +56,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-fish.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-fish-i-like-fish.mp3",
         "chunks": ["I", "have", "a", "fish.", "I", "like", "fish."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
         "value": "birds-1",
@@ -70,7 +70,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-birds.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-bird-i-like-birds.mp3",
         "chunks": ["I", "have", "a", "bird.", "I", "like", "birds."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
         "value": "ducks-1",
@@ -84,7 +84,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-ducks.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-duck-i-like-ducks.mp3",
         "chunks": ["I", "have", "a", "duck.", "I", "like", "ducks."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
         "value": "rabbits",
@@ -98,7 +98,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-vob-like-rabbits.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l04-sen-i-have-a-rabbit-i-like-rabbits.mp3",
         "chunks": ["I", "have", "a", "rabbit.", "I", "like", "rabbits."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       }
     ]
   }
