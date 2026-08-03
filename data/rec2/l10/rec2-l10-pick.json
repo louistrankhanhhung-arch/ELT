@@ -1,0 +1,24 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-pick.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Lucy: What subjects do you study at school, Amy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-l1-what-subjects-do-you-study-at-school-amy.mp3" },
+    { "text": "Amy: I study English, Math, and Art.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-a1-i-study-english-math-and-art.mp3" },
+    { "text": "Lucy: What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-l2-what-is-your-favorite-subject.mp3" },
+    { "text": "Amy: My favorite subject is Art.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-a2-my-favorite-subject-is-art.mp3" },
+    { "text": "Lucy: Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-l3-why-do-you-like-it.mp3" },
+    { "text": "Amy: I like Art because it is fun.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-a3-i-like-art-because-it-is-fun.mp3" },
+    { "text": "Lucy: Great!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-l4-great.mp3" },
+    { "text": "Amy: And you, Lucy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-a4-and-you-lucy.mp3" },
+    { "text": "Amy: What is your favorite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-a5-what-is-your-favorite-subject.mp3" },
+    { "text": "Lucy: My favorite subject is English.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-l5-my-favorite-subject-is-english.mp3" },
+    { "text": "Amy: Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-a6-why-do-you-like-it.mp3" },
+    { "text": "Lucy: I like English because it is easy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-lead2-l6-i-like-english-because-it-is-easy.mp3" }
+  ]
+}
