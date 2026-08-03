@@ -1,10 +1,10 @@
 {
   "title": "Repeat",
-  "text": "I like drawing pictures",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-draw-pictures.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-drawing-pictures.mp3",
-  "chunks": ["I", "like", "drawing", "pictures"],
-  "timings": [0, 0.3, 0.6, 1.0],
+  "text": "My favorite subject is English",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-english.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-english.mp3",
+  "chunks": ["My", "favorite", "subject", "is", "English"],
+  "timings": [0, 0.3, 0.9, 1.5, 1.8],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -13,50 +13,106 @@
   },
   "substitution": {
     "label": "",
-    "slot": "{drawing pictures}",
-    "base": "I like {drawing pictures}",
+    "slot": "{English}",
+    "base": "My favorite subject is {English}",
     "options": [
       {
-        "value": "ride a bike",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-ride-a-bike.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-riding-a-bike.mp3",
-        "chunks": ["I", "like", "riding", "a", "bike"],
-        "timings": [0, 0.3, 0.6, 1.0, 1.2]
+        "value": "English-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-english.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-english.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "English"],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
-        "value": "swim",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-swim.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-swimming.mp3",
-        "chunks": ["I", "like", "swimming"],
-        "timings": [0, 0.3, 0.6]
+        "value": "English-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-english.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-english-because-it-is-fun.mp3",
+        "chunks": ["I", "like", "English", "because", "it", "is", "fun"],
+        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
       },
       {
-        "value": "dance",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-dance.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-dancing.mp3",
-        "chunks": ["I", "like", "dancing"],
-        "timings": [0, 0.3, 0.6]
+        "value": "Maths-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-maths.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-maths.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Maths"],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
-        "value": "sing",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-sing.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-singing.mp3",
-        "chunks": ["I", "like", "singing"],
-        "timings": [0, 0.3, 0.6]
+        "value": "Maths-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-maths.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-maths-because-it-is-important.mp3",
+        "chunks": ["I", "like", "Maths", "because", "it", "is", "important"],
+        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
       },
       {
-        "value": "cook",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-cook.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-cooking.mp3",
-        "chunks": ["I", "like", "cooking"],
-        "timings": [0, 0.3, 0.6]
+        "value": "Vietnamese-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-vietnamese.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-vietnamese.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Vietnamese"],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
       },
       {
-        "value": "draw pictures",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-draw-pictures.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-drawing-pictures.mp3",
-        "chunks": ["I", "like", "drawing", "pictures"],
-        "timings": [0, 0.3, 0.6, 1.2]
+        "value": "Vietnamese-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-vietnamese.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-vietnamese-because-it-is-important.mp3",
+        "chunks": ["I", "like", "Vietnamese", "because", "it", "is", "important"],
+        "timings": [0, 0.3, 0.6, 1.8, 2.7, 3.0, 3.3]
+      },
+      {
+        "value": "Science-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-science.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-science.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Science"],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
+      },
+      {
+        "value": "Science-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-science.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-science-because-it-is-fun.mp3",
+        "chunks": ["I", "like", "Science", "because", "it", "is", "fun"],
+        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+      },
+      {
+        "value": "Art-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-art.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-art.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Art"],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
+      },
+      {
+        "value": "Art-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-art.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-art-because-it-is-easy.mp3",
+        "chunks": ["I", "like", "Art", "because", "it", "is", "easy"],
+        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+      },
+      {
+        "value": "Music-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-music.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-music.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "Music"],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
+      },
+      {
+        "value": "Music-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-music.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-music-because-it-is-easy.mp3",
+        "chunks": ["I", "like", "Music", "because", "it", "is", "easy"],
+        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
+      },
+      {
+        "value": "P.E.-1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-pe.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-my-favorite-subject-is-pe.mp3",
+        "chunks": ["My", "favorite", "subject", "is", "P.E."],
+        "timings": [0, 0.3, 0.9, 1.5, 1.8]
+      },
+      {
+        "value": "P.E.-2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-vob-pe.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l10/r2-l10-sen-i-like-pe-because-it-is-fun.mp3",
+        "chunks": ["I", "like", "P.E.", "because", "it", "is", "fun"],
+        "timings": [0, 0.3, 0.6, 1.5, 2.4, 2.7, 3.0]
       }
     ]
   }
