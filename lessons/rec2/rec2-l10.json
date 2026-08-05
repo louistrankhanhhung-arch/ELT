@@ -162,8 +162,20 @@
       }
     },
     {
-      "id": "dialogue",
+      "id": "inter",
       "order": 14,
+      "type": "activity",
+      "activity_kind": "q&inter",
+      "title": "Interaction",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l10/rec2-l10-inter.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "dialogue",
+      "order": 15,
       "type": "activity",
       "activity_kind": "dialogue",
       "title": "Dialogue",
@@ -175,7 +187,7 @@
     },
     {
       "id": "semi1",
-      "order": 15,
+      "order": 16,
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Take note",
@@ -187,7 +199,7 @@
     },
     {
       "id": "free1",
-      "order": 16,
+      "order": 17,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk",
