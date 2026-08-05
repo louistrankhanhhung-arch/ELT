@@ -63,7 +63,7 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-speak-english.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-speak-english.mp3",
         "chunks": ["can", "speak", "English", "/", "can't", "speak", "English"],
-        "timings": [0, 0.2, 0.5, 1.5, 1.8, 2.1, 2.4]
+        "timings": [0, 0.2, 0.5, 1.5, 2.1, 2.4, 2.7]
       }
     ]
   }
