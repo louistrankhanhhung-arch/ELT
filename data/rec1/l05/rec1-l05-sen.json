@@ -60,7 +60,7 @@
       },
       {
         "value": "speak English",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-speak-English.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-speak-english.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-speak-english.mp3",
         "chunks": ["I", "can", "speak", "English"],
         "timings": [0, 0.3, 0.6, 0.9]
