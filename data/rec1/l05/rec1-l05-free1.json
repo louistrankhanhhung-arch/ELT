@@ -1,24 +1,5 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "Tell me what you can do."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nI’m a student.\nI’m happy today.\nI can ____.\nI can ____.\nI can ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "run",
-    "jump",
-    "swim",
-    "read",
-    "draw",
-    "dance"
-  ]
+  "layout": "focus_center",
+  "title": "Let's talk",
+  "text": "Tell me about yourself."
 }
