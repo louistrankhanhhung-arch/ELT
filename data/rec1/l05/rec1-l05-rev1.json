@@ -1,5 +1,21 @@
 {
-  "layout": "review_card",
   "title": "Review",
-  "prompt": "Do you like cats?"
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-rev1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-hello.mp3" },
+    { "text": "What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-is-your-name.mp3" },
+    { "text": "Are you a boy or a girl?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-are-you-a-boy-or-a-girl.mp3" },
+    { "text": "How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-how-old-are-you.mp3" },
+    { "text": "Are you happy?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-are-you-happy.mp3" },
+    { "text": "What do you have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-do-you-have.mp3" },
+    { "text": "Do you have a dog?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-do-you-have-a-dog.mp3" },
+    { "text": "What do you like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-do-you-like.mp3" },
+    { "text": "Do you like birds?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-do-you-like-birds.mp3" }
+  ]
 }
