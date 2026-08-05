@@ -1,0 +1,70 @@
+{
+  "title": "Repeat",
+  "text": "can run / can't run",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-run.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-run.mp3",
+  "chunks": ["can", "run", "/", "can't", "run"],
+  "timings": [0, 0.2, 1.2, 1.5, 1.8],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{run}",
+    "base": "can run / can't {run}.",
+    "options": [
+      {
+        "value": "can run / can't run",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-run.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-run.mp3",
+        "chunks": ["can", "run", "/", "can't", "run"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      
+        "value": "can jump / can't jump",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-jump.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-jump.mp3",
+        "chunks": ["can", "jump", "/", "can't", "jump"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      
+        "value": "can swim / can't swim",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-swim.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-swim.mp3",
+        "chunks": ["can", "swim", "/", "can't", "swim"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      
+        "value": "can read / can't read",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-read.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-read.mp3",
+        "chunks": ["can", "read", "/", "can't", "read"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      
+        "value": "can draw / can't draw",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-draw.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-draw.mp3",
+        "chunks": ["can", "draw", "/", "can't", "draw"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      
+        "value": "can dance / can't dance",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-dance.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-dance.mp3",
+        "chunks": ["can", "dance", "/", "can't", "dance"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      
+        "value": "can speak English / can't speak English",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-speak-English.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-speak-English.mp3",
+        "chunks": ["can", "speak", "English", "/", "can't", "speak", "English"],
+        "timings": [0, 0.2, 0.5, 1.5, 1.8, 2.1, 2.4]
+      }
+    ]
+  }
+}
