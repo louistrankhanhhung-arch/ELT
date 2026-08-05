@@ -1,8 +1,8 @@
 {
   "title": "Repeat",
   "text": "I can run.",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-run.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-run.mp3",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-run.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-run.mp3",
   "chunks": ["I", "can", "run"],
   "timings": [0, 0.3, 0.6],
   "settings": {
@@ -17,46 +17,88 @@
     "base": "I can {run}.",
     "options": [
       {
+        "value": "run",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-run.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-run.mp3",
+        "chunks": ["I", "can", "run"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
         "value": "jump",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-jump.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-jump.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-jump.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-jump.mp3",
         "chunks": ["I", "can", "jump"],
         "timings": [0, 0.3, 0.6]
       },
       {
         "value": "swim",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-swim.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-swim.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-swim.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-swim.mp3",
         "chunks": ["I", "can", "swim"],
         "timings": [0, 0.3, 0.6]
       },
       {
         "value": "read",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-read.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-read.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-read.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-read.mp3",
         "chunks": ["I", "can", "read"],
         "timings": [0, 0.3, 0.6]
       },
       {
         "value": "draw",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-draw.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-draw.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-draw.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-draw.mp3",
         "chunks": ["I", "can", "draw"],
         "timings": [0, 0.3, 0.6]
       },
       {
         "value": "dance",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-dance.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-dance.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-dance.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-dance.mp3",
         "chunks": ["I", "can", "dance"],
         "timings": [0, 0.3, 0.6]
       },
       {
-        "value": "run",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-vob-run.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-sen-i-can-run.mp3",
-        "chunks": ["I", "can", "run"],
-        "timings": [0, 0.3, 0.6]
+        "value": "speak English",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-speak-English.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-can-speak-english.mp3",
+        "chunks": ["I", "can", "speak", "English],
+        "timings": [0, 0.3, 0.6, 0.9]
+      },
+      {
+        "value": "book-read",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-book-read.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-a-book-i-can-read.mp3",
+        "chunks": ["I", "have", "a", "book.", "I", "can", "read."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
+      },
+      {
+        "value": "crayons-draw",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-crayons-draw.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-five-crayons-i-can-draw.mp3",
+        "chunks": ["I", "have", "five", "crayons.", "I", "can", "draw."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
+      },
+      {
+        "value": "dog-run",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-dog-run.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-a-dog-dogs-can-run.mp3",
+        "chunks": ["I", "have", "a", "dog.", "Dogs", "can", "run."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
+      },
+      {
+        "value": "rabbits-jump",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-rabbits-jump.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-two-rabbits-rabbits-can-jump.mp3",
+        "chunks": ["I", "have", "two", "rabbits.", "Rabbits", "can", "jump."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.4, 2.7]
+      },
+      {
+        "value": "fish-swim",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-fish-swim.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-four-fish-fish-can-swim.mp3",
+        "chunks": ["I", "have", "four", "fish.", "Fish", "can", "swim."],
+        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
       }
     ]
   }
