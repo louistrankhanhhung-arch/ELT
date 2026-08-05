@@ -77,28 +77,28 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-crayons-draw.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-five-crayons-i-can-draw.mp3",
         "chunks": ["I", "have", "five", "crayons.", "I", "can", "draw."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
+        "timings": [0, 0.3, 0.6, 0.9, 2.4, 2.7, 3.0]
       },
       {
         "value": "dog-run",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-dog-run.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-a-dog-dogs-can-run.mp3",
         "chunks": ["I", "have", "a", "dog.", "Dogs", "can", "run."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       },
       {
         "value": "rabbits-jump",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-rabbits-jump.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-two-rabbits-rabbits-can-jump.mp3",
         "chunks": ["I", "have", "two", "rabbits.", "Rabbits", "can", "jump."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.4, 2.7]
+        "timings": [0, 0.3, 0.6, 0.9, 2.4, 2.7, 3.0]
       },
       {
         "value": "fish-swim",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-fish-swim.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-i-have-four-fish-fish-can-swim.mp3",
         "chunks": ["I", "have", "four", "fish.", "Fish", "can", "swim."],
-        "timings": [0, 0.3, 0.6, 0.9, 1.5, 1.8, 2.1]
+        "timings": [0, 0.3, 0.6, 0.9, 1.8, 2.1, 2.4]
       }
     ]
   }
