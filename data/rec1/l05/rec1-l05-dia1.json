@@ -1,6 +1,6 @@
 {
-  "title": "Listen and repeat",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1.png",
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,13 +8,18 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: Hello, Jill. I have a rabbit.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t1-hello-jill-i-have-a-rabbit.mp3" },
-    { "text": "B: Hello, Tom. Nice. I like rabbits.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j1-hello-tom-nice-i-like-rabbits.mp3" },
-    { "text": "A: Rabbits can jump.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t2-rabbits-can-jump.mp3" },
-    { "text": "B: Yes! Can you jump?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j2-yes-can-you-jump.mp3" },
-    { "text": "A: Yes. I can jump.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t3-yes-i-can-jump.mp3" },
-    { "text": "B: Me too. Look! I have a duck.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j3-me-too-look-i-have-a-duck.mp3" },
-    { "text": "A: Wow! Ducks can swim. Can you swim?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-t4-wow-ducks-can-swim-can-you-swim.mp3" },
-    { "text": "B: Yes, I can. And I can dance, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l05/g1-l05-dia1-j4-yes-i-can-and-i-can-dance-too.mp3" }
+    { "text": "Teacher: Tell me about yourself.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-tell-me-about-yourself.mp3" },
+    { "text": "Tom: Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t1-hello.mp3" },
+    { "text": "My name is Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t2-my-name-is-tom.mp3" },
+    { "text": "I am a boy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t3-i-am-a-boy.mp3" },
+    { "text": "I am a student.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t4-i-am-a-student.mp3" },
+    { "text": "I am eight years old.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t5-i-am-eight-years-old.mp3" },
+    { "text": "I am happy today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t6-i-am-happy-today.mp3" },
+    { "text": "I have a book.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t7-i-have-a-book.mp3" },
+    { "text": "I can read.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t8-i-have-a-book.mp3" },
+    { "text": "I have five crayons.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t9-and-i-have-five-crayons.mp3" },
+    { "text": "I can draw.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t10-i-can-draw.mp3" },
+    { "text": "And I can speak English, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t11-and-i-can-speak-english-too.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-dia1-t11-thank-you.mp3" }
   ]
 }
