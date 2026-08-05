@@ -1,18 +1,46 @@
 {
-  "layout": "qa_substitution",
-  "title": "Ask & Answer",
-  "prompt": "Can you ____?",
-  "answers": [
-    "Yes, I can.",
-    "No, I can't."
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "run",
-    "jump",
-    "swim",
-    "read",
-    "draw",
-    "dance"
+  "title": "Yes, I can. — No, I can’t.",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "Can you run?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-run.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-run.mp3"
+    },
+    {
+      "word": "Can you jump?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-jump.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-jump.mp3"
+    },
+    {
+      "word": "Can you swim?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-swim.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-swim.mp3"
+    },
+    {
+      "word": "Can you read?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-read.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-read.mp3"
+    },
+    {
+      "word": "Can you draw?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-draw.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-draw.mp3"
+    },
+    {
+      "word": "Can you dance?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-dance.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-dance.mp3"
+    },
+    {
+      "word": "Can you speak English?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-speak-english.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-you-speak-english.mp3"
+    }
   ]
 }
