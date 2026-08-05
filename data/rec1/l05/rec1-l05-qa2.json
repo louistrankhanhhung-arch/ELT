@@ -8,10 +8,6 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-hello.mp3" },
-    { "text": "What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-is-your-name.mp3" },
-    { "text": "What do you have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-do-you-have.mp3" },
-    { "text": "What do you like?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-do-you-like.mp3" },
     { "text": "What can you do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-can-you-do.mp3" },
     { "text": "What can’t you do?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-what-cant-you-do.mp3" }
   ]
