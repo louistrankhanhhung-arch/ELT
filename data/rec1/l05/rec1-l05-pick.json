@@ -1,0 +1,25 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-pick.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Tom: Hello, Jill.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-t1-hello-jill.mp3" },
+    { "text": "Jill: Hello, Tom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j1-hello-tom.mp3" },
+    { "text": "Tom: Look! I have a rabbit.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-t2-look-i-have-a-rabbit.mp3" },
+    { "text": "Jill: Nice. I like rabbits.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j2-nice-i-like-rabbits.mp3" },
+    { "text": "Tom: Rabbits can jump.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-t3-rabbits-can-jump.mp3" },
+    { "text": "Jill: Yes! Can you jump?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j3-yes-can-you-jump.mp3" },
+    { "text": "Tom: Yes. I can jump.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-t4-yes-i-can-jump.mp3" },
+    { "text": "Jill: Me too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j4-me-too.mp3" },
+    { "text": "Jill: Look! I have a duck.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j5-look-i-have-a-duck.mp3" },
+    { "text": "Tom: Wow! Ducks can swim.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-t5-wow-ducks-can-swim.mp3" },
+    { "text": "Tom: Can you swim?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-t6-can-you-swim.mp3" },
+    { "text": "Jill: Yes, I can.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j6-yes-i-can.mp3" },
+    { "text": "Jill: And I can speak English, too.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-lead2-j7-and-i-can-speak-english-too.mp3" }
+  ]
+}
