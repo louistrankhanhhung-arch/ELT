@@ -23,7 +23,7 @@
         "chunks": ["can", "run", "/", "can't", "run"],
         "timings": [0, 0.2, 1.2, 1.5, 1.8]
       },
-      
+      {
         "value": "can jump / can't jump",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-vob-can-cant-jump.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l05/r1-l05-sen-can-cant-jump.mp3",
