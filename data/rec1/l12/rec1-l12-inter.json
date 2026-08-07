@@ -1,0 +1,16 @@
+{
+  "title": "Interaction",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-inter.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-hello.mp3" },
+    { "text": "Tell me about your family.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-tell-me-about-your-family2.mp3" },
+    { "text": "Who is he?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-who-is-he.mp3" },
+    { "text": "Who is she?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l12/r1-l12-sen-who-is-she.mp3" }
+  ]
+}
