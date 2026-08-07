@@ -126,25 +126,25 @@
       }
     },
     {
-      "id": "game1",
+      "id": "chest",
       "order": 11,
       "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 1",
-      "player": "game.html",
-      "data": "data/rec1/l12/rec1-l12-gam1.json",
+      "activity_kind": "chest",
+      "title": "Find keywords",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l12/rec1-l12-chest.json",
       "completion": {
         "mode": "student_complete"
       }
     },
     {
-      "id": "game2",
+      "id": "handouts",
       "order": 12,
       "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 2",
-      "player": "game.html",
-      "data": "data/rec1/l12/rec1-l12-gam2.json",
+      "activity_kind": "handouts",
+      "title": "Handouts",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l12/rec1-l12-hd1.json",
       "completion": {
         "mode": "student_complete"
       }
