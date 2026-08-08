@@ -114,32 +114,44 @@
       }
     },
     {
-      "id": "game1",
+      "id": "gram",
       "order": 10,
       "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 1",
-      "player": "game.html",
-      "data": "data/rec1/l13/rec1-l13-gam1.json",
+      "activity_kind": "gram",
+      "title": "Grammar",
+      "player": "player-grid-v2.html",
+      "data": "data/rec1/l13/rec1-l13-gram.json",
       "completion": {
         "mode": "student_complete"
       }
     },
     {
-      "id": "game2",
+      "id": "chest",
       "order": 11,
       "type": "activity",
-      "activity_kind": "game",
-      "title": "Game 2",
-      "player": "game.html",
-      "data": "data/rec1/l13/rec1-l13-gam2.json",
+      "activity_kind": "Chest",
+      "title": "Find keywords",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l13/rec1-l13-chest.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "handouts",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "handouts",
+      "title": "Handouts",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l13/rec1-l13-hd1.json",
       "completion": {
         "mode": "student_complete"
       }
     },
     {
       "id": "qa1",
-      "order": 12,
+      "order": 13,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
@@ -151,7 +163,7 @@
     },
     {
       "id": "qa2",
-      "order": 13,
+      "order": 14,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
@@ -162,8 +174,20 @@
       }
     },
     {
+      "id": "inter",
+      "order": 15,
+      "type": "activity",
+      "activity_kind": "inter",
+      "title": "Interaction",
+      "player": "player-dialogue.html",
+      "data": "data/rec1/l13/rec1-l13-inter.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
       "id": "dialogue",
-      "order": 14,
+      "order": 16,
       "type": "activity",
       "activity_kind": "dialogue",
       "title": "Dialogue",
@@ -175,7 +199,7 @@
     },
     {
       "id": "semi1",
-      "order": 15,
+      "order": 17,
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Take note",
@@ -187,7 +211,7 @@
     },
     {
       "id": "free1",
-      "order": 16,
+      "order": 18,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk",
