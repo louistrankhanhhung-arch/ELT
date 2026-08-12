@@ -1,5 +1,5 @@
 {
-  "title": "Listen and repeat",
+  "title": "Listen & repeat",
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1.png",
   "settings": {
     "slowRate": 0.6,
@@ -8,15 +8,21 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "A: Hello, Lucy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t1-hello-lucy.mp3" },
-    { "text": "B: Hello, Tony.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l1-hello-tony.mp3" },
-    { "text": "A: What sport do you play?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t2-what-sport-do-you-play.mp3" },
-    { "text": "B: I play badminton.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l2-i-play-badminton.mp3" },
-    { "text": "B: I also play tennis.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l3-i-also-play-tennis.mp3" },
-    { "text": "A: Cool! What’s your favorite sport?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t3-cool-whats-your-favorite-sport.mp3" },
-    { "text": "B: My favorite sport is badminton.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l4-my-favorite-sport-is-badminton.mp3" },
-    { "text": "B: What’s your favorite sport, Tony?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l5-whats-your-favorite-sport-tony.mp3" },
-    { "text": "A: My favorite sport is basketball.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-t4-my-favorite-sport-is-basketball.mp3" },
-    { "text": "B: That’s nice.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-l6-thats-nice.mp3" }
+    { "text": "Teacher: Tell me about your school day.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-tell-me-about-your-school-day.mp3" },
+    { "text": "Amy: Hello. My name’s Amy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a1-hello-my-names-amy.mp3" },
+    { "text": "Let me tell you about my school day.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a2-let-me-tell-you-about-my-school-day.mp3" },
+    { "text": "First, I get up at six o’clock in the morning.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a3-first-i-get-up-at-six-oclock-in-the-morning.mp3" },
+    { "text": "Then, I have breakfast and go to school at six thirty.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a4-then-i-have-breakfast-and-go-to-school-at-six-thirty.mp3" },
+    { "text": "My classes start at seven o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a5-my-classes-start-at-seven-o'clock.mp3" },
+    { "text": "In the morning, I study English, Maths and Vietnamese in the classroom.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a6-in-the-morning-i-study-english-maths-and-vietnamese-in-the-classroom.mp3" },
+    { "text": "My favorite subject is English.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a7-my-favourite-subject-is-english.mp3" },
+    { "text": "I like it because it is fun.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a8-i-like-it-because-it-is-fun.mp3" },
+    { "text": "At break time, I play with my friends in the playground.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a9-at-breaktime-i-play-with-my-friends-in-the-playground.mp3" },
+    { "text": "Next, I have lunch in the canteen at eleven thirty.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a10-next-i-have-lunch-in-the-canteen-at-eleven-thirty.mp3" },
+    { "text": "In the afternoon, I have Science and P.E.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a11-in-the-afternoon-i-have-science-and-pe.mp3" },
+    { "text": "After that, I use the computer in the computer room.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a12-after-that-i-use-the-computer-in-the-computer-room.mp3" },
+    { "text": "Finally, I go home at four o’clock.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a13-finally-i-go-home-at-four-oclock.mp3" },
+    { "text": "I am usually tired, but I am happy after a school day.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a14-i-am-usually-tired-but-i-am-happy-after-a-school-day.mp3" },
+    { "text": "Thank you.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-dia1-a15-thank-you.mp3" }
  ]
 }
