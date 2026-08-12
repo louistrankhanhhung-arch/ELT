@@ -1,14 +1,5 @@
 {
-  "layout": "full_dialogue",
+  "layout": "focus_center",
   "title": "Let's talk",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "Tell me about yourself."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name’s _____.\nI’m a student.\nI’m happy today.\nI like _____.\nI have _____.\nI can _____.\n"
-    }
-  ]
+  "text": "Tell me about yourself."
 }
