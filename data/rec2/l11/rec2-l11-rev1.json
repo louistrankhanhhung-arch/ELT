@@ -1,5 +1,19 @@
 {
-  "layout": "review_card",
   "title": "Review",
-  "prompt": "What do you like doing?"
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-rev1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "What places are there in your school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-what-places-are-there-in-your-school.mp3" },
+    { "text": "Classroom, library, computer room, canteen, and toilet?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-classroom-library-computer-room-canteen-and-toilet.mp3" },
+    { "text": "What do you do there?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-what-do-you-do-there.mp3" },
+    { "text": "What subjects do you study at school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-what-subjects-do-you-study-at-school.mp3" },
+    { "text": "Where do you study them?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-where-do-you-study-them.mp3" },
+    { "text": "What is your favourite subject?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-what-is-your-favourite-subject.mp3" },
+    { "text": "Why do you like it?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-why-do-you-like-it.mp3" }
+ ]
 }
