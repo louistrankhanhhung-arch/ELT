@@ -1,0 +1,15 @@
+{
+  "title": "Let's try",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-lead1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
+    { "text": "Can you see the timeline?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-can-you-see-the-timeline.mp3" },
+    { "text": "Let’s make one!", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-lets-make-one.mp3" }
+  ]
+}
