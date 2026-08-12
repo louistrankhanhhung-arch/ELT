@@ -1,32 +1,24 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Take note and talk to your friend",
+  "title": "Take note",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
   "lines": [
-    {
-      "speaker": "A",
-      "text": "What sport do you play?"
-    },
-    {
-      "speaker": "B",
-      "text": "I play ____. I also play ____."
-    },
-    {
-      "speaker": "A",
-      "text": "What’s your favorite sport?"
-    },
-    {
-      "speaker": "B",
-      "text": "My favorite sport is ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "football",
-    "badminton",
-    "volleyball",
-    "basketball",
-    "tennis",
-    "table tennis"
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-answer-these-questions-and-take-note.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-you-have-an-example.mp3" },
+    { "text": "1. What time do you get up?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-1-what-time-do-you-get-up.mp3" },
+    { "text": "2. What do you do before school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-2-what-do-you-do-before-school.mp3" },
+    { "text": "3. What time do you go to school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-3-what-time-do-you-go-to-school.mp3" },
+    { "text": "4. What subjects do you study in the morning? Where?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-4-what-subjects-do-you-study-in-the-morning-where.mp3" },
+    { "text": "5. What is your favorite subject? Why?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-5-what-is-your-favourite-subject-why.mp3" },
+    { "text": "6. What do you do at break time? Where?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-6-what-do-you-do-at-break-time-where.mp3" },
+    { "text": "7. What time do you have lunch? Where?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-7-what-time-do-you-have-lunch-where.mp3" },
+    { "text": "8. What subjects do you have in the afternoon? Where?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-8-what-subjects-do-you-have-in-the-afternoon-where.mp3" },
+    { "text": "9. What time do you go home?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-9-what-time-do-you-go-home.mp3" },
+    { "text": "10. How do you feel after school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l11/r2-l11-sen-10-how-do-you-feel-after-school.mp3" }
   ]
 }
