@@ -283,10 +283,9 @@
     .presentation-counter {
       color: #fff;
       font-size: 13px;
-      min-width: 60px;
+      min-width: 64px;
       text-align: center;
     }
-    
   </style>
 </head>
 <body>
@@ -331,6 +330,13 @@
     </section>
   </main>
 
+  <div class="presentation-controls" id="presentationControls">
+    <button id="presentationPrevBtn">←</button>
+    <span class="presentation-counter" id="presentationCounter">1 / 1</span>
+    <button id="presentationNextBtn">→</button>
+    <button id="exitPresentationBtn">Exit</button>
+  </div>
+
   <script src="./config.js?v=3"></script>
   <script>
     const BASE_URL =
@@ -369,12 +375,28 @@
     const nextBtn = document.getElementById("nextBtn");
     const openStudentBtn = document.getElementById("openStudentBtn");
     const homeBtn = document.getElementById("homeBtn");
-    
     const copyStudentBtn = document.getElementById("copyStudentBtn");
+
+    const presentationBtn =
+      document.getElementById("presentationBtn");
+
+    const presentationPrevBtn =
+      document.getElementById("presentationPrevBtn");
+
+    const presentationNextBtn =
+      document.getElementById("presentationNextBtn");
+
+    const exitPresentationBtn =
+      document.getElementById("exitPresentationBtn");
+
+    const presentationCounter =
+      document.getElementById("presentationCounter");
 
     let currentLesson = null;
     let sessionPin = null;
     let monitorTimer = null;
+    let isPresentationMode = false;
+    let presentationControlsTimer = null;
 
     async function loadLesson() {
       try {
@@ -457,6 +479,11 @@
         url.searchParams.set("lesson", lessonPath);
         url.searchParams.set("block", blockIndex);
         window.history.replaceState({}, "", url.toString());
+      }
+      
+      if (presentationCounter) {
+        presentationCounter.textContent =
+          `${blockIndex + 1} / ${blocks.length}`;
       }
     }
 
@@ -652,6 +679,84 @@
       currentBlock.textContent = "Current block: error";
     }
 
+    function showPresentationControls() {
+      if (!isPresentationMode) return;
+
+      document.body.classList.add(
+        "show-presentation-controls"
+      );
+
+      clearTimeout(presentationControlsTimer);
+
+      presentationControlsTimer = setTimeout(() => {
+        document.body.classList.remove(
+          "show-presentation-controls"
+        );
+      }, 1800);
+    }
+
+    async function enterPresentationMode() {
+      isPresentationMode = true;
+
+      document.body.classList.add(
+        "presentation-mode"
+      );
+
+      showPresentationControls();
+
+      try {
+        if (
+          document.documentElement.requestFullscreen &&
+          !document.fullscreenElement
+        ) {
+          await document.documentElement.requestFullscreen();
+        }
+      } catch (err) {
+        console.warn(
+          "Browser fullscreen unavailable:",
+          err
+        );
+      }
+    }
+
+    async function exitPresentationMode() {
+      isPresentationMode = false;
+
+      document.body.classList.remove(
+        "presentation-mode",
+        "show-presentation-controls"
+      );
+
+      if (document.fullscreenElement) {
+        try {
+          await document.exitFullscreen();
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    }
+
+    function presentationNext() {
+      if (!currentLesson) return;
+
+      if (
+        blockIndex <
+        currentLesson.blocks.length - 1
+      ) {
+        goToBlock(blockIndex + 1);
+        syncSessionSetBlock(blockIndex);
+      }
+    }
+
+    function presentationPrevious() {
+      if (!currentLesson) return;
+
+      if (blockIndex > 0) {
+        goToBlock(blockIndex - 1);
+        syncSessionSetBlock(blockIndex);
+      }
+    }
+
     prevBtn.addEventListener("click", () => {
       goToBlock(blockIndex - 1);
       syncSessionSetBlock(blockIndex);
@@ -692,12 +797,81 @@
       window.location.href = "./teacher-home.html";
     });
 
+    presentationBtn.addEventListener(
+      "click",
+      enterPresentationMode
+    );
+
+    exitPresentationBtn.addEventListener(
+      "click",
+      exitPresentationMode
+    );
+
+    presentationNextBtn.addEventListener(
+      "click",
+      presentationNext
+    );
+
+    presentationPrevBtn.addEventListener(
+      "click",
+      presentationPrevious
+    );
+
+    document.addEventListener(
+      "mousemove",
+      () => {
+        if (isPresentationMode) {
+          showPresentationControls();
+        }
+      }
+    );
+
+    document.addEventListener(
+      "fullscreenchange",
+      () => {
+        if (
+          isPresentationMode &&
+          !document.fullscreenElement
+        ) {
+          isPresentationMode = false;
+
+          document.body.classList.remove(
+            "presentation-mode",
+            "show-presentation-controls"
+          );
+        }
+      }
+    );
+
     document.addEventListener("keydown", (e) => {
       if (
         e.target.tagName === "INPUT" ||
         e.target.tagName === "TEXTAREA"
       ) return;
-    
+
+      if (isPresentationMode) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          exitPresentationMode();
+          return;
+        }
+
+        if (
+          e.key === "PageDown" ||
+          e.key === "Enter"
+        ) {
+          e.preventDefault();
+          presentationNext();
+          return;
+        }
+
+        if (e.key === "PageUp") {
+          e.preventDefault();
+          presentationPrevious();
+          return;
+        }
+      }
+      
       // HOME
       if (e.key === "h" || e.key === "H") {
         window.location.href = "./teacher-home.html";
@@ -712,8 +886,7 @@
         e.preventDefault();
     
         if (blockIndex < currentLesson.blocks.length - 1) {
-          goToBlock(blockIndex + 1);
-          syncSessionSetBlock(blockIndex);
+          presentationNext();
         }
     
         return;
@@ -724,8 +897,7 @@
         e.preventDefault();
     
         if (blockIndex > 0) {
-          goToBlock(blockIndex - 1);
-          syncSessionSetBlock(blockIndex);
+          presentationPrevious();
         }
     
         return;
