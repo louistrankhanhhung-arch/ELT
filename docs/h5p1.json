@@ -1,5 +1,6 @@
 {
-  "embed_url": "https://app.lumi.education/...",
-  "height": 650,
+  "embed_url": "https://app.lumi.education/api/v1/run/6USha1/embed",
+  "height": 720,
+  "allow": "geolocation *; microphone *; camera *; midi *; encrypted-media *",
   "allow_fullscreen": true
 }
