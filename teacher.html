@@ -286,6 +286,45 @@
       min-width: 64px;
       text-align: center;
     }
+
+    /* =========================
+       ANNOTATION
+       ========================= */
+
+    #annotationCanvas {
+      display: none;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9000;
+      pointer-events: none;
+      touch-action: none;
+    }
+
+    body.presentation-mode #annotationCanvas {
+      display: block;
+    }
+
+    body.annotation-drawing #annotationCanvas {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    .annotation-btn.active {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    #annotationColor {
+      width: 32px;
+      height: 32px;
+      padding: 2px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -330,10 +369,51 @@
     </section>
   </main>
 
+  <canvas id="annotationCanvas"></canvas>
+
   <div class="presentation-controls" id="presentationControls">
     <button id="presentationPrevBtn">←</button>
     <span class="presentation-counter" id="presentationCounter">1 / 1</span>
     <button id="presentationNextBtn">→</button>
+
+    <button
+      id="annotationPointerBtn"
+      class="annotation-btn active"
+      title="Pointer (V)"
+    >
+      ↖ Pointer
+    </button>
+
+    <button
+      id="annotationPenBtn"
+      class="annotation-btn"
+      title="Pen (P)"
+    >
+      ✎ Pen
+    </button>
+
+    <button
+      id="annotationEraserBtn"
+      class="annotation-btn"
+      title="Eraser (E)"
+    >
+      ◻ Eraser
+    </button>
+
+    <input
+      id="annotationColor"
+      type="color"
+      value="#e11d48"
+      title="Pen color"
+    />
+
+    <button
+      id="annotationClearBtn"
+      title="Clear annotations (C)"
+    >
+      Clear
+    </button>
+    
     <button id="exitPresentationBtn">Exit</button>
   </div>
 
@@ -392,11 +472,35 @@
     const presentationCounter =
       document.getElementById("presentationCounter");
 
+    const annotationCanvas =
+      document.getElementById("annotationCanvas");
+
+    const annotationPointerBtn =
+      document.getElementById("annotationPointerBtn");
+
+    const annotationPenBtn =
+      document.getElementById("annotationPenBtn");
+
+    const annotationEraserBtn =
+      document.getElementById("annotationEraserBtn");
+
+    const annotationClearBtn =
+      document.getElementById("annotationClearBtn");
+
+    const annotationColor =
+      document.getElementById("annotationColor");
+
     let currentLesson = null;
     let sessionPin = null;
     let monitorTimer = null;
     let isPresentationMode = false;
     let presentationControlsTimer = null;
+
+    let annotationMode = "pointer";
+    let annotationDrawing = false;
+    let annotationLastX = 0;
+    let annotationLastY = 0;
+    let annotationCtx = null;
 
     async function loadLesson() {
       try {
@@ -485,6 +589,8 @@
         presentationCounter.textContent =
           `${blockIndex + 1} / ${blocks.length}`;
       }
+
+      clearAnnotations();
     }
 
     function buildStudentUrl() {
@@ -695,6 +801,168 @@
       }, 1800);
     }
 
+    /* =========================
+       ANNOTATION FUNCTIONS
+       ========================= */
+
+    function resizeAnnotationCanvas() {
+      if (!annotationCanvas) return;
+
+      const dpr = window.devicePixelRatio || 1;
+
+      annotationCanvas.width =
+        Math.round(window.innerWidth * dpr);
+
+      annotationCanvas.height =
+        Math.round(window.innerHeight * dpr);
+
+      annotationCanvas.style.width =
+        `${window.innerWidth}px`;
+
+      annotationCanvas.style.height =
+        `${window.innerHeight}px`;
+
+      annotationCtx =
+        annotationCanvas.getContext("2d");
+
+      annotationCtx.setTransform(
+        dpr, 0, 0, dpr, 0, 0
+      );
+
+      annotationCtx.lineCap = "round";
+      annotationCtx.lineJoin = "round";
+    }
+
+    function clearAnnotations() {
+      if (!annotationCanvas) return;
+
+      const ctx =
+        annotationCanvas.getContext("2d");
+
+      ctx.clearRect(
+        0,
+        0,
+        annotationCanvas.width,
+        annotationCanvas.height
+      );
+    }
+
+    function setAnnotationMode(mode) {
+      annotationMode = mode;
+
+      annotationPointerBtn.classList.toggle(
+        "active",
+        mode === "pointer"
+      );
+
+      annotationPenBtn.classList.toggle(
+        "active",
+        mode === "pen"
+      );
+
+      annotationEraserBtn.classList.toggle(
+        "active",
+        mode === "eraser"
+      );
+
+      document.body.classList.toggle(
+        "annotation-drawing",
+        mode !== "pointer"
+      );
+
+      showPresentationControls();
+    }
+
+    function getAnnotationPoint(event) {
+      const rect =
+        annotationCanvas.getBoundingClientRect();
+
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    function beginAnnotation(event) {
+      if (
+        annotationMode === "pointer" ||
+        !isPresentationMode
+      ) return;
+
+      event.preventDefault();
+
+      annotationDrawing = true;
+
+      const point =
+        getAnnotationPoint(event);
+
+      annotationLastX = point.x;
+      annotationLastY = point.y;
+
+      annotationCanvas.setPointerCapture(
+        event.pointerId
+      );
+    }
+
+    function drawAnnotation(event) {
+      if (
+        !annotationDrawing ||
+        annotationMode === "pointer"
+      ) return;
+
+      event.preventDefault();
+
+      const point =
+        getAnnotationPoint(event);
+
+      if (!annotationCtx) {
+        annotationCtx =
+          annotationCanvas.getContext("2d");
+      }
+
+      annotationCtx.beginPath();
+      annotationCtx.moveTo(
+        annotationLastX,
+        annotationLastY
+      );
+      annotationCtx.lineTo(
+        point.x,
+        point.y
+      );
+
+      if (annotationMode === "eraser") {
+        annotationCtx.globalCompositeOperation =
+          "destination-out";
+
+        annotationCtx.lineWidth = 32;
+      } else {
+        annotationCtx.globalCompositeOperation =
+          "source-over";
+
+        annotationCtx.strokeStyle =
+          annotationColor.value || "#e11d48";
+
+        annotationCtx.lineWidth = 5;
+      }
+
+      annotationCtx.stroke();
+
+      annotationLastX = point.x;
+      annotationLastY = point.y;
+    }
+
+    function endAnnotation(event) {
+      if (!annotationDrawing) return;
+
+      annotationDrawing = false;
+
+      try {
+        annotationCanvas.releasePointerCapture(
+          event.pointerId
+        );
+      } catch (_) {}
+    }
+
     async function enterPresentationMode() {
       isPresentationMode = true;
 
@@ -703,6 +971,9 @@
       );
 
       showPresentationControls();
+
+      resizeAnnotationCanvas();
+      setAnnotationMode("pointer");
 
       try {
         if (
@@ -721,6 +992,8 @@
 
     async function exitPresentationMode() {
       isPresentationMode = false;
+
+      setAnnotationMode("pointer");
 
       document.body.classList.remove(
         "presentation-mode",
@@ -817,6 +1090,55 @@
       presentationPrevious
     );
 
+    annotationPointerBtn.addEventListener(
+      "click",
+      () => setAnnotationMode("pointer")
+    );
+
+    annotationPenBtn.addEventListener(
+      "click",
+      () => setAnnotationMode("pen")
+    );
+
+    annotationEraserBtn.addEventListener(
+      "click",
+      () => setAnnotationMode("eraser")
+    );
+
+    annotationClearBtn.addEventListener(
+      "click",
+      clearAnnotations
+    );
+
+    annotationCanvas.addEventListener(
+      "pointerdown",
+      beginAnnotation
+    );
+
+    annotationCanvas.addEventListener(
+      "pointermove",
+      drawAnnotation
+    );
+
+    annotationCanvas.addEventListener(
+      "pointerup",
+      endAnnotation
+    );
+
+    annotationCanvas.addEventListener(
+      "pointercancel",
+      endAnnotation
+    );
+
+    window.addEventListener(
+      "resize",
+      () => {
+        if (isPresentationMode) {
+          resizeAnnotationCanvas();
+        }
+      }
+    );
+
     document.addEventListener(
       "mousemove",
       () => {
@@ -846,13 +1168,44 @@
     document.addEventListener("keydown", (e) => {
       if (
         e.target.tagName === "INPUT" ||
-        e.target.tagName === "TEXTAREA"
+        e.target.tagName === "TEXTAREA" ||
+        e.target.tagName === "SELECT"
       ) return;
 
       if (isPresentationMode) {
+        if (e.key === "p" || e.key === "P") {
+          e.preventDefault();
+          setAnnotationMode("pen");
+          return;
+        }
+
+        if (e.key === "v" || e.key === "V") {
+          e.preventDefault();
+          setAnnotationMode("pointer");
+          return;
+        }
+
+        if (e.key === "e" || e.key === "E") {
+          e.preventDefault();
+          setAnnotationMode("eraser");
+          return;
+        }
+
+        if (e.key === "c" || e.key === "C") {
+          e.preventDefault();
+          clearAnnotations();
+          return;
+        }
+        
         if (e.key === "Escape") {
           e.preventDefault();
-          exitPresentationMode();
+          
+          if (annotationMode !== "pointer") {
+            setAnnotationMode("pointer");
+          } else {
+            exitPresentationMode();
+          }
+          
           return;
         }
 
