@@ -42,7 +42,7 @@
     h1 {
       margin: 0;
       color: var(--accent);
-      font-size: clamp(40px, 7vw, 82px);
+      font-size: clamp(36px, 5vw, 64px);
       line-height: 1;
       font-weight: 500;
       text-align: center;
@@ -66,7 +66,7 @@
       background: #eef3f5;
       box-shadow: 0 4px 12px rgba(23,48,68,.12);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
     }
 
@@ -75,6 +75,7 @@
       display: block;
       aspect-ratio: 16 / 11;
       object-fit: contain;
+      object-position: center top;
       background: #eef3f5;
     }
 
@@ -266,12 +267,14 @@
     
       .imageWrap {
         height: 100%;
+        align-items: flex-start;
       }
     
       .imageWrap img {
         height: 100%;
         aspect-ratio: auto;
         object-fit: contain;
+        object-position: center top;
         background: #eef3f5;
       }
     
@@ -344,6 +347,7 @@
         width: 100%;
         aspect-ratio: auto;
         object-fit: contain;
+        object-position: center top;
         background: #eef3f5;
       }
     
@@ -491,6 +495,7 @@
     @media (min-width: 900px) and (max-height: 760px) {
       .imageWrap img {
         object-fit: contain;
+        object-position: center top;
         background: #eef3f5;
       }
     }
