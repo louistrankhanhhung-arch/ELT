@@ -136,6 +136,17 @@
       "completion": {
         "mode": "teacher_next"
       }
-    }
+    },
+    {
+      "id": "h5p1",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "h5p",
+      "title": "H5p",
+      "player": "player-h5p.html",
+      "data": "data/rec1/l11/rec1-l11-h5p1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
   ]
 }
