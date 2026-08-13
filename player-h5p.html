@@ -9,23 +9,23 @@
   <title>H5P Activity</title>
 
   <style>
-    html,
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       width: 100%;
-      height: 100%;
-      overflow: hidden;
+      min-height: 720px;
+      background: white;
     }
 
     #h5p-container {
       width: 100%;
-      height: 100%;
+      min-height: 720px;
     }
 
     #h5p-frame {
       display: block;
       width: 100%;
-      height: 100%;
+      min-height: 720px;
       border: 0;
     }
   </style>
@@ -58,8 +58,21 @@
       iframe.id = "h5p-frame";
       iframe.src = config.embed_url;
       iframe.title = "Interactive activity";
-      iframe.height = config.height || 650;
+      iframe.width = "100%";
+      iframe.height = config.height || 720;
+      iframe.style.minHeight = `${config.height || 720}px`;
       iframe.allowFullscreen = config.allow_fullscreen !== false;
+      iframe.allow =
+        config.allow ||
+        "geolocation *; microphone *; camera *; midi *; encrypted-media *";
+
+      iframe.onload = () => {
+        iframe.style.minHeight = `${config.height || 720}px`;
+
+        setTimeout(() => {
+          window.dispatchEvent(new Event("resize"));
+        }, 300);
+      };
 
       document
         .getElementById("h5p-container")
@@ -67,6 +80,11 @@
     }
 
     init();
+  </script>
+
+  <script
+    src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
+    charset="UTF-8">
   </script>
 </body>
 </html>
