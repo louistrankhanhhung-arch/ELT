@@ -100,6 +100,7 @@
       cursor: pointer;
       transition: background .12s ease, border-color .12s ease, transform .12s ease;
       min-height: 54px;
+      flex: 0 0 auto;
     }
 
     .line:hover { background: rgba(15,116,168,.06); }
@@ -511,6 +512,7 @@
     .lines {
       justify-content: flex-start;
       align-content: stretch;
+      align-items: stretch;
     }
 
     .line {
@@ -518,6 +520,7 @@
       grid-template-columns: auto minmax(0, 1fr);
       column-gap: .35em;
       align-items: start;
+      flex: 0 0 auto;
       overflow-wrap: anywhere;
     }
 
@@ -534,9 +537,11 @@
         justify-content: flex-start;
         align-content: stretch;
         padding-right: 8px;
+        overflow-y: auto;
       }
 
       .line {
+        flex: 0 0 auto;
         font-size: clamp(20px, 3.4vh, 28px);
         line-height: 1.16;
         padding: 5px 8px;
