@@ -206,6 +206,87 @@
         min-height: 0;
       }
     }
+
+    /* =========================
+       PRESENTATION MODE
+       ========================= */
+
+    body.presentation-mode {
+      background: #000;
+    }
+
+    body.presentation-mode header,
+    body.presentation-mode .sidebar,
+    body.presentation-mode .current,
+    body.presentation-mode #sessionBanner,
+    body.presentation-mode #monitorPanel {
+      display: none !important;
+    }
+
+    body.presentation-mode .app {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    body.presentation-mode .preview {
+      width: 100vw;
+      height: 100vh;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    body.presentation-mode #previewFrame {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      background: #fff;
+    }
+
+    .presentation-controls {
+      position: fixed;
+      z-index: 10000;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    body.presentation-mode .presentation-controls {
+      display: flex;
+    }
+
+    body.presentation-mode.show-presentation-controls
+      .presentation-controls {
+      opacity: 1;
+    }
+
+    .presentation-controls button {
+      border: 0;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .presentation-counter {
+      color: #fff;
+      font-size: 13px;
+      min-width: 60px;
+      text-align: center;
+    }
+    
   </style>
 </head>
 <body>
@@ -219,6 +300,7 @@
       <button id="homeBtn">⌂ Home</button>
       <button id="prevBtn">← Previous</button>
       <button id="nextBtn">Next →</button>
+      <button id="presentationBtn">Present ⛶</button>
       <button id="openStudentBtn">Open Student View</button>
       <button id="startSessionBtn">Start Session</button>
       <button id="endSessionBtn" disabled>End Session</button>
