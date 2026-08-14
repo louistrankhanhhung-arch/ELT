@@ -1,14 +1,42 @@
 {
-  "title": "Find keywords",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-chest.png",
+  "title": "Pre-task",
+  "text": "Listen and drag the words",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-chest1.png",
+  "audio": "",
+  "chunks": ["Listen", "and", "drag", "the", "words"],
+  "timings": [0],
   "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
     "slowRate": 0.6,
-    "lineModePauseMs": 1100,
-    "hideText": false,
-    "lineMode": false
+    "highlight": true
   },
-  "lines": [
-    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
-    { "text": "Find the keywords in the questions.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-find-the-keywords-in-the-questions.mp3" }
-  ]
+  "substitution": {
+    "label": "activities",
+    "slot": "{}",
+    "base": "Listen and drag the words {}",
+    "options": [
+      {
+        "value": "1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-vob-chest1.png",
+        "audio": "",
+        "chunks": ["Listen", "and", "drag", "the", "words"],
+        "timings": []
+      },
+      {
+        "value": "2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-chest2.png",
+        "audio": "",
+        "chunks": ["Unscramble", "the", "words"],
+        "timings": []
+      },
+      {
+        "value": "3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l13/r1-l13-chest3.png",
+        "audio": "",
+        "chunks": ["Am,", "is,", "are?"],
+        "timings": []
+      }
+    ]
+  }
 }
