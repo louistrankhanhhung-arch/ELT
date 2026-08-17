@@ -143,7 +143,7 @@
       "type": "activity",
       "activity_kind": "chest",
       "title": "Pre-task 2",
-      "player": "player-dialogue.html",
+      "player": "player-sentence.html",
       "data": "data/rec1/l07/rec1-l07-chest2.json",
       "completion": {
         "mode": "teacher_next"
