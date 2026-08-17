@@ -1,24 +1,5 @@
 {
-  "layout": "talking_dialogue",
-  "compact": true,
-  "title": "Let’s talk",
-  "lines": [
-    {
-      "speaker": "A",
-      "text": "Tell me about your house."
-    },
-    {
-      "speaker": "B",
-      "text": "Hello.\nMy name’s ____.\nWelcome to my house.\nThis is a ____.\nThis is a ____.\nThat is a ____."
-    }
-  ],
-  "substitution_title": "Substitution",
-  "substitutions": [
-    "chair",
-    "table",
-    "door",
-    "window",
-    "tree",
-    "flower"
-  ]
+  "layout": "focus_center",
+  "title": "Let's talk",
+  "text": "Tell me about your house."
 }
