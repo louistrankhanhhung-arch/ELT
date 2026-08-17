@@ -1,0 +1,6 @@
+{
+  "embed_url": "",
+  "height": 720,
+  "allow": "geolocation *; microphone *; camera *; midi *; encrypted-media *",
+  "allow_fullscreen": true
+}
