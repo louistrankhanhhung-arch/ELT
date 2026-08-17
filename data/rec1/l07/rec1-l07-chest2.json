@@ -1,0 +1,42 @@
+{
+  "title": "Pre-task",
+  "text": "Listen. Fill in the blanks.",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-chest2-1.png",
+  "audio": "",
+  "chunks": ["Listen.", "Fill", "in", "the", "blanks."],
+  "timings": [0],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "activities",
+    "slot": "{}",
+    "base": "Listen. Fill in the blanks. {}",
+    "options": [
+      {
+        "value": "1",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-chest2-1.png",
+        "audio": "",
+        "chunks": ["Listen.", "Fill", "in", "the", "blanks."],
+        "timings": []
+      },
+      {
+        "value": "2",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-chest2-2.png",
+        "audio": "",
+        "chunks": ["Unscramble", "the", "words"],
+        "timings": []
+      },
+      {
+        "value": "3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-chest2-3.png",
+        "audio": "",
+        "chunks": ["Choose", "the", "correct", "answer"],
+        "timings": []
+      }
+    ]
+  }
+}
