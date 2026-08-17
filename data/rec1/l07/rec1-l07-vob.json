@@ -1,5 +1,5 @@
 {
-  "title": "Listen and Repeat",
+  "title": "Listen & repeat",
   "settings": {
     "shuffle": false,
     "hideText": false,
@@ -8,34 +8,49 @@
   },
   "items": [
     {
-      "word": "chair",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.mp3"
+      "word": "house",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-house.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-house.mp3"
     },
     {
       "word": "table",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-table.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-table.mp3"
+    },
+    {
+      "word": "chair",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-chair.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-chair.mp3"
     },
     {
       "word": "door",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-door.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-door.mp3"
     },
     {
       "word": "window",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-window.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-window.mp3"
     },
     {
-      "word": "tree",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.mp3"
+      "word": "bed",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-bed.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-bed.mp3"
     },
     {
-      "word": "flower",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.mp3"
+      "word": "sofa",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-sofa.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-sofa.mp3"
+    },
+    {
+      "word": "clock",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-clock.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-clock.mp3"
+    },
+    {
+      "word": "lamp",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-lamp.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-lamp.mp3"
     }
   ]
 }
