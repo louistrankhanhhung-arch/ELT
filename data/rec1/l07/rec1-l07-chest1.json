@@ -9,6 +9,6 @@
   },
   "lines": [
     { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
-    { "text": "Drag & drop the words.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-drag-and-drop-the-words.mp3" }
+    { "text": "Drag and drop the words.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-drag-and-drop-the-words.mp3" }
   ]
 }
