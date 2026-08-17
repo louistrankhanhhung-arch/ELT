@@ -1,0 +1,20 @@
+{
+  "title": "Interaction",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-inter.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Hello.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-hello.mp3" },
+    { "text": "What is your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-what-is-your-name.mp3" },
+    { "text": "How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-how-old-are-you.mp3" },
+    { "text": "How are you today?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-how-are-you-today.mp3" },
+    { "text": "What do you have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-what-do-you-have.mp3" },
+    { "text": "Tell me about your house.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-tell-me-about-your-house1.mp3" },
+    { "text": "What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-what-is-this.mp3" },
+    { "text": "What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-what-is-that.mp3" }
+  ]
+}
