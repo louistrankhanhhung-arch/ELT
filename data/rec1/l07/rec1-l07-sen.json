@@ -68,35 +68,35 @@
       
       {
         "value": "clock",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-clock.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-clock.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-is-a-clock.mp3",
         "chunks": ["This", "is", "a", "clock"],
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "lamp",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-lamp.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-lamp.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-is-a-lamp.mp3",
         "chunks": ["This", "is", "a", "lamp"],
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "boy",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-boy.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-boy.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-is-a-boy.mp3",
         "chunks": ["This", "is", "a", "boy"],
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "girl",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-girl.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-girl.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-is-a-girl.mp3",
         "chunks": ["This", "is", "a", "girl"],
         "timings": [0, 0.3, 0.5, 0.8]
       },
       {
         "value": "book",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l03-vob-book.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-book.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-is-a-book.mp3",
         "chunks": ["This", "is", "a", "book"],
         "timings": [0, 0.3, 0.5, 0.8]
