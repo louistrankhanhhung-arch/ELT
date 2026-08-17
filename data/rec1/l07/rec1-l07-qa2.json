@@ -1,6 +1,6 @@
 {
-  "title": "Listen, Ask & Answer",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-dia2.png",
+  "title": "Ask & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-qa2.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,10 +8,7 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-this.mp3" },
-    { "text": "What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-what-is-that.mp3" },
-    { "text": "", "audio": "" },
-    { "text": "→ This is ____.", "audio": "" },
-    { "text": "→ That is ____.", "audio": "" }
+    { "text": "What is this?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-what-is-this.mp3" },
+    { "text": "What is that?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-what-is-that.mp3" }
   ]
 }
