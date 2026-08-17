@@ -1,0 +1,70 @@
+{
+  "title": "Repeat",
+  "text": "this house / that house",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-house.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-house.mp3",
+  "chunks": ["this", "house", "/", "that", "house"],
+  "timings": [0, 0.2, 1.2, 1.5, 1.8],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{run}",
+    "base": "this house / that {house}.",
+    "options": [
+      {
+        "value": "this house / that house",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-house.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-house.mp3",
+        "chunks": ["this", "house", "/", "that", "house"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "this chair / that chair",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-chair.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-chair.mp3",
+        "chunks": ["this", "chair", "/", "that", "chair"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "this table / that table",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-table.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-table.mp3",
+        "chunks": ["this", "table", "/", "that", "table"],
+        "timings": [0, 0.2, 1.5, 1.8, 2.1]
+      },
+      {
+        "value": "this window / that window",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-window.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-window.mp3",
+        "chunks": ["this", "window", "/", "that", "window"],
+        "timings": [0, 0.2, 1.5, 1.8, 2.1]
+      },
+      {
+        "value": "this door / that door",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-door.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-door.mp3",
+        "chunks": ["this", "door", "/", "that", "door"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "this bag / that bag",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-bag.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-bag.mp3",
+        "chunks": ["this", "bag", "/", "that", "bag"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      },
+      {
+        "value": "this bird / that bird",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-bird.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-this-that-bird.mp3",
+        "chunks": ["this", "bird", "/", "that", "bird"],
+        "timings": [0, 0.2, 1.2, 1.5, 1.8]
+      }
+    ]
+  }
+}
