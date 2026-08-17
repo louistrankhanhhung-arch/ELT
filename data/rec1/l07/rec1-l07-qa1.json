@@ -1,5 +1,5 @@
 {
-  "title": "Yes, it is./No, it isn't.",
+  "title": "Yes, it is. --- No, it isn't.",
   "settings": {
     "shuffle": false,
     "hideText": false,
@@ -8,54 +8,69 @@
   },
   "items": [
     {
-      "word": "Is this a chair?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-chair.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-chair.mp3"
+      "word": "Is this a house?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-house.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-house.mp3"
     },
     {
-      "word": "Is this a table?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-flower.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-table.mp3"
+      "word": "Is this a chair?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-table.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-chair.mp3"
     },
     {
       "word": "Is this a door?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-door.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-door.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-door.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-door.mp3"
     },
     {
       "word": "Is this a window?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-window.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-window.mp3"
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-sofa.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-window.mp3"
     },
     {
-      "word": "Is this a tree?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-tree.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-tree.mp3"
+      "word": "Is this a table?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-table.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-table.mp3"
     },
     {
-      "word": "Is this a flower?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-vob-table.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-flower.mp3"
+      "word": "Is this a bed?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-bed.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-bed.mp3"
     },
     {
-      "word": "Is this a book?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-book.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-book.mp3"
+      "word": "Is this a clock?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-sofa.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-clock.mp3"
     },
     {
-      "word": "Is this a bag?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l03/g1-l03-vob-bag.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-bag.mp3"
+      "word": "Is this a lamp?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l07-vob-lamp.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-lamp.mp3"
     },
     {
-      "word": "Is this a duck?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-duck.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-duck.mp3"
+      "word": "Is this a window?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-window.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-window.mp3"
     },
     {
-      "word": "Is this a rabbit?",
-      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l04/g1-l04-vob-cat.png",
-      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/g1/l07/g1-l07-sen-is-this-a-rabbit.mp3"
+      "word": "Is this a sofa?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l07-vob-bed.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-sofa.mp3"
+    },
+    {
+      "word": "Is this a clock?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l03/r1-l07-vob-clock.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-clock.mp3"
+    },
+    {
+      "word": "Is this a chair?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-vob-chair.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-chair.mp3"
+    },
+    {
+      "word": "Is this a lamp?",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l04/r1-l07-vob-house.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r1/l07/r1-l07-sen-is-this-a-lamp.mp3"
     }
   ]
 }
