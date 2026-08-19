@@ -1,0 +1,35 @@
+{
+  "title": "Repeat",
+  "text": "c-a-r   car",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.mp3",
+  "chunks": ["c-a-r", "-", "car"],
+  "timings": [],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{car}",
+    "base": "c-a-r {car}.",
+    "options": [
+      {
+        "value": "car",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.mp3",
+        "chunks": ["c-a-r", "-", "car"],
+        "timings": []
+      },
+      {
+        "value": "top",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-top.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-top.mp3",
+        "chunks": ["t-o-p", "-", "top"],
+        "timings": []
+      }
+    ]
+  }
+}
