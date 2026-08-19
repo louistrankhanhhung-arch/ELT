@@ -1,0 +1,16 @@
+{
+  "title": "Pre-task",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-chest-rev1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
+    { "text": "What places are there in the school map?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-what-places-are-there-in-the-school-map.mp3" },
+    { "text": "Match the words to the school places.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-match-the-words-to-the-school-places.mp3" },
+    { "text": "You can use many words for each place.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-you-can-use-many-words-for-each-place.mp3" }
+  ]
+}
