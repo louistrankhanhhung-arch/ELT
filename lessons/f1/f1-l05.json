@@ -72,7 +72,7 @@
       "activity_kind": "phonics",
       "title": "Phonics",
       "player": "player-sentence.html",
-      "data": "data/rec1/l05/rec1-l05-phonics.json",
+      "data": "data/f1/l05/f1-l05-phonics.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -96,7 +96,7 @@
       "activity_kind": "sentence",
       "title": "Sentence Practice",
       "player": "player-sentence.html",
-      "data": "data/rec1/l05/rec1-l05-sen.json",
+      "data": "data/f1/l05/f1-l05-sen.json",
       "completion": {
         "mode": "teacher_next"
       }
