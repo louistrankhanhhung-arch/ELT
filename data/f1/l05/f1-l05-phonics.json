@@ -4,7 +4,7 @@
   "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.png",
   "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.mp3",
   "chunks": ["c-a-r", "-", "car"],
-  "timings": [],
+  "timings": [0],
   "settings": {
     "autoRepeatCount": 2,
     "repeatDelayMs": 900,
@@ -21,14 +21,14 @@
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-car.mp3",
         "chunks": ["c-a-r", "-", "car"],
-        "timings": []
+        "timings": [0]
       },
       {
         "value": "top",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-top.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-ph-top.mp3",
         "chunks": ["t-o-p", "-", "top"],
-        "timings": []
+        "timings": [0]
       }
     ]
   }
