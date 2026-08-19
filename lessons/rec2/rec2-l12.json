@@ -1,0 +1,93 @@
+{
+  "lesson_id": "rec2-l12",
+  "title": "Recovery 2 – Lesson 12",
+  "level": "A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/rec2/l12/rec2-l12-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "chest-rev1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Pre-task 1",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l12/rec2-l12-chest-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review",
+      "player": "player-h5p.html",
+      "data": "data/rec2/l12/rec2-l12-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "chest",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "chest",
+      "title": "Pre-task 2",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l12/rec2-l12-chest.json",
+      "completion": {
+        "mode": "student_complete"
+      }
+    },
+    {
+      "id": "hd1",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "handouts",
+      "title": "Monologue",
+      "player": "player-h5p.html",
+      "data": "data/rec2/l12/rec2-l12-hd1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "semi1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "semi controlled",
+      "title": "Take note",
+      "player": "player-dialogue.html",
+      "data": "data/rec2/l12/rec2-l12-semi1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/rec2/l12/rec2-l12-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
