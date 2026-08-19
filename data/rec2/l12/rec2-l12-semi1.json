@@ -1,0 +1,22 @@
+{
+  "title": "Take note",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-semi1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Answer these questions and take note.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-answer-these-questions-and-take-note.mp3" },
+    { "text": "You have an example.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-you-have-an-example.mp3" },
+    { "text": "1. What places does your school have?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-1-what-places-does-your-school-have.mp3" },
+    { "text": "2. What do you do there?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-2-what-do-you-do-there.mp3" },
+    { "text": "3. What subjects do you study at school?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-3-what-subjects-do-you-study-at-school.mp3" },
+    { "text": "4. What is your favourite subject? Why?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-4-what-is-your-favourite-subject-why.mp3" },
+    { "text": "5. What time does your school start?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-5-what-time-does-your-school-start.mp3" },
+    { "text": "6. What do you do at school in the morning and in the afternoon?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-6-what-do-you-do-at-school-in-the-morning-and-in-the-afternoon.mp3" },
+    { "text": "7. What time do you go home?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-7-what-time-do-you-go-home.mp3" },
+    { "text": "8. Do you like your school? Why?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/r2/l12/r2-l12-sen-8-do-you-like-your-school-why.mp3" }
+  ]
+}
