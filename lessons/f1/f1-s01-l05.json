@@ -1,5 +1,5 @@
 {
-  "lesson_id": "f01-l05",
+  "lesson_id": "f01-s01-l05",
   "title": "Foundation 1 – Lesson 5",
   "level": "Pre-A1",
   "version": "0.1",
@@ -12,7 +12,7 @@
       "activity_kind": "text",
       "title": "Cover",
       "player": "player-text.html",
-      "data": "data/f1/l05/f1-l05-cover.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-cover.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -24,7 +24,7 @@
       "activity_kind": "review",
       "title": "Review",
       "player": "player-h5p.html",
-      "data": "data/f1/l05/f1-l05-rev1.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-rev1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -36,7 +36,7 @@
       "activity_kind": "leadin",
       "title": "Lead-in",
       "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-lead1.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-lead1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -48,7 +48,7 @@
       "activity_kind": "vocab",
       "title": "Vocab",
       "player": "player-grid-v2.html",
-      "data": "data/f1/l05/f1-l05-vob.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-vob.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -60,7 +60,7 @@
       "activity_kind": "ccq",
       "title": "CCQ",
       "player": "player-grid-v2.html",
-      "data": "data/f1/l05/f1-l05-ccq.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-ccq.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -72,7 +72,7 @@
       "activity_kind": "phonics",
       "title": "Phonics",
       "player": "player-sentence.html",
-      "data": "data/f1/l05/f1-l05-phonics.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-phonics.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -84,7 +84,7 @@
       "activity_kind": "write",
       "title": "Writing 1",
       "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-write1.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-write1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -96,7 +96,7 @@
       "activity_kind": "sentence",
       "title": "Sentence Practice",
       "player": "player-sentence.html",
-      "data": "data/f1/l05/f1-l05-sen.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-sen.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -108,7 +108,7 @@
       "activity_kind": "write",
       "title": "Writing 2",
       "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-write2.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-write2.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -120,7 +120,7 @@
       "activity_kind": "qa",
       "title": "Q&A",
       "player": "player-grid-v2.html",
-      "data": "data/f1/l05/f1-l05-qa1.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-qa1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -132,7 +132,7 @@
       "activity_kind": "handouts",
       "title": "Handouts",
       "player": "player-h5p.html",
-      "data": "data/f1/l05/f1-l05-hd1.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-hd1.json",
       "completion": {
         "mode": "teacher_next"
       }
