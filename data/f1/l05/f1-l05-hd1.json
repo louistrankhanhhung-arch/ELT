@@ -1,13 +1,6 @@
 {
-  "title": "Task 1. Listen & Number",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-hd1.png",
-  "settings": {
-    "slowRate": 0.6,
-    "lineModePauseMs": 1100,
-    "hideText": false,
-    "lineMode": false
-  },
-  "lines": [
-    { "text": "Audio", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-hd1.mp3" }
-  ]
+  "embed_url": "https://app.lumi.education/api/v1/run/aFLg7H/embed",
+  "height": 720,
+  "allow": "geolocation *; microphone *; camera *; midi *; encrypted-media *",
+  "allow_fullscreen": true
 }
