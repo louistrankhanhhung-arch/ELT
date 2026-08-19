@@ -23,7 +23,7 @@
       "type": "activity",
       "activity_kind": "review",
       "title": "Review",
-      "player": "player-text.html",
+      "player": "player-h5p.html",
       "data": "data/f1/l05/f1-l05-rev1.json",
       "completion": {
         "mode": "teacher_next"
@@ -36,9 +36,9 @@
       "activity_kind": "leadin",
       "title": "Lead-in",
       "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-lead.json",
+      "data": "data/f1/l05/f1-l05-lead1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
@@ -50,53 +50,89 @@
       "player": "player-grid-v2.html",
       "data": "data/f1/l05/f1-l05-vob.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },    
     {
-      "id": "game1",
+      "id": "ccq",
       "order": 5,
       "type": "activity",
-      "activity_kind": "game",
-      "title": "TPR",
-      "player": "player-text.html",
-      "data": "data/f1/l05/f1-l05-gam1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "handouts1",
-      "order": 6,
-      "type": "activity",
-      "activity_kind": "handouts",
-      "title": "YLE challenge",
-      "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-hd1.json",
-      "completion": {
-        "mode": "student_complete"
-      }
-    },
-    {
-      "id": "semi1",
-      "order": 7,
-      "type": "activity",
-      "activity_kind": "semi-controlled",
-      "title": "Ask & Answer",
-      "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-semi1.json",
+      "activity_kind": "ccq",
+      "title": "CCQ",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/l05/f1-l05-ccq.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "free1",
+      "id": "phonics",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "phonics",
+      "title": "Phonics",
+      "player": "player-sentence.html",
+      "data": "data/rec1/l05/rec1-l05-phonics.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "write1",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "write",
+      "title": "Writing 1",
+      "player": "player-dialogue.html",
+      "data": "data/f1/l05/f1-l05-write1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "sentence",
       "order": 8,
       "type": "activity",
-      "activity_kind": "free talk",
-      "title": "Let's talk",
+      "activity_kind": "sentence",
+      "title": "Sentence Practice",
+      "player": "player-sentence.html",
+      "data": "data/rec1/l05/rec1-l05-sen.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "write2",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "write",
+      "title": "Writing 2",
       "player": "player-dialogue.html",
-      "data": "data/f1/l05/f1-l05-free1.json",
+      "data": "data/f1/l05/f1-l05-write2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "qa1",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "qa",
+      "title": "CCQ",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/l05/f1-l05-qa1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "handouts1",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "handouts",
+      "title": "Handouts",
+      "player": "player-h5p.html",
+      "data": "data/f1/l05/f1-l05-hd1.json",
       "completion": {
         "mode": "teacher_next"
       }
