@@ -118,7 +118,7 @@
       "order": 10,
       "type": "activity",
       "activity_kind": "qa",
-      "title": "CCQ",
+      "title": "Q&A",
       "player": "player-grid-v2.html",
       "data": "data/f1/l05/f1-l05-qa1.json",
       "completion": {
