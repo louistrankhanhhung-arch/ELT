@@ -94,7 +94,7 @@
       "order": 8,
       "type": "activity",
       "activity_kind": "pick",
-      "title": "Context",
+      "title": "Pick structure",
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-pick.json",
       "completion": {
