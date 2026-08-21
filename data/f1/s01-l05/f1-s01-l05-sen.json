@@ -1,8 +1,8 @@
 {
   "title": "Repeat",
   "text": "One bell — two bells",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bells.png",
-  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-bells.mp3",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-bells.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-bells.mp3",
   "chunks": ["One", "bell", "—", "two", "bells"],
   "timings": [0, 0.3, 1.8, 2.1, 2.4],
   "settings": {
@@ -18,50 +18,50 @@
     "options": [
       {
         "value": "One bell — two bells",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-bells.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-bells.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-bells.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-bells.mp3",
         "chunks": ["One", "bell", "—", "two", "bells"],
         "timings": [0, 0.3, 1.8, 2.1, 2.4]
       },
       {
         "value": "One balloon — three balloons",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-balloons.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-balloons.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-balloons.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-balloons.mp3",
         "chunks": ["One", "balloon", "—", "three", "balloons"],
         "timings": [0, 0.3, 1.5, 1.8, 2.1]
       },
       {
         "value": "One top — four tops",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-tops.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-tops.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-tops.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-tops.mp3",
         "chunks": ["One", "top", "—", "four", "tops"],
         "timings": [0, 0.3, 1.8, 2.1, 2.4]
       },
       {
         "value": "One car — five cars",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-cars.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-cars.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-cars.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-cars.mp3",
         "chunks": ["One", "car", "—", "five", "cars"],
         "timings": [0, 0.3, 1.8, 2.1, 2.4]
       },
       {
         "value": "One truck — six trucks",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-trucks.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-trucks.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-trucks.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-trucks.mp3",
         "chunks": ["One", "truck", "—", "six", "trucks"],
         "timings": [0, 0.3, 1.8, 2.1, 2.4]
       },
       {
         "value": "One plane — seven planes",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-planes.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-planes.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-planes.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-planes.mp3",
         "chunks": ["One", "plane", "—", "seven", "planes"],
         "timings": [0, 0.3, 1.8, 2.1, 2.4]
       },
       {
         "value": "One ship — eight ships",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-vob-ships.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/l05/f1-l05-sen-ships.mp3",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-vob-ships.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-ships.mp3",
         "chunks": ["One", "ship", "—", "eight", "ships"],
         "timings": [0, 0.3, 1.8, 2.1, 2.4]
       }
