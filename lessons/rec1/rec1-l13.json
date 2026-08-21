@@ -23,7 +23,7 @@
       "type": "activity",
       "activity_kind": "review",
       "title": "Review",
-      "player": "player-text.html",
+      "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-rev1.json",
       "completion": {
         "mode": "teacher_next"
