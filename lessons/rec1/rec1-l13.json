@@ -38,7 +38,7 @@
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-lead1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
@@ -50,7 +50,7 @@
       "player": "player-grid-v2.html",
       "data": "data/rec1/l13/rec1-l13-vob.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
@@ -62,96 +62,108 @@
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-tpr.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ccq",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "cc1",
+      "title": "CCQ",
+      "player": "player-grid-v2.html",
+      "data": "data/rec1/l13/rec1-l13-ccq.json",
+      "completion": {
+        "mode": "teacher_next"
       }
     },
     {
       "id": "leadin",
-      "order": 6,
+      "order": 7,
       "type": "activity",
       "activity_kind": "leadin",
       "title": "Lead-in 2",
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-lead2.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "context",
-      "order": 7,
+      "order": 8,
       "type": "activity",
       "activity_kind": "context",
       "title": "Context",
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-context.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "pick",
-      "order": 8,
+      "order": 9,
       "type": "activity",
       "activity_kind": "pick",
       "title": "Pick structure",
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-pick.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "sentence",
-      "order": 9,
+      "order": 10,
       "type": "activity",
       "activity_kind": "sentence",
       "title": "Sentence Practice",
       "player": "player-sentence.html",
       "data": "data/rec1/l13/rec1-l13-sen.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "gram",
-      "order": 10,
+      "order": 11,
       "type": "activity",
       "activity_kind": "gram",
       "title": "Grammar",
       "player": "player-grid-v2.html",
       "data": "data/rec1/l13/rec1-l13-gram.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "chest",
-      "order": 11,
+      "order": 12,
       "type": "activity",
       "activity_kind": "Chest",
       "title": "Find keywords",
       "player": "player-sentence.html",
       "data": "data/rec1/l13/rec1-l13-chest.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "handouts",
-      "order": 12,
+      "order": 13,
       "type": "activity",
       "activity_kind": "handouts",
       "title": "Handouts",
       "player": "player-h5p.html",
       "data": "data/rec1/l13/rec1-l13-hd1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "qa1",
-      "order": 13,
+      "order": 14,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 1",
@@ -163,7 +175,7 @@
     },
     {
       "id": "qa2",
-      "order": 14,
+      "order": 15,
       "type": "activity",
       "activity_kind": "q&a",
       "title": "Ask & Answer 2",
@@ -175,31 +187,31 @@
     },
     {
       "id": "inter",
-      "order": 15,
+      "order": 16,
       "type": "activity",
       "activity_kind": "inter",
       "title": "Interaction",
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-inter.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "dialogue",
-      "order": 16,
+      "order": 11,
       "type": "activity",
       "activity_kind": "dialogue",
       "title": "Dialogue",
       "player": "player-dialogue.html",
       "data": "data/rec1/l13/rec1-l13-dia1.json",
       "completion": {
-        "mode": "student_complete"
+        "mode": "teacher_next"
       }
     },
     {
       "id": "semi1",
-      "order": 17,
+      "order": 18,
       "type": "activity",
       "activity_kind": "semi controlled",
       "title": "Take note",
@@ -211,7 +223,7 @@
     },
     {
       "id": "free1",
-      "order": 18,
+      "order": 19,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk",
