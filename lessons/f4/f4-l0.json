@@ -1,0 +1,165 @@
+{
+  "lesson_id": "f04-l0",
+  "title": "Foundation 4 – Lesson 0",
+  "level": "A1-A2",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f4/l0/f4-l0-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f4/l0/f4-l0-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 1",
+      "player": "player-h5p.html",
+      "data": "data/f4/l0/f4-l0-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins2",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f4/l0/f4-l0-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 2",
+      "player": "player-h5p.html",
+      "data": "data/f4/l0/f4-l0-rev2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk 1",
+      "player": "player-dialogue.html",
+      "data": "data/f4/l0/f4-l0-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins3",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f4/l0/f4-l0-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev3",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 3-1",
+      "player": "player-h5p.html",
+      "data": "data/f4/l0/f4-l0-rev3-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins4",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 4",
+      "player": "player-dialogue.html",
+      "data": "data/f4/l0/f4-l0-ins4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev3-2",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 3-2",
+      "player": "player-h5p.html",
+      "data": "data/f4/l0/f4-l0-rev3-2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins5",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 5",
+      "player": "player-sentence.html",
+      "data": "data/f4/l0/f4-l0-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "rev3-3",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 3-3",
+      "player": "player-h5p.html",
+      "data": "data/f4/l0/f4-l0-rev3-3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free2",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk 2",
+      "player": "player-text.html",
+      "data": "data/f4/l0/f4-l0-free2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
