@@ -1,6 +1,6 @@
 {
   "title": "Let's talk",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.f4.dev/f4/l0/f4-l0-free1.png",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/l0/f4-l0-free1.png",
   "settings": {
     "slowRate": 0.6,
     "lineModePauseMs": 1100,
@@ -8,6 +8,6 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Can you tell me about your daily routine on weekdays?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.f4.dev/f4/l0/f4-l0-sen-can-you-tell-me-about-your-daily-routine-on-weekdays.mp3" }
+    { "text": "Can you tell me about your daily routine on weekdays?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/l0/f4-l0-sen-can-you-tell-me-about-your-daily-routine-on-weekdays.mp3" }
   ]
 }
