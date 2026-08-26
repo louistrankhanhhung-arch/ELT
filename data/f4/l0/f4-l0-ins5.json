@@ -1,7 +1,7 @@
 {
   "title": "Instruction",
   "text": "Choose the correct answer.",
-  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.f4.dev/f4/l0/f4-l0-ins5-1.png",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/l0/f4-l0-ins5-1.png",
   "audio": "",
   "chunks": ["Choose", "the", "correct", "answer."],
   "timings": [0],
@@ -18,21 +18,21 @@
     "options": [
       {
         "value": "1",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.f4.dev/f4/l0/f4-l0-ins5-1.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/l0/f4-l0-ins5-1.png",
         "audio": "",
         "chunks": ["Choose", "the", "correct", "answer."],
         "timings": [0]
       },
       {
         "value": "2",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.f4.dev/f4/l0/f4-l0-ins5-2.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/l0/f4-l0-ins5-2.png",
         "audio": "",
         "chunks": ["Choose", "the", "correct", "answer."],
         "timings": [0]
       },
       {
         "value": "3",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.f4.dev/f4/l0/f4-l0-ins5-3.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/l0/f4-l0-ins5-3.png",
         "audio": "",
         "chunks": ["Choose", "the", "correct", "answer."],
         "timings": [0]
