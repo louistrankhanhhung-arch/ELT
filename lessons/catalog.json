@@ -319,6 +319,21 @@
       ]
     },
     {
+      "course_id": "f03",
+      "course_title": "Foundation 3",
+      "description": "Foundation track for A1 learners.",
+      "lessons": [
+        {
+          "lesson_id": "f03-l0",
+          "title": "Lesson 0",
+          "level": "A1",
+          "estimated_minutes": 60,
+          "path": "lessons/f3/f3-l0.json",
+          "status": "ready"
+        }
+      ]
+    },
+    {
       "course_id": "f04",
       "course_title": "Foundation 4",
       "description": "Foundation track for A1-A2 learners.",
