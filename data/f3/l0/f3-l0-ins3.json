@@ -1,0 +1,13 @@
+{
+  "title": "Instruction",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/l0/f3-l0-ins3.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Watch the video and choose the main idea.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-watch-the-video-and-choose-the-main-idea.mp3" }
+  ]
+}
