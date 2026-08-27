@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REH Media Activity</title>
+
+  <style>
+    :root {
+      --reh-gap: 24px;
+      --reh-radius: 16px;
+      --reh-border: #e5e7eb;
+      --reh-bg: #f8fafc;
+      --reh-panel: #ffffff;
+      --reh-text: #111827;
+      --reh-muted: #6b7280;
+      --reh-max-width: 1500px;
+      --reh-sticky-top: 16px;
+      --reh-media-width: 44%;
+      --reh-activity-width: 56%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--reh-bg);
+      color: var(--reh-text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      padding: 16px;
+    }
+
+    #app {
+      width: min(100%, var(--reh-max-width));
+      margin: 0 auto;
+    }
+
+    .reh-header {
+      margin: 0 0 14px;
+    }
+
+    .reh-title {
+      margin: 0;
+      font-size: clamp(1.15rem, 2vw, 1.6rem);
+      line-height: 1.25;
+    }
+
+    .reh-instructions {
+      margin: 8px 0 0;
+      color: var(--reh-muted);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .reh-layout {
+      display: grid;
+      grid-template-columns:
+        minmax(0, var(--reh-media-width))
+        minmax(0, var(--reh-activity-width));
+      gap: var(--reh-gap);
+      align-items: start;
+    }
+
+    .reh-panel {
+      min-width: 0;
+      background: var(--reh-panel);
+      border: 1px solid var(--reh-border);
+      border-radius: var(--reh-radius);
+      overflow: hidden;
+    }
+
+    .reh-media-column {
+      position: sticky;
+      top: var(--reh-sticky-top);
+    }
+
+    .reh-media-inner {
+      padding: 14px;
+    }
+
+    .reh-media-heading,
+    .reh-activity-heading {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .reh-media-frame {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .reh-youtube-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #000;
+      border-radius: 12px;
+    }
+
+    .reh-youtube-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .reh-audio-wrap {
+      padding: 10px 2px 4px;
+    }
+
+    .reh-audio-wrap audio {
+      width: 100%;
+      display: block;
+    }
+
+    .reh-image {
+      display: block;
+      width: 100%;
+      max-height: calc(100vh - 120px);
+      object-fit: contain;
+      border-radius: 12px;
+      background: #f3f4f6;
+    }
+
+    .reh-text {
+      max-height: calc(100vh - 120px);
+      overflow: auto;
+      padding: 4px 2px;
+      white-space: pre-wrap;
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+
+    .reh-caption {
+      margin: 10px 0 0;
+      color: var(--reh-muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .reh-activity-column {
+      min-width: 0;
+    }
+
+    .reh-activity-inner {
+      padding: 14px;
+    }
+
+    #h5p-container {
+      width: 100%;
+      min-width: 0;
+    }
+
+    #h5p-frame {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      min-height: 720px;
+      border: 0;
+      background: #fff;
+    }
+
+    .reh-error {
+      padding: 18px;
+      margin: 20px auto;
+      max-width: 760px;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      background: #fff;
+      color: #991b1b;
+      line-height: 1.5;
+    }
+
+    .reh-hidden {
+      display: none !important;
+    }
+
+    /* Tablet / mobile: stack media above H5P.
+       Sticky is intentionally disabled to prevent the media panel
+       from covering the activity on small screens. */
+    @media (max-width: 900px) {
+      body {
+        padding: 10px;
+      }
+
+      .reh-layout {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .reh-media-column {
+        position: static;
+      }
+
+      .reh-image,
+      .reh-text {
+        max-height: none;
+      }
+
+      #h5p-frame {
+        min-height: 640px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 6px;
+      }
+
+      .reh-panel {
+        border-radius: 12px;
+      }
+
+      .reh-media-inner,
+      .reh-activity-inner {
+        padding: 10px;
+      }
+
+      #h5p-frame {
+        min-height: 560px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <header id="header" class="reh-header reh-hidden">
+      <h1 id="title" class="reh-title"></h1>
+      <p id="instructions" class="reh-instructions"></p>
+    </header>
+
+    <main class="reh-layout">
+      <section id="media-panel" class="reh-panel reh-media-column">
+        <div class="reh-media-inner">
+          <h2 id="media-heading" class="reh-media-heading reh-hidden"></h2>
+          <div id="media-container" class="reh-media-frame"></div>
+          <p id="media-caption" class="reh-caption reh-hidden"></p>
+        </div>
+      </section>
+
+      <section id="activity-panel" class="reh-panel reh-activity-column">
+        <div class="reh-activity-inner">
+          <h2 id="activity-heading" class="reh-activity-heading reh-hidden"></h2>
+          <div id="h5p-container"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function fail(message) {
+      document.body.innerHTML = `<div class="reh-error">${message}</div>`;
+    }
+
+    function setOptionalText(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      if (value === undefined || value === null || String(value).trim() === "") {
+        el.classList.add("reh-hidden");
+        return;
+      }
+
+      el.textContent = String(value);
+      el.classList.remove("reh-hidden");
+    }
+
+    function applyLayout(config) {
+      const root = document.documentElement;
+      const layout = config.layout || {};
+
+      if (layout.media_width) {
+        const mediaWidth = Number(layout.media_width);
+        if (Number.isFinite(mediaWidth) && mediaWidth >= 25 && mediaWidth <= 70) {
+          root.style.setProperty("--reh-media-width", `${mediaWidth}%`);
+          root.style.setProperty("--reh-activity-width", `${100 - mediaWidth}%`);
+        }
+      }
+
+      if (layout.gap) {
+        const gap = Number(layout.gap);
+        if (Number.isFinite(gap) && gap >= 0 && gap <= 80) {
+          root.style.setProperty("--reh-gap", `${gap}px`);
+        }
+      }
+
+      if (layout.sticky_top !== undefined) {
+        const stickyTop = Number(layout.sticky_top);
+        if (Number.isFinite(stickyTop) && stickyTop >= 0 && stickyTop <= 200) {
+          root.style.setProperty("--reh-sticky-top", `${stickyTop}px`);
+        }
+      }
+
+      if (layout.max_width) {
+        const maxWidth = Number(layout.max_width);
+        if (Number.isFinite(maxWidth) && maxWidth >= 700 && maxWidth <= 2400) {
+          root.style.setProperty("--reh-max-width", `${maxWidth}px`);
+        }
+      }
+    }
+
+    function youtubeEmbedUrl(rawUrl, media = {}) {
+      try {
+        const url = new URL(rawUrl);
+        let videoId = "";
+
+        if (url.hostname.includes("youtu.be")) {
+          videoId = url.pathname.replace(/^\/+/, "").split("/")[0];
+        } else if (url.pathname.startsWith("/shorts/")) {
+          videoId = url.pathname.split("/shorts/")[1].split("/")[0];
+        } else if (url.pathname.startsWith("/embed/")) {
+          videoId = url.pathname.split("/embed/")[1].split("/")[0];
+        } else {
+          videoId = url.searchParams.get("v") || "";
+        }
+
+        if (!videoId) {
+          throw new Error("Could not determine YouTube video ID.");
+        }
+
+        const params = new URLSearchParams({
+          rel: media.rel === true ? "1" : "0",
+          playsinline: "1"
+        });
+
+        if (media.start !== undefined) {
+          const start = Math.max(0, Number(media.start) || 0);
+          if (start > 0) params.set("start", String(Math.floor(start)));
+        }
+
+        if (media.captions === true) {
+          params.set("cc_load_policy", "1");
+        }
+
+        return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?${params.toString()}`;
+      } catch (error) {
+        throw new Error(`Invalid YouTube URL: ${error.message}`);
+      }
+    }
+
+    function renderYouTube(container, media) {
+      if (!media.src) throw new Error("YouTube media requires media.src.");
+
+      const wrap = document.createElement("div");
+      wrap.className = "reh-youtube-wrap";
+
+      const iframe = document.createElement("iframe");
+      iframe.src = youtubeEmbedUrl(media.src, media);
+      iframe.title = media.alt || media.title || "YouTube video";
+      iframe.loading = "eager";
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+
+      wrap.appendChild(iframe);
+      container.appendChild(wrap);
+    }
+
+    function renderAudio(container, media) {
+      if (!media.src) throw new Error("Audio media requires media.src.");
+
+      const wrap = document.createElement("div");
+      wrap.className = "reh-audio-wrap";
+
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.preload = media.preload || "metadata";
+      audio.src = media.src;
+
+      if (media.autoplay === true) audio.autoplay = true;
+      if (media.loop === true) audio.loop = true;
+
+      wrap.appendChild(audio);
+      container.appendChild(wrap);
+    }
+
+    function renderImage(container, media) {
+      if (!media.src) throw new Error("Image media requires media.src.");
+
+      const img = document.createElement("img");
+      img.className = "reh-image";
+      img.src = media.src;
+      img.alt = media.alt || "";
+      img.loading = "eager";
+      container.appendChild(img);
+    }
+
+    function renderText(container, media) {
+      const text = document.createElement("div");
+      text.className = "reh-text";
+      text.textContent = media.content || "";
+      container.appendChild(text);
+    }
+
+    function renderMedia(config) {
+      const media = config.media || {};
+      const container = document.getElementById("media-container");
+      const panel = document.getElementById("media-panel");
+
+      if (!media.type) {
+        panel.classList.add("reh-hidden");
+        document.querySelector(".reh-layout").style.gridTemplateColumns = "1fr";
+        return;
+      }
+
+      setOptionalText("media-heading", media.title);
+      setOptionalText("media-caption", media.caption);
+
+      switch (String(media.type).toLowerCase()) {
+        case "youtube":
+          renderYouTube(container, media);
+          break;
+        case "audio":
+          renderAudio(container, media);
+          break;
+        case "image":
+          renderImage(container, media);
+          break;
+        case "text":
+          renderText(container, media);
+          break;
+        default:
+          throw new Error(`Unsupported media.type: ${media.type}`);
+      }
+    }
+
+    function renderActivity(config) {
+      const activity = config.activity || config.h5p || {};
+      const container = document.getElementById("h5p-container");
+      const panel = document.getElementById("activity-panel");
+
+      if (!activity.embed_url) {
+        panel.classList.add("reh-hidden");
+        document.querySelector(".reh-layout").style.gridTemplateColumns = "1fr";
+        return;
+      }
+
+      setOptionalText("activity-heading", activity.title);
+
+      const iframe = document.createElement("iframe");
+      iframe.id = "h5p-frame";
+      iframe.className = "h5p-iframe";
+      iframe.src = activity.embed_url;
+      iframe.title = activity.aria_label || activity.title || "Interactive activity";
+      iframe.width = "100%";
+
+      const baseHeight = Number(activity.height) || 720;
+      iframe.height = baseHeight;
+      iframe.style.minHeight = `${baseHeight}px`;
+      iframe.allowFullscreen = activity.allow_fullscreen !== false;
+      iframe.allow =
+        activity.allow ||
+        "geolocation *; microphone *; camera *; midi *; encrypted-media *";
+
+      iframe.onload = () => {
+        iframe.style.minHeight = `${baseHeight}px`;
+
+        // Give H5P/Lumi a resize signal after the iframe has settled.
+        setTimeout(() => {
+          window.dispatchEvent(new Event("resize"));
+        }, 300);
+
+        setTimeout(() => {
+          window.dispatchEvent(new Event("resize"));
+        }, 1200);
+      };
+
+      container.appendChild(iframe);
+    }
+
+    async function init() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const dataPath = params.get("data");
+
+        if (!dataPath) {
+          fail("Missing media-activity data path.");
+          return;
+        }
+
+        const response = await fetch(dataPath, { cache: "no-store" });
+
+        if (!response.ok) {
+          fail(`Could not load media-activity config (${response.status}).`);
+          return;
+        }
+
+        const config = await response.json();
+
+        applyLayout(config);
+
+        setOptionalText("title", config.title);
+        setOptionalText("instructions", config.instructions);
+
+        const headerHasContent =
+          (config.title && String(config.title).trim()) ||
+          (config.instructions && String(config.instructions).trim());
+
+        if (headerHasContent) {
+          document.getElementById("header").classList.remove("reh-hidden");
+        }
+
+        renderMedia(config);
+        renderActivity(config);
+      } catch (error) {
+        console.error(error);
+        fail(`Could not initialize media activity: ${error.message}`);
+      }
+    }
+
+    init();
+  </script>
+
+  <script
+    src="https://app.lumi.education/api/v1/h5p/core/js/h5p-resizer.js"
+    charset="UTF-8">
+  </script>
+</body>
+</html>
