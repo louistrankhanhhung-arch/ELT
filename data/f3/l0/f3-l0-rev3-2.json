@@ -1,6 +1,20 @@
 {
-  "embed_url": "https://app.lumi.education/api/v1/run/j443_A/embed",
-  "height": 720,
-  "allow": "geolocation *; microphone *; camera *; midi *; encrypted-media *",
-  "allow_fullscreen": true
+  "title": "Watch and answer",
+  "media": {
+    "type": "youtube",
+    "src": "https://www.youtube.com/watch?v=VgBtaR8K7dc",
+    "title": "Video",
+    "caption": "You may replay the video."
+  },
+  "activity": {
+    "embed_url": "https://app.lumi.education/api/v1/run/j443_A/embed",
+    "title": "Questions",
+    "height": 720
+  },
+  "layout": {
+    "media_width": 44,
+    "gap": 24,
+    "sticky_top": 16,
+    "max_width": 1500
+  }
 }
