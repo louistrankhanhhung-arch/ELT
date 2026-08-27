@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from random import randint
 from datetime import datetime, timezone, timedelta
-from typing import List
+from typing import List, Literal, Optional
 import os
 import sqlite3
 
@@ -51,6 +51,44 @@ class EventRequest(BaseModel):
     block_index: int
     block_id: str
     event_type: str
+
+
+class MediaConfig(BaseModel):
+    type: Literal["youtube", "audio", "image", "text"]
+    src: Optional[str] = None
+    content: Optional[str] = None
+    title: Optional[str] = None
+    alt: Optional[str] = None
+    caption: Optional[str] = None
+    start: Optional[int] = None
+    captions: bool = False
+    autoplay: bool = False
+    loop: bool = False
+    preload: Optional[str] = "metadata"
+
+
+class H5PActivityConfig(BaseModel):
+    embed_url: str
+    title: Optional[str] = None
+    aria_label: Optional[str] = None
+    height: int = 720
+    allow_fullscreen: bool = True
+    allow: Optional[str] = None
+
+
+class MediaActivityLayout(BaseModel):
+    media_width: int = 44
+    gap: int = 24
+    sticky_top: int = 16
+    max_width: int = 1500
+
+
+class MediaActivityConfig(BaseModel):
+    title: Optional[str] = None
+    instructions: Optional[str] = None
+    media: Optional[MediaConfig] = None
+    activity: Optional[H5PActivityConfig] = None
+    layout: MediaActivityLayout = MediaActivityLayout()
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -256,6 +294,38 @@ def require_active_session(pin: str):
         )
 
     return session
+
+
+@app.post("/api/media-activity/validate")
+def validate_media_activity(payload: MediaActivityConfig):
+    """
+    Validate a media-activity JSON config before publishing it.
+    The player itself remains static and fetches the JSON through ?data=...
+    """
+    if payload.media:
+        if payload.media.type in {"youtube", "audio", "image"} and not payload.media.src:
+            raise HTTPException(
+                status_code=422,
+                detail=f"media.src is required for media.type={payload.media.type}",
+            )
+
+        if payload.media.type == "text" and payload.media.content is None:
+            raise HTTPException(
+                status_code=422,
+                detail="media.content is required for media.type=text",
+            )
+
+    if not payload.media and not payload.activity:
+        raise HTTPException(
+            status_code=422,
+            detail="At least one of media or activity is required",
+        )
+
+    return {
+        "ok": True,
+        "config": payload.model_dump(),
+    }
+
 
 @app.get("/api/health")
 def health():
