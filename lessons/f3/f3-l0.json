@@ -82,9 +82,9 @@
       "order": 7,
       "type": "activity",
       "activity_kind": "review",
-      "title": "Review 3-1",
-      "player": "player-h5p.html",
-      "data": "data/f3/l0/f3-l0-rev3-1.json",
+      "title": "Review 3",
+      "player": "player-media-activity.html",
+      "data": "data/f3/l0/f3-l0-rev3.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -102,13 +102,13 @@
       }
     },
     {
-      "id": "rev3-2",
+      "id": "rev4",
       "order": 9,
       "type": "activity",
       "activity_kind": "review",
-      "title": "Review 3-2",
-      "player": "player-h5p.html",
-      "data": "data/f3/l0/f3-l0-rev3-2.json",
+      "title": "Review 4",
+      "player": "player-media-activity.html",
+      "data": "data/f3/l0/f3-l0-rev4.json",
       "completion": {
         "mode": "teacher_next"
       }
