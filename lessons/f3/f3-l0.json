@@ -90,8 +90,20 @@
       }
     },
     {
-      "id": "ins4",
+      "id": "rev3test",
       "order": 8,
+      "type": "activity",
+      "activity_kind": "review",
+      "title": "Review 3-1 test",
+      "player": "player-media-activity.html",
+      "data": "data/f3/l0/f3-l0-rev3-1-test.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins4",
+      "order": 9,
       "type": "activity",
       "activity_kind": "instruction",
       "title": "Instruction 4",
@@ -103,7 +115,7 @@
     },
     {
       "id": "rev3-2",
-      "order": 9,
+      "order": 10,
       "type": "activity",
       "activity_kind": "review",
       "title": "Review 3-2",
@@ -115,7 +127,7 @@
     },
     {
       "id": "free1",
-      "order": 10,
+      "order": 11,
       "type": "activity",
       "activity_kind": "free talk",
       "title": "Let's talk",
