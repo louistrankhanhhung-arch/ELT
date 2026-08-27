@@ -1,0 +1,13 @@
+{
+  "title": "Read and answer",
+  "media": {
+    "type": "text",
+    "title": "Reading text",
+    "content": "Tom gets up at seven o'clock.\nHe has breakfast with his family.\nThen he goes to school by bike."
+  },
+  "activity": {
+    "embed_url": "https://app.lumi.education/api/v1/h5p/YOUR_H5P_EMBED",
+    "title": "Questions",
+    "height": 720
+  }
+}

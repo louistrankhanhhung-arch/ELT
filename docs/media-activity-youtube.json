@@ -1,0 +1,21 @@
+{
+  "title": "Watch and answer",
+  "instructions": "Watch the video. Replay it when needed, then answer the questions.",
+  "media": {
+    "type": "youtube",
+    "src": "https://www.youtube.com/watch?v=YOUR_VIDEO_ID",
+    "title": "Video",
+    "caption": "You may replay the video."
+  },
+  "activity": {
+    "embed_url": "https://app.lumi.education/api/v1/h5p/YOUR_H5P_EMBED",
+    "title": "Questions",
+    "height": 720
+  },
+  "layout": {
+    "media_width": 44,
+    "gap": 24,
+    "sticky_top": 16,
+    "max_width": 1500
+  }
+}

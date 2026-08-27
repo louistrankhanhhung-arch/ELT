@@ -1,0 +1,14 @@
+{
+  "title": "Look and answer",
+  "media": {
+    "type": "image",
+    "src": "./media/classroom.jpg",
+    "alt": "A classroom scene",
+    "title": "Picture"
+  },
+  "activity": {
+    "embed_url": "https://app.lumi.education/api/v1/h5p/YOUR_H5P_EMBED",
+    "title": "Questions",
+    "height": 720
+  }
+}

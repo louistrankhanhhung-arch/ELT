@@ -1,0 +1,14 @@
+{
+  "title": "Listen and answer",
+  "media": {
+    "type": "audio",
+    "src": "./media/listening-01.mp3",
+    "title": "Audio",
+    "caption": "Listen again if necessary."
+  },
+  "activity": {
+    "embed_url": "https://app.lumi.education/api/v1/h5p/YOUR_H5P_EMBED",
+    "title": "Questions",
+    "height": 720
+  }
+}
