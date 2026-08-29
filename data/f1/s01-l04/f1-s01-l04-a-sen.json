@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I like pizza",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-vob-tom-pizza.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-i-like-pizza.mp3",
+  "chunks": ["I", "like", "pizza"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{}",
+    "base": "I like pizza {}",
+    "options": [
+      {
+        "value": "pizza",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-vob-tom-pizza.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-i-like-pizza.mp3",
+        "chunks": ["I", "like", "pizza"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "apples",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-vob-tom-apples.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-i-like-apples.mp3",
+        "chunks": ["I", "like", "apples"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "football",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-vob-tom-football.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-i-like-football.mp3",
+        "chunks": ["I", "like", "football"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "spiders",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-vob-tom-spiders.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-i-dont-like-spiders.mp3",
+        "chunks": ["I", "don't", "like", "spiders"],
+        "timings": [0, 0.3, 0.6, 0.9]
+      }
+    ]
+  }
+}
