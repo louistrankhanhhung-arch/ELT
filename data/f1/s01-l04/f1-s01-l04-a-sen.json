@@ -39,7 +39,7 @@
       },
       {
         "value": "spiders",
-        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-sen-tom-spiders.png",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-sen-tom-spider.png",
         "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-i-dont-like-spiders.mp3",
         "chunks": ["I", "don't", "like", "spiders"],
         "timings": [0, 0.3, 0.6, 0.9]
