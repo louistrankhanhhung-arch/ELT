@@ -1,0 +1,17 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-a-sen.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "What’s your name?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-whats-your-name.mp3" },
+    { "text": "How old are you?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-how-old-are-you.mp3" },
+    { "text": "Where do you live?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-where-do-you-live.mp3" },
+    { "text": "Is it a town or a city?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-is-it-a-town-or-a-city.mp3" },
+    { "text": "What school do you go to?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-what-school-do-you-go-to.mp3" }
+  ]
+}
