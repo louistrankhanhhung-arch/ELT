@@ -1,0 +1,14 @@
+{
+  "title": "Instruction",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-ins2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Watch again.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-watch-again.mp3" },
+    { "text": "Drag the pictures into the correct boxes.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-drag-the-pictures-into-the-correct-boxes.mp3" }
+  ]
+}
