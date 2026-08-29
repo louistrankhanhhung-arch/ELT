@@ -1,0 +1,14 @@
+{
+  "title": "Let's draw",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-note1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Draw 2 things you like. Then say: I like... ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-draw-2-things-you-like-then-say-i-like.mp3" },
+    { "text": "Draw 1 thing you don’t like. Then say: I don’t like…", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-draw-1-thing-you-dont-like-then-say-i-dont-like.mp3" }
+  ]
+}
