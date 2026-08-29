@@ -309,11 +309,11 @@
       "description": "Foundation track for Pre-A1 learners.",
       "lessons": [
         {
-          "lesson_id": "f01-l05",
-          "title": "Lesson S01-5",
+          "lesson_id": "f01-l04",
+          "title": "Lesson S01-L04",
           "level": "Pre-A1",
           "estimated_minutes": 60,
-          "path": "lessons/f1/f1-s01-l05.json",
+          "path": "lessons/f1/f1-s01-l04.json",
           "status": "ready"
         }
       ]
