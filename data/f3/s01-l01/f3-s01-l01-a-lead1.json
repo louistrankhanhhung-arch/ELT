@@ -1,0 +1,19 @@
+{
+  "title": "Let's guess",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-a-lead1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Look at the picture.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
+    { "text": "Who is he?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-who-is-he.mp3" },
+    { "text": "Is he Tom the Fox?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-is-he-tom-the-fox.mp3" },
+    { "text": "Is he Jill the Rabbit?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-is-he-jill-the-rabbit.mp3" },
+    { "text": "Is he new?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-is-he-new.mp3" },
+    { "text": "Tom meets a new friend today.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-tom-meet-a-new-friend-today.mp3" },
+    { "text": "What does Tom want to know?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-what-does-tom-want-to-know.mp3" }
+  ]
+}
