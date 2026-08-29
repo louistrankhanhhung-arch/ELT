@@ -1,0 +1,189 @@
+{
+  "lesson_id": "f1-s01-l04",
+  "title": "Foundation 1 – Lesson S01-L04",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-cover",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section A",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "leadin1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "vocab",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "vocab",
+      "title": "Vocab",
+      "player": "player-grid-v2.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-vob.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },    
+    {
+      "id": "ins1",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ccq",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "ccq",
+      "title": "CCQ",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-ccq.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "l-gist",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "l-gist",
+      "title": "L-Gist",
+      "player": "player-media-activity.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-l-gist.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins2",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "l-si",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "l-si",
+      "title": "L-SI",
+      "player": "player-media-activity.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-l-si.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "sentence",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "sentence",
+      "title": "Sentence Practice",
+      "player": "player-sentence.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-sen.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins3",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "con",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "qa1",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "qa",
+      "title": "Q&A",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-qa1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "note",
+      "order": 14,
+      "type": "activity",
+      "activity_kind": "note",
+      "title": "Drawing",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-note1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free1",
+      "order": 15,
+      "type": "activity",
+      "activity_kind": "free talk",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l04/f1-s01-l04-a-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
