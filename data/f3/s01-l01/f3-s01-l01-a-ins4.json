@@ -1,0 +1,14 @@
+{
+  "title": "Instruction",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-a-ins4.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Interview your partner and take notes.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-interview-your-partner-and-take-notes.mp3" },
+    { "text": "Role-play! Imagine you are your partner and introduce yourself to the class.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-sen-role-play-imagine-you-are-your-partner-and-introduce-yourself-to-the-class.mp3" }
+  ]
+}
