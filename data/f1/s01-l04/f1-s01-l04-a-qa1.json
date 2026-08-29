@@ -1,0 +1,16 @@
+{
+  "title": "Ask & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-a-lead1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Do you like pizza?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-do-you-like-pizza.mp3" },
+    { "text": "Yes, I do.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-yes-i-do.mp3" },
+    { "text": "Do you like spiders?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-do-you-like-spiders.mp3" },
+    { "text": "No, I don’t.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l04/f1-s01-l04-sen-no-i-dont.mp3" }
+  ]
+}
