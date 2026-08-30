@@ -353,6 +353,14 @@
           "estimated_minutes": 60,
           "path": "lessons/f4/f4-l0.json",
           "status": "ready"
+        },
+        {
+          "lesson_id": "f04-s01-l01",
+          "title": "Lesson S01-L01",
+          "level": "A1-A2",
+          "estimated_minutes": 60,
+          "path": "lessons/f4/f4-s01-l01.json",
+          "status": "ready"
         }
       ]
     }
