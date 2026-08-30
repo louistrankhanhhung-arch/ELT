@@ -8,7 +8,7 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Watch again.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-watch-again.mp3" }
-    { "text": "Drag and drop the words.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-drag-and-drop-the-words.mp3" }
+    { "text": "Watch again.", "audio": "" }
+    { "text": "Drag and drop the words.", "audio": "" }
   ]
 }
