@@ -1,0 +1,15 @@
+{
+  "title": "Read & Answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s01-l01/f4-s01-l01-a-pick1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Which word describes Leo's body?", "audio": "" },
+    { "text": "Which words tell us what Leo has?", "audio": "" }
+    { "text": "Which words tell us about his clothes?", "audio": "" }
+  ]
+}
