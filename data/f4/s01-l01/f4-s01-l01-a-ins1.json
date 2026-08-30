@@ -8,7 +8,10 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Work in teams.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-work-in-teams.mp3" },
-    { "text": "Take turns reading the clues and filling in the crossword.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-take-turns-reading-the-clues-and-filling-in-the-crossword.mp3" }
+    { "text": "Work in teams.", "audio": "" },
+    { "text": "Take turns reading the clues and filling in the crossword.", "audio": "" },
+    { "text": "You have 30 seconds each turn.", "audio": "" }
+    { "text": "Each correct word gets 1 point.", "audio": "" }
+    { "text": "The team with the highest score wins!", "audio": "" }
   ]
 }
