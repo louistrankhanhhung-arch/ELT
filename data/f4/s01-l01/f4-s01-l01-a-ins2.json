@@ -8,7 +8,7 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Look at the pictures.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-look-at-the-picture.mp3" },
-    { "text": "Choose the correct answer.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/ins/ins-choose-the-correct-answer.mp3" }
+    { "text": "Look at the pictures.", "audio": "" },
+    { "text": "Choose the correct answer.", "audio": "" }
   ]
 }
