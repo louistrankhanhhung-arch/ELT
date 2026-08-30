@@ -1,0 +1,261 @@
+{
+  "lesson_id": "f04-s01-s01-l011",
+  "title": "Foundation 4 – Lesson S01-s01-l011",
+  "level": "A1-A2",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-cover",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "wu",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "wu",
+      "title": "Warm-up",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-wu.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "vob1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 1",
+      "player": "player-media-activity.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-vob1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins3",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "vob2",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 2",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-vob2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins4",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 4",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "vob3",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 3",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-vob3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins5",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 5",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "vob4",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 4",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-vob4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "l-gist",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "l-gist",
+      "title": "L-Gist",
+      "player": "player-media-activity.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-l-gist.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins6",
+      "order": 14,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 6",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins6.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "l-si",
+      "order": 15,
+      "type": "activity",
+      "activity_kind": "l-si",
+      "title": "L-Gist",
+      "player": "player-media-activity.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-l-si.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "pick1",
+      "order": 16,
+      "type": "activity",
+      "activity_kind": "pick",
+      "title": "Pick structure 1",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-pick1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "pick2",
+      "order": 17,
+      "type": "activity",
+      "activity_kind": "pick",
+      "title": "Pick structure 2",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-pick2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins7",
+      "order": 18,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 7",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins7.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "con1",
+      "order": 19,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins8",
+      "order": 20,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 8",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-ins8.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "qa1",
+      "order": 21,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-qa1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
