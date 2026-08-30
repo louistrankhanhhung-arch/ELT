@@ -1,0 +1,14 @@
+{
+  "title": "Look and answer",
+  "media": {
+    "type": "image",
+    "src": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s01-l01/f4-s01-l01-a-vob1.png",
+    "alt": "",
+    "title": "Picture"
+  },
+  "activity": {
+    "embed_url": "https://app.lumi.education/api/v1/run/BOO6Nx/embed",
+    "title": "Questions",
+    "height": 720
+  }
+}
