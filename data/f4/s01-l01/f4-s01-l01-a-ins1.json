@@ -10,8 +10,8 @@
   "lines": [
     { "text": "Work in teams.", "audio": "" },
     { "text": "Take turns reading the clues and filling in the crossword.", "audio": "" },
-    { "text": "You have 30 seconds each turn.", "audio": "" }
-    { "text": "Each correct word gets 1 point.", "audio": "" }
+    { "text": "You have 30 seconds each turn.", "audio": "" },
+    { "text": "Each correct word gets 1 point.", "audio": "" },
     { "text": "The team with the highest score wins!", "audio": "" }
   ]
 }
