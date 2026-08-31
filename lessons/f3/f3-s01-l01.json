@@ -196,6 +196,210 @@
       "completion": {
         "mode": "teacher_next"
       }
+    },
+    {
+      "id": "b-cover",
+      "order": 17,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section A",
+      "player": "player-text.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-lead1",
+      "order": 18,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Lead-in",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-vob",
+      "order": 19,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab",
+      "player": "player-grid-v2.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-vob.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ccq1",
+      "order": 20,
+      "type": "activity",
+      "activity_kind": "ccq",
+      "title": "CCQ 1",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ccq1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins1",
+      "order": 21,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ccq2",
+      "order": 22,
+      "type": "activity",
+      "activity_kind": "ccq",
+      "title": "CCQ 2",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ccq2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-r-gist",
+      "order": 23,
+      "type": "activity",
+      "activity_kind": "reading",
+      "title": "R-Gist",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-r-gist.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins2",
+      "order": 24,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-r-si1",
+      "order": 25,
+      "type": "activity",
+      "activity_kind": "reading",
+      "title": "L-SI 1",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-r-si1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins3",
+      "order": 26,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-r-si2",
+      "order": 27,
+      "type": "activity",
+      "activity_kind": "reading",
+      "title": "L-SI 2",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-r-si2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins4",
+      "order": 28,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 4",
+      "player": "player-dialogue.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ins4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-r-ev",
+      "order": 29,
+      "type": "activity",
+      "activity_kind": "reading",
+      "title": "L-EV",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-r-ev.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins5",
+      "order": 30,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 5",
+      "player": "player-dialogue.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-pick",
+      "order": 31,
+      "type": "activity",
+      "activity_kind": "picking",
+      "title": "Pick Structure",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-pick.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-note",
+      "order": 32,
+      "type": "activity",
+      "activity_kind": "note",
+      "title": "Take note",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-note.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free",
+      "order": 33,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
     }
   ]
 }
