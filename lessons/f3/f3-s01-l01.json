@@ -202,7 +202,7 @@
       "order": 17,
       "type": "activity",
       "activity_kind": "text",
-      "title": "Section A",
+      "title": "Section B",
       "player": "player-text.html",
       "data": "data/f3/s01-l01/f3-s01-l01-b-cover.json",
       "completion": {
