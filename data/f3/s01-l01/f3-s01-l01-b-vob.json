@@ -1,0 +1,46 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "country",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-country.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-country.mp3"
+    },
+    {
+      "word": "city",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-city.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-city.mp3"
+    },
+    {
+      "word": "town",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-town.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-town.mp3"
+    },
+    {
+      "word": "countryside",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-countryside.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-countryside.mp3"
+    },
+    {
+      "word": "field",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-field.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-field.mp3"
+    },
+    {
+      "word": "building",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-building.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-building.mp3"
+    },
+    {
+      "word": "library",
+      "img": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-library.png",
+      "audio": "https://pub-af09166f3dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l01/f3-s01-l01-b-vob-library.mp3"
+    }
+  ]
+}
