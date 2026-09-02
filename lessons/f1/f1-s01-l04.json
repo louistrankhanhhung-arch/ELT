@@ -204,7 +204,7 @@
       "activity_kind": "lead",
       "title": "Lead-in",
       "player": "player-grid-v2.html",
-      "data": "data/f1/s01-l04/f1-s01-l04-b-vob.json",
+      "data": "data/f1/s01-l04/f1-s01-l04-b-lead1.json",
       "completion": {
         "mode": "teacher_next"
       }
