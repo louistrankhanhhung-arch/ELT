@@ -183,8 +183,9 @@
       "data": "data/f1/s01-l04/f1-s01-l04-a-free1.json",
       "completion": {
         "mode": "teacher_next"
-      },
-      {
+      }
+    },
+    {
       "id": "b-cover",
       "order": 16,
       "type": "activity",
