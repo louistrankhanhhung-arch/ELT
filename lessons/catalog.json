@@ -363,6 +363,21 @@
           "status": "ready"
         }
       ]
+    },
+    {
+      "course_id": "a04",
+      "course_title": "Accelerator 1",
+      "description": "Accelerator track for A1-B1 learners.",
+      "lessons": [
+        {
+          "lesson_id": "a01-w01",
+          "title": "Week 1",
+          "level": "A1-B1",
+          "estimated_minutes": 60,
+          "path": "lessons/a1/a1-w1.json",
+          "status": "ready"
+        }
+      ]
     }
   ]
 }
