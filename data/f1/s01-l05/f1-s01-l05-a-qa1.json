@@ -1,0 +1,19 @@
+{
+  "title": "Ask & answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-qa1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Can you swim?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-swim.mp3" },
+    { "text": "Can you dance?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-dance.mp3" },
+    { "text": "Can you sing?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-sing.mp3" },
+    { "text": "Can you draw?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-draw.mp3" },
+    { "text": "", "audio": "" },
+    { "text": "Yes, I can.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-draw.mp3" },
+    { "text": "No, I can’t.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-draw.mp3" }
+  ]
+}
