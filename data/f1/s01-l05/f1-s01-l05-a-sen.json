@@ -40,7 +40,7 @@
       {
         "value": "I can't fly",
         "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-cantfly.png",
-        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-can't-fly.mp3",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-cant-fly.mp3",
         "chunks": ["I", "can't", "run"],
         "timings": [0, 0.3, 0.6]
       }
