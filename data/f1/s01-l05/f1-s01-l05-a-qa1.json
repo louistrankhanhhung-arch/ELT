@@ -13,7 +13,7 @@
     { "text": "Can you sing?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-sing.mp3" },
     { "text": "Can you draw?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-draw.mp3" },
     { "text": "", "audio": "" },
-    { "text": "Yes, I can.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-draw.mp3" },
-    { "text": "No, I can’t.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-can-you-draw.mp3" }
+    { "text": "Yes, I can.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-yes-i-can.mp3" },
+    { "text": "No, I can’t.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-no-i-cant.mp3" }
   ]
 }
