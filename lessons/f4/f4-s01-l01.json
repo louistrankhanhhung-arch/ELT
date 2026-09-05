@@ -256,6 +256,30 @@
       "completion": {
         "mode": "teacher_next"
       }
+    },
+    {
+      "id": "inter",
+      "order": 22,
+      "type": "activity",
+      "activity_kind": "interaction",
+      "title": "Interaction",
+      "player": "player-dialogue.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-inter.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "free",
+      "order": 23,
+      "type": "activity",
+      "activity_kind": "free",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-a-free1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
     }
   ]
 }
