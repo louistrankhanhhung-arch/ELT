@@ -1,0 +1,21 @@
+{
+  "title": "Grammar 3",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/a1/w1/a1-w1-a-gram3.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Statement", "audio": "" },
+    { "text": "You are from the UK.", "audio": "" },
+    { "text": "", "audio": "" },
+    { "text": "Question", "audio": "" },
+    { "text": "Are you from the UK?", "audio": "" },
+    { "text": "", "audio": "" },
+    { "text": "Answers:", "audio": "" },
+    { "text": "Yes, I am.", "audio": "" },
+    { "text": "No, I'm not.", "audio": "" }
+  ]
+}
