@@ -1,0 +1,165 @@
+{
+  "lesson_id": "a01-w0",
+  "title": "Accelerator 1 – Week 01",
+  "level": "A1-B1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "a-cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section A",
+      "player": "player-text.html",
+      "data": "data/a1/w1/a1-w1-a-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-vocab",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "vocab",
+      "title": "Vocab",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-vob.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "gram1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 1",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-a-gram1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "gram2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 2",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-a-gram2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con2",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "gram3",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 3",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-a-gram3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con3",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 3",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-con3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "gram4",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 4",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-a-gram4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con4-1",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 4-1",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-con4-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con4-2",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 4-2",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-con4-2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-gram5",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "The alphabet",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-gram5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con5",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 5",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-a-con5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
