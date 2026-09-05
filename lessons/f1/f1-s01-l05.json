@@ -18,121 +18,217 @@
       }
     },
     {
-      "id": "rev1",
+      "id": "a-cover",
       "order": 2,
       "type": "activity",
-      "activity_kind": "review",
-      "title": "Review",
-      "player": "player-h5p.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-rev1.json",
+      "activity_kind": "text",
+      "title": "SECTION A",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-cover.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "leadin",
+      "id": "a-ins1",
       "order": 3,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-leadin",
+      "order": 4,
       "type": "activity",
       "activity_kind": "leadin",
       "title": "Lead-in",
-      "player": "player-dialogue.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-lead1.json",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-lead1.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "vocab",
-      "order": 4,
+      "id": "a-vocab",
+      "order": 5,
       "type": "activity",
       "activity_kind": "vocab",
       "title": "Vocab",
       "player": "player-grid-v2.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-vob.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-vob.json",
       "completion": {
         "mode": "teacher_next"
       }
     },    
     {
-      "id": "ccq",
-      "order": 5,
-      "type": "activity",
-      "activity_kind": "ccq",
-      "title": "CCQ",
-      "player": "player-grid-v2.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-ccq.json",
-      "completion": {
-        "mode": "teacher_next"
-      }
-    },
-    {
-      "id": "phonics",
+      "id": "a-tpr",
       "order": 6,
       "type": "activity",
-      "activity_kind": "phonics",
-      "title": "Phonics",
-      "player": "player-sentence.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-phonics.json",
+      "activity_kind": "tpr",
+      "title": "TPR",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-tpr.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "write1",
+      "id": "a-l-gist",
       "order": 7,
       "type": "activity",
-      "activity_kind": "write",
-      "title": "Writing 1",
-      "player": "player-dialogue.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-write1.json",
+      "activity_kind": "l-gist",
+      "title": "L-Gist",
+      "player": "player-media-activity.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-l-gist.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "sentence",
+      "id": "a-ins2",
       "order": 8,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-l-si",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "l-si",
+      "title": "L-SI",
+      "player": "player-media-activity.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-l-si.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins3",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-pick",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "pick",
+      "title": "Pick structure",
+      "player": "player-media-activity.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-pick.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-sentence",
+      "order": 12,
       "type": "activity",
       "activity_kind": "sentence",
       "title": "Sentence Practice",
       "player": "player-sentence.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-sen.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-sen.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "write2",
-      "order": 9,
+      "id": "a-ins4",
+      "order": 13,
       "type": "activity",
-      "activity_kind": "write",
-      "title": "Writing 2",
+      "activity_kind": "ins",
+      "title": "Instruction 4",
       "player": "player-dialogue.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-write2.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-ins4.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "qa1",
-      "order": 10,
+      "id": "a-con1",
+      "order": 14,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-qa1",
+      "order": 15,
       "type": "activity",
       "activity_kind": "qa",
       "title": "Q&A",
-      "player": "player-grid-v2.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-qa1.json",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-qa1.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "handouts1",
-      "order": 12,
+      "id": "a-ins5",
+      "order": 16,
       "type": "activity",
-      "activity_kind": "handouts",
-      "title": "Handouts",
+      "activity_kind": "ins",
+      "title": "Instruction 5",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-inter",
+      "order": 17,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Interview",
       "player": "player-h5p.html",
-      "data": "data/f1/s01-l05/f1-s01-l05-hd1.json",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-inter.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-note",
+      "order": 18,
+      "type": "activity",
+      "activity_kind": "note",
+      "title": "Take note",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-note.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-free1",
+      "order": 19,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Let's talk",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-a-free1.json",
       "completion": {
         "mode": "teacher_next"
       }
