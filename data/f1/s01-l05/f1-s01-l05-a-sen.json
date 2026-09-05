@@ -1,0 +1,49 @@
+{
+  "title": "Repeat",
+  "text": "I can run",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-run.png",
+  "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-can-run.mp3",
+  "chunks": ["I", "can", "run"],
+  "timings": [0, 0.3, 0.6],
+  "settings": {
+    "autoRepeatCount": 2,
+    "repeatDelayMs": 900,
+    "slowRate": 0.6,
+    "highlight": true
+  },
+  "substitution": {
+    "label": "",
+    "slot": "{}",
+    "base": "I can run {}",
+    "options": [
+      {
+        "value": "I can run",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-run.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-can-run.mp3",
+        "chunks": ["I", "can", "run"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "I can jump",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-jump.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-can-jump.mp3",
+        "chunks": ["I", "can", "jump"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "I can swim",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-swim.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-can-swim.mp3",
+        "chunks": ["I", "can", "swim"],
+        "timings": [0, 0.3, 0.6]
+      },
+      {
+        "value": "I can't fly",
+        "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-cantfly.png",
+        "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-sen-i-can't-fly.mp3",
+        "chunks": ["I", "can't", "run"],
+        "timings": [0, 0.3, 0.6]
+      }
+    ]
+  }
+}
