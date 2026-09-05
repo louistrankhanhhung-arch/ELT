@@ -1,0 +1,23 @@
+{
+  "title": "Guess who",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s01-l01/f4-s01-l01-a-inter.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "A:", "audio": "" },
+    { "text": "Is it a boy or a girl?", "audio": "" },
+    { "text": "Is he tall?", "audio": "" },
+    { "text": "Does he have big ears?", "audio": "" },
+    { "text": "Does he wear glasses?", "audio": "" },
+    { "text": "", "audio": "" },
+    { "text": "B:", "audio": "" },
+    { "text": "Yes, he does.", "audio": "" },
+    { "text": "No, he doesn't.", "audio": "" },
+    { "text": "", "audio": "" },
+    { "text": "Is it Ben?", "audio": "" }
+  ]
+}
