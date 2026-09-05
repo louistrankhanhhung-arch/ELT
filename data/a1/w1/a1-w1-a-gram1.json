@@ -1,0 +1,17 @@
+{
+  "title": "Grammar",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/a1/w1/a1-w1-a-gram1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Jane is my friend.", "audio": "" },
+    { "text": "Jane → she", "audio": "" },
+    { "text": "", "audio": "" },
+    { "text": "Tom and Jill are friends.", "audio": "" },
+    { "text": "Tom and Jill → they", "audio": "" }
+  ]
+}
