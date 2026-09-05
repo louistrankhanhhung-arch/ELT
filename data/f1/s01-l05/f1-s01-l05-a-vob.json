@@ -1,0 +1,46 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "run",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-run.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-run.mp3"
+    },
+    {
+      "word": "jump",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-jump.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-jump.mp3"
+    },
+    {
+      "word": "swim",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-swim.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-swim.mp3"
+    },
+    {
+      "word": "dance",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-dance.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-dance.mp3"
+    },
+    {
+      "word": "sing",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-sing.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-sing.mp3"
+    },
+    {
+      "word": "draw",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-draw.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-draw.mp3"
+    },
+    {
+      "word": "fly",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-fly.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s01-l05/f1-s01-l05-a-vob-fly.mp3"
+    }
+  ]
+}
