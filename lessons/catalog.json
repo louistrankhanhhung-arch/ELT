@@ -373,6 +373,21 @@
       ]
     },
     {
+      "course_id": "f05",
+      "course_title": "Foundation 5",
+      "description": "Foundation track for A2 learners.",
+      "lessons": [
+        {
+          "lesson_id": "f05-l0",
+          "title": "Lesson 0",
+          "level": "A2",
+          "estimated_minutes": 60,
+          "path": "lessons/f5/f5-l0.json",
+          "status": "ready"
+        }
+      ]
+    },  
+    {
       "course_id": "a04",
       "course_title": "Accelerator 1",
       "description": "Accelerator track for A1-B1 learners.",
