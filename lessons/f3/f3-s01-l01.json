@@ -378,25 +378,25 @@
       }
     },
     {
-      "id": "b-note",
-      "order": 32,
+      "id": "b-ins6",
+      "order": 30,
       "type": "activity",
-      "activity_kind": "note",
-      "title": "Take note",
-      "player": "player-h5p.html",
-      "data": "data/f3/s01-l01/f3-s01-l01-b-note.json",
+      "activity_kind": "instruction",
+      "title": "Instruction 6",
+      "player": "player-dialogue.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-ins6.json",
       "completion": {
         "mode": "teacher_next"
       }
     },
     {
-      "id": "free",
+      "id": "b-note",
       "order": 33,
       "type": "activity",
-      "activity_kind": "text",
-      "title": "Let's talk",
-      "player": "player-text.html",
-      "data": "data/f3/s01-l01/f3-s01-l01-b-free1.json",
+      "activity_kind": "note",
+      "title": "Take note",
+      "player": "player-h5p.html",
+      "data": "data/f3/s01-l01/f3-s01-l01-b-note.json",
       "completion": {
         "mode": "teacher_next"
       }
