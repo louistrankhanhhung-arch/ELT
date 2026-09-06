@@ -8,6 +8,7 @@
     "lineMode": false
   },
   "lines": [
-    { "text": "Match the questions to the answers.", "audio": "" }
+    { "text": "Interview your friend and take note", "audio": "" },
+    { "text": "Tell the class about your friend.", "audio": "" }
   ]
 }
