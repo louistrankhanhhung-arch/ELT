@@ -119,7 +119,7 @@
       "type": "activity",
       "activity_kind": "instruction",
       "title": "Instruction 5",
-      "player": "player-sentence.html",
+      "player": "player-dialogue.html",
       "data": "data/f5/l0/f5-l0-ins5.json",
       "completion": {
         "mode": "teacher_next"
@@ -143,7 +143,7 @@
       "type": "activity",
       "activity_kind": "instruction",
       "title": "Instruction 6",
-      "player": "player-sentence.html",
+      "player": "player-dialogue.html",
       "data": "data/f5/l0/f5-l0-ins6.json",
       "completion": {
         "mode": "teacher_next"
@@ -179,7 +179,7 @@
       "type": "activity",
       "activity_kind": "instruction",
       "title": "Instruction 7",
-      "player": "player-sentence.html",
+      "player": "player-dialogue.html",
       "data": "data/f5/l0/f5-l0-ins7.json",
       "completion": {
         "mode": "teacher_next"
