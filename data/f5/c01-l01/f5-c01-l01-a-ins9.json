@@ -1,0 +1,15 @@
+{
+  "title": "Instruction",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f5/c01-l01/f5-c01-l01-a-ins9.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Take note of your friend’s appearance and personality.", "audio": "" },
+    { "text": "Using “a little” / “quite” / “very”", "audio": "" },
+    { "text": "Tell the class about your friend.”", "audio": "" }
+  ]
+}
