@@ -1,0 +1,273 @@
+{
+  "lesson_id": "f05-c01-c01-l011",
+  "title": "Foundation 5 – Lesson C01-c01-l011",
+  "level": "A2",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-cover",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-lead1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-h5p.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-vob1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 1",
+      "player": "player-h5p.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-vob1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins3",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-vob2",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 2",
+      "player": "player-h5p.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-vob2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins4",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 4",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-vob3",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "vob",
+      "title": "Vocab 3",
+      "player": "player-h5p.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-vob3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins5",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 5",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-l-gist",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "l-gist",
+      "title": "L-Gist",
+      "player": "player-media-activity.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-l-gist.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins6",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 6",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins6.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-l-si1",
+      "order": 14,
+      "type": "activity",
+      "activity_kind": "l-si",
+      "title": "L-SI 1",
+      "player": "player-media-activity.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-l-si1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins7",
+      "order": 15,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 7",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins7.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-l-si2",
+      "order": 16,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "L-SI 2",
+      "player": "player-media-activity.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-l-si2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins8",
+      "order": 17,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 8",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins8.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-pick"
+      "order": 18,
+      "type": "activity",
+      "activity_kind": "pick",
+      "title": "Pick structure",
+      "player": "player-media-activity.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-pick.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-sen1",
+      "order": 19,
+      "type": "activity",
+      "activity_kind": "sen",
+      "title": "Structure pattern 1",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-sen1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-sen2",
+      "order": 20,
+      "type": "activity",
+      "activity_kind": "sen",
+      "title": "Structure pattern 2",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-sen2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins9",
+      "order": 21,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 9",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins9.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-note",
+      "order": 22,
+      "type": "activity",
+      "activity_kind": "note",
+      "title": "Note",
+      "player": "player-h5p.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-note.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
