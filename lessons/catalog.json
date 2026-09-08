@@ -384,6 +384,14 @@
           "estimated_minutes": 60,
           "path": "lessons/f5/f5-l0.json",
           "status": "ready"
+        },
+        {
+          "lesson_id": "f05-c01-l01",
+          "title": "Lesson C01-L01",
+          "level": "A2",
+          "estimated_minutes": 60,
+          "path": "lessons/f5/f5-c01-l01.json",
+          "status": "ready"
         }
       ]
     },  
