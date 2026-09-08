@@ -210,7 +210,7 @@
       }
     },
     {
-      "id": "a-pick"
+      "id": "a-pick",
       "order": 18,
       "type": "activity",
       "activity_kind": "pick",
