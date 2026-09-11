@@ -232,6 +232,222 @@
       "completion": {
         "mode": "teacher_next"
       }
+    },
+    {
+      "id": "b-cover",
+      "order": 20,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "SECTION B",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-rev",
+      "order": 21,
+      "type": "activity",
+      "activity_kind": "rev",
+      "title": "Review",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-rev1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins1",
+      "order": 22,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con1",
+      "order": 23,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled Practice 1",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins2",
+      "order": 24,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con2",
+      "order": 25,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled Practice 2",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins3",
+      "order": 26,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con3",
+      "order": 27,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled Practice 3",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-con3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins4",
+      "order": 28,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 4",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con4",
+      "order": 29,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled Practice 4",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-con4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins5",
+      "order": 30,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 5",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con5",
+      "order": 31,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled Practice 5",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-con5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins6",
+      "order": 32,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 6",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins6.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con6",
+      "order": 33,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled Practice 6",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-con6.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins7",
+      "order": 34,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 7",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins7.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-note",
+      "order": 35,
+      "type": "activity",
+      "activity_kind": "note",
+      "title": "Take note",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-note.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins8",
+      "order": 36,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 8",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-ins8.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-inter",
+      "order": 37,
+      "type": "activity",
+      "activity_kind": "inter",
+      "title": "Interaction",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l05/f1-s01-l05-b-inter.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
     }
   ]
 }
