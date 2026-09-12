@@ -108,7 +108,7 @@
       "activity_kind": "instruction",
       "title": "Instruction 4",
       "player": "player-dialogue.html",
-      "data": "data/f3/s01-l02/f3-s01-l02-a-ins3.json",
+      "data": "data/f3/s01-l02/f3-s01-l02-a-ins4.json",
       "completion": {
         "mode": "teacher_next"
       }
