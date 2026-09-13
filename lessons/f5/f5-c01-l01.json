@@ -258,8 +258,32 @@
       }
     },
     {
-      "id": "a-note",
+      "id": "a-dict",
       "order": 22,
+      "type": "activity",
+      "activity_kind": "dict",
+      "title": "Dictation",
+      "player": "player-h5p.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-dict.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins10",
+      "order": 23,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Instruction 10",
+      "player": "player-dialogue.html",
+      "data": "data/f5/c01-l01/f5-c01-l01-a-ins10.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-note",
+      "order": 24,
       "type": "activity",
       "activity_kind": "note",
       "title": "Note",
