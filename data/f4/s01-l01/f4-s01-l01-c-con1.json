@@ -1,0 +1,16 @@
+{
+  "title": "Remember and describe",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s01-l01/f4-s01-l01-c-con1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Is he tall or short?", "audio": "" },
+    { "text": "What hair does he have?", "audio": "" },
+    { "text": "Does he wear glasses?", "audio": "" },
+    { "text": "What does he wear?", "audio": "" }
+  ]
+}
