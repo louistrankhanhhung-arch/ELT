@@ -160,6 +160,210 @@
       "completion": {
         "mode": "teacher_next"
       }
+    },
+    {
+      "id": "b-cover",
+      "order": 15,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section B",
+      "player": "player-text.html",
+      "data": "data/a1/w1/a1-w1-a-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins1",
+      "order": 16,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con1",
+      "order": 17,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins2",
+      "order": 18,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con2",
+      "order": 19,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins3",
+      "order": 20,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con3",
+      "order": 21,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 3",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins4",
+      "order": 22,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 4",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con4",
+      "order": 23,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 4",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-gram1",
+      "order": 24,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Grammar 1",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-gram1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins5",
+      "order": 25,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 5",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con5",
+      "order": 26,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 5",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con5.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-gram2",
+      "order": 27,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Grammar 2",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-gram2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins6",
+      "order": 28,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 6",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins6.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con6",
+      "order": 29,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 6",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con6.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "ins7",
+      "order": 30,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 7",
+      "player": "player-dialogue.html",
+      "data": "data/a1/w1/a1-w1-b-ins7.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con7",
+      "order": 31,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 7",
+      "player": "player-h5p.html",
+      "data": "data/a1/w1/a1-w1-b-con7.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
     }
   ]
 }
