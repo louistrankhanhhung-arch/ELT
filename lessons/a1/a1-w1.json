@@ -168,7 +168,7 @@
       "activity_kind": "text",
       "title": "Section B",
       "player": "player-text.html",
-      "data": "data/a1/w1/a1-w1-a-cover.json",
+      "data": "data/a1/w1/a1-w1-b-cover.json",
       "completion": {
         "mode": "teacher_next"
       }
