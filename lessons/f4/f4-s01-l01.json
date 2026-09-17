@@ -760,6 +760,18 @@
       "completion": {
         "mode": "teacher_next"
       }
+    },
+    {
+      "id": "rev-l",
+      "order": 64,
+      "type": "activity",
+      "activity_kind": "rev-l",
+      "title": "Review - Listening",
+      "player": "player-h5p.html",
+      "data": "data/f4/s01-l01/f4-s01-l01-rev-l.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
     }
   ]
 }
