@@ -1,0 +1,6 @@
+{
+  "embed_url": "https://forms.gle/rHFSdWXv9JBaXPho7",
+  "height": 720,
+  "allow": "geolocation *; microphone *; camera *; midi *; encrypted-media *",
+  "allow_fullscreen": true
+}
