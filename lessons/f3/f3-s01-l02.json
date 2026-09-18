@@ -431,7 +431,7 @@
       "type": "activity",
       "activity_kind": "lead-in",
       "title": "Lead-in",
-      "player": "player-meadia-activity.html",
+      "player": "player-media-activity.html",
       "data": "data/f3/s01-l02/f3-s01-l02-c-lead1.json",
       "completion": {
         "mode": "teacher_next"
