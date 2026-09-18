@@ -1,0 +1,16 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l02/f3-s01-l02-c-sen.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "My favourite food is cake, because it’s delicious.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l02/f3-s01-l02-sen-my-favourite-food-is-cake-because-its-delicious.mp3" },
+    { "text": "My favourite animal is the puppy, because it’s cute.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l02/f3-s01-l02-sen-my-favourite-animal-is-the-puppy-because-its-cute.mp3" },
+    { "text": "My favourite sport is football, because it’s exciting.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l02/f3-s01-l02-sen-my-favourite-sport-is-football-because-its-exciting.mp3" },
+    { "text": "My favourite activity is drawing, because it’s interesting.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f3/s01-l02/f3-s01-l02-sen-my-favourite-activity-is-drawing-because-its-interesting.mp3" }
+  ]
+}
