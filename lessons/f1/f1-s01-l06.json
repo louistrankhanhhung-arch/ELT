@@ -1,0 +1,81 @@
+{
+  "lesson_id": "f01-s01-l06",
+  "title": "Foundation 1 – Lesson S01-L06",
+  "level": "Pre-A1",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/f1/s01-l06/f1-s01-l06-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-lead1",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "leadin",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/f1/s01-l06/f1-s01-l06-a-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l06/f1-s01-l06-a-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con2",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l06/f1-s01-l06-a-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con3",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 3",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l06/f1-s01-l06-a-con3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-note",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "note",
+      "title": "Take note",
+      "player": "player-h5p.html",
+      "data": "data/f1/s01-l06/f1-s01-l06-a-note.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
