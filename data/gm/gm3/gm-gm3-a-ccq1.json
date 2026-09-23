@@ -1,0 +1,16 @@
+{
+  "title": "Read & answer",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-a-ccq1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "In “Jill is a student”, are Jill and the student two different people?", "audio": "" },
+    { "text": "Does “student” tell us who/what Jill is?", "audio": "" },
+    { "text": "Who is Tony?", "audio": "" },
+    { "text": "What are Snow and Brownie?", "audio": "" }
+  ]
+}
