@@ -90,13 +90,13 @@
       }
     },
     {
-      "id": "a-mean2",
+      "id": "a-mean2-1",
       "order": 8,
       "type": "activity",
       "activity_kind": "mean",
       "title": "Meaning 2",
       "player": "player-dialogue.html",
-      "data": "data/gm/gm3/gm-gm3-a-mean2.json",
+      "data": "data/gm/gm3/gm-gm3-a-mean2-1.json",
       "completion": {
         "mode": "teacher_next"
       }
