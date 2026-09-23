@@ -1,0 +1,13 @@
+{
+  "title": "Notice",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-b-form1-1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Can you make sentences, using Be + Adjective?", "audio": "" }
+  ]
+}
