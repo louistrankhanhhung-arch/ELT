@@ -1,0 +1,16 @@
+{
+  "title": "Notice",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-a-form1-2.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Which sentence is NOT CORRECT?", "audio": "" },
+    { "text": "She is a friendly.", "audio": "" },
+    { "text": "She is friendly.", "audio": "" },
+    { "text": "She is tall and thin.", "audio": "" }
+  ]
+}
