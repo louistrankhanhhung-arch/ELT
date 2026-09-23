@@ -354,13 +354,25 @@
       }
     },
     {
-      "id": "c-form1",
+      "id": "c-form1-1",
       "order": 29,
       "type": "activity",
       "activity_kind": "form",
       "title": "Form 1-1",
-      "player": "player-dialogue.html",
+      "player": "player-h5p.html",
       "data": "data/gm/gm3/gm-gm3-c-form1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-form1-2",
+      "order": 30,
+      "type": "activity",
+      "activity_kind": "form",
+      "title": "Form 1-2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-c-form1-2.json",
       "completion": {
         "mode": "teacher_next"
       }
