@@ -410,9 +410,24 @@
           "status": "ready"
         }
       ]
-    },  
+    },
     {
-      "course_id": "a04",
+      "course_id": "gm",
+      "course_title": "Grammar",
+      "description": "Grammar track for A1-A2 learners.",
+      "lessons": [
+        {
+          "lesson_id": "gm-gm3",
+          "title": "G03",
+          "level": "A1-A2",
+          "estimated_minutes": 60,
+          "path": "lessons/gm/gm-gm3.json",
+          "status": "ready"
+        }
+      ]
+    },
+    {
+      "course_id": "a01",
       "course_title": "Accelerator 1",
       "description": "Accelerator track for A1-B1 learners.",
       "lessons": [
