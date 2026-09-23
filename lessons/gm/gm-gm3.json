@@ -1,0 +1,417 @@
+{
+  "lesson_id": "gm-gm3",
+  "title": "Grammar – Lesson G03",
+  "level": "A1-A2",
+  "version": "0.1",
+  "estimated_minutes": 60,
+  "blocks": [
+    {
+      "id": "cover",
+      "order": 1,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Cover",
+      "player": "player-text.html",
+      "data": "data/gm/gm3/gm-gm3-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-cover",
+      "order": 2,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section A",
+      "player": "player-text.html",
+      "data": "data/gm/gm3/gm-gm3-a-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-lead1",
+      "order": 3,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-mean1-1",
+      "order": 4,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 1-1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-mean1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-mean1-2",
+      "order": 5,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 1-2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-mean1-2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ccq1",
+      "order": 6,
+      "type": "activity",
+      "activity_kind": "ccq",
+      "title": "CCQ 1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-ccq1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ccq2",
+      "order": 7,
+      "type": "activity",
+      "activity_kind": "ccq",
+      "title": "CCQ 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-ccq2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-mean2",
+      "order": 8,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-mean2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-form1-1",
+      "order": 9,
+      "type": "activity",
+      "activity_kind": "form",
+      "title": "Form 1-1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-form1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-form1-2",
+      "order": 10,
+      "type": "activity",
+      "activity_kind": "form",
+      "title": "Form 1-2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-form1-2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins1",
+      "order": 11,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con1",
+      "order": 12,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-a-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins2",
+      "order": 13,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con2",
+      "order": 14,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-a-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-ins3",
+      "order": 15,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-a-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "a-con3",
+      "order": 16,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 3",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-a-con3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-cover",
+      "order": 17,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section B",
+      "player": "player-text.html",
+      "data": "data/gm/gm3/gm-gm3-b-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-lead1",
+      "order": 18,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-mean1-1",
+      "order": 19,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 1-1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-mean1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-mean1-2",
+      "order": 20,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 1-2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-mean1-2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-mean1-3",
+      "order": 21,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 1-3",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-mean1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-form1-1",
+      "order": 22,
+      "type": "activity",
+      "activity_kind": "form",
+      "title": "Form 1-1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-form1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-form1-2",
+      "order": 23,
+      "type": "activity",
+      "activity_kind": "form",
+      "title": "Form 1-2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-form1-2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-ins1",
+      "order": 24,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con1",
+      "order": 25,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-b-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "b-con2",
+      "order": 26,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-b-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-cover",
+      "order": 27,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section C",
+      "player": "player-text.html",
+      "data": "data/gm/gm3/gm-gm3-c-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-lead1",
+      "order": 28,
+      "type": "activity",
+      "activity_kind": "instruction",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-c-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-mean1-1",
+      "order": 29,
+      "type": "activity",
+      "activity_kind": "mean",
+      "title": "Meaning 1-1",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-c-mean1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-form1",
+      "order": 29,
+      "type": "activity",
+      "activity_kind": "form",
+      "title": "Form 1-1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-c-form1-1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+     {
+      "id": "c-ins1",
+      "order": 31,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-c-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-con1",
+      "order": 32,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-c-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-ins2",
+      "order": 33,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-c-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "c-con2",
+      "order": 34,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-c-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    }
+  ]
+}
