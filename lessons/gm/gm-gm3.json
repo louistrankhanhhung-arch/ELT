@@ -251,8 +251,8 @@
       "type": "activity",
       "activity_kind": "mean",
       "title": "Meaning 1-3",
-      "player": "player-dialogue.html",
-      "data": "data/gm/gm3/gm-gm3-b-mean1-1.json",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-b-mean1-3.json",
       "completion": {
         "mode": "teacher_next"
       }
