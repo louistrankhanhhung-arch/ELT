@@ -234,13 +234,13 @@
       }
     },
     {
-      "id": "a-con2",
+      "id": "a-inter",
       "order": 20,
       "type": "activity",
-      "activity_kind": "con",
-      "title": "Controlled practice 2",
+      "activity_kind": "inter",
+      "title": "Interaction",
       "player": "player-h5p.html",
-      "data": "data/f1/s02-l01/f1-s02-l01-a-con2.json",
+      "data": "data/f1/s02-l01/f1-s02-l01-a-inter.json",
       "completion": {
         "mode": "teacher_next"
       }
