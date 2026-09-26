@@ -1,0 +1,41 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "mum",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-mum.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-mum.mp3"
+    },
+    {
+      "word": "dad",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-dad.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-dad.mp3"
+    },
+    {
+      "word": "brother",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-brother.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-brother.mp3"
+    },
+    {
+      "word": "sister",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-sister.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-sister.mp3"
+    },
+    {
+      "word": "grandpa",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-grandpa.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-grandpa.mp3"
+    },
+    {
+      "word": "grandma",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-grandma.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-vob-grandma.mp3"
+    }
+  ]
+}
