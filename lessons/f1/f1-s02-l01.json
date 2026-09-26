@@ -179,7 +179,7 @@
       "type": "activity",
       "activity_kind": "pick",
       "title": "Pick structure",
-      "player": "player-h5p.html",
+      "player": "player-media-activity.html",
       "data": "data/f1/s02-l01/f1-s02-l01-a-pick1.json",
       "completion": {
         "mode": "teacher_next"
