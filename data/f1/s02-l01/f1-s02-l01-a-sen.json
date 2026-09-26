@@ -1,0 +1,18 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-a-sen.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "He is my dad.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-sen-he-is-my-dad.mp3" },
+    { "text": "He is my brother.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-sen-he-is-my-brother.mp3" },
+    { "text": "He is my grandpa.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-sen-he-is-my-grandpa.mp3" },
+    { "text": "She is my mum. ", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-sen-she-is-my-mum.mp3" },
+    { "text": "She is my sister.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-sen-she-is-my-sister.mp3" },
+    { "text": "She is my grandma.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-sen-she-is-my-grandma.mp3" }
+  ]
+}
