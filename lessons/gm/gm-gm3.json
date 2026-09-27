@@ -411,8 +411,9 @@
       "data": "data/gm/gm3/gm-gm3-c-con2.json",
       "completion": {
         "mode": "teacher_next"
-      },
-      {
+      }
+    },
+    {
       "id": "d-cover",
       "order": 35,
       "type": "activity",
