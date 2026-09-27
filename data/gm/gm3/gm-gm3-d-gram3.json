@@ -1,0 +1,20 @@
+{
+  "title": "Notice",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-gram3.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "I’m happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-im-happy.mp3" },
+    { "text": "→ I’m not happy.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-im-not-happy.mp3" },
+    { "text": "He is at school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-he-is-at-school.mp3" },
+    { "text": "→ He is not at school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-he-is-not-at-school.mp3" },
+    { "text": "→ He isn’t at school.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-he-isnt-at-school.mp3" },
+    { "text": "They are my friends.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-they-are-my-friends.mp3" },
+    { "text": "→ They are not my friends.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-they-are-not-my-friends.mp3" },
+    { "text": "→ They aren’t my friends.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-they-arent-my-friends.mp3" }
+  ]
+}
