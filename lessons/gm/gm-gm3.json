@@ -411,6 +411,149 @@
       "data": "data/gm/gm3/gm-gm3-c-con2.json",
       "completion": {
         "mode": "teacher_next"
+      },
+      {
+      "id": "d-cover",
+      "order": 35,
+      "type": "activity",
+      "activity_kind": "text",
+      "title": "Section D",
+      "player": "player-text.html",
+      "data": "data/gm/gm3/gm-gm3-d-cover.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-lead1",
+      "order": 36,
+      "type": "activity",
+      "activity_kind": "lead",
+      "title": "Lead-in",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-lead1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-gram1",
+      "order": 37,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-gram1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-gram2",
+      "order": 38,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-gram2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-gram3",
+      "order": 39,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 3",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-gram3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-ins1",
+      "order": 40,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 1",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-ins1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-con1",
+      "order": 41,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 1",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-d-con1.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-gram4",
+      "order": 42,
+      "type": "activity",
+      "activity_kind": "gram",
+      "title": "Grammar 4",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-gram4.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-ins2",
+      "order": 43,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 2",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-ins2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-con2",
+      "order": 44,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 2",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-d-con2.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-ins3",
+      "order": 45,
+      "type": "activity",
+      "activity_kind": "ins",
+      "title": "Instruction 3",
+      "player": "player-dialogue.html",
+      "data": "data/gm/gm3/gm-gm3-d-ins3.json",
+      "completion": {
+        "mode": "teacher_next"
+      }
+    },
+    {
+      "id": "d-con3",
+      "order": 46,
+      "type": "activity",
+      "activity_kind": "con",
+      "title": "Controlled practice 3",
+      "player": "player-h5p.html",
+      "data": "data/gm/gm3/gm-gm3-d-con3.json",
+      "completion": {
+        "mode": "teacher_next"
       }
     }
   ]
