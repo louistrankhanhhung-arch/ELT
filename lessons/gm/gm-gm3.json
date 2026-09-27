@@ -431,7 +431,7 @@
       "type": "activity",
       "activity_kind": "lead",
       "title": "Lead-in",
-      "player": "player-dialogue.html",
+      "player": "player-h5p.html",
       "data": "data/gm/gm3/gm-gm3-d-lead1.json",
       "completion": {
         "mode": "teacher_next"
