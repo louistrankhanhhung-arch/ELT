@@ -1,0 +1,18 @@
+{
+  "title": "Notice",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-gram4.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "I’m a driver.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-im-a-driver.mp3" },
+    { "text": "→ Are you a driver?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-are-you-a-driver.mp3" },
+    { "text": "Tom is in the park.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-tom-is-in-the-park.mp3" },
+    { "text": "→ Is Tom in the park?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-is-tom-in-the-park.mp3" },
+    { "text": "We are tired.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-we-are-tired.mp3" },
+    { "text": "→ Are you tired?", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/gm/gm3/gm-gm3-d-sen-are-you-tired.mp3" }
+  ]
+}
