@@ -1,0 +1,16 @@
+{
+  "title": "Listen & repeat",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-pick1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "It is a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-sen-it-is-a-dog.mp3" },
+    { "text": "→ It’s a dog.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-sen-its-a-dog.mp3" },
+    { "text": "It is a ball.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-sen-it-is-a-ball.mp3" },
+    { "text": "→ It’s a ball.", "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-sen-its-a-ball.mp3" }
+  ]
+}
