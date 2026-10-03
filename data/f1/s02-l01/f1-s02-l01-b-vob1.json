@@ -1,0 +1,52 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "dog",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-dog.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-dog.mp3"
+    },
+    {
+      "word": "cat",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-cat.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-cat.mp3"
+    },
+    {
+      "word": "fish",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-fish.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-fish.mp3"
+    },
+    {
+      "word": "bird",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-bird.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-bird.mp3"
+    },
+    {
+      "word": "rabbit",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-rabbit.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-rabbit.mp3"
+    },
+    {
+      "word": "hamster",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-hamster.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-hamster.mp3"
+    },
+    {
+      "word": "turtle",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-turtle.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-turtle.mp3"
+    },
+    
+    {
+      "word": "parrot",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-parrot.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-parrot.mp3"
+    }
+  ]
+}
