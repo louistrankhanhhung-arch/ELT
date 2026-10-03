@@ -1,0 +1,52 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "bag",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-bag.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-bag.mp3"
+    },
+    {
+      "word": "book",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-book.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-book.mp3"
+    },
+    {
+      "word": "pencil",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-pencil.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-pencil.mp3"
+    },
+    {
+      "word": "ball",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-ball.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-ball.mp3"
+    },
+    {
+      "word": "cap",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-cap.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-cap.mp3"
+    },
+    {
+      "word": "hat",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-hat.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-hat.mp3"
+    },
+    {
+      "word": "bike",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-bike.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-bike.mp3"
+    },
+    
+    {
+      "word": "phone",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-phone.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f1/s02-l01/f1-s02-l01-b-vob-phone.mp3"
+    }
+  ]
+}
