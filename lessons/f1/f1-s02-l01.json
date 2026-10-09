@@ -456,7 +456,7 @@
       "activity_kind": "ins",
       "title": "Pick Structure 1",
       "player": "player-dialogue.html",
-      "data": "data/f1/s02-l01/f1-s02-l01-a-pick1.json",
+      "data": "data/f1/s02-l01/f1-s02-l01-c-pick1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -468,7 +468,7 @@
       "activity_kind": "ins",
       "title": "Pick Structure 2",
       "player": "player-dialogue.html",
-      "data": "data/f1/s02-l01/f1-s02-l01-a-pick2.json",
+      "data": "data/f1/s02-l01/f1-s02-l01-c-pick2.json",
       "completion": {
         "mode": "teacher_next"
       }
