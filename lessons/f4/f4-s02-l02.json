@@ -1,6 +1,6 @@
 {
-  "lesson_id": "f04-s01-s01-l011",
-  "title": "Foundation 4 – Lesson S01-s01-l011",
+  "lesson_id": "f04-s02-l02",
+  "title": "Foundation 4 – Lesson S02-L02",
   "level": "A1-A2",
   "version": "0.1",
   "estimated_minutes": 60,
@@ -12,7 +12,7 @@
       "activity_kind": "text",
       "title": "Cover",
       "player": "player-text.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-cover.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-cover.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -24,7 +24,7 @@
       "activity_kind": "lead",
       "title": "Lead-in",
       "player": "player-h5p.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-lead1.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-lead1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -36,7 +36,7 @@
       "activity_kind": "vocab",
       "title": "Vocab",
       "player": "player-grid-v2.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-vob.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-vob.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -48,7 +48,7 @@
       "activity_kind": "r-si",
       "title": "R-SI",
       "player": "player-h5p.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-r-si.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-r-si.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -60,7 +60,7 @@
       "activity_kind": "sen",
       "title": "Notice pattern 1",
       "player": "player-dialogue.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-sen1.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-sen1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -72,7 +72,7 @@
       "activity_kind": "sen",
       "title": "Notice pattern 2",
       "player": "player-dialogue.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-sen2.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-sen2.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -84,7 +84,7 @@
       "activity_kind": "sen",
       "title": "Notice pattern 3",
       "player": "player-dialogue.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-sen3.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-sen3.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -96,7 +96,7 @@
       "activity_kind": "con",
       "title": "Controlled practice",
       "player": "player-h5p.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-con1.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-con1.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -108,7 +108,7 @@
       "activity_kind": "free",
       "title": "Output",
       "player": "player-h5p.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-free.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-free.json",
       "completion": {
         "mode": "teacher_next"
       }
@@ -120,7 +120,7 @@
       "activity_kind": "text",
       "title": "Exit ticket",
       "player": "player-text.html",
-      "data": "data/f4/s01-l01/f4-s02-l02-exit.json",
+      "data": "data/f4/s02-l02/f4-s02-l02-exit.json",
       "completion": {
         "mode": "teacher_next"
       }
