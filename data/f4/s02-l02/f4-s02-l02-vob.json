@@ -1,0 +1,51 @@
+{
+  "title": "Listen & repeat",
+  "settings": {
+    "shuffle": false,
+    "hideText": false,
+    "autoplayOnFocus": true,
+    "delayMs": 900
+  },
+  "items": [
+    {
+      "word": "friendly",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-friendly.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-friendly.mp3"
+    },
+    {
+      "word": "kind",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-kind.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-kind.mp3"
+    },
+    {
+      "word": "funny",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-funny.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-funny.mp3"
+    },
+    {
+      "word": "quiet",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-quiet.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-quiet.mp3"
+    },
+    {
+      "word": "shy",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-shy.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-shy.mp3"
+    },
+    {
+      "word": "helpful",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-helpful.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-helpful.mp3"
+    },
+    {
+      "word": "clever",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-clever.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-clever.mp3"
+    },
+    {
+      "word": "hard-working",
+      "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-hard-working.png",
+      "audio": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s02-l02/f4-s02-l02-vob-hard-working.mp3"
+    }
+  ]
+}
