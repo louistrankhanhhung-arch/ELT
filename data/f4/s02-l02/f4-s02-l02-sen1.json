@@ -1,0 +1,15 @@
+{
+  "title": "Describe personality",
+  "img": "https://pub-af09166f1dd74d53a2042fd46f7462d7.r2.dev/f4/s01-l01/f4-s02-l02-sen1.png",
+  "settings": {
+    "slowRate": 0.6,
+    "lineModePauseMs": 1100,
+    "hideText": false,
+    "lineMode": false
+  },
+  "lines": [
+    { "text": "Which words describe personality? ", "audio": "" },
+    { "text": "What comes after ‘is’?", "audio": "" },
+    { "text": "When do we use ‘and’ and ‘but’?", "audio": "" }
+  ]
+}
