@@ -353,6 +353,17 @@
       <button id="copyStudentBtn">Copy Join Link</button>
     </div>
   </header>
+  <details id="writingPanel" hidden>
+    <summary>Writing · Giao và xem bài</summary>
+    <form id="writingAssignForm">
+      <label>Đề bài <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
+      <button type="submit">Giao bài Writing</button>
+    </form>
+    <button type="button" id="writingExport" hidden>Xuất CSV</button>
+    <p id="writingFeedback" role="status"></p>
+    <p id="writingCount"></p>
+    <div id="writingResults"></div>
+  </details>
 
   <main class="app">
     <aside class="sidebar" id="blockList"></aside>
@@ -511,6 +522,68 @@
 
     let currentLesson = null;
     let sessionPin = null;
+    const writingPanel = document.getElementById("writingPanel");
+    const writingAssignForm = document.getElementById("writingAssignForm");
+    const writingExport = document.getElementById("writingExport");
+    const writingFeedback = document.getElementById("writingFeedback");
+    const writingCount = document.getElementById("writingCount");
+    const writingResults = document.getElementById("writingResults");
+
+    writingAssignForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const prompt = writingAssignForm.elements.prompt.value.trim();
+      if (!sessionPin || !prompt) return;
+      const button = writingAssignForm.querySelector("button");
+      button.disabled = true;
+      try {
+        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/writing`, {
+          method: "POST",
+          headers: { ...teacherHeaders(), "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+        if (!response.ok) throw new Error("Giao bài chưa thành công.");
+        writingFeedback.textContent = "Đã giao. Chọn Interact để học sinh nộp bài.";
+        writingAssignForm.hidden = true;
+        await updateWritingResults(sessionPin);
+      } catch (error) {
+        writingFeedback.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    async function updateWritingResults(pin) {
+      const response = await fetch(`${API_BASE}/sessions/${pin}/writing/results`, { headers: teacherHeaders() });
+      if (!response.ok || pin !== sessionPin) return;
+      const result = await response.json();
+      writingCount.textContent = `Đã nộp: ${result.submissions.length}/${result.joined} học sinh đã vào lớp`;
+      writingExport.hidden = false;
+      if (writingResults.childElementCount === result.submissions.length) return;
+      writingResults.replaceChildren(...result.submissions.map((submission) => {
+        const row = document.createElement("details");
+        const label = document.createElement("summary");
+        const answer = document.createElement("p");
+        label.textContent = submission.student_name;
+        answer.textContent = submission.response;
+        answer.style.whiteSpace = "pre-wrap";
+        row.append(label, answer);
+        return row;
+      }));
+    }
+
+    writingExport.addEventListener("click", async () => {
+      try {
+        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/writing/export`, { headers: teacherHeaders() });
+        if (!response.ok) throw new Error("Chưa xuất được CSV.");
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(await response.blob());
+        link.download = `writing-${sessionPin}.csv`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      } catch (error) {
+        writingFeedback.textContent = error.message;
+      }
+    });
     const displayMode = document.getElementById("displayMode");
     const displayModeStatus = document.getElementById("displayModeStatus");
     let savedDisplayMode = "follow";
@@ -671,6 +744,12 @@
         const session = await res.json();
 
         sessionPin = session.pin;
+        writingPanel.hidden = false;
+        writingAssignForm.hidden = false;
+        writingExport.hidden = true;
+        writingFeedback.textContent = "";
+        writingCount.textContent = "";
+        writingResults.replaceChildren();
         savedDisplayMode = session.display_mode || "follow";
         displayMode.value = savedDisplayMode;
         displayMode.disabled = false;
@@ -746,6 +825,7 @@
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";
         endSessionBtn.disabled = true;
+        writingAssignForm.hidden = true;
         displayMode.disabled = true;
         displayModeStatus.textContent = "";
 
@@ -782,6 +862,7 @@
         if (!res.ok) return;
 
         const session = await res.json();
+        if (session.writing_task) await updateWritingResults(sessionPin);
         const students = session.students || [];
         const events = session.events || [];
         

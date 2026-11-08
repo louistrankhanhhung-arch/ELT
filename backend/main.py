@@ -4,11 +4,13 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from random import randint
 from datetime import datetime, timezone, timedelta
 from typing import List, Literal, Optional
+import csv
 import hashlib
+import io
 import hmac
 import json
 import os
@@ -218,6 +220,22 @@ def init_db():
         """)
 
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS writing_assignments (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin),
+            prompt TEXT NOT NULL,
+            assigned_at TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS writing_submissions (
+            pin TEXT NOT NULL REFERENCES writing_assignments(pin),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            response TEXT NOT NULL,
+            submitted_at TEXT NOT NULL,
+            PRIMARY KEY (pin, student_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS session_display_modes (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
             mode TEXT NOT NULL
@@ -279,6 +297,8 @@ def get_session(pin: str):
     events = [dict(row) for row in cur.fetchall()]
     cur.execute(sql("SELECT mode FROM session_display_modes WHERE pin = ?"), (pin,))
     display = cur.fetchone()
+    cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
+    writing = cur.fetchone()
 
     conn.close()
 
@@ -286,6 +306,7 @@ def get_session(pin: str):
     data["students"] = students
     data["events"] = events
     data["display_mode"] = display["mode"] if display else "follow"
+    data["writing_task"] = {"schema_version": 1, "type": "writing", **dict(writing)} if writing else None
     return data
 
 def update_session_status(pin: str, status: str):
@@ -691,3 +712,102 @@ def imported_slide(deck_id: str, number: int):
     return Response(bytes(page["image"]), media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
 
 app.mount("/studio", StaticFiles(directory=Path(__file__).parent / "studio"), name="studio")
+
+
+class WritingAssignmentRequest(BaseModel):
+    prompt: str = Field(min_length=1, max_length=4000)
+
+
+class WritingSubmissionRequest(BaseModel):
+    student_id: str
+    response: str = Field(min_length=1, max_length=20000)
+
+
+@app.post("/api/sessions/{pin}/writing", dependencies=[Depends(require_teacher)])
+def assign_writing(pin: str, payload: WritingAssignmentRequest):
+    require_active_session(pin)
+    prompt = payload.prompt.strip()
+    if not prompt:
+        raise HTTPException(422, "Enter a writing prompt")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            INSERT INTO writing_assignments (pin, prompt, assigned_at) VALUES (?, ?, ?)
+            ON CONFLICT(pin) DO NOTHING
+        """), (pin, prompt, now_iso()))
+        if cur.rowcount != 1:
+            raise HTTPException(409, "This session already has a writing task")
+        conn.commit()
+    return {"ok": True}
+
+
+@app.post("/api/sessions/{pin}/writing/submissions")
+def submit_writing(pin: str, payload: WritingSubmissionRequest):
+    session = require_active_session(pin)
+    if not any(student["student_id"] == payload.student_id for student in session["students"]):
+        raise HTTPException(403, "Join the session before submitting")
+    if not session["writing_task"]:
+        raise HTTPException(404, "No writing task assigned")
+    if not payload.response.strip():
+        raise HTTPException(422, "Enter a response before submitting")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT response FROM writing_submissions WHERE pin = ? AND student_id = ?
+        """), (pin, payload.student_id))
+        prior = cur.fetchone()
+        if not prior:
+            if session["display_mode"] != "interact":
+                raise HTTPException(409, "The teacher must enable Interact")
+            cur.execute(sql("""
+                INSERT INTO writing_submissions (pin, student_id, response, submitted_at)
+                VALUES (?, ?, ?, ?) ON CONFLICT(pin, student_id) DO NOTHING
+            """), (pin, payload.student_id, payload.response, now_iso()))
+            conn.commit()
+            cur.execute(sql("""
+                SELECT response FROM writing_submissions WHERE pin = ? AND student_id = ?
+            """), (pin, payload.student_id))
+            prior = cur.fetchone()
+    if prior["response"] != payload.response:
+        raise HTTPException(409, "A different response was already submitted")
+    return {"ok": True}
+
+
+def writing_results(pin: str):
+    session = get_session(pin)
+    if not session or not session["writing_task"]:
+        raise HTTPException(404, "Writing task not found")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT sub.student_id, student.student_name, sub.response, sub.submitted_at
+            FROM writing_submissions AS sub
+            JOIN session_students AS student ON student.student_id = sub.student_id
+            WHERE sub.pin = ? ORDER BY sub.submitted_at, sub.student_id
+        """), (pin,))
+        submissions = [dict(row) for row in cur.fetchall()]
+    return {"task": session["writing_task"], "joined": len(session["students"]), "submissions": submissions}
+
+
+@app.get("/api/sessions/{pin}/writing/results", dependencies=[Depends(require_teacher)])
+def get_writing_results(pin: str):
+    return writing_results(pin)
+
+
+@app.get("/api/sessions/{pin}/writing/export", dependencies=[Depends(require_teacher)])
+def export_writing(pin: str):
+    results = writing_results(pin)
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["schema_version", "pin", "prompt", "student_id", "student_name", "response", "submitted_at"])
+    for row in results["submissions"]:
+        values = [1, pin, results["task"]["prompt"], row["student_id"], row["student_name"], row["response"], row["submitted_at"]]
+        writer.writerow([
+            "'" + value if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@")) else value
+            for value in values
+        ])
+    return Response(
+        output.getvalue().encode("utf-8-sig"),
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="writing-{pin}.csv"'},
+    )

@@ -137,6 +137,15 @@
       <div class="status" id="statusText">Student runtime</div>
     </div>
   </header>
+  <section id="writingPanel" hidden>
+    <h2>Writing</h2>
+    <p id="writingPrompt" style="white-space:pre-wrap"></p>
+    <form id="writingForm">
+      <label>Câu trả lời <textarea name="response" rows="5" maxlength="20000" required></textarea></label>
+      <button type="submit">Nộp bài</button>
+    </form>
+    <p id="writingStatus" role="status"></p>
+  </section>
 
   <main class="runtime">
     <iframe id="playerFrame"></iframe>
@@ -179,6 +188,44 @@
     let currentLesson = null;
     let lastSessionBlockIndex = null;
     let displayMode = "follow";
+    const writingPanel = document.getElementById("writingPanel");
+    const writingForm = document.getElementById("writingForm");
+    const writingStatus = document.getElementById("writingStatus");
+    let writingSubmitted = false;
+
+    function syncWriting(task) {
+      writingPanel.hidden = !task || displayMode !== "interact" || !studentId;
+      if (task) document.getElementById("writingPrompt").textContent = task.prompt;
+      writingForm.hidden = writingSubmitted;
+    }
+
+    writingForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const responseText = writingForm.elements.response.value;
+      if (writingPanel.hidden || writingSubmitted || !responseText.trim()) return;
+      const button = writingForm.querySelector("button");
+      button.disabled = true;
+      writingForm.elements.response.readOnly = true;
+      try {
+        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/writing/submissions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId, response: responseText })
+        });
+        if (!response.ok) {
+          const result = await response.json();
+          throw new Error(typeof result.detail === "string" ? result.detail : "Chưa nộp được bài.");
+        }
+        writingSubmitted = true;
+        writingForm.hidden = true;
+        writingStatus.textContent = "Đã nộp bài.";
+      } catch (error) {
+        writingStatus.textContent = error.message + " Câu trả lời vẫn còn trong ô nhập.";
+      } finally {
+        button.disabled = false;
+        writingForm.elements.response.readOnly = false;
+      }
+    });
     let pollInFlight = false;
     const focusMessage = document.getElementById("focusMessage");
     let isDisconnected = false;
@@ -278,6 +325,7 @@
         blockIndex = session.current_block_index || 0;
         lastSessionBlockIndex = blockIndex;
         displayMode = session.display_mode || "follow";
+        syncWriting(session.writing_task);
 
         renderSessionBlock();
         startSessionPolling();
@@ -356,6 +404,7 @@
             playerFrame.style.display = "none";
             playerFrame.src = "about:blank";
             focusMessage.hidden = true;
+            writingPanel.hidden = true;
             completeBtn.disabled = true;
             errorBox.style.display = "block";
             errorBox.textContent =
@@ -378,6 +427,7 @@
             lastSessionBlockIndex = nextIndex;
             renderSessionBlock();
           }
+          syncWriting(session.writing_task);
         } catch (err) {
           console.error(err);
           if (!isDisconnected) {
