@@ -218,6 +218,12 @@ def init_db():
         """)
 
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS session_display_modes (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin),
+            mode TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS imported_slide_pages (
             deck_id TEXT NOT NULL,
             page_number INTEGER NOT NULL,
@@ -271,12 +277,15 @@ def get_session(pin: str):
         (pin,)
     )
     events = [dict(row) for row in cur.fetchall()]
+    cur.execute(sql("SELECT mode FROM session_display_modes WHERE pin = ?"), (pin,))
+    display = cur.fetchone()
 
     conn.close()
 
     data = dict(session)
     data["students"] = students
     data["events"] = events
+    data["display_mode"] = display["mode"] if display else "follow"
     return data
 
 def update_session_status(pin: str, status: str):
@@ -470,6 +479,22 @@ def join_session(pin: str, payload: JoinSessionRequest):
         "student": student,
         "session": get_session_state(pin, None),
     }
+
+
+class DisplayModeRequest(BaseModel):
+    mode: Literal["focus", "follow", "interact"]
+
+
+@app.post("/api/sessions/{pin}/mode", dependencies=[Depends(require_teacher)])
+def set_display_mode(pin: str, payload: DisplayModeRequest):
+    require_active_session(pin)
+    with closing(db()) as conn:
+        conn.cursor().execute(sql("""
+            INSERT INTO session_display_modes (pin, mode) VALUES (?, ?)
+            ON CONFLICT(pin) DO UPDATE SET mode = excluded.mode
+        """), (pin, payload.mode))
+        conn.commit()
+    return {"display_mode": payload.mode}
 
 
 @app.post("/api/sessions/{pin}/next", dependencies=[Depends(require_teacher)])

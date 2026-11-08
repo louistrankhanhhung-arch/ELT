@@ -140,6 +140,7 @@
 
   <main class="runtime">
     <iframe id="playerFrame"></iframe>
+    <p id="focusMessage" hidden role="status">Hãy nhìn lên bảng.</p>
     <div class="error" id="errorBox" style="display:none;"></div>
   </main>
 
@@ -177,6 +178,9 @@
 
     let currentLesson = null;
     let lastSessionBlockIndex = null;
+    let displayMode = "follow";
+    let pollInFlight = false;
+    const focusMessage = document.getElementById("focusMessage");
     let isDisconnected = false;
     let pollingTimer = null;
 
@@ -273,6 +277,7 @@
         currentLesson = await lessonRes.json();
         blockIndex = session.current_block_index || 0;
         lastSessionBlockIndex = blockIndex;
+        displayMode = session.display_mode || "follow";
 
         renderSessionBlock();
         startSessionPolling();
@@ -302,12 +307,20 @@
         ? `PIN ${sessionPin}`
         : (block.activity_kind || block.type);
 
-      playerFrame.src = window.runtimePlayerUrl(block, "student");
+      const focus = displayMode === "focus";
+      const interact = displayMode === "interact";
+      focusMessage.hidden = !focus;
+      playerFrame.style.display = focus ? "none" : "block";
+      playerFrame.inert = !interact;
+      if (!interact) playerFrame.blur();
+      const source = focus ? "about:blank" : window.runtimePlayerUrl(block, "student");
+      if (playerFrame.src !== source) playerFrame.src = source;
+      statusText.textContent = `PIN ${sessionPin} · ${displayMode}`;
 
       prevBtn.disabled = true;
       nextBtn.disabled = true;
 
-      completeBtn.disabled = !sessionPin || !studentId || block.activity_kind === "google-slide";
+      completeBtn.disabled = !interact || !studentId || block.activity_kind === "google-slide";
       completeBtn.textContent = "Complete";
     }
 
@@ -315,6 +328,8 @@
       if (pollingTimer) clearInterval(pollingTimer);
 
       pollingTimer = setInterval(async () => {
+        if (pollInFlight) return;
+        pollInFlight = true;
         try {
           const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
           if (!res.ok) {
@@ -339,6 +354,9 @@
                 : "Please wait for your teacher.";
             statusText.textContent = `PIN ${sessionPin}`;
             playerFrame.style.display = "none";
+            playerFrame.src = "about:blank";
+            focusMessage.hidden = true;
+            completeBtn.disabled = true;
             errorBox.style.display = "block";
             errorBox.textContent =
               session.status === "expired"
@@ -353,7 +371,9 @@
           
           const nextIndex = session.current_block_index || 0;
 
-          if (nextIndex !== lastSessionBlockIndex) {
+          const nextMode = session.display_mode || "follow";
+          if (nextIndex !== lastSessionBlockIndex || nextMode !== displayMode) {
+            displayMode = nextMode;
             blockIndex = nextIndex;
             lastSessionBlockIndex = nextIndex;
             renderSessionBlock();
@@ -364,6 +384,8 @@
             statusText.textContent = "Reconnecting...";
             isDisconnected = true;
           }
+        } finally {
+          pollInFlight = false;
         }
       }, 1000);
     }
