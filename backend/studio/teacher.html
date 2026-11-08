@@ -439,6 +439,12 @@
 
     let blockIndex = Number(params.get("block") || 0);
 
+    const teacherTokenInput = document.createElement("input");
+    teacherTokenInput.type = "password";
+    teacherTokenInput.placeholder = "Mã giáo viên staging";
+    teacherTokenInput.setAttribute("aria-label", "Mã giáo viên staging");
+    teacherTokenInput.autocomplete = "off";
+    document.getElementById("startSessionBtn").before(teacherTokenInput);
     let teacherToken = "";
     function teacherHeaders() {
       return teacherToken ? { Authorization: "Bearer " + teacherToken } : {};
@@ -612,7 +618,7 @@
         startSessionBtn.disabled = true;
         startSessionBtn.textContent = "Starting...";
 
-        teacherToken = window.prompt("Mã truy cập giáo viên staging")?.trim() || "";
+        teacherToken = teacherTokenInput.value.trim();
         const res = await fetch(`${API_BASE}/sessions/start`, {
           method: "POST",
           headers: {
