@@ -236,6 +236,12 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS writing_task_quizzes (
+            task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
+            definition TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS active_writing_tasks (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
             task_id TEXT NOT NULL REFERENCES writing_tasks(task_id)
@@ -331,8 +337,9 @@ def get_session(pin: str):
     cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
     writing = cur.fetchone()
     cur.execute(sql("""
-        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at FROM active_writing_tasks a
-        JOIN writing_tasks t ON t.task_id = a.task_id WHERE a.pin = ?
+        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition FROM active_writing_tasks a
+        JOIN writing_tasks t ON t.task_id = a.task_id
+        LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id WHERE a.pin = ?
     """), (pin,))
     active_writing = cur.fetchone()
 
@@ -342,7 +349,7 @@ def get_session(pin: str):
     data["students"] = students
     data["events"] = events
     data["display_mode"] = display["mode"] if display else "follow"
-    data["active_writing_task"] = {"schema_version": 1, "type": "writing", **dict(active_writing)} if active_writing else None
+    data["active_writing_task"] = task_description(dict(active_writing)) if active_writing else None
     data["writing_task"] = {"schema_version": 1, "type": "writing", **dict(writing)} if writing else None
     return data
 
@@ -712,8 +719,7 @@ def import_google_slides(payload: SlidesImportRequest):
     return {"lesson_path": f"imports/{deck_id}", "slide_count": len(pages)}
 
 
-@app.get("/api/imports/{deck_id}")
-def imported_lesson(deck_id: str):
+def load_imported_lesson(deck_id: str):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("SELECT manifest FROM lesson_revisions WHERE revision_id = ?"), (deck_id,))
@@ -740,6 +746,16 @@ def imported_lesson(deck_id: str):
             for row in pages
         ],
     }
+
+
+@app.get("/api/imports/{deck_id}")
+def imported_lesson(deck_id: str):
+    manifest = load_imported_lesson(deck_id)
+    for block in manifest["blocks"]:
+        task = block.get("task")
+        if task and task.get("type") == "multiple_choice":
+            task.pop("correct_option", None)
+    return manifest
 
 
 @app.get("/api/imports/{deck_id}/pages/{number}")
@@ -854,22 +870,44 @@ def export_writing(pin: str):
     )
 
 
+class QuizDefinition(BaseModel):
+    options: List[str] = Field(min_length=4, max_length=4)
+    correct_option: int = Field(ge=0, le=3)
+
+    def normalized(self):
+        options = [option.strip() for option in self.options]
+        if any(not option or len(option) > 1000 for option in options) or len(set(options)) != 4:
+            raise HTTPException(422, "Enter four distinct answer options, up to 1000 characters each")
+        return {"options": options, "correct_option": self.correct_option}
+
+
+def task_description(row):
+    definition = row.pop("definition", None)
+    task = {"schema_version": 1, "type": "multiple_choice" if definition else "writing", **row}
+    if definition:
+        task["options"] = json.loads(definition)["options"]
+    return task
+
+
 class PreparedWritingRequest(WritingAssignmentRequest):
+    quiz: Optional[QuizDefinition] = None
     after_block: int = Field(ge=0)
 
 
 @app.post("/api/imports/{deck_id}/writing-blocks", dependencies=[Depends(require_teacher)])
 def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
-    manifest = imported_lesson(deck_id)
+    manifest = load_imported_lesson(deck_id)
     blocks = manifest["blocks"]
     prompt = payload.prompt.strip()
     if not prompt or payload.after_block >= len(blocks):
         raise HTTPException(422, "Enter a prompt and select a valid insertion point")
     revision_id = uuid4().hex
     block_id = f"writing-{revision_id}"
+    quiz = payload.quiz.normalized() if payload.quiz else None
     blocks.insert(payload.after_block + 1, {
         "id": block_id, "type": "activity", "activity_kind": "writing-task",
-        "title": "Writing task", "task": {"schema_version": 1, "type": "writing", "prompt": prompt},
+        "title": "Multiple-choice task" if quiz else "Writing task",
+        "task": {"schema_version": 1, "type": "multiple_choice" if quiz else "writing", "prompt": prompt, **(quiz or {})},
         "completion": {"mode": "teacher_next"},
     })
     manifest["lesson_id"] = f"slides-{revision_id}"
@@ -881,6 +919,7 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
 
 
 class SessionWritingRequest(BaseModel):
+    quiz: Optional[QuizDefinition] = None
     prompt: Optional[str] = Field(default=None, max_length=4000)
     block_id: Optional[str] = None
 
@@ -889,14 +928,19 @@ class SessionWritingRequest(BaseModel):
 def assign_session_writing(pin: str, payload: SessionWritingRequest):
     session = require_active_session(pin)
     prompt = (payload.prompt or "").strip()
+    quiz = payload.quiz.normalized() if payload.quiz else None
     if payload.block_id:
         if not session["lesson_path"].startswith("imports/"):
             raise HTTPException(422, "This lesson has no prepared task blocks")
-        blocks = imported_lesson(session["lesson_path"].split("/", 1)[1])["blocks"]
+        blocks = load_imported_lesson(session["lesson_path"].split("/", 1)[1])["blocks"]
+        if not 0 <= session["current_block_index"] < len(blocks):
+            raise HTTPException(409, "Move to the prepared task block before assigning it")
         block = blocks[session["current_block_index"]]
         if block["id"] != payload.block_id or block.get("activity_kind") != "writing-task":
             raise HTTPException(409, "Move to the prepared task block before assigning it")
         prompt = block["task"]["prompt"]
+        quiz = ({key: block["task"][key] for key in ("options", "correct_option")}
+                if block["task"]["type"] == "multiple_choice" else None)
     if not prompt:
         raise HTTPException(422, "Enter a writing prompt")
     task_id = uuid4().hex
@@ -909,6 +953,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         if cur.rowcount != 1:
             cur.execute(sql("SELECT task_id FROM writing_tasks WHERE pin = ? AND block_id = ?"), (pin, payload.block_id))
             task_id = cur.fetchone()["task_id"]
+        elif quiz:
+            cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
         cur.execute(sql("""
             INSERT INTO active_writing_tasks VALUES (?, ?)
             ON CONFLICT(pin) DO UPDATE SET task_id = excluded.task_id
@@ -935,6 +981,8 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
             active = session["active_writing_task"]
             if not active or active["task_id"] != task_id or session["display_mode"] != "interact":
                 raise HTTPException(409, "This task is not open for submissions")
+            if active["type"] == "multiple_choice" and payload.response not in {"0", "1", "2", "3"}:
+                raise HTTPException(422, "Select one of the four options")
             cur.execute(sql("""
                 INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
                 ON CONFLICT(task_id, student_id) DO NOTHING
@@ -955,8 +1003,9 @@ def session_task_results(pin: str):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT task_id, block_id, prompt, assigned_at FROM writing_tasks
-            WHERE pin = ? ORDER BY assigned_at, task_id
+            SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition
+            FROM writing_tasks t LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            WHERE t.pin = ? ORDER BY t.assigned_at, t.task_id
         """), (pin,))
         tasks = [dict(row) for row in cur.fetchall()]
         cur.execute(sql("""
@@ -967,7 +1016,16 @@ def session_task_results(pin: str):
         """), (pin,))
         responses = [dict(row) for row in cur.fetchall()]
     for task in tasks:
+        definition = task.pop("definition")
+        quiz = json.loads(definition) if definition else None
+        task["type"] = "multiple_choice" if quiz else "writing"
         task["submissions"] = [row for row in responses if row["task_id"] == task["task_id"]]
+        if quiz:
+            task.update(quiz)
+            for row in task["submissions"]:
+                option = int(row["response"])
+                row["selected_option"] = quiz["options"][option]
+                row["score"] = int(option == quiz["correct_option"])
     return {"joined": len(session["students"]), "tasks": tasks}
 
 
@@ -975,11 +1033,12 @@ def session_task_results(pin: str):
 def export_session_tasks(pin: str):
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["schema_version", "pin", "task_id", "source", "prompt", "student_id", "student_name", "response", "submitted_at"])
+    writer.writerow(["schema_version", "pin", "task_id", "source", "prompt", "student_id", "student_name", "response", "submitted_at", "task_type", "selected_option", "score"])
     for task in session_task_results(pin)["tasks"]:
         for row in task["submissions"]:
             values = [1, pin, task["task_id"], "prepared" if task["block_id"] else "quick",
-                      task["prompt"], row["student_id"], row["student_name"], row["response"], row["submitted_at"]]
+                      task["prompt"], row["student_id"], row["student_name"], row["response"], row["submitted_at"],
+                      task["type"], row.get("selected_option", ""), row.get("score", "")]
             writer.writerow(["'" + v if isinstance(v, str) and v.lstrip().startswith(("=", "+", "-", "@")) else v for v in values])
     return Response(output.getvalue().encode("utf-8-sig"), media_type="text/csv",
                     headers={"Content-Disposition": f'attachment; filename="writing-{pin}.csv"'})

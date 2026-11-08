@@ -395,9 +395,19 @@
     </div>
   </header>
   <details id="writingPanel">
-    <summary>Writing · Assignments and responses</summary>
+    <summary>Tasks · Assignments and responses</summary>
     <form id="writingAssignForm">
-      <label>Writing prompt <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
+      <label>Task type
+        <select name="taskType"><option value="writing">Writing</option><option value="multiple_choice">Multiple choice</option></select>
+      </label>
+      <label>Prompt <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
+      <fieldset id="quizOptions" hidden>
+        <legend>Multiple-choice options</legend>
+        <label>Options A–D, one per line <textarea name="options" rows="4"></textarea></label>
+        <label>Correct option
+          <select name="correctOption"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select>
+        </label>
+      </fieldset>
       <button type="submit" id="assignQuick" hidden>Quick assign</button>
       <button type="button" id="prepareWriting">Save task after this block</button>
       <button type="button" id="copyLessonLink">Copy lesson link</button>
@@ -580,6 +590,20 @@
     const assignPrepared = document.getElementById("assignPrepared");
     const preparedPrompt = document.getElementById("preparedPrompt");
     let lastWritingSummary = "";
+    const quizOptions = document.getElementById("quizOptions");
+    function syncTaskType() {
+      quizOptions.hidden = writingAssignForm.elements.taskType.value !== "multiple_choice";
+    }
+    writingAssignForm.elements.taskType.addEventListener("change", syncTaskType);
+
+    function taskPayload(prompt) {
+      if (writingAssignForm.elements.taskType.value !== "multiple_choice") return { prompt };
+      const options = writingAssignForm.elements.options.value.trim().split(/\r?\n/).map(option => option.trim());
+      if (options.length !== 4 || options.some(option => !option) || new Set(options).size !== 4) {
+        throw new Error("Enter four distinct options, one per line.");
+      }
+      return { prompt, quiz: { options, correct_option: Number(writingAssignForm.elements.correctOption.value) } };
+    }
 
     function syncWritingControls() {
       const live = Boolean(sessionPin) && !endSessionBtn.disabled;
@@ -607,13 +631,13 @@
     prepareWriting.addEventListener("click", async () => {
       const prompt = writingAssignForm.elements.prompt.value.trim();
       if (!prompt || !currentLesson || !lessonPath.startsWith("imports/")) {
-        writingFeedback.textContent = "Open an imported deck and enter a writing prompt.";
+        writingFeedback.textContent = "Open an imported deck and enter a prompt.";
         return;
       }
       teacherToken = teacherTokenInput.value.trim();
       prepareWriting.disabled = true;
       try {
-        const result = await writingRequest("/" + lessonPath + "/writing-blocks", { prompt, after_block: blockIndex });
+        const result = await writingRequest("/" + lessonPath + "/writing-blocks", { ...taskPayload(prompt), after_block: blockIndex });
         const next = new URL(location.href);
         next.searchParams.set("lesson", result.lesson_path);
         next.searchParams.set("block", result.block_index);
@@ -642,7 +666,10 @@
       try {
         await writingRequest(`/sessions/${sessionPin}/tasks/writing`, payload);
         writingFeedback.textContent = "Assigned. Use Interact to let students submit.";
-        if (payload.prompt) writingAssignForm.reset();
+        if (payload.prompt) {
+          writingAssignForm.reset();
+          syncTaskType();
+        }
         await updateWritingResults(sessionPin);
       } catch (error) {
         writingFeedback.textContent = error.message;
@@ -654,7 +681,13 @@
     writingAssignForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const prompt = writingAssignForm.elements.prompt.value.trim();
-      if (!assignQuick.hidden && prompt) assignWriting({ prompt }, assignQuick);
+      if (!assignQuick.hidden && prompt) {
+        try {
+          assignWriting(taskPayload(prompt), assignQuick);
+        } catch (error) {
+          writingFeedback.textContent = error.message;
+        }
+      }
     });
     assignPrepared.addEventListener("click", () => {
       assignWriting({ block_id: currentLesson.blocks[blockIndex].id }, assignPrepared);
@@ -680,6 +713,11 @@
         const prompt = document.createElement("p");
         prompt.textContent = task.prompt;
         group.append(label, prompt);
+        if (task.type === "multiple_choice") {
+          const key = document.createElement("p");
+          key.textContent = "Correct answer: " + task.options[task.correct_option];
+          group.append(key);
+        }
         for (const submission of task.submissions) {
           const row = document.createElement("details");
           row.id = task.task_id + "-" + submission.student_id;
@@ -687,7 +725,9 @@
           const name = document.createElement("summary");
           const answer = document.createElement("p");
           name.textContent = submission.student_name;
-          answer.textContent = submission.response;
+          answer.textContent = task.type === "multiple_choice"
+            ? `${submission.selected_option} · Score: ${submission.score}/1`
+            : submission.response;
           answer.style.whiteSpace = "pre-wrap";
           row.append(name, answer);
           group.append(row);

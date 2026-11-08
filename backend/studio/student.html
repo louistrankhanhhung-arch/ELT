@@ -179,10 +179,11 @@
     </div>
   </header>
   <section id="writingPanel" hidden>
-    <h2>Writing</h2>
+    <h2 id="taskHeading">Writing</h2>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
     <form id="writingForm">
-      <label>Response <textarea name="response" rows="5" maxlength="20000" required></textarea></label>
+      <label id="writingInput">Response <textarea name="response" rows="5" maxlength="20000" required></textarea></label>
+      <fieldset id="quizChoices" hidden><legend>Choose one answer</legend></fieldset>
       <button type="submit">Submit response</button>
     </form>
     <p id="writingStatus" role="status"></p>
@@ -233,15 +234,43 @@
     const writingForm = document.getElementById("writingForm");
     const writingStatus = document.getElementById("writingStatus");
     let writingTaskId = null;
+    let isQuiz = false;
+    const writingInput = document.getElementById("writingInput");
+    const quizChoices = document.getElementById("quizChoices");
     const writingDrafts = new Map();
     const submittedTasks = new Set();
 
     function syncWriting(task) {
       const nextId = task?.task_id || null;
       if (nextId !== writingTaskId) {
-        if (writingTaskId) writingDrafts.set(writingTaskId, writingForm.elements.response.value);
+        if (writingTaskId) {
+          const selected = quizChoices.querySelector("input:checked");
+          writingDrafts.set(writingTaskId, isQuiz ? selected?.value || "" : writingForm.elements.response.value);
+        }
         writingTaskId = nextId;
-        writingForm.elements.response.value = writingDrafts.get(nextId) || "";
+        const draft = writingDrafts.get(nextId) || "";
+        isQuiz = task?.type === "multiple_choice";
+        document.getElementById("taskHeading").textContent = isQuiz ? "Multiple choice" : "Writing";
+        writingInput.hidden = isQuiz;
+        writingForm.elements.response.required = !isQuiz;
+        quizChoices.hidden = !isQuiz;
+        quizChoices.querySelectorAll("label").forEach(label => label.remove());
+        if (isQuiz) {
+          task.options.forEach((option, index) => {
+            const label = document.createElement("label");
+            label.style.display = "block";
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "quizAnswer";
+            radio.value = String(index);
+            radio.required = true;
+            radio.checked = draft === radio.value;
+            label.append(radio, " " + option);
+            quizChoices.append(label);
+          });
+        } else {
+          writingForm.elements.response.value = draft;
+        }
         writingStatus.textContent = submittedTasks.has(nextId) ? "Response submitted." : "";
       }
       writingPanel.hidden = !nextId || displayMode !== "interact" || !studentId;
@@ -251,7 +280,9 @@
 
     writingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const responseText = writingForm.elements.response.value;
+      const responseText = isQuiz
+        ? quizChoices.querySelector("input:checked")?.value || ""
+        : writingForm.elements.response.value;
       const taskId = writingTaskId;
       if (writingPanel.hidden || !taskId || submittedTasks.has(taskId) || !responseText.trim()) return;
       const button = writingForm.querySelector("button");
@@ -273,7 +304,7 @@
           writingStatus.textContent = "Response submitted.";
         }
       } catch (error) {
-        if (taskId === writingTaskId) writingStatus.textContent = error.message + " Your response is still in the text box.";
+        if (taskId === writingTaskId) writingStatus.textContent = error.message + " Your response is still available.";
       } finally {
         button.disabled = false;
         writingForm.elements.response.readOnly = false;
