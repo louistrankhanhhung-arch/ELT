@@ -342,7 +342,7 @@
       <button id="openStudentBtn">Open Student View</button>
       <button id="startSessionBtn">Start Session</button>
       <button id="endSessionBtn" disabled>End Session</button>
-      <button id="copyStudentBtn">Copy Student URL</button>
+      <button id="copyStudentBtn">Copy Join Link</button>
     </div>
   </header>
 
@@ -599,16 +599,9 @@
     }
 
     function buildStudentUrl() {
-      const url = new URL(BASE_URL + "student.html");
-
-      if (sessionPin) {
-        url.searchParams.set("pin", sessionPin);
-      } else {
-        url.searchParams.set("lesson", lessonPath);
-        url.searchParams.set("block", blockIndex);
-      }
-      
-      return url.toString();
+      const url = new URL("join.html", BASE_URL);
+      url.searchParams.set("pin", sessionPin);
+      return url.href;
     }
 
     async function startSession() {
@@ -1063,13 +1056,17 @@
     });
 
     copyStudentBtn.addEventListener("click", async () => {
+      if (!sessionPin) {
+        alert("Hãy bấm Start Session trước khi sao chép link tham gia.");
+        return;
+      }
       const studentUrl = buildStudentUrl();
 
       try {
         await navigator.clipboard.writeText(studentUrl);
         copyStudentBtn.textContent = "Copied!";
         setTimeout(() => {
-          copyStudentBtn.textContent = "Copy Student URL";
+          copyStudentBtn.textContent = "Copy Join Link";
         }, 1200);
       } catch (err) {
         alert(studentUrl);

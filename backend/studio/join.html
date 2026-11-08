@@ -100,15 +100,15 @@
     <h1>Join Class</h1>
 
     <p>
-      Enter your name and classroom PIN to join the lesson.
+      Nhập mã học sinh và PIN lớp để tham gia.
     </p>
 
     <div class="field">
-      <label for="studentName">Your Name</label>
+      <label for="studentName">Mã học sinh</label>
       <input
         id="studentName"
         type="text"
-        placeholder="Enter your name"
+        placeholder="Nhập mã học sinh"
       />
     </div>
 
@@ -151,6 +151,9 @@
     const message =
       document.getElementById("message");
 
+    const linkPin = new URLSearchParams(location.search).get("pin");
+    if (/^[0-9]{4}$/.test(linkPin || "")) sessionPinInput.value = linkPin;
+
     async function joinSession() {
       const studentName =
         studentNameInput.value.trim();
@@ -159,7 +162,7 @@
         sessionPinInput.value.trim();
 
       if (!studentName) {
-        showError("Please enter your name.");
+        showError("Hãy nhập mã học sinh.");
         return;
       }
 
@@ -180,7 +183,6 @@
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              student_name: studentName,
               roster_code: studentName,
             }),
           }
