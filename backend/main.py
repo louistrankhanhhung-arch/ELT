@@ -242,6 +242,11 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS published_quiz_scores (
+            task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS active_writing_tasks (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
             task_id TEXT NOT NULL REFERENCES writing_tasks(task_id)
@@ -342,6 +347,11 @@ def get_session(pin: str):
         LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id WHERE a.pin = ?
     """), (pin,))
     active_writing = cur.fetchone()
+    cur.execute(sql("""
+        SELECT p.task_id FROM published_quiz_scores p JOIN writing_tasks t ON t.task_id = p.task_id
+        WHERE t.pin = ? ORDER BY p.task_id
+    """), (pin,))
+    published_scores = [row["task_id"] for row in cur.fetchall()]
 
     conn.close()
 
@@ -349,6 +359,7 @@ def get_session(pin: str):
     data["students"] = students
     data["events"] = events
     data["display_mode"] = display["mode"] if display else "follow"
+    data["published_score_ids"] = published_scores
     data["active_writing_task"] = task_description(dict(active_writing)) if active_writing else None
     data["writing_task"] = {"schema_version": 1, "type": "writing", **dict(writing)} if writing else None
     return data
@@ -755,6 +766,8 @@ def imported_lesson(deck_id: str):
         task = block.get("task")
         if task and task.get("type") == "multiple_choice":
             task.pop("correct_option", None)
+            for question in task.get("questions", []):
+                question.pop("correct_option", None)
     return manifest
 
 
@@ -870,22 +883,75 @@ def export_writing(pin: str):
     )
 
 
-class QuizDefinition(BaseModel):
-    options: List[str] = Field(min_length=4, max_length=4)
-    correct_option: int = Field(ge=0, le=3)
+class QuizQuestion(BaseModel):
+    prompt: str = Field(min_length=1, max_length=4000)
+    options: List[str] = Field(min_length=2, max_length=8)
+    correct_option: int = Field(ge=0, le=7)
 
     def normalized(self):
         options = [option.strip() for option in self.options]
-        if any(not option or len(option) > 1000 for option in options) or len(set(options)) != 4:
-            raise HTTPException(422, "Enter four distinct answer options, up to 1000 characters each")
-        return {"options": options, "correct_option": self.correct_option}
+        if not self.prompt.strip() or any(not option or len(option) > 1000 for option in options):
+            raise HTTPException(422, "Enter a question and options of up to 1000 characters each")
+        if len(set(options)) != len(options) or self.correct_option >= len(options):
+            raise HTTPException(422, "Use distinct options and select an existing correct option")
+        return {"prompt": self.prompt.strip(), "options": options, "correct_option": self.correct_option}
+
+
+class QuizDefinition(BaseModel):
+    questions: Optional[List[QuizQuestion]] = Field(default=None, min_length=1, max_length=30)
+    shuffle: bool = False
+    options: Optional[List[str]] = None
+    correct_option: Optional[int] = None
+
+    def normalized(self, prompt):
+        if self.questions is not None:
+            return {"questions": [question.normalized() for question in self.questions], "shuffle": self.shuffle}
+        if self.options is None or self.correct_option is None:
+            raise HTTPException(422, "Add at least one question")
+        if not 2 <= len(self.options) <= 8 or not 0 <= self.correct_option < len(self.options):
+            raise HTTPException(422, "Use 2 to 8 options and select an existing correct option")
+        return QuizQuestion(prompt=prompt, options=self.options, correct_option=self.correct_option).normalized()
+
+
+def quiz_questions(quiz, prompt):
+    return quiz["questions"] if "questions" in quiz else [{
+        "prompt": prompt, "options": quiz["options"], "correct_option": quiz["correct_option"]
+    }]
+
+
+def quiz_answers(raw, questions):
+    try:
+        answers = json.loads(raw)
+    except ValueError:
+        raise HTTPException(422, "Answer every question before submitting")
+    if type(answers) is int and len(questions) == 1:
+        answers = [answers]
+    if not isinstance(answers, list) or len(answers) != len(questions) or any(
+        type(answer) is not int or not 0 <= answer < len(question["options"])
+        for answer, question in zip(answers, questions)
+    ):
+        raise HTTPException(422, "Select one valid option for every question")
+    return answers
+
+
+def grade_quiz(raw, quiz, prompt):
+    questions = quiz_questions(quiz, prompt)
+    answers = quiz_answers(raw, questions)
+    selected = [question["options"][answer] for answer, question in zip(answers, questions)]
+    score = sum(answer == question["correct_option"] for answer, question in zip(answers, questions))
+    return {"selected_option": selected[0] if len(selected) == 1 else json.dumps(selected, ensure_ascii=False),
+            "score": score, "max_score": len(questions)}
 
 
 def task_description(row):
     definition = row.pop("definition", None)
     task = {"schema_version": 1, "type": "multiple_choice" if definition else "writing", **row}
     if definition:
-        task["options"] = json.loads(definition)["options"]
+        quiz = json.loads(definition)
+        task["questions"] = [{"prompt": q["prompt"], "options": q["options"]} for q in quiz_questions(quiz, task["prompt"])]
+        task["shuffle"] = quiz.get("shuffle", False)
+        if len(task["questions"]) == 1:
+            task["options"] = task["questions"][0]["options"]
     return task
 
 
@@ -903,7 +969,7 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
         raise HTTPException(422, "Enter a prompt and select a valid insertion point")
     revision_id = uuid4().hex
     block_id = f"writing-{revision_id}"
-    quiz = payload.quiz.normalized() if payload.quiz else None
+    quiz = payload.quiz.normalized(prompt) if payload.quiz else None
     blocks.insert(payload.after_block + 1, {
         "id": block_id, "type": "activity", "activity_kind": "writing-task",
         "title": "Multiple-choice task" if quiz else "Writing task",
@@ -928,7 +994,7 @@ class SessionWritingRequest(BaseModel):
 def assign_session_writing(pin: str, payload: SessionWritingRequest):
     session = require_active_session(pin)
     prompt = (payload.prompt or "").strip()
-    quiz = payload.quiz.normalized() if payload.quiz else None
+    quiz = payload.quiz.normalized(prompt) if payload.quiz else None
     if payload.block_id:
         if not session["lesson_path"].startswith("imports/"):
             raise HTTPException(422, "This lesson has no prepared task blocks")
@@ -939,7 +1005,7 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         if block["id"] != payload.block_id or block.get("activity_kind") != "writing-task":
             raise HTTPException(409, "Move to the prepared task block before assigning it")
         prompt = block["task"]["prompt"]
-        quiz = ({key: block["task"][key] for key in ("options", "correct_option")}
+        quiz = ({key: block["task"][key] for key in ("questions", "shuffle", "options", "correct_option") if key in block["task"]}
                 if block["task"]["type"] == "multiple_choice" else None)
     if not prompt:
         raise HTTPException(422, "Enter a writing prompt")
@@ -981,8 +1047,8 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
             active = session["active_writing_task"]
             if not active or active["task_id"] != task_id or session["display_mode"] != "interact":
                 raise HTTPException(409, "This task is not open for submissions")
-            if active["type"] == "multiple_choice" and payload.response not in {"0", "1", "2", "3"}:
-                raise HTTPException(422, "Select one of the four options")
+            if active["type"] == "multiple_choice":
+                quiz_answers(payload.response, active["questions"])
             cur.execute(sql("""
                 INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
                 ON CONFLICT(task_id, student_id) DO NOTHING
@@ -1019,13 +1085,13 @@ def session_task_results(pin: str):
         definition = task.pop("definition")
         quiz = json.loads(definition) if definition else None
         task["type"] = "multiple_choice" if quiz else "writing"
+        task["scores_published"] = task["task_id"] in session["published_score_ids"]
         task["submissions"] = [row for row in responses if row["task_id"] == task["task_id"]]
         if quiz:
             task.update(quiz)
+            task["questions"] = quiz_questions(quiz, task["prompt"])
             for row in task["submissions"]:
-                option = int(row["response"])
-                row["selected_option"] = quiz["options"][option]
-                row["score"] = int(option == quiz["correct_option"])
+                row.update(grade_quiz(row["response"], quiz, task["prompt"]))
     return {"joined": len(session["students"]), "tasks": tasks}
 
 
@@ -1033,12 +1099,51 @@ def session_task_results(pin: str):
 def export_session_tasks(pin: str):
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["schema_version", "pin", "task_id", "source", "prompt", "student_id", "student_name", "response", "submitted_at", "task_type", "selected_option", "score"])
+    writer.writerow(["schema_version", "pin", "task_id", "source", "prompt", "student_id", "student_name", "response", "submitted_at", "task_type", "selected_option", "score", "max_score"])
     for task in session_task_results(pin)["tasks"]:
         for row in task["submissions"]:
             values = [1, pin, task["task_id"], "prepared" if task["block_id"] else "quick",
                       task["prompt"], row["student_id"], row["student_name"], row["response"], row["submitted_at"],
-                      task["type"], row.get("selected_option", ""), row.get("score", "")]
+                      task["type"], row.get("selected_option", ""), row.get("score", ""), row.get("max_score", "")]
             writer.writerow(["'" + v if isinstance(v, str) and v.lstrip().startswith(("=", "+", "-", "@")) else v for v in values])
     return Response(output.getvalue().encode("utf-8-sig"), media_type="text/csv",
                     headers={"Content-Disposition": f'attachment; filename="writing-{pin}.csv"'})
+
+
+@app.post("/api/sessions/{pin}/tasks/{task_id}/publish-scores", dependencies=[Depends(require_teacher)])
+def publish_scores(pin: str, task_id: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT 1 FROM writing_tasks t JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            WHERE t.pin = ? AND t.task_id = ?
+        """), (pin, task_id))
+        if not cur.fetchone():
+            raise HTTPException(404, "Quiz not found")
+        cur.execute(sql("INSERT INTO published_quiz_scores VALUES (?) ON CONFLICT(task_id) DO NOTHING"), (task_id,))
+        conn.commit()
+    return {"ok": True}
+
+
+class StudentScoresRequest(BaseModel):
+    student_id: str
+
+
+@app.post("/api/sessions/{pin}/published-scores")
+def student_scores(pin: str, payload: StudentScoresRequest):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT t.task_id, t.prompt, q.definition, r.response
+            FROM published_quiz_scores p JOIN writing_tasks t ON t.task_id = p.task_id
+            JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            JOIN writing_task_responses r ON r.task_id = t.task_id
+            WHERE t.pin = ? AND r.student_id = ? ORDER BY t.assigned_at, t.task_id
+        """), (pin, payload.student_id))
+        rows = cur.fetchall()
+    scores = []
+    for row in rows:
+        grade = grade_quiz(row["response"], json.loads(row["definition"]), row["prompt"])
+        scores.append({"task_id": row["task_id"], "title": row["prompt"],
+                       "score": grade["score"], "max_score": grade["max_score"]})
+    return {"scores": scores}

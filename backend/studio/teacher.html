@@ -402,11 +402,10 @@
       </label>
       <label>Prompt <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
       <fieldset id="quizOptions" hidden>
-        <legend>Multiple-choice options</legend>
-        <label>Options A–D, one per line <textarea name="options" rows="4"></textarea></label>
-        <label>Correct option
-          <select name="correctOption"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select>
-        </label>
+        <legend>Quiz questions</legend>
+        <label><input type="checkbox" name="shuffle"> Shuffle options for each student</label>
+        <div id="quizQuestions"></div>
+        <button type="button" id="addQuizQuestion">Add question</button>
       </fieldset>
       <button type="submit" id="assignQuick" hidden>Quick assign</button>
       <button type="button" id="prepareWriting">Save task after this block</button>
@@ -591,18 +590,60 @@
     const preparedPrompt = document.getElementById("preparedPrompt");
     let lastWritingSummary = "";
     const quizOptions = document.getElementById("quizOptions");
+    const quizQuestions = document.getElementById("quizQuestions");
+    const addQuizQuestion = document.getElementById("addQuizQuestion");
+
+    function addQuestion() {
+      if (quizQuestions.children.length >= 30) return;
+      const row = document.createElement("fieldset");
+      row.innerHTML = `
+        <legend>Question</legend>
+        <label>Question text <textarea data-question rows="2" maxlength="4000"></textarea></label>
+        <label>Options (2–8, one per line) <textarea data-options rows="4"></textarea></label>
+        <label>Correct option <select data-correct>
+          ${Array.from("ABCDEFGH", (letter, index) => '<option value="' + index + '">' + letter + '</option>').join("")}
+        </select></label>
+        <button type="button" data-remove>Remove question</button>`;
+      row.querySelector("[data-remove]").addEventListener("click", () => {
+        if (quizQuestions.children.length > 1) row.remove();
+        updateQuestionNumbers();
+      });
+      quizQuestions.append(row);
+      updateQuestionNumbers();
+    }
+
+    function updateQuestionNumbers() {
+      [...quizQuestions.children].forEach((row, index) => {
+        row.querySelector("legend").textContent = "Question " + (index + 1);
+        row.querySelector("[data-remove]").disabled = quizQuestions.children.length === 1;
+      });
+      addQuizQuestion.disabled = quizQuestions.children.length >= 30;
+    }
+
     function syncTaskType() {
       quizOptions.hidden = writingAssignForm.elements.taskType.value !== "multiple_choice";
+      writingAssignForm.elements.prompt.required = quizOptions.hidden;
+      if (!quizOptions.hidden && !quizQuestions.children.length) addQuestion();
     }
+    addQuizQuestion.addEventListener("click", addQuestion);
     writingAssignForm.elements.taskType.addEventListener("change", syncTaskType);
 
     function taskPayload(prompt) {
-      if (writingAssignForm.elements.taskType.value !== "multiple_choice") return { prompt };
-      const options = writingAssignForm.elements.options.value.trim().split(/\r?\n/).map(option => option.trim());
-      if (options.length !== 4 || options.some(option => !option) || new Set(options).size !== 4) {
-        throw new Error("Enter four distinct options, one per line.");
+      if (writingAssignForm.elements.taskType.value !== "multiple_choice") {
+        if (!prompt) throw new Error("Enter a writing prompt.");
+        return { prompt };
       }
-      return { prompt, quiz: { options, correct_option: Number(writingAssignForm.elements.correctOption.value) } };
+      const questions = [...quizQuestions.children].map((row, index) => {
+        const question = row.querySelector("[data-question]").value.trim();
+        const options = row.querySelector("[data-options]").value.trim().split(/\r?\n/).map(option => option.trim());
+        const correct_option = Number(row.querySelector("[data-correct]").value);
+        if (!question || options.length < 2 || options.length > 8 || options.some(option => !option)
+            || new Set(options).size !== options.length || correct_option >= options.length) {
+          throw new Error("Question " + (index + 1) + ": enter a question, 2–8 distinct options and a valid correct option.");
+        }
+        return { prompt: question, options, correct_option };
+      });
+      return { prompt: prompt || "Multiple-choice quiz", quiz: { questions, shuffle: writingAssignForm.elements.shuffle.checked } };
     }
 
     function syncWritingControls() {
@@ -630,8 +671,8 @@
 
     prepareWriting.addEventListener("click", async () => {
       const prompt = writingAssignForm.elements.prompt.value.trim();
-      if (!prompt || !currentLesson || !lessonPath.startsWith("imports/")) {
-        writingFeedback.textContent = "Open an imported deck and enter a prompt.";
+      if (!currentLesson || !lessonPath.startsWith("imports/")) {
+        writingFeedback.textContent = "Open an imported deck before saving a task block.";
         return;
       }
       teacherToken = teacherTokenInput.value.trim();
@@ -668,6 +709,7 @@
         writingFeedback.textContent = "Assigned. Use Interact to let students submit.";
         if (payload.prompt) {
           writingAssignForm.reset();
+          quizQuestions.replaceChildren();
           syncTaskType();
         }
         await updateWritingResults(sessionPin);
@@ -681,7 +723,7 @@
     writingAssignForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const prompt = writingAssignForm.elements.prompt.value.trim();
-      if (!assignQuick.hidden && prompt) {
+      if (!assignQuick.hidden) {
         try {
           assignWriting(taskPayload(prompt), assignQuick);
         } catch (error) {
@@ -699,7 +741,7 @@
       const result = await response.json();
       if (pin !== sessionPin) return;
       writingExport.hidden = !result.tasks.length;
-      const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length])]);
+      const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length, task.scores_published])]);
       if (summary === lastWritingSummary) return;
       lastWritingSummary = summary;
       const open = new Set([...writingResults.querySelectorAll("details[open]")].map(row => row.id));
@@ -715,8 +757,23 @@
         group.append(label, prompt);
         if (task.type === "multiple_choice") {
           const key = document.createElement("p");
-          key.textContent = "Correct answer: " + task.options[task.correct_option];
-          group.append(key);
+          key.textContent = task.questions.map((question, index) =>
+            `Q${index + 1}: ${question.options[question.correct_option]}`).join(" · ");
+          const publish = document.createElement("button");
+          publish.type = "button";
+          publish.textContent = task.scores_published ? "Scores published" : "Publish scores";
+          publish.disabled = task.scores_published || !task.submissions.length;
+          publish.addEventListener("click", async () => {
+            publish.disabled = true;
+            try {
+              await writingRequest(`/sessions/${pin}/tasks/${task.task_id}/publish-scores`, {});
+              await updateWritingResults(pin);
+            } catch (error) {
+              writingFeedback.textContent = error.message;
+              publish.disabled = false;
+            }
+          });
+          group.append(key, publish);
         }
         for (const submission of task.submissions) {
           const row = document.createElement("details");
@@ -726,7 +783,7 @@
           const answer = document.createElement("p");
           name.textContent = submission.student_name;
           answer.textContent = task.type === "multiple_choice"
-            ? `${submission.selected_option} · Score: ${submission.score}/1`
+            ? `${submission.selected_option} · Score: ${submission.score}/${submission.max_score}`
             : submission.response;
           answer.style.whiteSpace = "pre-wrap";
           row.append(name, answer);

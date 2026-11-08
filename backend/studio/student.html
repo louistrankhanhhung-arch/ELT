@@ -178,6 +178,7 @@
       <div class="status" id="statusText">Student runtime</div>
     </div>
   </header>
+  <p id="publishedScores" hidden role="status"></p>
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
@@ -235,6 +236,51 @@
     const writingStatus = document.getElementById("writingStatus");
     let writingTaskId = null;
     let isQuiz = false;
+    let scoreRequestKey = "";
+    const publishedScores = document.getElementById("publishedScores");
+
+    async function syncScores(ids) {
+      if (!studentId || !ids?.length) return;
+      const key = JSON.stringify(ids) + ":" + submittedTasks.size;
+      if (key === scoreRequestKey) return;
+      scoreRequestKey = key;
+      try {
+        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/published-scores`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId })
+        });
+        if (!response.ok) throw new Error("Could not load scores");
+        const result = await response.json();
+        if (scoreRequestKey !== key) return;
+        publishedScores.hidden = !result.scores.length;
+        publishedScores.textContent = result.scores.map(score =>
+          `${score.title}: ${score.score}/${score.max_score}`).join(" · ");
+      } catch {
+        if (scoreRequestKey === key) scoreRequestKey = "";
+      }
+    }
+
+    function optionOrder(task, question, questionIndex) {
+      const order = question.options.map((_, index) => index);
+      if (!task.shuffle) return order;
+      const seed = `${studentId}:${task.task_id}:${questionIndex}`;
+      let state = 2166136261;
+      for (const character of seed) state = Math.imul(state ^ character.charCodeAt(0), 16777619);
+      for (let i = order.length - 1; i > 0; i--) {
+        state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+        const j = state % (i + 1);
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      return order;
+    }
+
+    function selectedQuizAnswers() {
+      return [...quizChoices.querySelectorAll("fieldset")].map(group => {
+        const answer = group.querySelector("input:checked");
+        return answer ? Number(answer.value) : null;
+      });
+    }
     const writingInput = document.getElementById("writingInput");
     const quizChoices = document.getElementById("quizChoices");
     const writingDrafts = new Map();
@@ -244,8 +290,7 @@
       const nextId = task?.task_id || null;
       if (nextId !== writingTaskId) {
         if (writingTaskId) {
-          const selected = quizChoices.querySelector("input:checked");
-          writingDrafts.set(writingTaskId, isQuiz ? selected?.value || "" : writingForm.elements.response.value);
+          writingDrafts.set(writingTaskId, isQuiz ? selectedQuizAnswers() : writingForm.elements.response.value);
         }
         writingTaskId = nextId;
         const draft = writingDrafts.get(nextId) || "";
@@ -254,19 +299,26 @@
         writingInput.hidden = isQuiz;
         writingForm.elements.response.required = !isQuiz;
         quizChoices.hidden = !isQuiz;
-        quizChoices.querySelectorAll("label").forEach(label => label.remove());
+        quizChoices.querySelectorAll("fieldset").forEach(group => group.remove());
         if (isQuiz) {
-          task.options.forEach((option, index) => {
-            const label = document.createElement("label");
-            label.style.display = "block";
-            const radio = document.createElement("input");
-            radio.type = "radio";
-            radio.name = "quizAnswer";
-            radio.value = String(index);
-            radio.required = true;
-            radio.checked = draft === radio.value;
-            label.append(radio, " " + option);
-            quizChoices.append(label);
+          task.questions.forEach((question, questionIndex) => {
+            const group = document.createElement("fieldset");
+            const legend = document.createElement("legend");
+            legend.textContent = `${questionIndex + 1}. ${question.prompt}`;
+            group.append(legend);
+            for (const index of optionOrder(task, question, questionIndex)) {
+              const label = document.createElement("label");
+              label.style.display = "block";
+              const radio = document.createElement("input");
+              radio.type = "radio";
+              radio.name = "quizAnswer-" + questionIndex;
+              radio.value = String(index);
+              radio.required = true;
+              radio.checked = draft[questionIndex] === index;
+              label.append(radio, " " + question.options[index]);
+              group.append(label);
+            }
+            quizChoices.append(group);
           });
         } else {
           writingForm.elements.response.value = draft;
@@ -280,8 +332,10 @@
 
     writingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const answers = isQuiz ? selectedQuizAnswers() : [];
+      if (answers.some(answer => answer === null)) return;
       const responseText = isQuiz
-        ? quizChoices.querySelector("input:checked")?.value || ""
+        ? JSON.stringify(answers.length === 1 ? answers[0] : answers)
         : writingForm.elements.response.value;
       const taskId = writingTaskId;
       if (writingPanel.hidden || !taskId || submittedTasks.has(taskId) || !responseText.trim()) return;
@@ -410,6 +464,7 @@
         lastSessionBlockIndex = blockIndex;
         displayMode = session.display_mode || "follow";
         syncWriting(session.active_writing_task);
+          void syncScores(session.published_score_ids);
 
         renderSessionBlock();
         startSessionPolling();
@@ -512,6 +567,7 @@
             renderSessionBlock();
           }
           syncWriting(session.active_writing_task);
+          void syncScores(session.published_score_ids);
         } catch (err) {
           console.error(err);
           if (!isDisconnected) {
