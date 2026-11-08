@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Lessons | Root English House</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f5f7fb;
+      font-family: Arial, sans-serif;
+      color: #1f2933;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .shell {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #667085;
+      font-size: 16px;
+    }
+
+    .course {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+      margin-bottom: 16px;
+    }
+
+    .course h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .course p {
+      margin: 0 0 12px;
+      color: #667085;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .lesson-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .lesson-card {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      background: #fafafa;
+      color: inherit;
+      text-decoration: none;
+      transition: 0.15s ease;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .lesson-card:hover {
+      background: #eef6ff;
+      border-color: #93c5fd;
+      transform: translateY(-1px);
+    }
+
+    .lesson-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .lesson-meta {
+      display: none;
+      color: #667085;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status {
+      display: none;
+      margin-top: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .error {
+      padding: 18px;
+      border-radius: 16px;
+      background: #fff1f2;
+      color: #be123c;
+    }
+
+    .pin-card {
+      max-width: 420px;
+      margin: 80px auto 0;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .pin-card h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .pin-card p {
+      margin: 0 0 18px;
+      color: #667085;
+      line-height: 1.5;
+    }
+
+    .pin-card label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .pin-card input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d0d5dd;
+      border-radius: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+
+    .pin-card button {
+      width: 100%;
+      padding: 13px 16px;
+      border: 0;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .pin-error {
+      margin-top: 12px;
+      color: #be123c;
+      font-size: 14px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="shell hidden" id="teacherApp">
+    <header>
+      <h1>Teacher Lessons</h1>
+      <div class="subtitle">
+        Select a lesson to start a classroom session.
+      </div>
+    </header>
+
+    <section id="catalog"></section>
+  </main>
+
+  <section class="pin-card" id="pinGate">
+    <h2>Teacher Access</h2>
+    <p>
+      Enter the teacher PIN to open lesson controls.
+    </p>
+
+    <label for="teacherPinInput">Teacher PIN</label>
+    <input
+      id="teacherPinInput"
+      type="password"
+      inputmode="numeric"
+      placeholder="Enter teacher PIN"
+    />
+
+    <button id="unlockBtn">Unlock Teacher Lessons</button>
+    <div class="pin-error" id="pinError">Incorrect PIN. Please try again.</div>
+  </section>
+
+  <script src="./config.js?v=2"></script>
+  <script>
+    const BASE_URL =
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
+
+    const catalogEl = document.getElementById("catalog");
+    const teacherApp = document.getElementById("teacherApp");
+    const pinGate = document.getElementById("pinGate");
+    const teacherPinInput = document.getElementById("teacherPinInput");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const pinError = document.getElementById("pinError");
+
+    const TEACHER_PIN =
+      window.ELT_CONFIG?.TEACHER_PIN ||
+      "2468";
+
+    const importForm = document.createElement("form");
+    importForm.innerHTML = `
+      <h2>Nhập Google Slides</h2>
+      <label>Link Google Slides <input name="url" type="url" required></label>
+      <label>Mã giáo viên staging <input name="token" type="password" required></label>
+      <button type="submit">Nhập và mở bài</button>
+      <p role="status"></p>
+    `;
+    catalogEl.before(importForm);
+    importForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = importForm.querySelector("button");
+      const status = importForm.querySelector("[role=status]");
+      button.disabled = true;
+      status.textContent = "Đang nhập Google Slides…";
+      try {
+        const response = await fetch(window.ELT_CONFIG.API_BASE + "/slides/import", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + importForm.elements.token.value.trim()
+          },
+          body: JSON.stringify({ url: importForm.elements.url.value.trim() })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Không thể nhập bộ slide.");
+        const lesson = new URL("teacher.html", BASE_URL);
+        lesson.searchParams.set("lesson", result.lesson_path);
+        window.location.assign(lesson.href);
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    function unlockTeacherApp() {
+      const enteredPin = teacherPinInput.value.trim();
+
+      if (enteredPin !== TEACHER_PIN) {
+        pinError.style.display = "block";
+        teacherPinInput.value = "";
+        teacherPinInput.focus();
+        return;
+      }
+
+      pinGate.classList.add("hidden");
+      teacherApp.classList.remove("hidden");
+      catalogEl.hidden = true;
+    }
+
+    async function loadCatalog() {
+      try {
+        const res = await fetch(`${BASE_URL}lessons/catalog.json?v=${Date.now()}`);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lessons/catalog.json");
+        }
+
+        const catalog = await res.json();
+        renderCatalog(catalog);
+      } catch (err) {
+        console.error(err);
+        catalogEl.innerHTML =
+          `<div class="error">${err.message}</div>`;
+      }
+    }
+
+    function renderCatalog(catalog) {
+      const courses = catalog.courses || [];
+
+      if (!courses.length) {
+        catalogEl.innerHTML =
+          `<div class="error">No courses found.</div>`;
+        return;
+      }
+
+      catalogEl.innerHTML = courses.map(course => {
+        const lessons = course.lessons || [];
+
+        return `
+          <article class="course">
+            <h2>${course.course_title || course.course_id}</h2>
+            <p>${course.description || ""}</p>
+
+            <div class="lesson-grid">
+              ${lessons.map(lesson => {
+                const teacherUrl =
+                  `${BASE_URL}teacher.html?lesson=${encodeURIComponent(lesson.path)}`;
+
+                return `
+                  <a
+                    class="lesson-card"
+                    href="${teacherUrl}"
+                    title="${lesson.lesson_id || ""} · ${lesson.level || ""} · ${lesson.estimated_minutes || ""} min · ${lesson.status || "draft"}"
+                  >
+                    <div class="lesson-title">${lesson.title || lesson.lesson_id}</div>
+                  </a>
+                `;
+              }).join("")}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    unlockBtn.addEventListener("click", () => {
+      unlockTeacherApp();
+    });
+    
+    teacherPinInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        unlockTeacherApp();
+      }
+    });
+    
+    pinGate.classList.remove("hidden");
+    teacherApp.classList.add("hidden");
+    teacherPinInput.focus();
+  </script>
+</body>
+</html>
+
+

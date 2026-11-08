@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Root English House</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      overflow: hidden;
+    }
+
+    header {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .title {
+      min-width: 0;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title p {
+      margin: 4px 0 0;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    button {
+      padding: 8px 11px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .app {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid #ddd;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .block-btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fafafa;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .block-btn.active {
+      border-color: #222;
+      background: #eaeaea;
+      font-weight: bold;
+    }
+
+    .preview {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .current {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+      display: block;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .error {
+      padding: 20px;
+      color: #b00020;
+    }
+
+    @media (max-width: 800px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .controls {
+        flex-wrap: wrap;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .sidebar {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      .block-btn {
+        width: auto;
+        min-width: 150px;
+        margin-bottom: 0;
+        white-space: nowrap;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      header {
+        padding: 6px 8px;
+        gap: 8px;
+      }
+
+      .title h1 {
+        font-size: 15px;
+      }
+
+      .title p {
+        display: none;
+      }
+
+      .controls {
+        gap: 4px;
+      }
+
+      button {
+        padding: 5px 8px;
+        font-size: 12px;
+      }
+
+      .sidebar {
+        padding: 6px;
+        gap: 6px;
+      }
+
+      .block-btn {
+        min-width: 120px;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      .current {
+        display: none;
+      }
+
+      iframe {
+        min-height: 0;
+      }
+    }
+
+    /* =========================
+       PRESENTATION MODE
+       ========================= */
+
+    body.presentation-mode {
+      background: #000;
+    }
+
+    body.presentation-mode header,
+    body.presentation-mode .sidebar,
+    body.presentation-mode .current,
+    body.presentation-mode #sessionBanner,
+    body.presentation-mode #monitorPanel {
+      display: none !important;
+    }
+
+    body.presentation-mode .app {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    body.presentation-mode .preview {
+      width: 100vw;
+      height: 100vh;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    body.presentation-mode #previewFrame {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      background: #fff;
+    }
+
+    .presentation-controls {
+      position: fixed;
+      z-index: 10000;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    body.presentation-mode .presentation-controls {
+      display: flex;
+    }
+
+    body.presentation-mode.show-presentation-controls
+      .presentation-controls {
+      opacity: 1;
+    }
+
+    .presentation-controls button {
+      border: 0;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .presentation-counter {
+      color: #fff;
+      font-size: 13px;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    /* =========================
+       ANNOTATION
+       ========================= */
+
+    #annotationCanvas {
+      display: none;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9000;
+      pointer-events: none;
+      touch-action: none;
+    }
+
+    body.presentation-mode #annotationCanvas {
+      display: block;
+    }
+
+    body.annotation-drawing #annotationCanvas {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    .annotation-btn.active {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    #annotationColor {
+      width: 32px;
+      height: 32px;
+      padding: 2px;
+      border: 0;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1 id="lessonTitle">Loading lesson...</h1>
+      <p id="lessonMeta">Teacher Mock Controller</p>
+    </div>
+
+    <div class="controls">
+      <button id="homeBtn">⌂ Home</button>
+      <button id="prevBtn">← Previous</button>
+      <button id="nextBtn">Next →</button>
+      <button id="presentationBtn">Present ⛶</button>
+      <button id="openStudentBtn">Open Student View</button>
+      <button id="startSessionBtn">Start Session</button>
+      <button id="endSessionBtn" disabled>End Session</button>
+      <button id="copyStudentBtn">Copy Student URL</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <aside class="sidebar" id="blockList"></aside>
+
+    <section class="preview">
+      <div class="current" id="currentBlock">Current block: —</div>
+
+      <div
+        id="sessionBanner"
+        style="display:none;padding:10px 14px;background:#fff7d6;border-bottom:1px solid #ddd;font-weight:bold;"
+      ></div>
+
+      <div
+        id="monitorPanel"
+        style="display:none;padding:10px 14px;background:#eef7ff;border-bottom:1px solid #ddd;font-size:14px;"
+      >
+        Joined students: 0
+      </div>
+
+      <iframe id="previewFrame"></iframe>
+      <div class="error" id="errorBox" style="display:none;"></div>
+    </section>
+  </main>
+
+  <canvas id="annotationCanvas"></canvas>
+
+  <div class="presentation-controls" id="presentationControls">
+    <button id="presentationPrevBtn">←</button>
+    <span class="presentation-counter" id="presentationCounter">1 / 1</span>
+    <button id="presentationNextBtn">→</button>
+
+    <button
+      id="annotationPointerBtn"
+      class="annotation-btn active"
+      title="Pointer (V)"
+    >
+      ↖ Pointer
+    </button>
+
+    <button
+      id="annotationPenBtn"
+      class="annotation-btn"
+      title="Pen (P)"
+    >
+      ✎ Pen
+    </button>
+
+    <button
+      id="annotationEraserBtn"
+      class="annotation-btn"
+      title="Eraser (E)"
+    >
+      ◻ Eraser
+    </button>
+
+    <input
+      id="annotationColor"
+      type="color"
+      value="#e11d48"
+      title="Pen color"
+    />
+
+    <button
+      id="annotationClearBtn"
+      title="Clear annotations (C)"
+    >
+      Clear
+    </button>
+    
+    <button id="exitPresentationBtn">Exit</button>
+  </div>
+
+  <script src="./config.js?v=3"></script>
+  <script>
+    const BASE_URL =
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
+
+    const API_BASE =
+      window.ELT_CONFIG?.API_BASE ||
+      "https://elt-production.up.railway.app/api";
+
+    console.log("ELT_CONFIG", window.ELT_CONFIG);
+    console.log("API_BASE", API_BASE);
+    console.log("BASE_URL", BASE_URL);
+
+    const params = new URLSearchParams(window.location.search);
+
+    const lessonPath =
+      params.get("lesson") ||
+      "lessons/g1rec/l02/g1rec-l02.json";
+
+    let blockIndex = Number(params.get("block") || 0);
+
+    let teacherToken = "";
+    function teacherHeaders() {
+      return teacherToken ? { Authorization: "Bearer " + teacherToken } : {};
+    }
+
+    const lessonUrl = window.runtimeLessonUrl(lessonPath);
+
+    const lessonTitle = document.getElementById("lessonTitle");
+    const lessonMeta = document.getElementById("lessonMeta");
+    const blockList = document.getElementById("blockList");
+    const currentBlock = document.getElementById("currentBlock");
+    const previewFrame = document.getElementById("previewFrame");
+    const errorBox = document.getElementById("errorBox");
+    const startSessionBtn = document.getElementById("startSessionBtn");
+    const endSessionBtn = document.getElementById("endSessionBtn");
+    const sessionBanner = document.getElementById("sessionBanner");
+    const monitorPanel = document.getElementById("monitorPanel");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const openStudentBtn = document.getElementById("openStudentBtn");
+    const homeBtn = document.getElementById("homeBtn");
+    const copyStudentBtn = document.getElementById("copyStudentBtn");
+
+    const presentationBtn =
+      document.getElementById("presentationBtn");
+
+    const presentationPrevBtn =
+      document.getElementById("presentationPrevBtn");
+
+    const presentationNextBtn =
+      document.getElementById("presentationNextBtn");
+
+    const exitPresentationBtn =
+      document.getElementById("exitPresentationBtn");
+
+    const presentationCounter =
+      document.getElementById("presentationCounter");
+
+    const annotationCanvas =
+      document.getElementById("annotationCanvas");
+
+    const annotationPointerBtn =
+      document.getElementById("annotationPointerBtn");
+
+    const annotationPenBtn =
+      document.getElementById("annotationPenBtn");
+
+    const annotationEraserBtn =
+      document.getElementById("annotationEraserBtn");
+
+    const annotationClearBtn =
+      document.getElementById("annotationClearBtn");
+
+    const annotationColor =
+      document.getElementById("annotationColor");
+
+    let currentLesson = null;
+    let sessionPin = null;
+    let monitorTimer = null;
+    let isPresentationMode = false;
+    let presentationControlsTimer = null;
+
+    let annotationMode = "pointer";
+    let annotationDrawing = false;
+    let annotationLastX = 0;
+    let annotationLastY = 0;
+    let annotationCtx = null;
+
+    async function loadLesson() {
+      try {
+        const res = await fetch(lessonUrl);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lesson JSON: " + lessonUrl);
+        }
+
+        currentLesson = await res.json();
+
+        lessonTitle.textContent =
+          currentLesson.title || currentLesson.lesson_id || "Lesson";
+
+        lessonMeta.textContent =
+          `${currentLesson.lesson_id || ""} · ${currentLesson.level || ""} · v${currentLesson.version || ""}`;
+
+        renderBlockList(currentLesson.blocks || []);
+        goToBlock(blockIndex, false);
+      } catch (err) {
+        showError(err.message);
+      }
+    }
+
+    function renderBlockList(blocks) {
+      blockList.innerHTML = "";
+
+      blocks.forEach((block, index) => {
+        const btn = document.createElement("button");
+        btn.className = "block-btn";
+        btn.dataset.index = index;
+        btn.textContent = `${index + 1}. ${block.title || block.id}`;
+        btn.onclick = () => {
+          goToBlock(index);
+          syncSessionSetBlock(index);
+        };
+
+        blockList.appendChild(btn);
+      });
+    }
+
+    function goToBlock(index, updateUrl = true) {
+      if (!currentLesson) return;
+
+      const blocks = currentLesson.blocks || [];
+
+      if (index < 0 || index >= blocks.length) return;
+
+      const block = blocks[index];
+
+      if (block.type !== "activity") {
+        showError("Unsupported block type: " + block.type);
+        return;
+      }
+
+      blockIndex = index;
+
+      document.querySelectorAll(".block-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.index) === blockIndex);
+      });
+
+      currentBlock.textContent =
+        `Current block: ${blockIndex + 1}/${blocks.length} · ${block.title || block.id} · ${block.activity_kind || block.type}`;
+
+      previewFrame.src = window.runtimePlayerUrl(block, "teacher");
+      previewFrame.style.display = "block";
+      errorBox.style.display = "none";
+
+      prevBtn.disabled = blockIndex <= 0;
+      nextBtn.disabled = blockIndex >= blocks.length - 1;
+
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("lesson", lessonPath);
+        url.searchParams.set("block", blockIndex);
+        window.history.replaceState({}, "", url.toString());
+      }
+      
+      if (presentationCounter) {
+        presentationCounter.textContent =
+          `${blockIndex + 1} / ${blocks.length}`;
+      }
+
+      clearAnnotations();
+    }
+
+    function buildStudentUrl() {
+      const url = new URL(BASE_URL + "student.html");
+
+      if (sessionPin) {
+        url.searchParams.set("pin", sessionPin);
+      } else {
+        url.searchParams.set("lesson", lessonPath);
+        url.searchParams.set("block", blockIndex);
+      }
+      
+      return url.toString();
+    }
+
+    async function startSession() {
+      if (!currentLesson) return;
+
+      try {
+        startSessionBtn.disabled = true;
+        startSessionBtn.textContent = "Starting...";
+
+        teacherToken = window.prompt("Mã truy cập giáo viên staging")?.trim() || "";
+        const res = await fetch(`${API_BASE}/sessions/start`, {
+          method: "POST",
+          headers: {
+            ...teacherHeaders(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            lesson_id: currentLesson.lesson_id,
+            lesson_path: lessonPath,
+            total_blocks: currentLesson.blocks.length,
+            current_block_index: blockIndex,
+          }),
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Failed to start session: ${res.status} ${text}`);
+        }
+
+        const session = await res.json();
+
+        sessionPin = session.pin;
+        
+        sessionBanner.style.display = "block";
+        sessionBanner.textContent =
+          `LIVE SESSION · PIN: ${session.pin} · BLOCK: ${blockIndex + 1}`;
+
+        monitorPanel.style.display = "block";
+        startMonitorPolling();
+        
+        startSessionBtn.textContent = "Session Active";
+        endSessionBtn.disabled = false;
+      } catch (err) {
+        console.error(err);
+        alert("Could not start session: " + err.message);
+        startSessionBtn.disabled = false;
+        startSessionBtn.textContent = "Start Session";
+      }
+    }
+
+    async function syncSessionBlock(direction) {
+      if (!sessionPin) return;
+
+      try {
+        await fetch(
+          `${API_BASE}/sessions/${sessionPin}/${direction}`,
+          {
+            method: "POST",
+            headers: teacherHeaders(),
+          }
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function syncSessionSetBlock(index) {
+      if (!sessionPin) return;
+
+      console.log("SYNC SET BLOCK", index, "PIN", sessionPin);
+    
+      const res = await fetch(
+        `${API_BASE}/sessions/${sessionPin}/block/${index}`,
+        {
+          method: "POST",
+          headers: teacherHeaders(),
+        }
+      );
+    
+      if (!res.ok) {
+        throw new Error("Failed to sync block index: " + index);
+      }
+    
+      return await res.json();
+    }
+
+    async function endSession() {
+      if (!sessionPin) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/end`, {
+          method: "POST",
+          headers: teacherHeaders(),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to end session");
+        }
+
+        sessionBanner.textContent = `SESSION ENDED · PIN: ${sessionPin}`;
+        startSessionBtn.disabled = false;
+        startSessionBtn.textContent = "Start Session";
+        endSessionBtn.disabled = true;
+
+        if (monitorTimer) {
+          clearInterval(monitorTimer);
+          monitorTimer = null;
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Could not end session: " + err.message);
+      }
+    }
+
+    function startMonitorPolling() {
+      if (!sessionPin) return;
+
+      if (monitorTimer) {
+        clearInterval(monitorTimer);
+      }
+
+      updateMonitor();
+
+      monitorTimer = setInterval(() => {
+        updateMonitor();
+      }, 2000);
+    }
+
+    async function updateMonitor() {
+      if (!sessionPin) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`, { headers: teacherHeaders() });
+
+        if (!res.ok) return;
+
+        const session = await res.json();
+        const students = session.students || [];
+        const events = session.events || [];
+        
+        const completedStudentIds = new Set(
+          events
+            .filter(e =>
+              e.event_type === "block_completed" &&
+              e.block_index === blockIndex
+            )
+            .map(e => e.student_id)
+        );
+        
+        const completedCount = completedStudentIds.size;
+        
+        const names = students
+          .map(s => s.student_name)
+          .filter(Boolean);
+        
+        const previewNames = names.slice(0, 3);
+        
+        const remaining =
+          names.length - previewNames.length;
+        
+        monitorPanel.innerHTML =
+          `<strong>Joined students: ${students.length}</strong>` +
+          `<br><strong>Completed current block: ${completedCount}/${students.length}</strong>` +
+          (
+            previewNames.length
+              ? `<br>${previewNames.join(", ")}`
+              : ""
+          ) +
+          (
+            remaining > 0
+              ? ` +${remaining} more`
+              : ""
+          );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function showError(message) {
+      console.error(message);
+      previewFrame.style.display = "none";
+      errorBox.style.display = "block";
+      errorBox.textContent = message;
+      currentBlock.textContent = "Current block: error";
+    }
+
+    function showPresentationControls() {
+      if (!isPresentationMode) return;
+
+      document.body.classList.add(
+        "show-presentation-controls"
+      );
+
+      clearTimeout(presentationControlsTimer);
+
+      presentationControlsTimer = setTimeout(() => {
+        document.body.classList.remove(
+          "show-presentation-controls"
+        );
+      }, 1800);
+    }
+
+    /* =========================
+       ANNOTATION FUNCTIONS
+       ========================= */
+
+    function resizeAnnotationCanvas() {
+      if (!annotationCanvas) return;
+
+      const dpr = window.devicePixelRatio || 1;
+
+      annotationCanvas.width =
+        Math.round(window.innerWidth * dpr);
+
+      annotationCanvas.height =
+        Math.round(window.innerHeight * dpr);
+
+      annotationCanvas.style.width =
+        `${window.innerWidth}px`;
+
+      annotationCanvas.style.height =
+        `${window.innerHeight}px`;
+
+      annotationCtx =
+        annotationCanvas.getContext("2d");
+
+      annotationCtx.setTransform(
+        dpr, 0, 0, dpr, 0, 0
+      );
+
+      annotationCtx.lineCap = "round";
+      annotationCtx.lineJoin = "round";
+    }
+
+    function clearAnnotations() {
+      if (!annotationCanvas) return;
+
+      const ctx =
+        annotationCanvas.getContext("2d");
+
+      ctx.clearRect(
+        0,
+        0,
+        annotationCanvas.width,
+        annotationCanvas.height
+      );
+    }
+
+    function setAnnotationMode(mode) {
+      annotationMode = mode;
+
+      annotationPointerBtn.classList.toggle(
+        "active",
+        mode === "pointer"
+      );
+
+      annotationPenBtn.classList.toggle(
+        "active",
+        mode === "pen"
+      );
+
+      annotationEraserBtn.classList.toggle(
+        "active",
+        mode === "eraser"
+      );
+
+      document.body.classList.toggle(
+        "annotation-drawing",
+        mode !== "pointer"
+      );
+
+      showPresentationControls();
+    }
+
+    function getAnnotationPoint(event) {
+      const rect =
+        annotationCanvas.getBoundingClientRect();
+
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    function beginAnnotation(event) {
+      if (
+        annotationMode === "pointer" ||
+        !isPresentationMode
+      ) return;
+
+      event.preventDefault();
+
+      annotationDrawing = true;
+
+      const point =
+        getAnnotationPoint(event);
+
+      annotationLastX = point.x;
+      annotationLastY = point.y;
+
+      annotationCanvas.setPointerCapture(
+        event.pointerId
+      );
+    }
+
+    function drawAnnotation(event) {
+      if (
+        !annotationDrawing ||
+        annotationMode === "pointer"
+      ) return;
+
+      event.preventDefault();
+
+      const point =
+        getAnnotationPoint(event);
+
+      if (!annotationCtx) {
+        annotationCtx =
+          annotationCanvas.getContext("2d");
+      }
+
+      annotationCtx.beginPath();
+      annotationCtx.moveTo(
+        annotationLastX,
+        annotationLastY
+      );
+      annotationCtx.lineTo(
+        point.x,
+        point.y
+      );
+
+      if (annotationMode === "eraser") {
+        annotationCtx.globalCompositeOperation =
+          "destination-out";
+
+        annotationCtx.lineWidth = 32;
+      } else {
+        annotationCtx.globalCompositeOperation =
+          "source-over";
+
+        annotationCtx.strokeStyle =
+          annotationColor.value || "#e11d48";
+
+        annotationCtx.lineWidth = 5;
+      }
+
+      annotationCtx.stroke();
+
+      annotationLastX = point.x;
+      annotationLastY = point.y;
+    }
+
+    function endAnnotation(event) {
+      if (!annotationDrawing) return;
+
+      annotationDrawing = false;
+
+      try {
+        annotationCanvas.releasePointerCapture(
+          event.pointerId
+        );
+      } catch (_) {}
+    }
+
+    async function enterPresentationMode() {
+      isPresentationMode = true;
+
+      document.body.classList.add(
+        "presentation-mode"
+      );
+
+      showPresentationControls();
+
+      resizeAnnotationCanvas();
+      setAnnotationMode("pointer");
+
+      try {
+        if (
+          document.documentElement.requestFullscreen &&
+          !document.fullscreenElement
+        ) {
+          await document.documentElement.requestFullscreen();
+        }
+      } catch (err) {
+        console.warn(
+          "Browser fullscreen unavailable:",
+          err
+        );
+      }
+    }
+
+    async function exitPresentationMode() {
+      isPresentationMode = false;
+
+      setAnnotationMode("pointer");
+
+      document.body.classList.remove(
+        "presentation-mode",
+        "show-presentation-controls"
+      );
+
+      if (document.fullscreenElement) {
+        try {
+          await document.exitFullscreen();
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    }
+
+    function presentationNext() {
+      if (!currentLesson) return;
+
+      if (
+        blockIndex <
+        currentLesson.blocks.length - 1
+      ) {
+        goToBlock(blockIndex + 1);
+        syncSessionSetBlock(blockIndex);
+      }
+    }
+
+    function presentationPrevious() {
+      if (!currentLesson) return;
+
+      if (blockIndex > 0) {
+        goToBlock(blockIndex - 1);
+        syncSessionSetBlock(blockIndex);
+      }
+    }
+
+    prevBtn.addEventListener("click", () => {
+      goToBlock(blockIndex - 1);
+      syncSessionSetBlock(blockIndex);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      goToBlock(blockIndex + 1);
+      syncSessionSetBlock(blockIndex);
+    });
+
+    startSessionBtn.addEventListener("click", () => {
+      startSession();
+    });
+
+    endSessionBtn.addEventListener("click", () => {
+      endSession();
+    });
+
+    openStudentBtn.addEventListener("click", () => {
+      window.open(buildStudentUrl(), "_blank");
+    });
+
+    copyStudentBtn.addEventListener("click", async () => {
+      const studentUrl = buildStudentUrl();
+
+      try {
+        await navigator.clipboard.writeText(studentUrl);
+        copyStudentBtn.textContent = "Copied!";
+        setTimeout(() => {
+          copyStudentBtn.textContent = "Copy Student URL";
+        }, 1200);
+      } catch (err) {
+        alert(studentUrl);
+      }
+    });
+
+    homeBtn.addEventListener("click", () => {
+      window.location.href = "./teacher-home.html";
+    });
+
+    presentationBtn.addEventListener(
+      "click",
+      enterPresentationMode
+    );
+
+    exitPresentationBtn.addEventListener(
+      "click",
+      exitPresentationMode
+    );
+
+    presentationNextBtn.addEventListener(
+      "click",
+      presentationNext
+    );
+
+    presentationPrevBtn.addEventListener(
+      "click",
+      presentationPrevious
+    );
+
+    annotationPointerBtn.addEventListener(
+      "click",
+      () => setAnnotationMode("pointer")
+    );
+
+    annotationPenBtn.addEventListener(
+      "click",
+      () => setAnnotationMode("pen")
+    );
+
+    annotationEraserBtn.addEventListener(
+      "click",
+      () => setAnnotationMode("eraser")
+    );
+
+    annotationClearBtn.addEventListener(
+      "click",
+      clearAnnotations
+    );
+
+    annotationCanvas.addEventListener(
+      "pointerdown",
+      beginAnnotation
+    );
+
+    annotationCanvas.addEventListener(
+      "pointermove",
+      drawAnnotation
+    );
+
+    annotationCanvas.addEventListener(
+      "pointerup",
+      endAnnotation
+    );
+
+    annotationCanvas.addEventListener(
+      "pointercancel",
+      endAnnotation
+    );
+
+    window.addEventListener(
+      "resize",
+      () => {
+        if (isPresentationMode) {
+          resizeAnnotationCanvas();
+        }
+      }
+    );
+
+    document.addEventListener(
+      "mousemove",
+      () => {
+        if (isPresentationMode) {
+          showPresentationControls();
+        }
+      }
+    );
+
+    document.addEventListener(
+      "fullscreenchange",
+      () => {
+        if (
+          isPresentationMode &&
+          !document.fullscreenElement
+        ) {
+          isPresentationMode = false;
+
+          document.body.classList.remove(
+            "presentation-mode",
+            "show-presentation-controls"
+          );
+        }
+      }
+    );
+
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA" ||
+        e.target.tagName === "SELECT"
+      ) return;
+
+      if (isPresentationMode) {
+        if (e.key === "p" || e.key === "P") {
+          e.preventDefault();
+          setAnnotationMode("pen");
+          return;
+        }
+
+        if (e.key === "v" || e.key === "V") {
+          e.preventDefault();
+          setAnnotationMode("pointer");
+          return;
+        }
+
+        if (e.key === "e" || e.key === "E") {
+          e.preventDefault();
+          setAnnotationMode("eraser");
+          return;
+        }
+
+        if (e.key === "c" || e.key === "C") {
+          e.preventDefault();
+          clearAnnotations();
+          return;
+        }
+        
+        if (e.key === "Escape") {
+          e.preventDefault();
+          
+          if (annotationMode !== "pointer") {
+            setAnnotationMode("pointer");
+          } else {
+            exitPresentationMode();
+          }
+          
+          return;
+        }
+
+        if (
+          e.key === "PageDown" ||
+          e.key === "Enter"
+        ) {
+          e.preventDefault();
+          presentationNext();
+          return;
+        }
+
+        if (e.key === "PageUp") {
+          e.preventDefault();
+          presentationPrevious();
+          return;
+        }
+      }
+      
+      // HOME
+      if (e.key === "h" || e.key === "H") {
+        window.location.href = "./teacher-home.html";
+        return;
+      }
+    
+      // NEXT
+      if (
+        e.key === " " ||
+        e.key === "ArrowRight"
+      ) {
+        e.preventDefault();
+    
+        if (blockIndex < currentLesson.blocks.length - 1) {
+          presentationNext();
+        }
+    
+        return;
+      }
+    
+      // PREVIOUS
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+    
+        if (blockIndex > 0) {
+          presentationPrevious();
+        }
+    
+        return;
+      }
+    });
+
+    loadLesson();
+  </script>
+</body>
+</html>
+
+

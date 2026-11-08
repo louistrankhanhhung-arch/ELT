@@ -1,5 +1,8 @@
+from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.responses import Response
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from random import randint
@@ -9,6 +12,11 @@ import hashlib
 import hmac
 import json
 import os
+from contextlib import closing
+import re
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from urllib.request import urlopen
 from uuid import uuid4
 import sqlite3
 
@@ -563,3 +571,90 @@ def end_session(pin: str):
     return get_session(pin)
 
 
+
+
+class SlidesImportRequest(BaseModel):
+    url: str
+
+
+@app.post("/api/slides/import", dependencies=[Depends(require_teacher)])
+def import_google_slides(payload: SlidesImportRequest):
+    import pymupdf
+
+    url = urlsplit(payload.url.strip())
+    match = re.fullmatch(r"/presentation/d/([\w-]{10,150})(?:/[^/]+)?/?", url.path, re.ASCII)
+    if url.scheme != "https" or url.netloc != "docs.google.com" or not match:
+        raise HTTPException(422, "Use a Google Slides sharing link")
+
+    limit = 12 * 1024 * 1024
+    export_url = f"https://docs.google.com/presentation/d/{match[1]}/export/pdf"
+    try:
+        with urlopen(export_url, timeout=20) as response:
+            pdf = response.read(limit + 1)
+    except (HTTPError, URLError, TimeoutError):
+        raise HTTPException(422, "Google could not export this deck. Check sharing and download permissions.")
+
+    if len(pdf) > limit:
+        raise HTTPException(413, "Deck exceeds the 12 MB PDF limit")
+    if not pdf.startswith(b"%PDF-"):
+        raise HTTPException(422, "Google did not return a PDF. Check sharing and download permissions.")
+
+    pages = []
+    try:
+        with pymupdf.open(stream=pdf, filetype="pdf") as document:
+            if not 1 <= len(document) <= 60:
+                raise HTTPException(422, "Deck must have between 1 and 60 slides")
+            for page in document:
+                scale = 1280 / max(page.rect.width, page.rect.height)
+                image = page.get_pixmap(matrix=pymupdf.Matrix(scale, scale), alpha=False)
+                pages.append(image.tobytes("jpeg", jpg_quality=85))
+    except (pymupdf.FileDataError, ValueError, RuntimeError):
+        raise HTTPException(422, "Could not render this deck")
+
+    deck_id = uuid4().hex
+    with closing(db()) as conn:
+        conn.cursor().executemany(
+            sql("INSERT INTO imported_slide_pages (deck_id, page_number, image) VALUES (?, ?, ?)"),
+            [(deck_id, number, image) for number, image in enumerate(pages, 1)],
+        )
+        conn.commit()
+    return {"lesson_path": f"imports/{deck_id}", "slide_count": len(pages)}
+
+
+@app.get("/api/imports/{deck_id}")
+def imported_lesson(deck_id: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT page_number FROM imported_slide_pages WHERE deck_id = ? ORDER BY page_number"), (deck_id,))
+        pages = cur.fetchall()
+    if not pages:
+        raise HTTPException(404, "Imported lesson not found")
+    return {
+        "lesson_id": f"slides-{deck_id}",
+        "title": "Google Slides",
+        "version": "1",
+        "blocks": [
+            {
+                "id": f"slide-{row['page_number']}",
+                "type": "activity",
+                "activity_kind": "google-slide",
+                "title": f"Slide {row['page_number']}",
+                "image_path": f"imports/{deck_id}/pages/{row['page_number']}",
+                "completion": {"mode": "teacher_next"},
+            }
+            for row in pages
+        ],
+    }
+
+
+@app.get("/api/imports/{deck_id}/pages/{number}")
+def imported_slide(deck_id: str, number: int):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT image FROM imported_slide_pages WHERE deck_id = ? AND page_number = ?"), (deck_id, number))
+        page = cur.fetchone()
+    if page is None:
+        raise HTTPException(404, "Slide not found")
+    return Response(bytes(page["image"]), media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
+
+app.mount("/studio", StaticFiles(directory=Path(__file__).parent / "studio"), name="studio")

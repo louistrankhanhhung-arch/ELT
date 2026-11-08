@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Slides</title>
+<style>
+html, body { margin: 0; height: 100%; background: #111; color: white; }
+img { display: block; width: 100%; height: 100%; object-fit: contain; }
+</style>
+<img alt="Slide đã nhập">
+<script src="config.js"></script>
+<script>
+const path = new URLSearchParams(location.search).get("image");
+if (/^imports\/[a-f0-9]{32}\/pages\/[1-9][0-9]*$/.test(path || "")) {
+  document.querySelector("img").src = window.ELT_CONFIG.API_BASE + "/" + path;
+}
+</script>
+</html>
+

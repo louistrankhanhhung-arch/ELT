@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELT Student Runtime</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      background: #f7f3f8;
+      font-family: Arial, sans-serif;
+      color: #222;
+      overflow: hidden;
+    }
+
+    .topbar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
+      background: #ffffff;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    .lesson-info {
+      min-width: 0;
+    }
+
+    .lesson-title {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .block-title {
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .status {
+      flex: 0 0 auto;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .nav-controls {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .runtime {
+      flex: 1;
+      min-height: 0;
+      min-width: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #ffffff;
+      display: block;
+    }
+
+    .error {
+      padding: 20px;
+      font-size: 16px;
+      color: #b00020;
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .nav-btn {
+        padding: 5px 8px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 520px) {
+      .topbar {
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+      .block-title {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="lesson-info">
+      <div class="lesson-title" id="lessonTitle">Loading lesson...</div>
+      <div class="block-title" id="blockTitle">Loading block...</div>
+    </div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="completeBtn">Complete</button>
+      <button class="nav-btn" id="prevBtn">← Prev</button>
+      <button class="nav-btn" id="nextBtn">Next →</button>
+      <div class="status" id="statusText">Student runtime</div>
+    </div>
+  </header>
+
+  <main class="runtime">
+    <iframe id="playerFrame"></iframe>
+    <div class="error" id="errorBox" style="display:none;"></div>
+  </main>
+
+  <script src="./config.js?v=2"></script>
+  <script>
+    const BASE_URL =
+      window.ELT_CONFIG?.BASE_URL ||
+      "https://rootenglishhouse.com/";
+
+    const params = new URLSearchParams(window.location.search);
+
+    const API_BASE =
+      window.ELT_CONFIG?.API_BASE ||
+      "https://elt-production.up.railway.app/api";
+
+    const sessionPin = params.get("pin");
+    const studentId = params.get("student_id");
+
+    const lessonPath =
+      params.get("lesson") ||
+      "lessons/g1rec/l02/g1rec-l02.json";
+
+    let blockIndex = Number(params.get("block") || 0);
+
+    const lessonUrl = window.runtimeLessonUrl(lessonPath);
+
+    const lessonTitle = document.getElementById("lessonTitle");
+    const blockTitle = document.getElementById("blockTitle");
+    const statusText = document.getElementById("statusText");
+    const playerFrame = document.getElementById("playerFrame");
+    const errorBox = document.getElementById("errorBox");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const completeBtn = document.getElementById("completeBtn");
+
+    let currentLesson = null;
+    let lastSessionBlockIndex = null;
+    let isDisconnected = false;
+    let pollingTimer = null;
+
+    async function loadStudentBlock(targetIndex = blockIndex) {
+      try {
+        const res = await fetch(lessonUrl);
+
+        if (!res.ok) {
+          throw new Error("Cannot load lesson JSON: " + lessonUrl);
+        }
+
+        const lesson = await res.json();
+        currentLesson = lesson;
+        
+        const blocks = lesson.blocks || [];
+        const block = blocks[targetIndex];
+
+        if (!block) {
+          throw new Error("Block not found at index: " + blockIndex);
+        }
+
+        if (block.type !== "activity") {
+          throw new Error("Unsupported block type: " + block.type);
+        }
+
+        blockIndex = targetIndex;
+
+        lessonTitle.textContent = lesson.title || lesson.lesson_id || "Lesson";
+        blockTitle.textContent =
+          `${blockIndex + 1}/${blocks.length} · ${block.title || block.id}`;
+        statusText.textContent = block.activity_kind || block.type;
+
+        playerFrame.src = window.runtimePlayerUrl(block, "student");
+
+
+        prevBtn.disabled = blockIndex <= 0;
+        nextBtn.disabled = blockIndex >= blocks.length - 1;
+        
+      } catch (err) {
+        console.error(err);
+        playerFrame.style.display = "none";
+        errorBox.style.display = "block";
+        errorBox.textContent = err.message;
+        lessonTitle.textContent = "Failed to load";
+        blockTitle.textContent = "";
+      }
+    }
+
+    function updateUrlBlockParam(index) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("block", index);
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    function goToBlock(index) {
+      if (!currentLesson) return;
+
+      const blocks = currentLesson.blocks || [];
+
+      if (index < 0 || index >= blocks.length) {
+        return;
+      }
+
+      updateUrlBlockParam(index);
+      loadStudentBlock(index);
+    }
+
+    async function loadSessionFromPin() {
+      if (!sessionPin) {
+        loadStudentBlock();
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+
+        if (!res.ok) {
+          throw new Error("Session not found: " + sessionPin);
+        }
+
+        const session = await res.json();
+
+        if (!session.lesson_path) {
+          throw new Error("Session has no lesson_path");
+        }
+
+        const sessionLessonUrl = window.runtimeLessonUrl(session.lesson_path);
+        const lessonRes = await fetch(sessionLessonUrl);
+
+        if (!lessonRes.ok) {
+          throw new Error("Cannot load lesson JSON: " + sessionLessonUrl);
+        }
+
+        currentLesson = await lessonRes.json();
+        blockIndex = session.current_block_index || 0;
+        lastSessionBlockIndex = blockIndex;
+
+        renderSessionBlock();
+        startSessionPolling();
+      } catch (err) {
+        showStudentError(err);
+      }
+    }
+
+    function renderSessionBlock() {
+      if (!currentLesson) return;
+
+      const blocks = currentLesson.blocks || [];
+      const block = blocks[blockIndex];
+
+      if (!block) {
+        showStudentError(new Error("Block not found at index: " + blockIndex));
+        return;
+      }
+
+      lessonTitle.textContent =
+        currentLesson.title || currentLesson.lesson_id || "Lesson";
+
+      blockTitle.textContent =
+        `${blockIndex + 1}/${blocks.length} · ${block.title || block.id}`;
+
+      statusText.textContent = sessionPin
+        ? `PIN ${sessionPin}`
+        : (block.activity_kind || block.type);
+
+      playerFrame.src = window.runtimePlayerUrl(block, "student");
+
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
+
+      completeBtn.disabled = !sessionPin || !studentId || block.activity_kind === "google-slide";
+      completeBtn.textContent = "Complete";
+    }
+
+    function startSessionPolling() {
+      if (pollingTimer) clearInterval(pollingTimer);
+
+      pollingTimer = setInterval(async () => {
+        try {
+          const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+          if (!res.ok) {
+            throw new Error("Polling failed: " + res.status);
+          }
+
+          const session = await res.json();
+
+          if (isDisconnected) {
+            statusText.textContent = `PIN ${sessionPin}`;
+            isDisconnected = false;
+          }
+
+          if (
+            session.status === "ended" ||
+            session.status === "expired"
+          ) {
+            lessonTitle.textContent = "Session ended";
+            blockTitle.textContent =
+              session.status === "expired"
+                ? "This PIN has expired."
+                : "Please wait for your teacher.";
+            statusText.textContent = `PIN ${sessionPin}`;
+            playerFrame.style.display = "none";
+            errorBox.style.display = "block";
+            errorBox.textContent =
+              session.status === "expired"
+                ? "The class session has expired."
+                : "The class session has ended.";
+            if (pollingTimer) {
+              clearInterval(pollingTimer);
+              pollingTimer = null;
+            }
+            return;
+          }
+          
+          const nextIndex = session.current_block_index || 0;
+
+          if (nextIndex !== lastSessionBlockIndex) {
+            blockIndex = nextIndex;
+            lastSessionBlockIndex = nextIndex;
+            renderSessionBlock();
+          }
+        } catch (err) {
+          console.error(err);
+          if (!isDisconnected) {
+            statusText.textContent = "Reconnecting...";
+            isDisconnected = true;
+          }
+        }
+      }, 1000);
+    }
+
+    async function completeCurrentBlock() {
+      if (!sessionPin || !studentId || !currentLesson) {
+        return;
+      }
+
+      const blocks = currentLesson.blocks || [];
+      const block = blocks[blockIndex];
+
+      if (!block) {
+        return;
+      }
+
+      try {
+        completeBtn.disabled = true;
+        completeBtn.textContent = "Completed";
+
+        const res = await fetch(
+          `${API_BASE}/sessions/${sessionPin}/events`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              student_id: studentId,
+              block_index: blockIndex,
+              block_id: block.id,
+              event_type: "block_completed",
+            }),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Could not complete block.");
+        }
+      } catch (err) {
+        console.error(err);
+        completeBtn.disabled = false;
+        completeBtn.textContent = "Complete";
+      }
+    }
+
+    function showStudentError(err) {
+      console.error(err);
+      playerFrame.style.display = "none";
+      errorBox.style.display = "block";
+      errorBox.textContent = err.message;
+      lessonTitle.textContent = "Failed to load";
+      blockTitle.textContent = "";
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (sessionPin) return;
+      goToBlock(blockIndex - 1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (sessionPin) return;
+      goToBlock(blockIndex + 1);
+    });
+
+    completeBtn.addEventListener("click", () => {
+      completeCurrentBlock();
+    });
+
+    loadSessionFromPin();
+  </script>
+</body>
+</html>
+
+
