@@ -325,6 +325,47 @@
       background: #fff;
       cursor: pointer;
     }
+    #writingPanel {
+      box-sizing: border-box;
+      margin: 12px;
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid #dbe3ed;
+      border-radius: 10px;
+      color: #172338;
+      overflow: auto;
+      max-height: 40vh;
+      flex-shrink: 0;
+    }
+    #writingPanel > summary { cursor: pointer; font-weight: 650; }
+    #writingPanel h2 { margin: 0 0 8px; font-size: 1.1rem; }
+    #writingPanel form { margin: 10px 0; }
+    #writingPanel textarea {
+      box-sizing: border-box;
+      display: block;
+      width: min(100%, 48rem);
+      margin: 6px 0 10px;
+      padding: 9px 10px;
+      border: 1px solid #b5c4d5;
+      border-radius: 6px;
+      font: inherit;
+      resize: vertical;
+    }
+    #writingPanel button {
+      background: #2459a9;
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+    #writingPanel button:disabled { opacity: .55; cursor: default; }
+    #writingPanel p { margin: 8px 0; }
+    #writingPanel p:empty { display: none; }
+    #writingResults details { border-top: 1px solid #e1e8f0; padding: 8px 0; }
+    #writingResults summary { cursor: pointer; }
+    body.presentation-mode #writingPanel { display: none; }
   </style>
 </head>
 <body>
@@ -342,11 +383,11 @@
       <button id="openStudentBtn">Open Student View</button>
       <button id="startSessionBtn">Start Session</button>
       <button id="endSessionBtn" disabled>End Session</button>
-      <label>Chế độ học sinh
+      <label>Student mode
         <select id="displayMode" disabled>
-          <option value="focus">Focus · Nhìn lên bảng</option>
-          <option value="follow" selected>Follow · Theo màn hình</option>
-          <option value="interact">Interact · Cho phép tương tác</option>
+          <option value="focus">Focus · Look at the board</option>
+          <option value="follow" selected>Follow · Follow the teacher</option>
+          <option value="interact">Interact · Allow interaction</option>
         </select>
       </label>
       <span id="displayModeStatus" role="status"></span>
@@ -354,12 +395,12 @@
     </div>
   </header>
   <details id="writingPanel" hidden>
-    <summary>Writing · Giao và xem bài</summary>
+    <summary>Writing · Assignments and responses</summary>
     <form id="writingAssignForm">
-      <label>Đề bài <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
-      <button type="submit">Giao bài Writing</button>
+      <label>Writing prompt <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
+      <button type="submit">Assign Writing</button>
     </form>
-    <button type="button" id="writingExport" hidden>Xuất CSV</button>
+    <button type="button" id="writingExport" hidden>Export CSV</button>
     <p id="writingFeedback" role="status"></p>
     <p id="writingCount"></p>
     <div id="writingResults"></div>
@@ -460,8 +501,8 @@
 
     const teacherTokenInput = document.createElement("input");
     teacherTokenInput.type = "password";
-    teacherTokenInput.placeholder = "Mã giáo viên staging";
-    teacherTokenInput.setAttribute("aria-label", "Mã giáo viên staging");
+    teacherTokenInput.placeholder = "Staging teacher access code";
+    teacherTokenInput.setAttribute("aria-label", "Staging teacher access code");
     teacherTokenInput.autocomplete = "off";
     document.getElementById("startSessionBtn").before(teacherTokenInput);
     let teacherToken = "";
@@ -541,8 +582,8 @@
           headers: { ...teacherHeaders(), "Content-Type": "application/json" },
           body: JSON.stringify({ prompt })
         });
-        if (!response.ok) throw new Error("Giao bài chưa thành công.");
-        writingFeedback.textContent = "Đã giao. Chọn Interact để học sinh nộp bài.";
+        if (!response.ok) throw new Error("Could not assign Writing.");
+        writingFeedback.textContent = "Assigned. Use Interact to let students submit.";
         writingAssignForm.hidden = true;
         await updateWritingResults(sessionPin);
       } catch (error) {
@@ -556,7 +597,7 @@
       const response = await fetch(`${API_BASE}/sessions/${pin}/writing/results`, { headers: teacherHeaders() });
       if (!response.ok || pin !== sessionPin) return;
       const result = await response.json();
-      writingCount.textContent = `Đã nộp: ${result.submissions.length}/${result.joined} học sinh đã vào lớp`;
+      writingCount.textContent = `Submitted: ${result.submissions.length} of ${result.joined} joined students`;
       writingExport.hidden = false;
       if (writingResults.childElementCount === result.submissions.length) return;
       writingResults.replaceChildren(...result.submissions.map((submission) => {
@@ -574,7 +615,7 @@
     writingExport.addEventListener("click", async () => {
       try {
         const response = await fetch(`${API_BASE}/sessions/${sessionPin}/writing/export`, { headers: teacherHeaders() });
-        if (!response.ok) throw new Error("Chưa xuất được CSV.");
+        if (!response.ok) throw new Error("Could not export the CSV.");
         const link = document.createElement("a");
         link.href = URL.createObjectURL(await response.blob());
         link.download = `writing-${sessionPin}.csv`;
@@ -592,7 +633,7 @@
       const pin = sessionPin;
       const mode = displayMode.value;
       displayMode.disabled = true;
-      displayModeStatus.textContent = "Đang cập nhật…";
+      displayModeStatus.textContent = "Updating…";
       try {
         const response = await fetch(`${API_BASE}/sessions/${pin}/mode`, {
           method: "POST",
@@ -602,12 +643,12 @@
         if (!response.ok) throw new Error("Mode update failed");
         if (sessionPin === pin && !endSessionBtn.disabled) {
           savedDisplayMode = mode;
-          displayModeStatus.textContent = "Đã cập nhật";
+          displayModeStatus.textContent = "Updated";
         }
       } catch {
         if (sessionPin === pin && !endSessionBtn.disabled) {
           displayMode.value = savedDisplayMode;
-          displayModeStatus.textContent = "Chưa đổi được chế độ. Hãy thử lại.";
+          displayModeStatus.textContent = "Could not change the mode. Try again.";
         }
       } finally {
         if (sessionPin === pin && !endSessionBtn.disabled) displayMode.disabled = false;
@@ -1181,7 +1222,7 @@
 
     copyStudentBtn.addEventListener("click", async () => {
       if (!sessionPin) {
-        alert("Hãy bấm Start Session trước khi sao chép link tham gia.");
+        alert("Start a session before copying the join link.");
         return;
       }
       const studentUrl = buildStudentUrl();

@@ -100,15 +100,15 @@
     <h1>Join Class</h1>
 
     <p>
-      Nhập mã học sinh và PIN lớp để tham gia.
+      Enter your student code and class PIN to join.
     </p>
 
     <div class="field">
-      <label for="studentName">Mã học sinh</label>
+      <label for="studentName">Student code</label>
       <input
         id="studentName"
         type="text"
-        placeholder="Nhập mã học sinh"
+        placeholder="Enter your student code"
       />
     </div>
 
@@ -162,7 +162,7 @@
         sessionPinInput.value.trim();
 
       if (!studentName) {
-        showError("Hãy nhập mã học sinh.");
+        showError("Enter your student code.");
         return;
       }
 

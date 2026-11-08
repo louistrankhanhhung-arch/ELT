@@ -122,6 +122,47 @@
         display: none;
       }
     }
+    #writingPanel {
+      box-sizing: border-box;
+      margin: 12px;
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid #dbe3ed;
+      border-radius: 10px;
+      color: #172338;
+      overflow: auto;
+      max-height: 40vh;
+      flex-shrink: 0;
+    }
+    #writingPanel > summary { cursor: pointer; font-weight: 650; }
+    #writingPanel h2 { margin: 0 0 8px; font-size: 1.1rem; }
+    #writingPanel form { margin: 10px 0; }
+    #writingPanel textarea {
+      box-sizing: border-box;
+      display: block;
+      width: min(100%, 48rem);
+      margin: 6px 0 10px;
+      padding: 9px 10px;
+      border: 1px solid #b5c4d5;
+      border-radius: 6px;
+      font: inherit;
+      resize: vertical;
+    }
+    #writingPanel button {
+      background: #2459a9;
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+    #writingPanel button:disabled { opacity: .55; cursor: default; }
+    #writingPanel p { margin: 8px 0; }
+    #writingPanel p:empty { display: none; }
+    #writingResults details { border-top: 1px solid #e1e8f0; padding: 8px 0; }
+    #writingResults summary { cursor: pointer; }
+    body.presentation-mode #writingPanel { display: none; }
   </style>
 </head>
 <body>
@@ -141,15 +182,15 @@
     <h2>Writing</h2>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
     <form id="writingForm">
-      <label>Câu trả lời <textarea name="response" rows="5" maxlength="20000" required></textarea></label>
-      <button type="submit">Nộp bài</button>
+      <label>Response <textarea name="response" rows="5" maxlength="20000" required></textarea></label>
+      <button type="submit">Submit response</button>
     </form>
     <p id="writingStatus" role="status"></p>
   </section>
 
   <main class="runtime">
     <iframe id="playerFrame"></iframe>
-    <p id="focusMessage" hidden role="status">Hãy nhìn lên bảng.</p>
+    <p id="focusMessage" hidden role="status">Please look at the board.</p>
     <div class="error" id="errorBox" style="display:none;"></div>
   </main>
 
@@ -214,13 +255,13 @@
         });
         if (!response.ok) {
           const result = await response.json();
-          throw new Error(typeof result.detail === "string" ? result.detail : "Chưa nộp được bài.");
+          throw new Error(typeof result.detail === "string" ? result.detail : "Could not submit your response.");
         }
         writingSubmitted = true;
         writingForm.hidden = true;
-        writingStatus.textContent = "Đã nộp bài.";
+        writingStatus.textContent = "Response submitted.";
       } catch (error) {
-        writingStatus.textContent = error.message + " Câu trả lời vẫn còn trong ô nhập.";
+        writingStatus.textContent = error.message + " Your response is still in the text box.";
       } finally {
         button.disabled = false;
         writingForm.elements.response.readOnly = false;

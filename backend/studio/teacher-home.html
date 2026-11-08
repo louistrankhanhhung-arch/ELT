@@ -225,10 +225,10 @@
 
     const importForm = document.createElement("form");
     importForm.innerHTML = `
-      <h2>Nhập Google Slides</h2>
-      <label>Link Google Slides <input name="url" type="url" required></label>
-      <label>Mã giáo viên staging <input name="token" type="password" required></label>
-      <button type="submit">Nhập và mở bài</button>
+      <h2>Import Google Slides</h2>
+      <label>Google Slides link <input name="url" type="url" required></label>
+      <label>Staging teacher access code <input name="token" type="password" required></label>
+      <button type="submit">Import and open lesson</button>
       <p role="status"></p>
     `;
     catalogEl.before(importForm);
@@ -237,7 +237,7 @@
       const button = importForm.querySelector("button");
       const status = importForm.querySelector("[role=status]");
       button.disabled = true;
-      status.textContent = "Đang nhập Google Slides…";
+      status.textContent = "Importing Google Slides…";
       try {
         const response = await fetch(window.ELT_CONFIG.API_BASE + "/slides/import", {
           method: "POST",
@@ -248,7 +248,7 @@
           body: JSON.stringify({ url: importForm.elements.url.value.trim() })
         });
         const result = await response.json();
-        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Không thể nhập bộ slide.");
+        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Could not import this deck.");
         const lesson = new URL("teacher.html", BASE_URL);
         lesson.searchParams.set("lesson", result.lesson_path);
         window.location.assign(lesson.href);
