@@ -1,10 +1,14 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from random import randint
 from datetime import datetime, timezone, timedelta
 from typing import List, Literal, Optional
+import hashlib
+import hmac
+import json
 import os
+from uuid import uuid4
 import sqlite3
 
 try:
@@ -18,6 +22,17 @@ DB_PATH = "elt_runtime.db"
 DATABASE_URL = os.getenv("DATABASE_URL")
 USE_POSTGRES = bool(DATABASE_URL)
 SESSION_TTL_HOURS = 2
+TEACHER_ACCESS_TOKEN = os.getenv("TEACHER_ACCESS_TOKEN", "")
+ROSTER = json.loads(os.getenv("CLASS_ROSTER_JSON", "{}"))
+
+
+def require_teacher(authorization: Optional[str] = Header(default=None)):
+    if not TEACHER_ACCESS_TOKEN:
+        return
+    expected = f"Bearer {TEACHER_ACCESS_TOKEN}".encode()
+    if not hmac.compare_digest((authorization or "").encode(), expected):
+        raise HTTPException(status_code=401, detail="Teacher authentication required")
+
 
 app = FastAPI(title="ELT Runtime API v0.3 DB")
 
@@ -44,7 +59,8 @@ class StartSessionRequest(BaseModel):
 
 
 class JoinSessionRequest(BaseModel):
-    student_name: str
+    student_name: str = ""
+    roster_code: Optional[str] = None
 
 class EventRequest(BaseModel):
     student_id: str
@@ -336,7 +352,7 @@ def health():
     }
 
 
-@app.post("/api/sessions/start")
+@app.post("/api/sessions/start", dependencies=[Depends(require_teacher)])
 def start_session(payload: StartSessionRequest):
     pin = generate_pin()
     created_at = datetime.now(timezone.utc)
@@ -370,34 +386,44 @@ def start_session(payload: StartSessionRequest):
 
 
 @app.get("/api/sessions/{pin}/state")
-def get_session_state(pin: str):
+def get_session_state(pin: str, authorization: Optional[str] = Header(default=None)):
     session = get_session(pin)
 
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    return apply_session_expiry(session)
+    session = apply_session_expiry(session)
+    if TEACHER_ACCESS_TOKEN:
+        try:
+            require_teacher(authorization)
+        except HTTPException:
+            session.pop("students", None)
+            session.pop("events", None)
+    return session
 
 
 @app.post("/api/sessions/{pin}/join")
 def join_session(pin: str, payload: JoinSessionRequest):
-    session = require_active_session(pin)
-    
+    require_active_session(pin)
+    student_name = payload.student_name.strip()
+    student_id = f"{pin}-{uuid4().hex}"
+    if TEACHER_ACCESS_TOKEN:
+        member = ROSTER.get(payload.roster_code or "")
+        if not member:
+            raise HTTPException(status_code=403, detail="Invalid roster code")
+        student_name = member["name"]
+        member_key = f"{pin}:{member['id']}".encode()
+        student_id = f"{pin}-{hmac.new(TEACHER_ACCESS_TOKEN.encode(), member_key, hashlib.sha256).hexdigest()}"
+    if not student_name:
+        raise HTTPException(status_code=422, detail="Student name required")
+
     conn = db()
     cur = conn.cursor()
-
-    cur.execute(
-        sql("SELECT COUNT(*) AS count FROM session_students WHERE pin = ?"),
-        (pin,)
-    )
-    count = cur.fetchone()["count"]
-
-    student_id = f"{pin}-s{count + 1}"
 
     student = {
         "student_id": student_id,
         "pin": pin,
-        "student_name": payload.student_name,
+        "student_name": student_name,
         "joined_at": now_iso(),
         "last_seen_at": now_iso(),
     }
@@ -407,6 +433,7 @@ def join_session(pin: str, payload: JoinSessionRequest):
             student_id, pin, student_name, joined_at, last_seen_at
         )
         VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(student_id) DO UPDATE SET last_seen_at = excluded.last_seen_at
     """), (
         student["student_id"],
         student["pin"],
@@ -421,11 +448,11 @@ def join_session(pin: str, payload: JoinSessionRequest):
     return {
         "pin": pin,
         "student": student,
-        "session": get_session(pin),
+        "session": get_session_state(pin, None),
     }
 
 
-@app.post("/api/sessions/{pin}/next")
+@app.post("/api/sessions/{pin}/next", dependencies=[Depends(require_teacher)])
 def next_block(pin: str):
     session = require_active_session(pin)
 
@@ -446,7 +473,7 @@ def next_block(pin: str):
     return get_session(pin)
 
 
-@app.post("/api/sessions/{pin}/previous")
+@app.post("/api/sessions/{pin}/previous", dependencies=[Depends(require_teacher)])
 def previous_block(pin: str):
     session = require_active_session(pin)
 
@@ -464,7 +491,7 @@ def previous_block(pin: str):
     return get_session(pin)
 
 
-@app.post("/api/sessions/{pin}/block/{index}")
+@app.post("/api/sessions/{pin}/block/{index}", dependencies=[Depends(require_teacher)])
 def set_block(pin: str, index: int):
     session = require_active_session(pin)
 
@@ -485,6 +512,10 @@ def set_block(pin: str, index: int):
 @app.post("/api/sessions/{pin}/events")
 def log_event(pin: str, payload: EventRequest):
     session = require_active_session(pin)
+    if TEACHER_ACCESS_TOKEN and not any(
+        student["student_id"] == payload.student_id for student in session["students"]
+    ):
+        raise HTTPException(status_code=403, detail="Student is not in this session")
 
     conn = db()
     cur = conn.cursor()
@@ -509,7 +540,7 @@ def log_event(pin: str, payload: EventRequest):
     return {"ok": True}
 
 
-@app.post("/api/sessions/{pin}/end")
+@app.post("/api/sessions/{pin}/end", dependencies=[Depends(require_teacher)])
 def end_session(pin: str):
     session = get_session(pin)
 
@@ -526,3 +557,5 @@ def end_session(pin: str):
     conn.close()
 
     return get_session(pin)
+
+
