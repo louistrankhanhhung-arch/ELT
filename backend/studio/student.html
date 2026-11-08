@@ -232,23 +232,33 @@
     const writingPanel = document.getElementById("writingPanel");
     const writingForm = document.getElementById("writingForm");
     const writingStatus = document.getElementById("writingStatus");
-    let writingSubmitted = false;
+    let writingTaskId = null;
+    const writingDrafts = new Map();
+    const submittedTasks = new Set();
 
     function syncWriting(task) {
-      writingPanel.hidden = !task || displayMode !== "interact" || !studentId;
+      const nextId = task?.task_id || null;
+      if (nextId !== writingTaskId) {
+        if (writingTaskId) writingDrafts.set(writingTaskId, writingForm.elements.response.value);
+        writingTaskId = nextId;
+        writingForm.elements.response.value = writingDrafts.get(nextId) || "";
+        writingStatus.textContent = submittedTasks.has(nextId) ? "Response submitted." : "";
+      }
+      writingPanel.hidden = !nextId || displayMode !== "interact" || !studentId;
       if (task) document.getElementById("writingPrompt").textContent = task.prompt;
-      writingForm.hidden = writingSubmitted;
+      writingForm.hidden = submittedTasks.has(nextId);
     }
 
     writingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const responseText = writingForm.elements.response.value;
-      if (writingPanel.hidden || writingSubmitted || !responseText.trim()) return;
+      const taskId = writingTaskId;
+      if (writingPanel.hidden || !taskId || submittedTasks.has(taskId) || !responseText.trim()) return;
       const button = writingForm.querySelector("button");
       button.disabled = true;
       writingForm.elements.response.readOnly = true;
       try {
-        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/writing/submissions`, {
+        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/tasks/${taskId}/submissions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ student_id: studentId, response: responseText })
@@ -257,11 +267,13 @@
           const result = await response.json();
           throw new Error(typeof result.detail === "string" ? result.detail : "Could not submit your response.");
         }
-        writingSubmitted = true;
-        writingForm.hidden = true;
-        writingStatus.textContent = "Response submitted.";
+        submittedTasks.add(taskId);
+        if (taskId === writingTaskId) {
+          writingForm.hidden = true;
+          writingStatus.textContent = "Response submitted.";
+        }
       } catch (error) {
-        writingStatus.textContent = error.message + " Your response is still in the text box.";
+        if (taskId === writingTaskId) writingStatus.textContent = error.message + " Your response is still in the text box.";
       } finally {
         button.disabled = false;
         writingForm.elements.response.readOnly = false;
@@ -366,7 +378,7 @@
         blockIndex = session.current_block_index || 0;
         lastSessionBlockIndex = blockIndex;
         displayMode = session.display_mode || "follow";
-        syncWriting(session.writing_task);
+        syncWriting(session.active_writing_task);
 
         renderSessionBlock();
         startSessionPolling();
@@ -402,14 +414,14 @@
       playerFrame.style.display = focus ? "none" : "block";
       playerFrame.inert = !interact;
       if (!interact) playerFrame.blur();
-      const source = focus ? "about:blank" : window.runtimePlayerUrl(block, "student");
+      const source = focus || block.task ? "about:blank" : window.runtimePlayerUrl(block, "student");
       if (playerFrame.src !== source) playerFrame.src = source;
       statusText.textContent = `PIN ${sessionPin} · ${displayMode}`;
 
       prevBtn.disabled = true;
       nextBtn.disabled = true;
 
-      completeBtn.disabled = !interact || !studentId || block.activity_kind === "google-slide";
+      completeBtn.disabled = !interact || !studentId || Boolean(block.task) || block.activity_kind === "google-slide";
       completeBtn.textContent = "Complete";
     }
 
@@ -468,7 +480,7 @@
             lastSessionBlockIndex = nextIndex;
             renderSessionBlock();
           }
-          syncWriting(session.writing_task);
+          syncWriting(session.active_writing_task);
         } catch (err) {
           console.error(err);
           if (!isDisconnected) {

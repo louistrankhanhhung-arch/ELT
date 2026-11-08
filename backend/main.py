@@ -220,6 +220,37 @@ def init_db():
         """)
 
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS lesson_revisions (
+            revision_id TEXT PRIMARY KEY,
+            manifest TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS writing_tasks (
+            task_id TEXT PRIMARY KEY,
+            pin TEXT NOT NULL REFERENCES sessions(pin),
+            block_id TEXT,
+            prompt TEXT NOT NULL,
+            assigned_at TEXT NOT NULL,
+            UNIQUE (pin, block_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS active_writing_tasks (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin),
+            task_id TEXT NOT NULL REFERENCES writing_tasks(task_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS writing_task_responses (
+            task_id TEXT NOT NULL REFERENCES writing_tasks(task_id),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            response TEXT NOT NULL,
+            submitted_at TEXT NOT NULL,
+            PRIMARY KEY (task_id, student_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS writing_assignments (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
             prompt TEXT NOT NULL,
@@ -299,6 +330,11 @@ def get_session(pin: str):
     display = cur.fetchone()
     cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
     writing = cur.fetchone()
+    cur.execute(sql("""
+        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at FROM active_writing_tasks a
+        JOIN writing_tasks t ON t.task_id = a.task_id WHERE a.pin = ?
+    """), (pin,))
+    active_writing = cur.fetchone()
 
     conn.close()
 
@@ -306,6 +342,7 @@ def get_session(pin: str):
     data["students"] = students
     data["events"] = events
     data["display_mode"] = display["mode"] if display else "follow"
+    data["active_writing_task"] = {"schema_version": 1, "type": "writing", **dict(active_writing)} if active_writing else None
     data["writing_task"] = {"schema_version": 1, "type": "writing", **dict(writing)} if writing else None
     return data
 
@@ -679,6 +716,10 @@ def import_google_slides(payload: SlidesImportRequest):
 def imported_lesson(deck_id: str):
     with closing(db()) as conn:
         cur = conn.cursor()
+        cur.execute(sql("SELECT manifest FROM lesson_revisions WHERE revision_id = ?"), (deck_id,))
+        revision = cur.fetchone()
+        if revision:
+            return json.loads(revision["manifest"])
         cur.execute(sql("SELECT page_number FROM imported_slide_pages WHERE deck_id = ? ORDER BY page_number"), (deck_id,))
         pages = cur.fetchall()
     if not pages:
@@ -811,3 +852,134 @@ def export_writing(pin: str):
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="writing-{pin}.csv"'},
     )
+
+
+class PreparedWritingRequest(WritingAssignmentRequest):
+    after_block: int = Field(ge=0)
+
+
+@app.post("/api/imports/{deck_id}/writing-blocks", dependencies=[Depends(require_teacher)])
+def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
+    manifest = imported_lesson(deck_id)
+    blocks = manifest["blocks"]
+    prompt = payload.prompt.strip()
+    if not prompt or payload.after_block >= len(blocks):
+        raise HTTPException(422, "Enter a prompt and select a valid insertion point")
+    revision_id = uuid4().hex
+    block_id = f"writing-{revision_id}"
+    blocks.insert(payload.after_block + 1, {
+        "id": block_id, "type": "activity", "activity_kind": "writing-task",
+        "title": "Writing task", "task": {"schema_version": 1, "type": "writing", "prompt": prompt},
+        "completion": {"mode": "teacher_next"},
+    })
+    manifest["lesson_id"] = f"slides-{revision_id}"
+    manifest["version"] = str(int(manifest["version"]) + 1)
+    with closing(db()) as conn:
+        conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision_id, json.dumps(manifest)))
+        conn.commit()
+    return {"lesson_path": f"imports/{revision_id}", "block_index": payload.after_block + 1}
+
+
+class SessionWritingRequest(BaseModel):
+    prompt: Optional[str] = Field(default=None, max_length=4000)
+    block_id: Optional[str] = None
+
+
+@app.post("/api/sessions/{pin}/tasks/writing", dependencies=[Depends(require_teacher)])
+def assign_session_writing(pin: str, payload: SessionWritingRequest):
+    session = require_active_session(pin)
+    prompt = (payload.prompt or "").strip()
+    if payload.block_id:
+        if not session["lesson_path"].startswith("imports/"):
+            raise HTTPException(422, "This lesson has no prepared task blocks")
+        blocks = imported_lesson(session["lesson_path"].split("/", 1)[1])["blocks"]
+        block = blocks[session["current_block_index"]]
+        if block["id"] != payload.block_id or block.get("activity_kind") != "writing-task":
+            raise HTTPException(409, "Move to the prepared task block before assigning it")
+        prompt = block["task"]["prompt"]
+    if not prompt:
+        raise HTTPException(422, "Enter a writing prompt")
+    task_id = uuid4().hex
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(pin, block_id) DO NOTHING
+        """), (task_id, pin, payload.block_id, prompt, now_iso()))
+        if cur.rowcount != 1:
+            cur.execute(sql("SELECT task_id FROM writing_tasks WHERE pin = ? AND block_id = ?"), (pin, payload.block_id))
+            task_id = cur.fetchone()["task_id"]
+        cur.execute(sql("""
+            INSERT INTO active_writing_tasks VALUES (?, ?)
+            ON CONFLICT(pin) DO UPDATE SET task_id = excluded.task_id
+        """), (pin, task_id))
+        conn.commit()
+    return {"task_id": task_id}
+
+
+@app.post("/api/sessions/{pin}/tasks/{task_id}/submissions")
+def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionRequest):
+    session = require_active_session(pin)
+    if not any(student["student_id"] == payload.student_id for student in session["students"]):
+        raise HTTPException(403, "Join the session before submitting")
+    if not payload.response.strip():
+        raise HTTPException(422, "Enter a response before submitting")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT r.response FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+            WHERE t.pin = ? AND r.task_id = ? AND r.student_id = ?
+        """), (pin, task_id, payload.student_id))
+        prior = cur.fetchone()
+        if prior is None:
+            active = session["active_writing_task"]
+            if not active or active["task_id"] != task_id or session["display_mode"] != "interact":
+                raise HTTPException(409, "This task is not open for submissions")
+            cur.execute(sql("""
+                INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
+                ON CONFLICT(task_id, student_id) DO NOTHING
+            """), (task_id, payload.student_id, payload.response, now_iso()))
+            conn.commit()
+            cur.execute(sql("SELECT response FROM writing_task_responses WHERE task_id = ? AND student_id = ?"), (task_id, payload.student_id))
+            prior = cur.fetchone()
+    if prior["response"] != payload.response:
+        raise HTTPException(409, "A different response was already submitted")
+    return {"ok": True}
+
+
+@app.get("/api/sessions/{pin}/tasks/results", dependencies=[Depends(require_teacher)])
+def session_task_results(pin: str):
+    session = get_session(pin)
+    if not session:
+        raise HTTPException(404, "Session not found")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT task_id, block_id, prompt, assigned_at FROM writing_tasks
+            WHERE pin = ? ORDER BY assigned_at, task_id
+        """), (pin,))
+        tasks = [dict(row) for row in cur.fetchall()]
+        cur.execute(sql("""
+            SELECT r.task_id, r.student_id, s.student_name, r.response, r.submitted_at
+            FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+            JOIN session_students s ON s.student_id = r.student_id
+            WHERE t.pin = ? ORDER BY r.submitted_at, r.student_id
+        """), (pin,))
+        responses = [dict(row) for row in cur.fetchall()]
+    for task in tasks:
+        task["submissions"] = [row for row in responses if row["task_id"] == task["task_id"]]
+    return {"joined": len(session["students"]), "tasks": tasks}
+
+
+@app.get("/api/sessions/{pin}/tasks/export", dependencies=[Depends(require_teacher)])
+def export_session_tasks(pin: str):
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["schema_version", "pin", "task_id", "source", "prompt", "student_id", "student_name", "response", "submitted_at"])
+    for task in session_task_results(pin)["tasks"]:
+        for row in task["submissions"]:
+            values = [1, pin, task["task_id"], "prepared" if task["block_id"] else "quick",
+                      task["prompt"], row["student_id"], row["student_name"], row["response"], row["submitted_at"]]
+            writer.writerow(["'" + v if isinstance(v, str) and v.lstrip().startswith(("=", "+", "-", "@")) else v for v in values])
+    return Response(output.getvalue().encode("utf-8-sig"), media_type="text/csv",
+                    headers={"Content-Disposition": f'attachment; filename="writing-{pin}.csv"'})
