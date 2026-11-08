@@ -217,6 +217,14 @@ def init_db():
             )
         """)
 
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS imported_slide_pages (
+            deck_id TEXT NOT NULL,
+            page_number INTEGER NOT NULL,
+            image BYTEA NOT NULL,
+            PRIMARY KEY (deck_id, page_number)
+        )
+    """)
     conn.commit()
     conn.close()
 
