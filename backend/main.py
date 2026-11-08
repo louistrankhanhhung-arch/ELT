@@ -1,4 +1,5 @@
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from random import randint
@@ -26,11 +27,14 @@ TEACHER_ACCESS_TOKEN = os.getenv("TEACHER_ACCESS_TOKEN", "")
 ROSTER = json.loads(os.getenv("CLASS_ROSTER_JSON", "{}"))
 
 
-def require_teacher(authorization: Optional[str] = Header(default=None)):
+teacher_bearer = HTTPBearer(auto_error=False)
+
+
+def require_teacher(credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
     if not TEACHER_ACCESS_TOKEN:
         return
-    expected = f"Bearer {TEACHER_ACCESS_TOKEN}".encode()
-    if not hmac.compare_digest((authorization or "").encode(), expected):
+    supplied = credentials.credentials if credentials else ""
+    if not hmac.compare_digest(supplied.encode(), TEACHER_ACCESS_TOKEN.encode()):
         raise HTTPException(status_code=401, detail="Teacher authentication required")
 
 
@@ -386,7 +390,7 @@ def start_session(payload: StartSessionRequest):
 
 
 @app.get("/api/sessions/{pin}/state")
-def get_session_state(pin: str, authorization: Optional[str] = Header(default=None)):
+def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
     session = get_session(pin)
 
     if not session:
@@ -395,7 +399,7 @@ def get_session_state(pin: str, authorization: Optional[str] = Header(default=No
     session = apply_session_expiry(session)
     if TEACHER_ACCESS_TOKEN:
         try:
-            require_teacher(authorization)
+            require_teacher(credentials)
         except HTTPException:
             session.pop("students", None)
             session.pop("events", None)
