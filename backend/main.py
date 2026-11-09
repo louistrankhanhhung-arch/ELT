@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 from random import randint
 from datetime import datetime, timezone, timedelta
 from typing import List, Literal, Optional
+import base64
+import binascii
 import csv
 import hashlib
 import io
@@ -242,6 +244,11 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS speaking_tasks (
+            task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS published_quiz_scores (
             task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id)
         )
@@ -259,6 +266,16 @@ def init_db():
             response TEXT NOT NULL,
             submitted_at TEXT NOT NULL,
             PRIMARY KEY (task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS speaking_audio (
+            task_id TEXT NOT NULL,
+            student_id TEXT NOT NULL,
+            media_type TEXT NOT NULL,
+            audio BYTEA NOT NULL,
+            PRIMARY KEY (task_id, student_id),
+            FOREIGN KEY (task_id, student_id) REFERENCES writing_task_responses(task_id, student_id)
         )
     """)
     cur.execute("""
@@ -342,9 +359,10 @@ def get_session(pin: str):
     cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
     writing = cur.fetchone()
     cur.execute(sql("""
-        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition FROM active_writing_tasks a
+        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id FROM active_writing_tasks a
         JOIN writing_tasks t ON t.task_id = a.task_id
-        LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id WHERE a.pin = ?
+        LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+        LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id WHERE a.pin = ?
     """), (pin,))
     active_writing = cur.fetchone()
     cur.execute(sql("""
@@ -946,7 +964,8 @@ def grade_quiz(raw, quiz, prompt):
 
 def task_description(row):
     definition = row.pop("definition", None)
-    task = {"schema_version": 1, "type": "multiple_choice" if definition else "writing", **row}
+    speaking = row.pop("speaking_id", None)
+    task = {"schema_version": 1, "type": "speaking" if speaking else "multiple_choice" if definition else "writing", **row}
     if definition:
         quiz = json.loads(definition)
         task["questions"] = [{"prompt": q["prompt"], "options": q["options"]} for q in quiz_questions(quiz, task["prompt"])]
@@ -957,6 +976,7 @@ def task_description(row):
 
 
 class PreparedWritingRequest(WritingAssignmentRequest):
+    speaking: bool = False
     quiz: Optional[QuizDefinition] = None
     after_block: int = Field(ge=0)
 
@@ -973,10 +993,12 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
     revision_id = uuid4().hex
     block_id = f"writing-{revision_id}"
     quiz = payload.quiz.normalized(prompt) if payload.quiz else None
+    if payload.speaking and quiz:
+        raise HTTPException(422, "Choose one task type")
     blocks.insert(payload.after_block + 1, {
         "id": block_id, "type": "activity", "activity_kind": "writing-task",
-        "title": "Multiple-choice task" if quiz else "Writing task",
-        "task": {"schema_version": 1, "type": "multiple_choice" if quiz else "writing", "prompt": prompt, **(quiz or {})},
+        "title": "Speaking task" if payload.speaking else "Multiple-choice task" if quiz else "Writing task",
+        "task": {"schema_version": 1, "type": "speaking" if payload.speaking else "multiple_choice" if quiz else "writing", "prompt": prompt, **(quiz or {})},
         "completion": {"mode": "teacher_next"},
     })
     manifest["lesson_id"] = f"slides-{revision_id}"
@@ -988,6 +1010,7 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
 
 
 class SessionWritingRequest(BaseModel):
+    speaking: bool = False
     quiz: Optional[QuizDefinition] = None
     prompt: Optional[str] = Field(default=None, max_length=4000)
     block_id: Optional[str] = None
@@ -998,6 +1021,7 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
     session = require_active_session(pin)
     prompt = (payload.prompt or "").strip()
     quiz = payload.quiz.normalized(prompt) if payload.quiz else None
+    speaking = payload.speaking
     if payload.block_id:
         if not session["lesson_path"].startswith("imports/"):
             raise HTTPException(422, "This lesson has no prepared task blocks")
@@ -1008,10 +1032,13 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         if block["id"] != payload.block_id or block.get("activity_kind") != "writing-task":
             raise HTTPException(409, "Move to the prepared task block before assigning it")
         prompt = block["task"]["prompt"]
+        speaking = block["task"]["type"] == "speaking"
         quiz = ({key: block["task"][key] for key in ("questions", "shuffle", "options", "correct_option") if key in block["task"]}
                 if block["task"]["type"] == "multiple_choice" else None)
     if not prompt:
         raise HTTPException(422, "Enter a writing prompt")
+    if speaking and quiz:
+        raise HTTPException(422, "Choose one task type")
     task_id = uuid4().hex
     with closing(db()) as conn:
         cur = conn.cursor()
@@ -1022,6 +1049,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         if cur.rowcount != 1:
             cur.execute(sql("SELECT task_id FROM writing_tasks WHERE pin = ? AND block_id = ?"), (pin, payload.block_id))
             task_id = cur.fetchone()["task_id"]
+        elif speaking:
+            cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
         elif quiz:
             cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
         cur.execute(sql("""
@@ -1050,6 +1079,8 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
             active = session["active_writing_task"]
             if not active or active["task_id"] != task_id or session["display_mode"] != "interact":
                 raise HTTPException(409, "This task is not open for submissions")
+            if active["type"] == "speaking":
+                raise HTTPException(422, "Submit an audio recording for this task")
             if active["type"] == "multiple_choice":
                 quiz_answers(payload.response, active["questions"])
             cur.execute(sql("""
@@ -1072,8 +1103,9 @@ def session_task_results(pin: str):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition
+            SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id
             FROM writing_tasks t LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
             WHERE t.pin = ? ORDER BY t.assigned_at, t.task_id
         """), (pin,))
         tasks = [dict(row) for row in cur.fetchall()]
@@ -1087,7 +1119,8 @@ def session_task_results(pin: str):
     for task in tasks:
         definition = task.pop("definition")
         quiz = json.loads(definition) if definition else None
-        task["type"] = "multiple_choice" if quiz else "writing"
+        speaking = task.pop("speaking_id")
+        task["type"] = "speaking" if speaking else "multiple_choice" if quiz else "writing"
         task["scores_published"] = task["task_id"] in session["published_score_ids"]
         task["submissions"] = [row for row in responses if row["task_id"] == task["task_id"]]
         if quiz:
@@ -1155,7 +1188,7 @@ def student_scores(pin: str, payload: StudentScoresRequest):
 class WorkBlock(BaseModel):
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: Literal["diagnosis", "teach", "practice", "retrieve", "production", "verify"]
-    kind: Literal["slide", "writing", "multiple_choice"]
+    kind: Literal["slide", "writing", "multiple_choice", "speaking"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
     notes: str = Field(default="", max_length=4000)
@@ -1235,3 +1268,67 @@ def save_work_lesson(payload: SaveWorkLesson):
         conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
         conn.commit()
     return {"revision": revision, "version": version, "lesson_path": f"imports/{revision}"}
+
+
+class SpeakingSubmissionRequest(BaseModel):
+    student_id: str
+    media_type: Literal["audio/webm", "audio/mp4", "audio/ogg"]
+    audio_base64: str = Field(min_length=1, max_length=6_990_508)
+
+
+@app.post("/api/sessions/{pin}/tasks/{task_id}/speaking")
+def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest):
+    session = require_active_session(pin)
+    if not any(student["student_id"] == payload.student_id for student in session["students"]):
+        raise HTTPException(403, "Join the session before submitting")
+    try:
+        audio = base64.b64decode(payload.audio_base64, validate=True)
+    except (ValueError, binascii.Error):
+        raise HTTPException(422, "Invalid recording")
+    signatures = {"audio/webm": audio.startswith(b"\x1a\x45\xdf\xa3"),
+                  "audio/mp4": audio[4:8] == b"ftyp",
+                  "audio/ogg": audio.startswith(b"OggS")}
+    if len(audio) > 5 * 1024 * 1024 or not signatures[payload.media_type]:
+        raise HTTPException(422, "Use a supported audio recording under 5 MB")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT a.audio, a.media_type FROM speaking_audio a
+            JOIN writing_tasks t ON t.task_id = a.task_id
+            WHERE t.pin = ? AND a.task_id = ? AND a.student_id = ?
+        """), (pin, task_id, payload.student_id))
+        prior = cur.fetchone()
+        if prior is None:
+            active = session["active_writing_task"]
+            if not active or active["task_id"] != task_id or active["type"] != "speaking" or session["display_mode"] != "interact":
+                raise HTTPException(409, "This speaking task is not open for submissions")
+            cur.execute(sql("""
+                INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
+                ON CONFLICT(task_id, student_id) DO NOTHING
+            """), (task_id, payload.student_id, "[Audio recording]", now_iso()))
+            if cur.rowcount == 1:
+                cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
+                            (task_id, payload.student_id, payload.media_type, audio))
+            conn.commit()
+            cur.execute(sql("SELECT audio, media_type FROM speaking_audio WHERE task_id = ? AND student_id = ?"),
+                        (task_id, payload.student_id))
+            prior = cur.fetchone()
+    if not prior or bytes(prior["audio"]) != audio or prior["media_type"] != payload.media_type:
+        raise HTTPException(409, "A different recording was already submitted")
+    return {"ok": True}
+
+
+@app.get("/api/sessions/{pin}/tasks/{task_id}/speaking/{student_id}", dependencies=[Depends(require_teacher)])
+def read_speaking(pin: str, task_id: str, student_id: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT a.audio, a.media_type FROM speaking_audio a
+            JOIN writing_tasks t ON t.task_id = a.task_id
+            WHERE t.pin = ? AND a.task_id = ? AND a.student_id = ?
+        """), (pin, task_id, student_id))
+        row = cur.fetchone()
+    if not row:
+        raise HTTPException(404, "Recording not found")
+    return Response(bytes(row["audio"]), media_type=row["media_type"],
+                    headers={"Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"})

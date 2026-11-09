@@ -28,7 +28,7 @@ function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
-        || !["slide", "writing", "multiple_choice"].includes(block.kind)
+        || !["slide", "writing", "multiple_choice", "speaking"].includes(block.kind)
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
   }
@@ -94,7 +94,7 @@ function render() {
   fields.replaceChildren();
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
-  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "writing", "multiple_choice"]);
+  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "writing", "multiple_choice", "speaking"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
   if (block.kind === "slide") {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);

@@ -187,6 +187,13 @@
       <fieldset id="quizChoices" hidden><legend>Choose one answer</legend></fieldset>
       <button type="submit">Submit response</button>
     </form>
+    <div id="speakingPanel" hidden>
+      <button type="button" id="recordAudio">Record</button>
+      <button type="button" id="stopAudio" disabled>Stop recording</button>
+      <audio id="audioPreview" controls hidden></audio>
+      <button type="button" id="submitAudio" disabled>Submit recording</button>
+      <p>Record up to 2 minutes. Listen to your recording before submitting.</p>
+    </div>
     <p id="writingStatus" role="status"></p>
   </section>
 
@@ -236,6 +243,136 @@
     const writingStatus = document.getElementById("writingStatus");
     let writingTaskId = null;
     let isQuiz = false;
+    let isSpeaking = false;
+    const speakingPanel = document.getElementById("speakingPanel");
+    const recordAudio = document.getElementById("recordAudio");
+    const stopAudio = document.getElementById("stopAudio");
+    const submitAudio = document.getElementById("submitAudio");
+    const audioPreview = document.getElementById("audioPreview");
+    const audioDrafts = new Map();
+    let recorder = null;
+    let recordingTaskId = null;
+    let recordingTimer = null;
+    let previewBlob = null;
+    let previewUrl = "";
+    let audioSubmitting = false;
+
+    function updateAudioControls() {
+      const draft = audioDrafts.get(writingTaskId);
+      if (previewBlob !== draft) {
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        previewBlob = draft;
+        previewUrl = draft ? URL.createObjectURL(draft) : "";
+        if (previewUrl) audioPreview.src = previewUrl;
+        else audioPreview.removeAttribute("src");
+      }
+      audioPreview.hidden = !draft;
+      recordAudio.disabled = Boolean(recordingTaskId);
+      stopAudio.disabled = !recorder || recorder.state !== "recording";
+      submitAudio.disabled = !draft || Boolean(recordingTaskId) || audioSubmitting;
+    }
+
+    function stopRecording() {
+      if (recorder?.state === "recording") recorder.stop();
+    }
+
+    recordAudio.addEventListener("click", async () => {
+      if (!isSpeaking || writingPanel.hidden || recordingTaskId) return;
+      const taskId = writingTaskId;
+      recordingTaskId = taskId;
+      updateAudioControls();
+      let stream;
+      try {
+        if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+          throw new Error("Recording is not available in this browser.");
+        }
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        if (taskId !== writingTaskId || writingPanel.hidden) {
+          stream.getTracks().forEach(track => track.stop());
+          recordingTaskId = null;
+          updateAudioControls();
+          return;
+        }
+        const mimeType = ["audio/webm;codecs=opus", "audio/mp4", "audio/ogg;codecs=opus"]
+          .find(type => MediaRecorder.isTypeSupported(type));
+        if (!mimeType) throw new Error("This browser does not support a compatible recording format.");
+        const current = new MediaRecorder(stream, { mimeType });
+        const chunks = [];
+        recorder = current;
+        current.addEventListener("dataavailable", event => {
+          if (event.data.size) chunks.push(event.data);
+        });
+        current.addEventListener("error", () => {
+          chunks.length = 0;
+          if (taskId === writingTaskId) writingStatus.textContent = "Recording failed. Please try again.";
+        });
+        current.addEventListener("stop", () => {
+          clearTimeout(recordingTimer);
+          stream.getTracks().forEach(track => track.stop());
+          const blob = new Blob(chunks, { type: (current.mimeType || mimeType).split(";")[0] });
+          recorder = null;
+          recordingTaskId = null;
+          if (blob.size && blob.size <= 5 * 1024 * 1024) {
+            audioDrafts.set(taskId, blob);
+            if (taskId === writingTaskId) writingStatus.textContent = "Recording ready. Listen or record again.";
+          } else if (taskId === writingTaskId) {
+            writingStatus.textContent = "No usable recording. Try again with a shorter recording.";
+          }
+          updateAudioControls();
+        });
+        current.start();
+        recordingTimer = setTimeout(stopRecording, 120000);
+        writingStatus.textContent = "Recording…";
+        updateAudioControls();
+      } catch (error) {
+        stream?.getTracks().forEach(track => track.stop());
+        recorder = null;
+        recordingTaskId = null;
+        if (taskId === writingTaskId) {
+          writingStatus.textContent = error.name === "NotAllowedError"
+            ? "Microphone access was denied. Allow it to record."
+            : error.message;
+        }
+        updateAudioControls();
+      }
+    });
+    stopAudio.addEventListener("click", stopRecording);
+
+    submitAudio.addEventListener("click", async () => {
+      const taskId = writingTaskId;
+      const blob = audioDrafts.get(taskId);
+      if (!blob || writingPanel.hidden || audioSubmitting || submittedTasks.has(taskId)) return;
+      audioSubmitting = true;
+      updateAudioControls();
+      try {
+        const encoded = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/tasks/${taskId}/speaking`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: studentId, media_type: blob.type, audio_base64: encoded })
+        });
+        if (!response.ok) {
+          const result = await response.json();
+          throw new Error(typeof result.detail === "string" ? result.detail : "Could not submit the recording.");
+        }
+        submittedTasks.add(taskId);
+        audioDrafts.delete(taskId);
+        if (taskId === writingTaskId) {
+          speakingPanel.hidden = true;
+          writingStatus.textContent = "Recording submitted.";
+        }
+      } catch (error) {
+        if (taskId === writingTaskId) writingStatus.textContent = "Recording not sent. You can retry. " + error.message;
+      } finally {
+        audioSubmitting = false;
+        updateAudioControls();
+      }
+    });
     let scoreRequestKey = "";
     const publishedScores = document.getElementById("publishedScores");
 
@@ -295,7 +432,8 @@
         writingTaskId = nextId;
         const draft = writingDrafts.get(nextId) || "";
         isQuiz = task?.type === "multiple_choice";
-        document.getElementById("taskHeading").textContent = isQuiz ? "Multiple choice" : "Writing";
+        isSpeaking = task?.type === "speaking";
+        document.getElementById("taskHeading").textContent = isSpeaking ? "Speaking" : isQuiz ? "Multiple choice" : "Writing";
         writingInput.hidden = isQuiz;
         writingForm.elements.response.required = !isQuiz;
         quizChoices.hidden = !isQuiz;
@@ -327,7 +465,11 @@
       }
       writingPanel.hidden = !nextId || displayMode !== "interact" || !studentId;
       if (task) document.getElementById("writingPrompt").textContent = task.prompt;
-      writingForm.hidden = submittedTasks.has(nextId);
+      writingForm.hidden = isSpeaking || submittedTasks.has(nextId);
+      speakingPanel.hidden = !isSpeaking || submittedTasks.has(nextId);
+      if (writingPanel.hidden || recordingTaskId !== nextId) stopRecording();
+      if (writingPanel.hidden) audioPreview.pause();
+      updateAudioControls();
     }
 
     writingForm.addEventListener("submit", async (event) => {
@@ -544,6 +686,8 @@
             playerFrame.src = "about:blank";
             focusMessage.hidden = true;
             writingPanel.hidden = true;
+            stopRecording();
+            audioPreview.pause();
             completeBtn.disabled = true;
             errorBox.style.display = "block";
             errorBox.textContent =
