@@ -281,6 +281,24 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS evidence_roster_ids (
+            roster_id TEXT PRIMARY KEY, evidence_id TEXT NOT NULL UNIQUE
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS evidence_student_links (
+            student_id TEXT PRIMARY KEY REFERENCES session_students(student_id),
+            evidence_id TEXT NOT NULL REFERENCES evidence_roster_ids(evidence_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS task_evidence_context (
+            task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
+            phase TEXT,
+            learning_target_id TEXT
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS task_reviews (
             task_id TEXT NOT NULL, student_id TEXT NOT NULL, score INTEGER, max_score INTEGER,
             feedback TEXT NOT NULL, reviewed_at TEXT NOT NULL, PRIMARY KEY (task_id, student_id),
@@ -543,12 +561,14 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
 def join_session(pin: str, payload: JoinSessionRequest):
     require_active_session(pin)
     student_name = payload.student_name.strip()
+    roster_id = None
     student_id = f"{pin}-{uuid4().hex}"
     if TEACHER_ACCESS_TOKEN:
         member = ROSTER.get(payload.roster_code or "")
         if not member:
             raise HTTPException(status_code=403, detail="Invalid roster code")
         student_name = member["name"]
+        roster_id = str(member["id"])
         member_key = f"{pin}:{member['id']}".encode()
         student_id = f"{pin}-{hmac.new(TEACHER_ACCESS_TOKEN.encode(), member_key, hashlib.sha256).hexdigest()}"
     if not student_name:
@@ -578,6 +598,14 @@ def join_session(pin: str, payload: JoinSessionRequest):
         student["joined_at"],
         student["last_seen_at"],
     ))
+
+    if roster_id is not None:
+        cur.execute(sql("INSERT INTO evidence_roster_ids VALUES (?, ?) ON CONFLICT(roster_id) DO NOTHING"),
+                    (roster_id, uuid4().hex))
+        cur.execute(sql("SELECT evidence_id FROM evidence_roster_ids WHERE roster_id = ?"), (roster_id,))
+        evidence_id = cur.fetchone()["evidence_id"]
+        cur.execute(sql("INSERT INTO evidence_student_links VALUES (?, ?) ON CONFLICT(student_id) DO NOTHING"),
+                    (student_id, evidence_id))
 
     conn.commit()
     conn.close()
@@ -917,6 +945,7 @@ def export_writing(pin: str):
 
 
 class QuizQuestion(BaseModel):
+    question_id: Optional[str] = Field(default=None, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
     prompt: str = Field(min_length=1, max_length=4000)
     options: List[str] = Field(min_length=2, max_length=8)
     correct_option: int = Field(ge=0, le=7)
@@ -927,7 +956,8 @@ class QuizQuestion(BaseModel):
             raise HTTPException(422, "Enter a question and options of up to 1000 characters each")
         if len(set(options)) != len(options) or self.correct_option >= len(options):
             raise HTTPException(422, "Use distinct options and select an existing correct option")
-        return {"prompt": self.prompt.strip(), "options": options, "correct_option": self.correct_option}
+        return {"prompt": self.prompt.strip(), "options": options, "correct_option": self.correct_option,
+                **({"question_id": self.question_id} if self.question_id else {})}
 
 
 class QuizDefinition(BaseModel):
@@ -938,7 +968,11 @@ class QuizDefinition(BaseModel):
 
     def normalized(self, prompt):
         if self.questions is not None:
-            return {"questions": [question.normalized() for question in self.questions], "shuffle": self.shuffle}
+            questions = [question.normalized() for question in self.questions]
+            ids = [question.get("question_id", f"q{index + 1}") for index, question in enumerate(questions)]
+            if len(set(ids)) != len(ids):
+                raise HTTPException(422, "Use unique question IDs within each task")
+            return {"questions": questions, "shuffle": self.shuffle}
         if self.options is None or self.correct_option is None:
             raise HTTPException(422, "Add at least one question")
         if not 2 <= len(self.options) <= 8 or not 0 <= self.correct_option < len(self.options):
@@ -989,7 +1023,12 @@ def task_description(row):
     return task
 
 
+EvidencePhase = Literal["diagnosis", "teach", "practice", "retrieve", "production", "verify"]
+
+
 class PreparedWritingRequest(WritingAssignmentRequest):
+    phase: Optional[EvidencePhase] = None
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
     speaking: bool = False
     quiz: Optional[QuizDefinition] = None
     after_block: int = Field(ge=0)
@@ -1011,6 +1050,7 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
         raise HTTPException(422, "Choose one task type")
     blocks.insert(payload.after_block + 1, {
         "id": block_id, "type": "activity", "activity_kind": "writing-task",
+        "phase": payload.phase, "learning_target_id": (payload.learning_target_id or "").strip() or None,
         "title": "Speaking task" if payload.speaking else "Multiple-choice task" if quiz else "Writing task",
         "task": {"schema_version": 1, "type": "speaking" if payload.speaking else "multiple_choice" if quiz else "writing", "prompt": prompt, **(quiz or {})},
         "completion": {"mode": "teacher_next"},
@@ -1024,6 +1064,8 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
 
 
 class SessionWritingRequest(BaseModel):
+    phase: Optional[EvidencePhase] = None
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
     speaking: bool = False
     quiz: Optional[QuizDefinition] = None
     prompt: Optional[str] = Field(default=None, max_length=4000)
@@ -1036,6 +1078,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
     prompt = (payload.prompt or "").strip()
     quiz = payload.quiz.normalized(prompt) if payload.quiz else None
     speaking = payload.speaking
+    phase = payload.phase
+    target = (payload.learning_target_id or "").strip() or None
     if payload.block_id:
         if not session["lesson_path"].startswith("imports/"):
             raise HTTPException(422, "This lesson has no prepared task blocks")
@@ -1047,6 +1091,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
             raise HTTPException(409, "Move to the prepared task block before assigning it")
         prompt = block["task"]["prompt"]
         speaking = block["task"]["type"] == "speaking"
+        phase = block.get("phase")
+        target = block.get("learning_target_id")
         quiz = ({key: block["task"][key] for key in ("questions", "shuffle", "options", "correct_option") if key in block["task"]}
                 if block["task"]["type"] == "multiple_choice" else None)
     if not prompt:
@@ -1067,6 +1113,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
             cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
         elif quiz:
             cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
+        cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?) ON CONFLICT(task_id) DO NOTHING"),
+                    (task_id, phase, target))
         cur.execute(sql("""
             INSERT INTO active_writing_tasks VALUES (?, ?)
             ON CONFLICT(pin) DO UPDATE SET task_id = excluded.task_id
@@ -1205,7 +1253,8 @@ def student_scores(pin: str, payload: StudentScoresRequest):
 
 class WorkBlock(BaseModel):
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
-    phase: Literal["diagnosis", "teach", "practice", "retrieve", "production", "verify"]
+    phase: EvidencePhase
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
     kind: Literal["slide", "writing", "multiple_choice", "speaking"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
@@ -1260,6 +1309,7 @@ def save_work_lesson(payload: SaveWorkLesson):
         if not title:
             raise HTTPException(422, f"Block {block.id}: enter a title")
         entry = {"id": block.id, "title": title, "type": "activity", "phase": block.phase,
+                 "learning_target_id": (block.learning_target_id or "").strip() or None,
                  "completion": {"mode": "teacher_next"}}
         if block.kind == "slide":
             media = block.media_url
@@ -1380,21 +1430,52 @@ def session_evidence(pin):
         legacy = writing_results(pin)
         results["tasks"].insert(0, {"task_id": "legacy-writing", "block_id": None, **legacy["task"],
                                     "submissions": legacy["submissions"]})
-    title, version, phases = session["lesson_id"], None, {}
+    title, version, objective, blocks = session["lesson_id"], None, None, {}
     if session["lesson_path"].startswith("imports/"):
         try:
             lesson = load_imported_lesson(session["lesson_path"].split("/", 1)[1])
             title, version = lesson["title"], lesson["version"]
-            phases = {block["id"]: block.get("phase") for block in lesson["blocks"]}
+            objective = lesson.get("objective") or None
+            blocks = {block["id"]: block for block in lesson["blocks"]}
         except HTTPException as error:
             if error.status_code != 404:
                 raise
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT l.student_id, l.evidence_id FROM evidence_student_links l
+            JOIN session_students s ON s.student_id = l.student_id WHERE s.pin = ?
+        """), (pin,))
+        students = {row["student_id"]: row["evidence_id"] for row in cur.fetchall()}
+        cur.execute(sql("""
+            SELECT c.task_id, c.phase, c.learning_target_id FROM task_evidence_context c
+            JOIN writing_tasks t ON t.task_id = c.task_id WHERE t.pin = ?
+        """), (pin,))
+        context = {row["task_id"]: dict(row) for row in cur.fetchall()}
     for task in results["tasks"]:
-        task["phase"] = phases.get(task["block_id"])
+        block = blocks.get(task["block_id"], {})
+        saved = context.get(task["task_id"], {})
+        task["phase"] = saved.get("phase") or block.get("phase")
+        task["learning_target_id"] = saved.get("learning_target_id") or block.get("learning_target_id")
+        questions = task.get("questions", [])
+        for index, question in enumerate(questions, 1):
+            question["question_id"] = question.get("question_id") or f"q{index}"
+        for row in task["submissions"]:
+            row["learner_id"] = students.get(row["student_id"])
+            if questions:
+                answers = quiz_answers(row["response"], questions)
+                row["items"] = [{
+                    "question_id": question["question_id"],
+                    "selected_index": answer,
+                    "selected_option": question["options"][answer],
+                    "correct_index": question["correct_option"],
+                    "correct_option": question["options"][question["correct_option"]],
+                    "is_correct": answer == question["correct_option"],
+                } for question, answer in zip(questions, answers)]
     audio = [row for task in results["tasks"] for row in task["submissions"] if row.get("audio_bytes")]
     return {"schema_version": 1, "session": {key: session[key] for key in
             ("pin", "lesson_id", "lesson_path", "created_at", "ended_at", "status")},
-            "lesson_title": title, "lesson_version": version, **results,
+            "lesson_title": title, "lesson_version": version, "lesson_objective": objective, **results,
             "audio_count": len(audio), "audio_bytes": sum(row["audio_bytes"] for row in audio)}
 
 
@@ -1442,13 +1523,13 @@ def audio_fingerprint(evidence):
 def evidence_csv(evidence):
     output = io.StringIO()
     writer = csv.writer(output)
-    columns = ("student_id", "student_name", "response", "selected_option", "score", "max_score",
+    columns = ("student_id", "learner_id", "student_name", "response", "selected_option", "score", "max_score",
                "review_score", "review_max_score", "feedback", "submitted_at", "reviewed_at", "audio_file")
-    writer.writerow(("pin", "lesson_id", "lesson_version", "task_id", "phase", "type", "prompt", *columns))
+    writer.writerow(("pin", "lesson_id", "lesson_version", "task_id", "phase", "learning_target_id", "type", "prompt", *columns))
     for task in evidence["tasks"]:
         for row in task["submissions"]:
             values = [evidence["session"]["pin"], evidence["session"]["lesson_id"], evidence["lesson_version"],
-                      task["task_id"], task["phase"], task["type"], task["prompt"], *(row.get(key) for key in columns)]
+                      task["task_id"], task["phase"], task["learning_target_id"], task["type"], task["prompt"], *(row.get(key) for key in columns)]
             writer.writerow(["'" + v if isinstance(v, str) and v.lstrip().startswith(("=", "+", "-", "@")) else v for v in values])
     return output.getvalue().encode("utf-8-sig")
 

@@ -94,6 +94,7 @@ function render() {
   fields.replaceChildren();
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
+  field(fields, "Learning target ID (optional)", block.learning_target_id, value => { block.learning_target_id = value.trim() || null; });
   field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "writing", "multiple_choice", "speaking"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
   if (block.kind === "slide") {
@@ -130,6 +131,7 @@ function renderQuiz(fields, block) {
     legend.textContent = "Question " + (index + 1);
     group.append(legend);
     field(group, "Question", question.prompt, value => { question.prompt = value; });
+    field(group, "Question ID (optional)", question.question_id, value => { question.question_id = value.trim() || null; });
     field(group, "Options (2–8, one per line)", question.options.join("\n"),
       value => { question.options = value.split(/\r?\n/); }, null, true);
     field(group, "Correct option number", String(question.correct_option + 1),
