@@ -33,7 +33,7 @@ function text(tag, value) {
   return node;
 }
 function readableDate(value) { return new Date(value).toLocaleString("en-GB", {timeZone:"Asia/Ho_Chi_Minh"}); }
-async function history() {
+async function loadHistory() {
   const result = await (await request("/session-history?offset=" + offset)).json();
   el("history").hidden = false;
   el("previous").disabled = offset === 0;
@@ -135,13 +135,13 @@ function reviewForm(task,row,pin) {
 el("load").onclick = async () => {
   try {
     status("Loading…");
-    await history();
+    await loadHistory();
     if (pinFromLink) { await openSession(pinFromLink); pinFromLink = null; }
     status("");
   } catch (error) { status(error.message); }
 };
-el("previous").onclick = () => { offset = Math.max(0, offset - 50); history().catch(error => status(error.message)); };
-el("next").onclick = () => { offset += 50; history().catch(error => status(error.message)); };
+el("previous").onclick = () => { offset = Math.max(0, offset - 50); loadHistory().catch(error => status(error.message)); };
+el("next").onclick = () => { offset += 50; loadHistory().catch(error => status(error.message)); };
 el("studentFilter").onchange = renderTasks;
 el("archive").onclick = async () => {
   const pin = current.session.pin;
