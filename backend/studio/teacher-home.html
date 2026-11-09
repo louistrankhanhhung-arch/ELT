@@ -240,7 +240,11 @@
     const catalogsLink = document.createElement("a");
     catalogsLink.href = "catalogs.html";
     catalogsLink.textContent = "Roster and Learning Targets";
-    catalogEl.before(authorLink, document.createTextNode(" · "), resultsLink, document.createTextNode(" · "), catalogsLink, importForm);
+    const lessonsLink = document.createElement("a");
+    lessonsLink.href = "lesson-catalogue.html";
+    lessonsLink.textContent = "Lesson Catalogue";
+    catalogEl.before(lessonsLink, document.createTextNode(" · "), authorLink, document.createTextNode(" · "),
+      resultsLink, document.createTextNode(" · "), catalogsLink, importForm);
     importForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const button = importForm.querySelector("button");

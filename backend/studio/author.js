@@ -4,7 +4,9 @@ const api = window.ELT_CONFIG.API_BASE;
 const phases = ["diagnosis", "teach", "practice", "retrieve", "production", "verify"];
 let lesson = null;
 let selected = 0;
-let revision = new URLSearchParams(location.search).get("revision");
+const authorParams = new URLSearchParams(location.search);
+let revision = authorParams.get("revision");
+const catalogueId = authorParams.get("catalogue");
 
 function status(message) { byId("status").textContent = message; }
 
@@ -40,6 +42,7 @@ function loadDraft(value, parent = null) {
   byId("editor").hidden = false;
   byId("classroom").hidden = true;
   byId("editLink").hidden = true;
+  byId("catalogueLink").hidden = true;
   render();
 }
 
@@ -55,6 +58,7 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
     changed(input.value);
     byId("classroom").hidden = true;
     byId("editLink").hidden = true;
+  byId("catalogueLink").hidden = true;
     renderPreview();
   });
   label.append(input);
@@ -153,6 +157,7 @@ function renderQuiz(fields, block) {
 function dirty() {
   byId("classroom").hidden = true;
   byId("editLink").hidden = true;
+  byId("catalogueLink").hidden = true;
 }
 function move(offset) {
   const next = selected + offset;
@@ -213,8 +218,12 @@ byId("save").onclick = async () => {
     });
     const saved = await request("/work-lessons", { lesson: { ...lesson, blocks }, parent_revision: revision });
     revision = saved.revision;
-    byId("classroom").href = "teacher.html?lesson=" + encodeURIComponent(saved.lesson_path);
-    byId("editLink").href = "author.html?revision=" + encodeURIComponent(revision);
+    const catalogue = catalogueId ? "&catalogue=" + encodeURIComponent(catalogueId) : "";
+    byId("classroom").href = "teacher.html?lesson=" + encodeURIComponent(saved.lesson_path) + catalogue;
+    byId("editLink").href = "author.html?revision=" + encodeURIComponent(revision) + catalogue;
+    byId("catalogueLink").href = "lesson-catalogue.html?revision=" + encodeURIComponent(revision) + catalogue;
+    byId("catalogueLink").textContent = catalogueId ? "Publish new version" : "Save to Catalogue";
+    byId("catalogueLink").hidden = false;
     byId("classroom").hidden = false;
     byId("editLink").hidden = false;
     status("Version " + saved.version + " saved. Open Classroom to teach.");

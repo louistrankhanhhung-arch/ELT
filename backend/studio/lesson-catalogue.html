@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lesson Catalogue | REH</title>
+<style>
+*{box-sizing:border-box}body{max-width:1000px;margin:auto;padding:20px;background:#f3f6fa;color:#172338;font:16px system-ui}
+section,article{background:white;border:1px solid #dbe3ed;border-radius:10px;padding:16px;margin:12px 0}h1,h2,h3{margin:0 0 8px}
+label{display:block;margin:8px 0}input{display:block;width:min(100%,420px);padding:7px;border:1px solid #aab9ca;border-radius:5px;font:inherit}
+button,.action{display:inline-block;background:#2459a9;color:white;border:0;border-radius:6px;padding:8px 12px;margin:4px 6px 4px 0;font:inherit;text-decoration:none;cursor:pointer}
+button:disabled{opacity:.5}[hidden]{display:none!important}
+</style>
+<a href="teacher-home.html">Teacher home</a>
+<h1>Lesson Catalogue</h1><p>Open a published lesson to start a separate classroom session.</p>
+<section>
+<label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
+<form id="searchForm"><label>Search by title, level or cluster <input id="query" maxlength="160"></label>
+<button>Find lessons</button></form>
+<p id="status" role="status"></p>
+</section>
+<section id="publishPanel" hidden>
+<h2 id="publishTitle">Save to Catalogue</h2><p id="revisionInfo"></p>
+<form id="publishForm">
+<label>Catalogue title <input name="title" maxlength="160" required></label>
+<label>Level <input name="level" maxlength="80" required></label>
+<label>Cluster <input name="cluster" maxlength="120" required></label>
+<button id="publishButton">Save to Catalogue</button>
+</form>
+</section>
+<section id="results" hidden><h2>Published lessons</h2><div id="entries"></div>
+<button id="previous" disabled>Previous</button><button id="next" disabled>Next</button></section>
+<script src="config.js"></script><script src="lesson-catalogue.js"></script>
+</html>

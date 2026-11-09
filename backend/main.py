@@ -225,6 +225,18 @@ def init_db():
         """)
 
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS lesson_catalogue (
+            catalogue_id TEXT PRIMARY KEY,
+            revision_id TEXT NOT NULL UNIQUE,
+            title TEXT NOT NULL,
+            level TEXT NOT NULL,
+            cluster TEXT NOT NULL,
+            version TEXT NOT NULL,
+            origin TEXT NOT NULL,
+            published_at TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS lesson_revisions (
             revision_id TEXT PRIMARY KEY,
             manifest TEXT NOT NULL
@@ -1086,6 +1098,7 @@ def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
     })
     manifest["lesson_id"] = f"slides-{revision_id}"
     manifest["version"] = str(int(manifest["version"]) + 1)
+    manifest["parent_revision"] = deck_id
     with closing(db()) as conn:
         conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision_id, json.dumps(manifest)))
         conn.commit()
@@ -1360,6 +1373,7 @@ def save_work_lesson(payload: SaveWorkLesson):
         blocks.append(entry)
     manifest = {"lesson_id": f"work-{revision}", "title": lesson.title.strip(), "version": str(version),
                 "origin": "work", "objective": lesson.objective, "blocks": blocks,
+                "parent_revision": payload.parent_revision,
                 "work_source": lesson.model_dump(exclude_none=True)}
     with closing(db()) as conn:
         conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
@@ -1718,3 +1732,105 @@ def read_catalog(kind: Literal["students", "targets"], active_only: bool = False
         cur.execute(sql(query + f" ORDER BY {column} LIMIT 501 OFFSET ?"), (max(offset, 0),))
         rows = [dict(row) for row in cur.fetchall()]
     return {"rows": rows[:500], "has_more": len(rows) > 500}
+
+
+class CatalogueEntryRequest(BaseModel):
+    revision_id: str = Field(pattern=r"^[a-f0-9]{32}$")
+    title: str = Field(min_length=1, max_length=160)
+    level: str = Field(min_length=1, max_length=80)
+    cluster: str = Field(min_length=1, max_length=120)
+
+
+class PublishCatalogueRequest(CatalogueEntryRequest):
+    expected_revision: str = Field(pattern=r"^[a-f0-9]{32}$")
+
+
+def catalogue_metadata(payload):
+    fields = tuple(value.strip() for value in (payload.title, payload.level, payload.cluster))
+    if not all(fields):
+        raise HTTPException(422, "Enter a title, level and cluster")
+    return fields
+
+
+def is_newer_lesson_revision(candidate, previous):
+    for _ in range(100):
+        parent = candidate.get("parent_revision")
+        if not parent:
+            return False
+        if parent == previous:
+            return True
+        candidate = load_imported_lesson(parent)
+    return False
+
+
+@app.get("/api/lesson-catalogue", dependencies=[Depends(require_teacher)])
+def list_catalogue(search: str = "", offset: int = 0):
+    search = search.strip().lower()[:160].replace("!", "!!").replace("%", "!%").replace("_", "!_")
+    pattern = f"%{search}%"
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT * FROM lesson_catalogue
+            WHERE LOWER(title) LIKE ? ESCAPE '!' OR LOWER(level) LIKE ? ESCAPE '!'
+               OR LOWER(cluster) LIKE ? ESCAPE '!'
+            ORDER BY LOWER(title), catalogue_id LIMIT 51 OFFSET ?
+        """), (pattern, pattern, pattern, max(0, offset)))
+        entries = [dict(row) for row in cur.fetchall()]
+    return {"entries": entries[:50], "has_more": len(entries) > 50}
+
+
+@app.get("/api/lesson-catalogue/{catalogue_id}", dependencies=[Depends(require_teacher)])
+def catalogue_entry(catalogue_id: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT * FROM lesson_catalogue WHERE catalogue_id = ?"), (catalogue_id,))
+        entry = cur.fetchone()
+    if not entry:
+        raise HTTPException(404, "Catalogue entry not found")
+    return dict(entry)
+
+
+@app.post("/api/lesson-catalogue", dependencies=[Depends(require_teacher)])
+def create_catalogue_entry(payload: CatalogueEntryRequest):
+    manifest = load_imported_lesson(payload.revision_id)
+    title, level, cluster = catalogue_metadata(payload)
+    catalogue_id = uuid4().hex
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            INSERT INTO lesson_catalogue VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(revision_id) DO NOTHING
+        """), (catalogue_id, payload.revision_id, title, level, cluster, manifest["version"],
+               manifest.get("origin", "google_slides"), now_iso()))
+        if cur.rowcount != 1:
+            raise HTTPException(409, "This lesson version is already in the catalogue")
+        conn.commit()
+    return catalogue_entry(catalogue_id)
+
+
+@app.put("/api/lesson-catalogue/{catalogue_id}", dependencies=[Depends(require_teacher)])
+def publish_catalogue_version(catalogue_id: str, payload: PublishCatalogueRequest):
+    entry = catalogue_entry(catalogue_id)
+    if entry["revision_id"] != payload.expected_revision:
+        raise HTTPException(409, "The published version changed. Reload the catalogue.")
+    manifest = load_imported_lesson(payload.revision_id)
+    if (manifest.get("origin", "google_slides") != entry["origin"]
+            or not is_newer_lesson_revision(manifest, entry["revision_id"])):
+        raise HTTPException(422, "Open the published lesson, save a newer version, then publish that version")
+    title, level, cluster = catalogue_metadata(payload)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT 1 FROM lesson_catalogue WHERE revision_id = ?
+        """), (payload.revision_id,))
+        if cur.fetchone():
+            raise HTTPException(409, "This lesson version is already in the catalogue")
+        cur.execute(sql("""
+            UPDATE lesson_catalogue SET revision_id = ?, title = ?, level = ?, cluster = ?, version = ?, published_at = ?
+            WHERE catalogue_id = ? AND revision_id = ?
+        """), (payload.revision_id, title, level, cluster, manifest["version"], now_iso(),
+               catalogue_id, payload.expected_revision))
+        if cur.rowcount != 1:
+            raise HTTPException(409, "The published version changed. Reload the catalogue.")
+        conn.commit()
+    return catalogue_entry(catalogue_id)

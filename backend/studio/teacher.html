@@ -392,6 +392,7 @@
       </label>
       <span id="displayModeStatus" role="status"></span>
       <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
+      <a href="lesson-catalogue.html" id="saveToCatalogue" hidden>Save to Catalogue</a>
       <a href="session-results.html" id="sessionResultsLink">Session Results</a>
       <button id="copyStudentBtn">Copy Join Link</button>
     </div>
@@ -901,9 +902,21 @@
         }
 
         currentLesson = await res.json();
+        const catalogueId = params.get("catalogue");
+        if (/^imports\/[a-f0-9]{32}$/.test(lessonPath)) {
+          const save = document.getElementById("saveToCatalogue");
+          const destination = new URL("lesson-catalogue.html", BASE_URL);
+          destination.searchParams.set("revision", lessonPath.split("/")[1]);
+          if (catalogueId) destination.searchParams.set("catalogue", catalogueId);
+          save.href = destination.href;
+          save.hidden = false;
+        }
         if (currentLesson.origin === "work") {
           const edit = document.getElementById("editWorkLesson");
-          edit.href = "author.html?revision=" + encodeURIComponent(lessonPath.split("/")[1]);
+          const editor = new URL("author.html", BASE_URL);
+          editor.searchParams.set("revision", lessonPath.split("/")[1]);
+          if (catalogueId) editor.searchParams.set("catalogue", catalogueId);
+          edit.href = editor.href;
           edit.hidden = false;
         }
 
@@ -1022,6 +1035,7 @@
         sessionPin = session.pin;
         document.getElementById("sessionResultsLink").href = "session-results.html?pin=" + encodeURIComponent(sessionPin);
         document.getElementById("editWorkLesson").hidden = true;
+        document.getElementById("saveToCatalogue").hidden = true;
         writingPanel.hidden = false;
         writingAssignForm.hidden = false;
         writingExport.hidden = true;
