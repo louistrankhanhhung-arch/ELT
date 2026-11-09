@@ -231,7 +231,10 @@
       <button type="submit">Import and open lesson</button>
       <p role="status"></p>
     `;
-    catalogEl.before(importForm);
+    const authorLink = document.createElement("a");
+    authorLink.href = "author.html";
+    authorLink.textContent = "Open Lesson Studio";
+    catalogEl.before(authorLink, importForm);
     importForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const button = importForm.querySelector("button");

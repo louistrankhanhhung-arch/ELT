@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REH Lesson Studio</title>
+<style>
+* { box-sizing:border-box } body { margin:0; font:16px system-ui; background:#f3f6fa; color:#172338 }
+header,main { max-width:1100px; margin:auto; padding:16px } h1,h2 { margin:0 0 12px }
+section,aside { background:white; border:1px solid #dbe3ed; border-radius:10px; padding:16px; margin-bottom:12px }
+.grid { display:grid; grid-template-columns:minmax(200px,1fr) minmax(0,2fr); gap:12px }
+label { display:block; margin:8px 0 } input:not([type=checkbox]),select,textarea { display:block; width:100%; padding:8px; font:inherit; border:1px solid #aab9ca; border-radius:5px }
+button,.action { display:inline-block; background:#2459a9; color:white; border:0; border-radius:6px; padding:8px 12px; font:inherit; text-decoration:none; cursor:pointer; margin:4px 4px 4px 0 }
+[hidden] { display:none!important } button:disabled { opacity:.5; cursor:default } .block { width:100%; text-align:left; background:#e8eef8; color:#172338 }
+.block[aria-current=true] { background:#2459a9; color:white } pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit }
+fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
+@media(max-width:680px) { .grid { grid-template-columns:1fr } }
+</style>
+<header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import a lesson from GPT Work, edit its blocks, and save a version for class.</p></header>
+<main>
+<section>
+  <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
+  <button id="loadRevision" hidden>Load saved version</button>
+  <button id="sample">Load Work sample</button>
+  <a href="/api/work-lessons/schema">JSON schema</a> · <a href="work-lesson-sample.json" download>Download sample JSON</a>
+  <details><summary>Import Work JSON</summary>
+    <label>Lesson JSON <textarea id="source" rows="7" spellcheck="false"></textarea></label>
+    <button id="import">Import draft</button>
+  </details>
+  <p id="status" role="status"></p>
+</section>
+<section id="editor" hidden>
+  <label>Lesson title <input id="title" maxlength="160"></label>
+  <label>Learning objective <input id="objective" maxlength="1000"></label>
+  <div class="grid">
+    <aside><h2>Lesson blocks</h2><div id="blocks"></div>
+      <button id="addSlide">Add slide</button><button id="addTask">Add task</button>
+    </aside>
+    <section><h2>Edit block</h2><div id="fields"></div>
+      <button id="up">Move up</button><button id="down">Move down</button><button id="remove">Remove block</button>
+      <h2>Preview</h2><pre id="preview"></pre>
+    </section>
+  </div>
+  <button id="save">Save version</button>
+  <a class="action" id="classroom" hidden>Open Classroom</a>
+  <a class="action" id="editLink" hidden>Open saved version in Studio</a>
+</section>
+</main>
+<script src="config.js"></script>
+<script src="author.js"></script>
+</html>

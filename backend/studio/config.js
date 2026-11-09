@@ -8,6 +8,13 @@ window.runtimeLessonUrl = function (path) {
 };
 window.runtimePlayerUrl = function (block, role) {
   const config = window.ELT_CONFIG;
+  if (block.native_revision) {
+    const player = new URL("player-native-slide.html", config.BASE_URL);
+    player.searchParams.set("revision", block.native_revision);
+    player.searchParams.set("block", block.id);
+    player.searchParams.set("role", role);
+    return player.href;
+  }
   if (block.image_path) {
     const player = new URL("player-imported-slide.html", config.BASE_URL);
     player.searchParams.set("image", block.image_path);

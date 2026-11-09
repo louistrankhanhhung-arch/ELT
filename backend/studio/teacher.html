@@ -391,10 +391,12 @@
         </select>
       </label>
       <span id="displayModeStatus" role="status"></span>
+      <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
       <button id="copyStudentBtn">Copy Join Link</button>
     </div>
   </header>
   <details id="writingPanel">
+
     <summary>Tasks · Assignments and responses</summary>
     <form id="writingAssignForm">
       <label>Task type
@@ -649,13 +651,13 @@
     function syncWritingControls() {
       const live = Boolean(sessionPin) && !endSessionBtn.disabled;
       const prepared = currentLesson?.blocks[blockIndex]?.task;
-      prepareWriting.hidden = live;
+      prepareWriting.hidden = live || currentLesson?.origin === "work";
       copyLessonLink.hidden = live;
       assignQuick.hidden = !live;
       assignPrepared.hidden = !live || !prepared;
       preparedPrompt.hidden = !prepared;
       preparedPrompt.textContent = prepared ? prepared.prompt : "";
-      writingAssignForm.hidden = false;
+      writingAssignForm.hidden = !live && currentLesson?.origin === "work";
     }
 
     async function writingRequest(path, payload) {
@@ -854,6 +856,11 @@
         }
 
         currentLesson = await res.json();
+        if (currentLesson.origin === "work") {
+          const edit = document.getElementById("editWorkLesson");
+          edit.href = "author.html?revision=" + encodeURIComponent(lessonPath.split("/")[1]);
+          edit.hidden = false;
+        }
 
         lessonTitle.textContent =
           currentLesson.title || currentLesson.lesson_id || "Lesson";
@@ -875,7 +882,7 @@
         const btn = document.createElement("button");
         btn.className = "block-btn";
         btn.dataset.index = index;
-        btn.textContent = `${index + 1}. ${block.title || block.id}`;
+        btn.textContent = `${index + 1}. ${(block.phase ? block.phase.toUpperCase() + " · " : "") + (block.title || block.id)}`;
         btn.onclick = () => {
           goToBlock(index);
           syncSessionSetBlock(index);
@@ -968,6 +975,7 @@
         const session = await res.json();
 
         sessionPin = session.pin;
+        document.getElementById("editWorkLesson").hidden = true;
         writingPanel.hidden = false;
         writingAssignForm.hidden = false;
         writingExport.hidden = true;

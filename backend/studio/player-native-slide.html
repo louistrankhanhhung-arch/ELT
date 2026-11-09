@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>REH slide</title>
+<style>
+body { margin:0; min-height:100vh; display:grid; place-items:center; background:#10233c; color:#fff; font:clamp(16px,3vw,34px) system-ui }
+main { width:min(90%,960px); padding:24px 0 } h1 { font-size:1.45em; margin:0 0 12px }
+p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height:55vh } audio { max-width:100% }
+</style>
+<main><h1></h1><p></p><div id="media"></div></main>
+<script src="config.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const revision = params.get("revision");
+async function showSlide() {
+  if (!/^[a-f0-9]{32}$/.test(revision || "")) throw new Error("Invalid slide");
+  const response = await fetch(window.runtimeLessonUrl("imports/" + revision));
+  if (!response.ok) throw new Error("Slide unavailable");
+  const lesson = await response.json();
+  const block = lesson.blocks.find(block => block.id === params.get("block") && block.activity_kind === "native-slide");
+  if (!block) throw new Error("Slide not found");
+  document.querySelector("h1").textContent = block.title;
+  document.querySelector("p").textContent = block.body;
+  if (block.media_url) {
+    const media = document.createElement(block.media_type === "image" ? "img" : block.media_type);
+    if (block.media_type === "image") media.alt = block.title;
+    else { media.controls = true; media.preload = "metadata"; }
+    media.src = block.media_url;
+    document.getElementById("media").append(media);
+  }
+}
+showSlide().catch(error => { document.querySelector("h1").textContent = error.message; });
+</script>
+</html>

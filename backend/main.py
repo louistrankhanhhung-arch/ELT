@@ -762,6 +762,7 @@ def load_imported_lesson(deck_id: str):
 @app.get("/api/imports/{deck_id}")
 def imported_lesson(deck_id: str):
     manifest = load_imported_lesson(deck_id)
+    manifest.pop("work_source", None)
     for block in manifest["blocks"]:
         task = block.get("task")
         if task and task.get("type") == "multiple_choice":
@@ -963,6 +964,8 @@ class PreparedWritingRequest(WritingAssignmentRequest):
 @app.post("/api/imports/{deck_id}/writing-blocks", dependencies=[Depends(require_teacher)])
 def prepare_writing(deck_id: str, payload: PreparedWritingRequest):
     manifest = load_imported_lesson(deck_id)
+    if manifest.get("origin") == "work":
+        raise HTTPException(409, "Edit Work lessons in Studio")
     blocks = manifest["blocks"]
     prompt = payload.prompt.strip()
     if not prompt or payload.after_block >= len(blocks):
@@ -1147,3 +1150,88 @@ def student_scores(pin: str, payload: StudentScoresRequest):
         scores.append({"task_id": row["task_id"], "title": row["prompt"],
                        "score": grade["score"], "max_score": grade["max_score"]})
     return {"scores": scores}
+
+
+class WorkBlock(BaseModel):
+    id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
+    phase: Literal["diagnosis", "teach", "practice", "retrieve", "production", "verify"]
+    kind: Literal["slide", "writing", "multiple_choice"]
+    title: str = Field(min_length=1, max_length=160)
+    body: str = Field(default="", max_length=4000)
+    notes: str = Field(default="", max_length=4000)
+    media_type: Optional[Literal["image", "audio", "video"]] = None
+    media_url: Optional[str] = Field(default=None, max_length=2000)
+    prompt: str = Field(default="", max_length=4000)
+    quiz: Optional[QuizDefinition] = None
+
+
+class WorkLesson(BaseModel):
+    schema_version: Literal[1]
+    title: str = Field(min_length=1, max_length=160)
+    objective: str = Field(default="", max_length=1000)
+    blocks: List[WorkBlock] = Field(min_length=1, max_length=100)
+
+
+class SaveWorkLesson(BaseModel):
+    lesson: WorkLesson
+    parent_revision: Optional[str] = None
+
+
+@app.get("/api/work-lessons/schema")
+def work_lesson_schema():
+    return WorkLesson.model_json_schema()
+
+
+@app.get("/api/work-lessons/{revision}")
+def read_work_lesson(revision: str, credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    require_teacher(credentials)
+    manifest = load_imported_lesson(revision)
+    if "work_source" not in manifest:
+        raise HTTPException(404, "Work lesson not found")
+    return {"lesson": manifest["work_source"], "version": manifest["version"]}
+
+
+@app.post("/api/work-lessons", dependencies=[Depends(require_teacher)])
+def save_work_lesson(payload: SaveWorkLesson):
+    lesson = payload.lesson
+    if not lesson.title.strip() or len({block.id for block in lesson.blocks}) != len(lesson.blocks):
+        raise HTTPException(422, "Enter a lesson title and use unique block IDs")
+    version = 1
+    if payload.parent_revision:
+        parent = load_imported_lesson(payload.parent_revision)
+        if "work_source" not in parent:
+            raise HTTPException(422, "This revision is not a Work lesson")
+        version = int(parent["version"]) + 1
+    revision = uuid4().hex
+    blocks = []
+    for block in lesson.blocks:
+        title = block.title.strip()
+        if not title:
+            raise HTTPException(422, f"Block {block.id}: enter a title")
+        entry = {"id": block.id, "title": title, "type": "activity", "phase": block.phase,
+                 "completion": {"mode": "teacher_next"}}
+        if block.kind == "slide":
+            media = block.media_url
+            if bool(media) != bool(block.media_type):
+                raise HTTPException(422, f"Block {block.id}: enter both a media type and URL")
+            if media:
+                url = urlsplit(media)
+                if url.scheme != "https" or not url.hostname or url.username or url.password:
+                    raise HTTPException(422, f"Block {block.id}: use a direct HTTPS media URL")
+            entry.update(activity_kind="native-slide", body=block.body,
+                         media_type=block.media_type, media_url=media, native_revision=revision)
+        else:
+            prompt = block.prompt.strip()
+            if not prompt or (block.kind == "multiple_choice") != bool(block.quiz):
+                raise HTTPException(422, f"Block {block.id}: enter a prompt and the required task options")
+            quiz = block.quiz.normalized(prompt) if block.quiz else {}
+            entry.update(activity_kind="writing-task",
+                         task={"schema_version": 1, "type": block.kind, "prompt": prompt, **quiz})
+        blocks.append(entry)
+    manifest = {"lesson_id": f"work-{revision}", "title": lesson.title.strip(), "version": str(version),
+                "origin": "work", "objective": lesson.objective, "blocks": blocks,
+                "work_source": lesson.model_dump(exclude_none=True)}
+    with closing(db()) as conn:
+        conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
+        conn.commit()
+    return {"revision": revision, "version": version, "lesson_path": f"imports/{revision}"}

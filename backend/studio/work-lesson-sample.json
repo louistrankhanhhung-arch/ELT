@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "title": "REH Sample · Describe a classmate",
+  "objective": "Use character adjectives and support them with an example.",
+  "blocks": [
+    {
+      "id": "diagnosis-1",
+      "phase": "diagnosis",
+      "kind": "writing",
+      "title": "Starting point",
+      "prompt": "Write one adjective that describes a helpful classmate."
+    },
+    {
+      "id": "teach-1",
+      "phase": "teach",
+      "kind": "slide",
+      "title": "Character and evidence",
+      "body": "An adjective describes character.\n\nExample: Maya is helpful because she explains difficult words to her classmates.",
+      "notes": "Ask learners which part of the sentence provides evidence."
+    },
+    {
+      "id": "practice-1",
+      "phase": "practice",
+      "kind": "multiple_choice",
+      "title": "Choose the best adjective",
+      "prompt": "Choose one answer for each question.",
+      "quiz": {
+        "shuffle": true,
+        "questions": [
+          {
+            "prompt": "Which adjective describes someone who shares willingly?",
+            "options": [
+              "Generous",
+              "Shy",
+              "Impatient"
+            ],
+            "correct_option": 0
+          },
+          {
+            "prompt": "Which phrase gives evidence?",
+            "options": [
+              "because he shares his notes",
+              "very nice"
+            ],
+            "correct_option": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "retrieve-1",
+      "phase": "retrieve",
+      "kind": "writing",
+      "title": "Recall without the example",
+      "prompt": "From memory, write an adjective and a reason using because."
+    },
+    {
+      "id": "production-1",
+      "phase": "production",
+      "kind": "writing",
+      "title": "Write a short description",
+      "prompt": "Write two sentences about a fictional classmate. Use a character adjective and one specific example."
+    },
+    {
+      "id": "verify-1",
+      "phase": "verify",
+      "kind": "multiple_choice",
+      "title": "Exit check",
+      "prompt": "Choose the stronger description.",
+      "quiz": {
+        "shuffle": false,
+        "questions": [
+          {
+            "prompt": "Which sentence supports the adjective with an example?",
+            "options": [
+              "Sam is patient because he waits for others to finish.",
+              "Sam is very patient."
+            ],
+            "correct_option": 0
+          }
+        ]
+      }
+    }
+  ]
+}
