@@ -234,7 +234,10 @@
     const authorLink = document.createElement("a");
     authorLink.href = "author.html";
     authorLink.textContent = "Open Lesson Studio";
-    catalogEl.before(authorLink, importForm);
+    const resultsLink = document.createElement("a");
+    resultsLink.href = "session-results.html";
+    resultsLink.textContent = "Session Results";
+    catalogEl.before(authorLink, document.createTextNode(" · "), resultsLink, importForm);
     importForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const button = importForm.querySelector("button");

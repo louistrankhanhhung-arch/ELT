@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session Results | REH</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#172338;font:16px system-ui}
+main{max-width:1050px;margin:auto;padding:20px}section,article{background:#fff;border:1px solid #dbe3ed;border-radius:10px;padding:16px;margin:14px 0}
+h1,h2,h3{margin:0 0 8px}button{border:0;border-radius:6px;background:#2459a9;color:white;padding:8px 12px;margin:4px;font:inherit;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}button.danger{background:#9e2c2c}input,select,textarea{font:inherit;padding:6px;max-width:100%}
+label{display:inline-block;margin:4px 8px 4px 0}textarea{display:block;width:100%;min-height:60px}summary{cursor:pointer;font-weight:600}
+details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}audio{max-width:100%}
+#sessionList{list-style:none;padding:0}#sessionList button{text-align:left;width:100%;background:#e8eef8;color:#172338} [hidden]{display:none!important}
+</style>
+<main>
+<a href="teacher-home.html">Teacher home</a><h1>Session Results</h1>
+<p>Reopen a classroom session to review and export saved evidence.</p>
+<section>
+<label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
+<button id="load">Load session history</button><p id="status" role="status"></p>
+</section>
+<section id="history" hidden>
+<h2>Session history</h2><ul id="sessionList"></ul>
+<button id="previous" disabled>Previous</button><button id="next" disabled>Next</button>
+</section>
+<section id="detail" hidden>
+<h2 id="sessionTitle"></h2><p id="sessionSummary"></p>
+<label>Student <select id="studentFilter"><option value="">All students</option></select></label>
+<button id="archive">Download archive</button>
+<details id="deletePanel" hidden>
+<summary>Delete archived audio</summary>
+<p id="deleteSummary"></p>
+<label><input type="checkbox" id="verified"> I opened the ZIP and verified that the original recordings are saved.</label>
+<label>Type DELETE AUDIO <input id="confirmation" autocomplete="off"></label>
+<button class="danger" id="deleteAudio" disabled>Delete audio permanently</button>
+</details>
+<div id="tasks"></div>
+</section>
+</main>
+<script src="config.js"></script>
+<script src="session-results.js"></script>
+</html>

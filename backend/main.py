@@ -1,7 +1,7 @@
 from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from fastapi.responses import Response
+from fastapi.responses import Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -13,6 +13,8 @@ import binascii
 import csv
 import hashlib
 import io
+import tempfile
+import zipfile
 import hmac
 import json
 import os
@@ -276,6 +278,18 @@ def init_db():
             audio BYTEA NOT NULL,
             PRIMARY KEY (task_id, student_id),
             FOREIGN KEY (task_id, student_id) REFERENCES writing_task_responses(task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS task_reviews (
+            task_id TEXT NOT NULL, student_id TEXT NOT NULL, score INTEGER, max_score INTEGER,
+            feedback TEXT NOT NULL, reviewed_at TEXT NOT NULL, PRIMARY KEY (task_id, student_id),
+            FOREIGN KEY (task_id, student_id) REFERENCES writing_task_responses(task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS session_audio_archives (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin), fingerprint TEXT NOT NULL
         )
     """)
     cur.execute("""
@@ -1110,9 +1124,13 @@ def session_task_results(pin: str):
         """), (pin,))
         tasks = [dict(row) for row in cur.fetchall()]
         cur.execute(sql("""
-            SELECT r.task_id, r.student_id, s.student_name, r.response, r.submitted_at
+            SELECT r.task_id, r.student_id, s.student_name, r.response, r.submitted_at,
+                   v.score AS review_score, v.max_score AS review_max_score, v.feedback, v.reviewed_at,
+                   a.media_type AS audio_type, LENGTH(a.audio) AS audio_bytes
             FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
             JOIN session_students s ON s.student_id = r.student_id
+            LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
+            LEFT JOIN speaking_audio a ON a.task_id = r.task_id AND a.student_id = r.student_id
             WHERE t.pin = ? ORDER BY r.submitted_at, r.student_id
         """), (pin,))
         responses = [dict(row) for row in cur.fetchall()]
@@ -1332,3 +1350,179 @@ def read_speaking(pin: str, task_id: str, student_id: str):
         raise HTTPException(404, "Recording not found")
     return Response(bytes(row["audio"]), media_type=row["media_type"],
                     headers={"Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"})
+
+
+@app.get("/api/session-history", dependencies=[Depends(require_teacher)])
+def session_history(offset: int = 0):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT s.pin, s.lesson_id, s.created_at, s.ended_at, s.expires_at, s.status, r.manifest
+            FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
+            ORDER BY s.created_at DESC, s.pin DESC LIMIT 51 OFFSET ?
+        """), (max(offset, 0),))
+        sessions = [dict(row) for row in cur.fetchall()]
+    for session in sessions:
+        manifest = session.pop("manifest")
+        session["title"] = json.loads(manifest)["title"] if manifest else session["lesson_id"]
+        if session["status"] == "active" and session["expires_at"] and parse_iso(session["expires_at"]) <= datetime.now(timezone.utc):
+            session["status"] = "expired"
+    return {"sessions": sessions[:50], "has_more": len(sessions) > 50}
+
+
+def session_evidence(pin):
+    session = get_session(pin)
+    if not session:
+        raise HTTPException(404, "Session not found")
+    session = apply_session_expiry(session)
+    results = session_task_results(pin)
+    if session["writing_task"]:
+        legacy = writing_results(pin)
+        results["tasks"].insert(0, {"task_id": "legacy-writing", "block_id": None, **legacy["task"],
+                                    "submissions": legacy["submissions"]})
+    title, version, phases = session["lesson_id"], None, {}
+    if session["lesson_path"].startswith("imports/"):
+        try:
+            lesson = load_imported_lesson(session["lesson_path"].split("/", 1)[1])
+            title, version = lesson["title"], lesson["version"]
+            phases = {block["id"]: block.get("phase") for block in lesson["blocks"]}
+        except HTTPException as error:
+            if error.status_code != 404:
+                raise
+    for task in results["tasks"]:
+        task["phase"] = phases.get(task["block_id"])
+    audio = [row for task in results["tasks"] for row in task["submissions"] if row.get("audio_bytes")]
+    return {"schema_version": 1, "session": {key: session[key] for key in
+            ("pin", "lesson_id", "lesson_path", "created_at", "ended_at", "status")},
+            "lesson_title": title, "lesson_version": version, **results,
+            "audio_count": len(audio), "audio_bytes": sum(row["audio_bytes"] for row in audio)}
+
+
+@app.get("/api/session-history/{pin}", dependencies=[Depends(require_teacher)])
+def get_session_evidence(pin: str):
+    return session_evidence(pin)
+
+
+class ManualReview(BaseModel):
+    score: Optional[int] = Field(default=None, ge=0, le=100)
+    max_score: Optional[int] = Field(default=None, ge=1, le=100)
+    feedback: str = Field(default="", max_length=4000)
+
+
+@app.put("/api/session-history/{pin}/tasks/{task_id}/reviews/{student_id}", dependencies=[Depends(require_teacher)])
+def save_review(pin: str, task_id: str, student_id: str, payload: ManualReview):
+    if (payload.score is None) != (payload.max_score is None) or (
+        payload.score is not None and payload.score > payload.max_score
+    ):
+        raise HTTPException(422, "Enter a score and maximum, with score no higher than maximum")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT 1 FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+            LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            WHERE t.pin = ? AND r.task_id = ? AND r.student_id = ? AND q.task_id IS NULL
+        """), (pin, task_id, student_id))
+        if not cur.fetchone():
+            raise HTTPException(404, "Writing or Speaking submission not found")
+        cur.execute(sql("""
+            INSERT INTO task_reviews VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(task_id, student_id) DO UPDATE SET score = excluded.score, max_score = excluded.max_score,
+            feedback = excluded.feedback, reviewed_at = excluded.reviewed_at
+        """), (task_id, student_id, payload.score, payload.max_score, payload.feedback, now_iso()))
+        conn.commit()
+    return {"ok": True}
+
+
+def audio_fingerprint(evidence):
+    rows = sorted((task["task_id"], row["student_id"], row["audio_bytes"])
+                  for task in evidence["tasks"] for row in task["submissions"] if row.get("audio_bytes"))
+    return hashlib.sha256(json.dumps(rows).encode()).hexdigest()
+
+
+def evidence_csv(evidence):
+    output = io.StringIO()
+    writer = csv.writer(output)
+    columns = ("student_id", "student_name", "response", "selected_option", "score", "max_score",
+               "review_score", "review_max_score", "feedback", "submitted_at", "reviewed_at", "audio_file")
+    writer.writerow(("pin", "lesson_id", "lesson_version", "task_id", "phase", "type", "prompt", *columns))
+    for task in evidence["tasks"]:
+        for row in task["submissions"]:
+            values = [evidence["session"]["pin"], evidence["session"]["lesson_id"], evidence["lesson_version"],
+                      task["task_id"], task["phase"], task["type"], task["prompt"], *(row.get(key) for key in columns)]
+            writer.writerow(["'" + v if isinstance(v, str) and v.lstrip().startswith(("=", "+", "-", "@")) else v for v in values])
+    return output.getvalue().encode("utf-8-sig")
+
+
+@app.get("/api/session-history/{pin}/archive", dependencies=[Depends(require_teacher)])
+def download_session_archive(pin: str):
+    evidence = session_evidence(pin)
+    archive = tempfile.SpooledTemporaryFile(max_size=4 * 1024 * 1024)
+    try:
+        with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as bundle, closing(db()) as conn:
+            cur = conn.cursor()
+            for task in evidence["tasks"]:
+                for row in task["submissions"]:
+                    if not row.get("audio_bytes"):
+                        continue
+                    cur.execute(sql("SELECT audio, media_type FROM speaking_audio WHERE task_id = ? AND student_id = ?"),
+                                (task["task_id"], row["student_id"]))
+                    recording = cur.fetchone()
+                    if not recording:
+                        raise HTTPException(409, "Recordings changed. Download the archive again.")
+                    extension = {"audio/webm": "webm", "audio/mp4": "m4a", "audio/ogg": "ogg"}[recording["media_type"]]
+                    row["audio_file"] = f'audio/{task["task_id"]}_{row["student_id"]}.{extension}'
+                    bundle.writestr(row["audio_file"], bytes(recording["audio"]))
+            bundle.writestr("evidence.json", json.dumps(evidence, ensure_ascii=False, indent=2))
+            bundle.writestr("responses.csv", evidence_csv(evidence))
+        if evidence["session"]["status"] != "active" and evidence["audio_count"]:
+            with closing(db()) as conn:
+                conn.cursor().execute(sql("""
+                    INSERT INTO session_audio_archives VALUES (?, ?)
+                    ON CONFLICT(pin) DO UPDATE SET fingerprint = excluded.fingerprint
+                """), (pin, audio_fingerprint(evidence)))
+                conn.commit()
+        archive.seek(0)
+    except Exception:
+        archive.close()
+        raise
+
+    def chunks():
+        with archive:
+            while chunk := archive.read(65536):
+                yield chunk
+
+    return StreamingResponse(chunks(), media_type="application/zip", headers={
+        "Content-Disposition": f'attachment; filename="session-{pin}-evidence.zip"',
+        "Cache-Control": "private, no-store",
+    })
+
+
+class DeleteSessionAudio(BaseModel):
+    confirmation: Literal["DELETE AUDIO"]
+
+
+@app.post("/api/session-history/{pin}/delete-audio", dependencies=[Depends(require_teacher)])
+def delete_session_audio(pin: str, payload: DeleteSessionAudio):
+    evidence = session_evidence(pin)
+    if evidence["session"]["status"] == "active":
+        raise HTTPException(409, "End the session before deleting audio")
+    if not evidence["audio_count"]:
+        return {"deleted": 0, "audio_bytes": 0}
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT fingerprint FROM session_audio_archives WHERE pin = ?"), (pin,))
+        archive = cur.fetchone()
+        if not archive or archive["fingerprint"] != audio_fingerprint(evidence):
+            raise HTTPException(409, "Download and verify an archive for this session first")
+        deleted = 0
+        for task in evidence["tasks"]:
+            for row in task["submissions"]:
+                if not row.get("audio_bytes"):
+                    continue
+                cur.execute(sql("DELETE FROM speaking_audio WHERE task_id = ? AND student_id = ? AND LENGTH(audio) = ?"),
+                            (task["task_id"], row["student_id"], row["audio_bytes"]))
+                deleted += cur.rowcount
+        if deleted != evidence["audio_count"]:
+            raise HTTPException(409, "Recordings changed. Download the archive again.")
+        conn.commit()
+    return {"deleted": deleted, "audio_bytes": evidence["audio_bytes"] if deleted else 0}

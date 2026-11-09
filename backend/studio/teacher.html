@@ -392,6 +392,7 @@
       </label>
       <span id="displayModeStatus" role="status"></span>
       <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
+      <a href="session-results.html" id="sessionResultsLink">Session Results</a>
       <button id="copyStudentBtn">Copy Join Link</button>
     </div>
   </header>
@@ -1001,6 +1002,7 @@
         const session = await res.json();
 
         sessionPin = session.pin;
+        document.getElementById("sessionResultsLink").href = "session-results.html?pin=" + encodeURIComponent(sessionPin);
         document.getElementById("editWorkLesson").hidden = true;
         writingPanel.hidden = false;
         writingAssignForm.hidden = false;
