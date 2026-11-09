@@ -79,6 +79,7 @@ class StartSessionRequest(BaseModel):
 class JoinSessionRequest(BaseModel):
     student_name: str = ""
     roster_code: Optional[str] = None
+    reh_student_id: Optional[str] = Field(default=None, max_length=120)
 
 class EventRequest(BaseModel):
     student_id: str
@@ -278,6 +279,22 @@ def init_db():
             audio BYTEA NOT NULL,
             PRIMARY KEY (task_id, student_id),
             FOREIGN KEY (task_id, student_id) REFERENCES writing_task_responses(task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS reh_roster (
+            student_id TEXT PRIMARY KEY,
+            display_name TEXT NOT NULL,
+            status TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS learning_targets (
+            learning_target_id TEXT PRIMARY KEY,
+            label TEXT NOT NULL,
+            skill TEXT NOT NULL,
+            level TEXT NOT NULL,
+            status TEXT NOT NULL
         )
     """)
     cur.execute("""
@@ -564,9 +581,19 @@ def join_session(pin: str, payload: JoinSessionRequest):
     roster_id = None
     student_id = f"{pin}-{uuid4().hex}"
     if TEACHER_ACCESS_TOKEN:
-        member = ROSTER.get(payload.roster_code or "")
+        entered_id = (payload.reh_student_id or payload.roster_code or "").strip()
+        with closing(db()) as conn:
+            cur = conn.cursor()
+            cur.execute(sql("SELECT * FROM reh_roster WHERE student_id = ?"), (entered_id.upper(),))
+            registered = cur.fetchone()
+        if registered:
+            if registered["status"] != "active":
+                raise HTTPException(status_code=403, detail="Student ID is not active")
+            member = {"id": registered["student_id"], "name": registered["display_name"]}
+        else:
+            member = ROSTER.get(entered_id)
         if not member:
-            raise HTTPException(status_code=403, detail="Invalid roster code")
+            raise HTTPException(status_code=403, detail="Student ID was not found")
         student_name = member["name"]
         roster_id = str(member["id"])
         member_key = f"{pin}:{member['id']}".encode()
@@ -945,6 +972,7 @@ def export_writing(pin: str):
 
 
 class QuizQuestion(BaseModel):
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
     question_id: Optional[str] = Field(default=None, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
     prompt: str = Field(min_length=1, max_length=4000)
     options: List[str] = Field(min_length=2, max_length=8)
@@ -957,7 +985,8 @@ class QuizQuestion(BaseModel):
         if len(set(options)) != len(options) or self.correct_option >= len(options):
             raise HTTPException(422, "Use distinct options and select an existing correct option")
         return {"prompt": self.prompt.strip(), "options": options, "correct_option": self.correct_option,
-                **({"question_id": self.question_id} if self.question_id else {})}
+                **({"question_id": self.question_id} if self.question_id else {}),
+                **({"learning_target_id": self.learning_target_id.strip()} if self.learning_target_id and self.learning_target_id.strip() else {})}
 
 
 class QuizDefinition(BaseModel):
@@ -1443,10 +1472,13 @@ def session_evidence(pin):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT l.student_id, l.evidence_id FROM evidence_student_links l
-            JOIN session_students s ON s.student_id = l.student_id WHERE s.pin = ?
+            SELECT l.student_id, l.evidence_id, roster.student_id AS reh_student_id FROM evidence_student_links l
+            JOIN session_students s ON s.student_id = l.student_id
+            JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
+            LEFT JOIN reh_roster roster ON roster.student_id = ids.roster_id
+            WHERE s.pin = ?
         """), (pin,))
-        students = {row["student_id"]: row["evidence_id"] for row in cur.fetchall()}
+        students = {row["student_id"]: dict(row) for row in cur.fetchall()}
         cur.execute(sql("""
             SELECT c.task_id, c.phase, c.learning_target_id FROM task_evidence_context c
             JOIN writing_tasks t ON t.task_id = c.task_id WHERE t.pin = ?
@@ -1461,11 +1493,14 @@ def session_evidence(pin):
         for index, question in enumerate(questions, 1):
             question["question_id"] = question.get("question_id") or f"q{index}"
         for row in task["submissions"]:
-            row["learner_id"] = students.get(row["student_id"])
+            identity = students.get(row["student_id"], {})
+            row["learner_id"] = identity.get("evidence_id")
+            row["reh_student_id"] = identity.get("reh_student_id")
             if questions:
                 answers = quiz_answers(row["response"], questions)
                 row["items"] = [{
                     "question_id": question["question_id"],
+                    "learning_target_id": question.get("learning_target_id") or task["learning_target_id"],
                     "selected_index": answer,
                     "selected_option": question["options"][answer],
                     "correct_index": question["correct_option"],
@@ -1523,7 +1558,7 @@ def audio_fingerprint(evidence):
 def evidence_csv(evidence):
     output = io.StringIO()
     writer = csv.writer(output)
-    columns = ("student_id", "learner_id", "student_name", "response", "selected_option", "score", "max_score",
+    columns = ("student_id", "reh_student_id", "learner_id", "student_name", "response", "selected_option", "score", "max_score",
                "review_score", "review_max_score", "feedback", "submitted_at", "reviewed_at", "audio_file")
     writer.writerow(("pin", "lesson_id", "lesson_version", "task_id", "phase", "learning_target_id", "type", "prompt", *columns))
     for task in evidence["tasks"]:
@@ -1607,3 +1642,79 @@ def delete_session_audio(pin: str, payload: DeleteSessionAudio):
             raise HTTPException(409, "Recordings changed. Download the archive again.")
         conn.commit()
     return {"deleted": deleted, "audio_bytes": evidence["audio_bytes"] if deleted else 0}
+
+
+class CatalogImport(BaseModel):
+    csv_text: str = Field(min_length=1, max_length=500000)
+
+
+CATALOG_COLUMNS = {
+    "students": ("student_id", "display_name", "status"),
+    "targets": ("learning_target_id", "label", "skill", "level", "status"),
+}
+
+
+def parse_catalog_csv(kind, content):
+    columns = CATALOG_COLUMNS[kind]
+    reader = csv.DictReader(io.StringIO(content.lstrip("\ufeff")), strict=True)
+    try:
+        headers = reader.fieldnames
+    except csv.Error:
+        raise HTTPException(422, "Could not parse the CSV header")
+    if not headers or len(headers) != len(columns) or set(headers) != set(columns):
+        raise HTTPException(422, "CSV headers must be: " + ",".join(columns))
+    rows, seen = [], set()
+    try:
+        for row in reader:
+            line = reader.line_num
+            if len(rows) >= 5000 or None in row or any(row[key] is None for key in columns):
+                raise HTTPException(422, f"Row {line}: check the columns and the 5,000-row limit")
+            values = [row[key].strip() for key in columns]
+            if not any(values):
+                continue
+            values[0] = values[0].upper() if kind == "students" else values[0]
+            values[-1] = values[-1].lower()
+            if (not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,119}", values[0])
+                    or not values[1] or any(len(value) > 300 for value in values)
+                    or values[-1] not in {"active", "inactive"}):
+                raise HTTPException(422, f"Row {line}: provide a valid ID, name or label, and active/inactive status")
+            if values[0] in seen:
+                raise HTTPException(422, f"Row {line}: duplicate ID {values[0]}")
+            seen.add(values[0])
+            rows.append(values)
+    except csv.Error:
+        raise HTTPException(422, "Could not parse the CSV")
+    if not rows:
+        raise HTTPException(422, "Include at least one data row")
+    return rows
+
+
+@app.post("/api/catalogs/{kind}/import", dependencies=[Depends(require_teacher)])
+def import_catalog(kind: Literal["students", "targets"], payload: CatalogImport):
+    rows = parse_catalog_csv(kind, payload.csv_text)
+    statements = {
+        "students": """INSERT INTO reh_roster VALUES (?, ?, ?)
+            ON CONFLICT(student_id) DO UPDATE SET display_name = excluded.display_name, status = excluded.status""",
+        "targets": """INSERT INTO learning_targets VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(learning_target_id) DO UPDATE SET label = excluded.label, skill = excluded.skill,
+            level = excluded.level, status = excluded.status""",
+    }
+    with closing(db()) as conn:
+        conn.cursor().executemany(sql(statements[kind]), rows)
+        conn.commit()
+    return {"imported": len(rows)}
+
+
+@app.get("/api/catalogs/{kind}", dependencies=[Depends(require_teacher)])
+def read_catalog(kind: Literal["students", "targets"], active_only: bool = False, offset: int = 0):
+    statements = {
+        "students": "SELECT * FROM reh_roster",
+        "targets": "SELECT * FROM learning_targets",
+    }
+    column = CATALOG_COLUMNS[kind][0]
+    query = statements[kind] + (" WHERE status = 'active'" if active_only else "")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql(query + f" ORDER BY {column} LIMIT 501 OFFSET ?"), (max(offset, 0),))
+        rows = [dict(row) for row in cur.fetchall()]
+    return {"rows": rows[:500], "has_more": len(rows) > 500}

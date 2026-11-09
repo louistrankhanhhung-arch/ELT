@@ -237,7 +237,10 @@
     const resultsLink = document.createElement("a");
     resultsLink.href = "session-results.html";
     resultsLink.textContent = "Session Results";
-    catalogEl.before(authorLink, document.createTextNode(" · "), resultsLink, importForm);
+    const catalogsLink = document.createElement("a");
+    catalogsLink.href = "catalogs.html";
+    catalogsLink.textContent = "Roster and Learning Targets";
+    catalogEl.before(authorLink, document.createTextNode(" · "), resultsLink, document.createTextNode(" · "), catalogsLink, importForm);
     importForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const button = importForm.querySelector("button");

@@ -414,7 +414,7 @@
           <option value="verify">Verify</option>
         </select>
       </label>
-      <label>Learning target ID <input name="learningTarget" maxlength="120" placeholder="Optional, e.g. grammar.subject-verb"></label>
+      <label>Learning target ID <input name="learningTarget" list="learningTargets" maxlength="120" placeholder="Optional, e.g. grammar.subject-verb"></label>
       <label>Prompt <textarea name="prompt" rows="3" maxlength="4000" required></textarea></label>
       <fieldset id="quizOptions" hidden>
         <legend>Quiz questions</legend>
@@ -506,6 +506,7 @@
   </div>
 
   <script src="./config.js?v=3"></script>
+  <script src="catalog-options.js" defer></script>
   <script>
     const BASE_URL =
       window.ELT_CONFIG?.BASE_URL ||
@@ -532,6 +533,7 @@
     teacherTokenInput.placeholder = "Staging teacher access code";
     teacherTokenInput.setAttribute("aria-label", "Staging teacher access code");
     teacherTokenInput.autocomplete = "off";
+    teacherTokenInput.dataset.targetCatalogCode = "";
     document.getElementById("startSessionBtn").before(teacherTokenInput);
     let teacherToken = "";
     function teacherHeaders() {
@@ -614,6 +616,7 @@
       row.innerHTML = `
         <legend>Question</legend>
         <label>Question text <textarea data-question rows="2" maxlength="4000"></textarea></label>
+        <label>Learning target override <input data-target list="learningTargets" maxlength="120"></label>
         <label>Options (2–8, one per line) <textarea data-options rows="4"></textarea></label>
         <label>Correct option <select data-correct>
           ${Array.from("ABCDEFGH", (letter, index) => '<option value="' + index + '">' + letter + '</option>').join("")}
@@ -658,7 +661,8 @@
             || new Set(options).size !== options.length || correct_option >= options.length) {
           throw new Error("Question " + (index + 1) + ": enter a question, 2–8 distinct options and a valid correct option.");
         }
-        return { prompt: question, options, correct_option };
+        return { prompt: question, options, correct_option,
+          learning_target_id: row.querySelector("[data-target]").value.trim() || null };
       });
       return { ...context, prompt: prompt || "Multiple-choice quiz", quiz: { questions, shuffle: writingAssignForm.elements.shuffle.checked } };
     }

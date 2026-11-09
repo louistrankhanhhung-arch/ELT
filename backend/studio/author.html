@@ -18,7 +18,7 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 <header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import a lesson from GPT Work, edit its blocks, and save a version for class.</p></header>
 <main>
 <section>
-  <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
+  <label>Staging teacher access code <input id="token" data-target-catalog-code type="password" autocomplete="off"></label>
   <button id="loadRevision" hidden>Load saved version</button>
   <button id="sample">Load Work sample</button>
   <a href="/api/work-lessons/schema">JSON schema</a> · <a href="work-lesson-sample.json" download>Download sample JSON</a>
@@ -46,5 +46,6 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 </section>
 </main>
 <script src="config.js"></script>
-<script src="author.js?v=evidence-1"></script>
+<script src="author.js?v=catalogs-1"></script>
+<script src="catalog-options.js" defer></script>
 </html>

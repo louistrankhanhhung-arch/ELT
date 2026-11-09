@@ -100,15 +100,15 @@
     <h1>Join Class</h1>
 
     <p>
-      Enter your student code and class PIN to join.
+      Enter your Student ID and class PIN to join.
     </p>
 
     <div class="field">
-      <label for="studentName">Student code</label>
+      <label for="studentName">Student ID</label>
       <input
         id="studentName"
         type="text"
-        placeholder="Enter your student code"
+        placeholder="Enter your Student ID"
       />
     </div>
 
@@ -162,7 +162,7 @@
         sessionPinInput.value.trim();
 
       if (!studentName) {
-        showError("Enter your student code.");
+        showError("Enter your Student ID.");
         return;
       }
 
@@ -183,7 +183,7 @@
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              roster_code: studentName,
+              reh_student_id: studentName,
             }),
           }
         );
