@@ -99,7 +99,7 @@ function render() {
   if (block.kind === "slide") {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
     field(fields, "Media type", block.media_type, value => { block.media_type = value || null; }, ["", "image", "audio", "video"]);
-    field(fields, "Direct HTTPS media URL", block.media_url, value => { block.media_url = value.trim() || null; });
+    field(fields, "Media URL (direct HTTPS or YouTube for video)", block.media_url, value => { block.media_url = value.trim() || null; });
   } else {
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
   }
