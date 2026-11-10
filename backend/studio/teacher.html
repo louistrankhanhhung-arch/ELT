@@ -366,6 +366,15 @@
     #writingResults details { border-top: 1px solid #e1e8f0; padding: 8px 0; }
     #writingResults summary { cursor: pointer; }
     body.presentation-mode #writingPanel { display: none; }
+    #joinSessionDialog { box-sizing: border-box; width: min(94vw, 540px); max-height: 94dvh; overflow: auto; padding: clamp(16px, 4vw, 32px); border: 1px solid #d5e1ec; border-radius: 18px; color: #17283b; text-align: center; }
+    #joinSessionDialog::backdrop { background: rgb(16 34 55 / 68%); }
+    #joinSessionDialog h2 { margin: 0; }
+    .join-close { display: block; margin-left: auto; }
+    .join-pin { margin: 10px 0; font-size: 1.2rem; }
+    .join-pin strong { margin-left: 8px; font-size: 2rem; letter-spacing: .12em; }
+    #joinSessionQr { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+    #joinSessionLink { display: block; margin: 8px 0 14px; overflow-wrap: anywhere; }
+    #joinCopyStatus:empty { display: none; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
   <link rel="stylesheet" href="classroom-ui.css?v=2">
@@ -430,6 +439,7 @@
       <summary>Live Session</summary>
       <div id="sessionAccess"></div>
       <p id="sessionBanner" role="status">Start a session to invite students.</p>
+      <button id="showJoinSession" hidden>Show join details</button>
       <button id="copyStudentBtn" hidden>Copy Join Link</button>
       <div id="monitorPanel" hidden></div>
       <details id="writingPanel">
@@ -472,6 +482,16 @@
     </details>
   </main>
 
+  <dialog id="joinSessionDialog" aria-labelledby="joinSessionTitle">
+    <form method="dialog"><button class="join-close" aria-label="Close join details">Close</button></form>
+    <h2 id="joinSessionTitle">Join Session</h2>
+    <p>Scan the QR code or open the link. Then enter your Student ID.</p>
+    <p class="join-pin">PIN <strong id="joinSessionPin"></strong></p>
+    <img id="joinSessionQr" width="260" height="260" alt="QR code for the student join link">
+    <a id="joinSessionLink" target="_blank" rel="noopener"></a>
+    <button id="copyJoinDialog" type="button">Copy Join Link</button>
+    <p id="joinCopyStatus" role="status"></p>
+  </dialog>
   <canvas id="annotationCanvas"></canvas>
 
   <div class="presentation-controls" id="presentationControls">
@@ -1179,6 +1199,31 @@
       return url.href;
     }
 
+    const joinDialog = document.getElementById("joinSessionDialog");
+    const showJoinSession = document.getElementById("showJoinSession");
+    const joinLink = document.getElementById("joinSessionLink");
+    const joinCopyStatus = document.getElementById("joinCopyStatus");
+
+    function showJoinDetails() {
+      const shortLink = new URL("/j/" + encodeURIComponent(sessionPin), new URL(API_BASE, location.href));
+      document.getElementById("joinSessionPin").textContent = sessionPin;
+      document.getElementById("joinSessionQr").src = shortLink.href + "/qr.svg";
+      joinLink.href = shortLink.href;
+      joinLink.textContent = shortLink.href.replace(/^https?:\/\//, "");
+      joinCopyStatus.textContent = "";
+      joinDialog.showModal();
+    }
+
+    showJoinSession.addEventListener("click", showJoinDetails);
+    document.getElementById("copyJoinDialog").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(joinLink.href);
+        joinCopyStatus.textContent = "Link copied.";
+      } catch {
+        joinCopyStatus.textContent = "Copy the link shown above.";
+      }
+    });
+
     async function startSession() {
       if (!currentLesson) return;
 
@@ -1237,12 +1282,14 @@
         monitorPanel.hidden = false;
         monitorPanel.replaceChildren();
         copyStudentBtn.hidden = false;
+        showJoinSession.hidden = false;
         teacherTokenInput.hidden = true;
         startMonitorPolling();
         
         startSessionBtn.textContent = "Session Active";
         endSessionBtn.disabled = false;
         syncWritingControls();
+        showJoinDetails();
       } catch (err) {
         console.error(err);
         alert("Could not start session: " + err.message);
@@ -1301,6 +1348,7 @@
         }
 
         sessionBanner.textContent = `Session ended · PIN ${sessionPin}`;
+        showJoinSession.hidden = true;
         teacherTokenInput.hidden = false;
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";

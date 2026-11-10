@@ -1,7 +1,7 @@
 from pathlib import Path
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from fastapi.responses import Response, StreamingResponse
+from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -25,6 +25,8 @@ from urllib.parse import urlsplit
 from urllib.request import urlopen
 from uuid import uuid4
 import sqlite3
+import qrcode
+from qrcode.image.svg import SvgPathImage
 
 try:
     import psycopg
@@ -904,6 +906,26 @@ def imported_slide(deck_id: str, number: int):
     if page is None:
         raise HTTPException(404, "Slide not found")
     return Response(bytes(page["image"]), media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"})
+
+@app.get("/j/{pin}")
+def short_join_link(pin: str):
+    if not re.fullmatch(r"[0-9]{4}", pin):
+        raise HTTPException(404, "Invalid session PIN")
+    return RedirectResponse(f"/studio/join.html?pin={pin}", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/j/{pin}/qr.svg")
+def session_join_qr(pin: str, request: Request):
+    if not re.fullmatch(r"[0-9]{4}", pin):
+        raise HTTPException(404, "Invalid session PIN")
+    url = request.url_for("short_join_link", pin=pin)
+    if url.hostname not in ("localhost", "127.0.0.1", "::1"):
+        url = url.replace(scheme="https")
+    image = qrcode.make(str(url), image_factory=SvgPathImage)
+    output = io.BytesIO()
+    image.save(output)
+    return Response(output.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "no-store"})
+
 
 app.mount("/studio", StaticFiles(directory=Path(__file__).parent / "studio"), name="studio")
 
