@@ -216,12 +216,14 @@
     #quizChoices input[data-typed-answer] { box-sizing: border-box; max-width: 100%; width: min(100%, 32rem); padding: 8px; font: inherit; }
     .order-parts { padding-inline-start: 1.6em; }
     .order-parts li { margin-block: 6px; padding: 8px; border: 1px solid #d5e1ec; border-radius: 8px; }
-    .order-parts li > div { display: inline-flex; gap: 5px; margin: 5px 0 0 8px; }
     .order-parts button { min-width: 42px; min-height: 42px; }
     .sentence-parts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
     .sentence-parts li { margin: 0; padding: 0; border: 0; max-width: 100%; }
-    #writingPanel .sentence-parts button { color: #17283b; background: #edf4fb; border: 1px solid #b7c9db; cursor: grab; max-width: 100%; overflow-wrap: anywhere; }
-    #writingPanel .sentence-parts button[aria-pressed="true"] { background: #d7f2eb; border-color: #08695f; outline: 2px solid #08695f; }
+    .paragraph-parts { list-style: none; padding: 0; }
+    .paragraph-parts li { padding: 0; border: 0; }
+    .paragraph-parts button { width: 100%; text-align: left; }
+    #writingPanel .order-parts button { color: #17283b; background: #edf4fb; border: 1px solid #b7c9db; cursor: grab; max-width: 100%; overflow-wrap: anywhere; }
+    #writingPanel .order-parts button[aria-pressed="true"] { background: #d7f2eb; border-color: #08695f; outline: 2px solid #08695f; }
     #quizChoices label {
       min-height: 36px;
       padding: 4px 0;
@@ -602,9 +604,9 @@
       return order;
     }
 
-    function renderSentenceParts(parts, draft) {
+    function renderOrderingParts(parts, draft, sentence) {
       const list = document.createElement("ul");
-      list.className = "order-parts sentence-parts";
+      list.className = "order-parts " + (sentence ? "sentence-parts" : "paragraph-parts");
       let selected;
       let dragged;
 
@@ -642,9 +644,11 @@
           }
         });
         chip.addEventListener("keydown", event => {
-          if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+          const previous = sentence ? "ArrowLeft" : "ArrowUp";
+          const next = sentence ? "ArrowRight" : "ArrowDown";
+          if (event.key !== previous && event.key !== next) return;
           event.preventDefault();
-          move(row, event.key === "ArrowLeft" ? row.previousElementSibling : row.nextElementSibling);
+          move(row, event.key === previous ? row.previousElementSibling : row.nextElementSibling);
           chip.focus();
         });
         row.addEventListener("dragstart", event => {
@@ -669,45 +673,6 @@
         row.append(chip);
         list.append(row);
       }
-      return list;
-    }
-
-    function renderOrderingParts(parts, draft) {
-      const list = document.createElement("ol");
-      list.className = "order-parts";
-      function updateButtons() {
-        [...list.children].forEach((row, index) => {
-          row.querySelector("[data-move='up']").disabled = index === 0;
-          row.querySelector("[data-move='down']").disabled = index === list.children.length - 1;
-        });
-      }
-      const order = Array.isArray(draft) ? draft : parts.map((_, index) => index);
-      for (const index of order) {
-        const row = document.createElement("li");
-        row.dataset.part = index;
-        const text = document.createElement("span");
-        text.textContent = parts[index];
-        const controls = document.createElement("div");
-        for (const direction of ["up", "down"]) {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.dataset.move = direction;
-          button.textContent = direction === "up" ? "↑" : "↓";
-          button.setAttribute("aria-label", "Move " + direction + ": " + parts[index]);
-          button.addEventListener("click", () => {
-            const adjacent = direction === "up" ? row.previousElementSibling : row.nextElementSibling;
-            if (!adjacent) return;
-            if (direction === "up") adjacent.before(row);
-            else adjacent.after(row);
-            updateButtons();
-            (button.disabled ? controls.querySelector("button:not(:disabled)") : button)?.focus();
-          });
-          controls.append(button);
-        }
-        row.append(text, controls);
-        list.append(row);
-      }
-      updateButtons();
       return list;
     }
 
@@ -743,7 +708,7 @@
         writingInput.hidden = isQuiz;
         writingForm.elements.response.required = !isQuiz;
         quizChoices.hidden = !isQuiz;
-        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : task?.type === "ordering_sentence" ? "Drag the words or tap two to swap them" : task?.type === "ordering_paragraph" ? "Use the arrows to move each part" : "Enter your answers";
+        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : task?.type?.startsWith("ordering_") ? "Drag the cards or tap two to swap them" : "Enter your answers";
         quizChoices.querySelectorAll("fieldset").forEach(group => group.remove());
         if (isQuiz) {
           task.questions.forEach((question, questionIndex) => {
@@ -753,9 +718,7 @@
             group.append(legend);
             window.renderTaskMaterials(group, question.materials);
             if (question.parts) {
-              group.append(task.type === "ordering_sentence"
-                ? renderSentenceParts(question.parts, draft[questionIndex])
-                : renderOrderingParts(question.parts, draft[questionIndex]));
+              group.append(renderOrderingParts(question.parts, draft[questionIndex], task.type === "ordering_sentence"));
               quizChoices.append(group);
               return;
             }
