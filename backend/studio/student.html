@@ -168,7 +168,13 @@
     .score-header, .score-question { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     #publishedScores:has(.writing-score-feedback) { flex:1 1 0; min-height:0; max-height:none; }
     body:has(#publishedScores:not([hidden]) .writing-score-feedback) :is(#writingPanel, .runtime) { display:none; }
-    .writing-score-feedback { padding: 12px; background: #E9F2E3; border-radius: 8px; }
+    .writing-score-feedback { display: grid; gap: 10px; overflow-wrap: anywhere; }
+    .writing-score-feedback section { padding: 12px; background: #F7FAF3; border: 1px solid #CCDCC8; border-radius: 8px; }
+    .writing-score-feedback section:last-child { background: #E9F2E3; }
+    .writing-score-feedback h3 { margin: 0 0 6px; font-size: 1rem; }
+    .writing-score-feedback p, .writing-score-feedback ul { margin: 0; white-space: pre-wrap; }
+    .writing-score-feedback li + li { margin-top: 8px; }
+    .writing-score-feedback blockquote { margin: 4px 0 0; padding: 4px 8px; border-inline-start: 3px solid #A68832; white-space: pre-wrap; }
     .score-header h2, #publishedScores article > p { margin: 4px 0 10px; }
     .score-points { background: #E9F2E3; color: #286340; padding: 7px 14px; border-radius: 10px; font-size: 1.35rem; }
     .score-toggle { padding: 8px 12px; background: white; border: 1px solid #A5BDA0; border-radius: 8px; color: #18352A; cursor: pointer; }
@@ -572,10 +578,42 @@
           const note = document.createElement("p");
           if (score.feedback) {
             note.textContent = "Writing feedback";
+            card.append(header, note);
+            const review = document.createElement("div");
+            review.className = "writing-score-feedback";
+            function addSection(title, value) {
+              const section = document.createElement("section");
+              const label = document.createElement("h3");
+              label.textContent = title;
+              section.append(label, value);
+              review.append(section);
+            }
+            const missed = (score.criteria || []).filter(item => item.score < item.max_score);
+            if (missed.length) {
+              const list = document.createElement("ul");
+              for (const item of missed) {
+                const row = document.createElement("li");
+                const label = document.createElement("strong");
+                label.textContent = `${item.label} · ${item.score}/${item.max_score}`;
+                row.append(label);
+                if (item.evidence) {
+                  const quote = document.createElement("blockquote");
+                  quote.textContent = item.evidence;
+                  row.append(quote);
+                }
+                list.append(row);
+              }
+              addSection("Review your answer", list);
+            }
+            if (score.difficulties?.length) {
+              const tags = document.createElement("p");
+              tags.textContent = score.difficulties.join(" · ");
+              addSection("What to watch for", tags);
+            }
             const feedback = document.createElement("p");
-            feedback.className = "writing-score-feedback";
             feedback.textContent = score.feedback;
-            card.append(header, note, feedback);
+            addSection(missed.length ? "How to improve" : "Feedback", feedback);
+            card.append(review);
             return card;
           }
           const items = score.items || [];

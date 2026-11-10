@@ -2050,7 +2050,9 @@ def student_scores(pin: str, payload: StudentScoresRequest):
             grade = json.loads(row["definition"])
             scores.append({"task_id": row["task_id"], "title": row["prompt"],
                            "score": grade["score"], "max_score": grade["max_score"],
-                           "feedback": grade["feedback"]})
+                           "feedback": grade["feedback"],
+                           "criteria": grade.get("criteria", []),
+                           "difficulties": [item["label"] for item in grade.get("difficulties", [])]})
     return {"scores": scores}
 
 
