@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join Session | REH</title>
+  <style>
+    body { margin: 0; min-height: 100dvh; display: grid; place-items: center; background: #10233b; color: #17283b; font: 18px system-ui, sans-serif; }
+    main { box-sizing: border-box; width: min(94vw, 800px); margin: 3vh auto; padding: clamp(16px, 3vh, 36px); border-radius: 18px; background: white; text-align: center; }
+    h1 { margin: 0; font-size: clamp(2rem, 6vw, 4rem); }
+    p { margin: .5em 0; }
+    strong { font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: .12em; margin-left: .3em; }
+    img { display: block; width: min(66vw, 39vh, 340px); height: auto; margin: auto; }
+    a { color: #08695f; overflow-wrap: anywhere; }
+    #shortLink { display: block; font-weight: 650; }
+    #download { display: inline-block; margin-top: 14px; padding: 8px 14px; background: #08695f; color: white; border-radius: 8px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Join Session</h1>
+    <p id="status" role="status">Starting the session…</p>
+    <section id="details" hidden>
+      <p>Scan the QR code or open the link, then enter your Student ID.</p>
+      <p>PIN <strong id="pinValue"></strong></p>
+      <img id="qr" width="340" height="340" alt="QR code for joining the session">
+      <a id="shortLink" target="_blank" rel="noopener"></a>
+      <a id="download">Download QR code</a>
+    </section>
+  </main>
+  <script>
+    const pin = new URLSearchParams(location.search).get("pin");
+    if (/^[0-9]{4}$/.test(pin)) {
+      const link = new URL("/j/" + pin, location.origin);
+      const qrUrl = link.href + "/qr.svg";
+      document.getElementById("pinValue").textContent = pin;
+      document.getElementById("qr").src = qrUrl;
+      const shortLink = document.getElementById("shortLink");
+      shortLink.href = link.href;
+      shortLink.textContent = link.host + link.pathname;
+      const download = document.getElementById("download");
+      download.href = qrUrl;
+      download.download = "reh-join-" + pin + ".svg";
+      document.getElementById("details").hidden = false;
+      document.getElementById("status").hidden = true;
+    }
+  </script>
+</body>
+</html>
