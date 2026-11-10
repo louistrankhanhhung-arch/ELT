@@ -644,7 +644,9 @@
       taskStageStatus.textContent = "";
       reviewTask.setAttribute("aria-pressed", "false");
       reviewTask.textContent = "Show answer key";
-      const questions = task?.questions || [];
+      const quiz = task?.quiz || block.quiz;
+      const questions = task?.questions || quiz?.questions ||
+        (Array.isArray(quiz?.options) ? [{ ...quiz, prompt: task.prompt }] : []);
       reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option));
       if (!task) return;
       const heading = document.createElement("h2");
