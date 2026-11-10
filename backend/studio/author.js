@@ -300,6 +300,7 @@ function render() {
     byId("elementInspector").replaceChildren();
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
     renderMaterialEditor(fields, block, 12);
+    if (block.kind === "writing") renderWritingRubric(fields, block);
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
   if (isTextAssessment(block.kind)) renderTextQuestions(fields, block);
@@ -327,6 +328,7 @@ function renderPageTasks(fields, block) {
       value => { task.learning_target_id = value.trim() || null; }, null, false, true);
     field(group, "Task prompt", task.prompt, value => { task.prompt = value; }, null, true);
     renderMaterialEditor(group, task, 12);
+    if (task.kind === "writing") renderWritingRubric(group, task);
     if (task.kind === "multiple_choice") renderQuiz(group, task);
     if (isTextAssessment(task.kind)) renderTextQuestions(group, task);
     if (isOrdering(task.kind)) renderOrderingQuestions(group, task);
@@ -390,6 +392,55 @@ function renderTextQuestions(parent, task) {
     dirty();
     render();
   });
+}
+
+function renderWritingRubric(parent, task) {
+  const panel = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.textContent = "AI Writing rubric";
+  panel.append(summary);
+  const rubric = task.writing_rubric;
+  if (!rubric) {
+    button(panel, "Add rubric", () => {
+      task.writing_rubric = {
+        criteria: [{id: "task_response", label: "Task response", max_score: 4,
+          description: "4: all parts answered clearly; 3: mostly complete; 2: partly complete; 1: minimal relevant response; 0: absent or off-topic."}],
+        difficulties: [{id: "missing_part", label: "Missing task part",
+          description: "One or more required parts of the prompt are unanswered."}]
+      };
+      dirty();
+      render();
+    });
+  } else {
+    for (const [key, title] of [["criteria", "Scoring criteria"], ["difficulties", "Difficulties to track"]]) {
+      const list = document.createElement("fieldset");
+      const legend = document.createElement("legend");
+      legend.textContent = title;
+      list.append(legend);
+      const items = rubric[key] ||= [];
+      items.forEach((item, index) => {
+        const group = document.createElement("div");
+        field(group, "ID", item.id, value => { item.id = value.trim(); });
+        field(group, "Label", item.label, value => { item.label = value; });
+        field(group, "Scoring rules or observable evidence", item.description, value => { item.description = value; }, null, true);
+        if (key === "criteria") field(group, "Max points", item.max_score,
+          value => { item.max_score = Number(value); }, ["1","2","3","4","5","6","7","8","9","10"]);
+        button(group, "Remove " + (key === "criteria" ? "criterion" : "difficulty"), () => {
+          rubric[key].splice(index, 1); dirty(); render();
+        });
+        list.append(group);
+      });
+      if (rubric[key].length < (key === "criteria" ? 6 : 12)) button(list, key === "criteria" ? "Add criterion" : "Add difficulty", () => {
+        rubric[key].push({id: "", label: "", description: "", ...(key === "criteria" ? {max_score: 4} : {})});
+        dirty();
+        render();
+      });
+      panel.append(list);
+    }
+    button(panel, "Remove rubric", () => { delete task.writing_rubric; dirty(); render(); });
+  }
+  panel.open = !!rubric;
+  parent.append(panel);
 }
 
 function renderMaterialEditor(parent, owner, limit, title = "Input materials", key = "materials") {
@@ -572,6 +623,7 @@ byId("save").onclick = async () => {
     const blocks = lesson.blocks.map(block => {
       const copy = { ...block };
       if (copy.kind !== "multiple_choice") delete copy.quiz;
+      if (copy.kind !== "writing") delete copy.writing_rubric;
       if (!isTextAssessment(copy.kind)) delete copy.text_questions;
       if (!isOrdering(copy.kind)) delete copy.ordering_questions;
       if (copy.kind !== "page") delete copy.tasks;

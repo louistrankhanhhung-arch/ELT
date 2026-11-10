@@ -166,6 +166,9 @@
       #publishedScores { flex: 0 0 auto; max-height: 42vh; overflow: auto; padding: 10px 16px; background: white; border-bottom: 1px solid #CCDCC8; }
     #publishedScores article { max-width: 850px; margin-inline: auto; }
     .score-header, .score-question { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    #publishedScores:has(.writing-score-feedback) { flex:1 1 0; min-height:0; max-height:none; }
+    body:has(#publishedScores:not([hidden]) .writing-score-feedback) :is(#writingPanel, .runtime) { display:none; }
+    .writing-score-feedback { padding: 12px; background: #E9F2E3; border-radius: 8px; }
     .score-header h2, #publishedScores article > p { margin: 4px 0 10px; }
     .score-points { background: #E9F2E3; color: #286340; padding: 7px 14px; border-radius: 10px; font-size: 1.35rem; }
     .score-toggle { padding: 8px 12px; background: white; border: 1px solid #A5BDA0; border-radius: 8px; color: #18352A; cursor: pointer; }
@@ -260,7 +263,7 @@
   </header>
   <label id="pageTaskPicker" hidden style="padding:8px 12px">Your tasks <select id="pageTaskSelect" style="max-width:100%"></select></label>
   <section id="dialogueCard" hidden aria-label="Dialogue card"></section>
-  <section id="publishedScores" hidden aria-label="Quiz results"></section>
+  <section id="publishedScores" hidden aria-label="Task results"></section>
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
@@ -567,6 +570,14 @@
           points.textContent = `${score.score} / ${score.max_score}`;
           header.append(title, points);
           const note = document.createElement("p");
+          if (score.feedback) {
+            note.textContent = "Writing feedback";
+            const feedback = document.createElement("p");
+            feedback.className = "writing-score-feedback";
+            feedback.textContent = score.feedback;
+            card.append(header, note, feedback);
+            return card;
+          }
           const items = score.items || [];
           const mistakes = items.filter(item => !item.is_correct).length;
           note.textContent = !items.length ? "Your score has been published."

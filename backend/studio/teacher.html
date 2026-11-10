@@ -557,7 +557,7 @@
 
   <script src="./config.js?v=3"></script>
 <script src="task-materials.js?v=1"></script>
-  <script src="classroom-report.js?v=mastery-1"></script>
+  <script src="classroom-report.js?v=writing-rubric-1"></script>
   <script src="catalog-options.js" defer></script>
   <script>
     const BASE_URL =
@@ -1126,6 +1126,8 @@
             if (!response.ok) throw new Error("Could not load the report.");
             return response.json();
           },
+          gradeWriting: (task, row) => writingRequest(`/sessions/${pin}/tasks/${task.task_id}/grade-writing`, { student_id: row.student_id }),
+          approveWriting: (task, row, scores, feedback) => writingRequest(`/sessions/${pin}/tasks/${task.task_id}/approve-writing`, { student_id: row.student_id, scores, feedback }),
           publish: task => writingRequest(`/sessions/${pin}/tasks/${task.task_id}/publish-scores`, {}),
           audio: async (task, row) => {
             const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/${task.task_id}/speaking/${row.student_id}`, {

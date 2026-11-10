@@ -119,6 +119,50 @@
       } else {
         container.append(node("p", row.response));
       }
+      if (row.ai_feedback) {
+        const feedback = row.ai_feedback;
+        container.append(node("p", feedback.feedback));
+        const scores = node("ul");
+        for (const criterion of feedback.criteria) {
+          scores.append(node("li", `${criterion.label} · ${criterion.score}/${criterion.max_score}${criterion.evidence ? " · “" + criterion.evidence + "”" : ""}`));
+        }
+        container.append(scores);
+        if (feedback.difficulties.length) container.append(node("p", feedback.difficulties.map(item => item.label).join(" · ")));
+        if (row.ai_state === "needs_review") {
+          const review = node("fieldset");
+          review.append(node("legend", "Review suggested feedback"));
+          const scores = {};
+          for (const criterion of feedback.criteria) {
+            const label = node("label", criterion.label + " ");
+            const input = node("input");
+            input.type = "number"; input.min = 0; input.max = criterion.max_score; input.value = criterion.score;
+            input.required = true;
+            scores[criterion.id] = input;
+            label.append(input);
+            review.append(label);
+          }
+          const edit = node("textarea");
+          edit.value = feedback.feedback; edit.maxLength = 300; edit.rows = 3;
+          edit.setAttribute("aria-label", "Feedback");
+          edit.style.cssText = "display:block;width:100%;margin:8px 0;font:inherit";
+          review.append(edit);
+          const approve = control("Approve score", async () => {
+            if (!edit.value.trim() || Object.values(scores).some(input => !input.value || !input.checkValidity())) {
+              status.textContent = "Enter valid scores and feedback before approving.";
+              return;
+            }
+            approve.disabled = true;
+            try {
+              const values = Object.fromEntries(Object.entries(scores).map(([id, input]) => [id, Number(input.value)]));
+              await actions.approveWriting(task, row, values, edit.value);
+              await refresh();
+            }
+            catch (error) { status.textContent = error.message; approve.disabled = false; }
+          });
+          review.append(approve);
+          container.append(review);
+        }
+      }
       const show = control("Show on screen", () => actions.show(task, row));
       show.disabled = task.type === "speaking" && !row.audio_type;
       container.append(show);
@@ -143,6 +187,28 @@
       panel.append(node("strong", `${percent}% reached mastery`), meter,
         node("p", `${mastered}/${graded.length} graded students scored at least 80% · Average score ${average}% · ${task.submissions.length}/${roster.length} submitted`));
 
+      if (task.writing_rubric) {
+        const difficulties = new Map();
+        for (const row of graded) for (const item of row.ai_feedback?.difficulties || []) {
+          if (!difficulties.has(item.id)) difficulties.set(item.id, {label: item.label, names: []});
+          difficulties.get(item.id).names.push(row.student_name);
+        }
+        panel.append(node("h3", "Most common difficulties"));
+        const list = node("div", null, "missed-questions");
+        for (const [id, item] of [...difficulties].sort((a, b) => b[1].names.length - a[1].names.length).slice(0, 3)) {
+          const detail = node("details");
+          detail.dataset.key = task.task_id + ":difficulty:" + id;
+          detail.append(node("summary", item.label + " · " + item.names.length + "/" + graded.length));
+          const bar = node("progress");
+          bar.max = graded.length; bar.value = item.names.length;
+          bar.className = "missed-bar"; bar.setAttribute("aria-label", item.label);
+          const names = node("ul", null, "missed-names");
+          for (const name of item.names) names.append(node("li", name));
+          detail.append(bar, names); list.append(detail);
+        }
+        panel.append(list.childElementCount ? list : node("p", "No rubric difficulties detected."));
+        return panel;
+      }
       const mistakes = task.questions.map((question, index) => {
         const checked = graded.filter(row => typeof row.items?.[index]?.is_correct === "boolean");
         const names = checked.filter(row => row.items[index].is_correct === false).map(row => row.student_name);
@@ -174,6 +240,34 @@
       return panel;
     }
 
+    let grading = false;
+    async function gradeSubmissions(task) {
+      if (grading) return;
+      const candidates = task.submissions.filter(row => !["ready", "needs_review"].includes(row.ai_state));
+      if (!candidates.length) return;
+      grading = true;
+      const controls = [...entries.querySelectorAll("[data-grade-button]")];
+      controls.forEach(button => { button.disabled = true; });
+      let attempted = 0;
+      let firstError;
+      try {
+        status.textContent = "Grading 0/" + candidates.length + "…";
+        for (let start = 0; start < candidates.length && !popup.closed; start += 3) {
+          const results = await Promise.allSettled(candidates.slice(start, start + 3).map(row => actions.gradeWriting(task, row)));
+          attempted += results.length;
+          firstError ||= results.find(result => result.status === "rejected")?.reason;
+          status.textContent = `Grading ${attempted}/${candidates.length}…`;
+          if (firstError?.message.includes("not configured")) break;
+        }
+      } finally {
+        grading = false;
+        if (!popup.closed) {
+          await refresh();
+          if (firstError) status.textContent = firstError.message;
+        }
+      }
+    }
+
     function render(result) {
       const wasOpen = new Set([...entries.querySelectorAll("details[open]")].map(item => item.dataset.key));
       const initial = !entries.querySelector(".task");
@@ -186,11 +280,21 @@
         const roster = task.recipient_ids ? result.students.filter(student => task.recipient_ids.includes(student.student_id)) : result.students;
         group.append(node("summary", `${window.classroomReportTitle(task, index)} · ${submitted.size}/${roster.length} submitted`),
           node("p", task.prompt));
-        if (task.questions?.length) {
+        if (task.questions?.length || task.writing_rubric) {
           const mastery = renderMastery(task, roster);
           for (const detail of mastery.querySelectorAll("details")) detail.open = wasOpen.has(detail.dataset.key);
           group.append(mastery);
-          const publish = control(task.scores_published ? "Scores published" : "Publish scores", async () => {
+          const ai = !!task.writing_rubric;
+          const ready = task.submissions.filter(row => row.ai_state === "ready").length;
+          const published = ai ? !!submitted.size && task.submissions.every(row => row.ai_published) : task.scores_published;
+          if (ai) {
+            const grade = control("Grade Writing", () => void gradeSubmissions(task));
+            grade.dataset.gradeButton = "";
+            grade.disabled = grading || !task.submissions.some(row => !["ready", "needs_review"].includes(row.ai_state));
+            const review = task.submissions.filter(row => row.ai_state === "needs_review").length;
+            group.append(node("p", `${ready}/${submitted.size} graded · ${review} need review`), grade);
+          }
+          const publish = control(published ? "Scores published" : "Publish scores", async () => {
             publish.disabled = true;
             try {
               await actions.publish(task);
@@ -200,13 +304,15 @@
               publish.disabled = false;
             }
           });
-          publish.disabled = task.scores_published || !submitted.size;
+          publish.disabled = published || !submitted.size || (ai && ready !== submitted.size);
           group.append(publish);
         }
         for (const student of roster) {
           const row = submitted.get(student.student_id);
           const badge = !row ? node("span", "Awaiting submission", "badge pending")
-            : node("span", row.score == null ? "Completed" : `${row.score} / ${row.max_score}`, "badge");
+            : node("span", row.score != null ? `${row.score} / ${row.max_score}` : task.writing_rubric
+              ? ({grading: "Grading", needs_review: "Needs review", failed: "Retry grading"})[row.ai_state] || "Awaiting grading"
+              : "Completed", "badge");
           const heading = node("span", null, "student-heading");
           heading.append(node("span", student.student_name), badge);
           if (!row) {
