@@ -4,6 +4,8 @@ const api = window.ELT_CONFIG.API_BASE;
 const phases = ["diagnosis", "teach", "practice", "retrieve", "production", "verify"];
 let lesson = null;
 let selected = 0;
+let selectedElement = null;
+let revealPreview = -1;
 const authorParams = new URLSearchParams(location.search);
 let revision = authorParams.get("revision");
 const catalogueId = authorParams.get("catalogue");
@@ -37,6 +39,8 @@ function loadDraft(value, parent = null) {
   lesson = value;
   revision = parent;
   selected = 0;
+  selectedElement = null;
+  revealPreview = -1;
   byId("title").value = lesson.title;
   byId("objective").value = lesson.objective || "";
   byId("editor").hidden = false;
@@ -65,34 +69,163 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   parent.append(label);
 }
 
+function positionElement(item, element) {
+  Object.assign(item.style, {
+    left: element.x + "%", top: element.y + "%",
+    width: element.width + "%", height: element.height + "%"
+  });
+}
+
+function drawElement(element, thumbnail = false) {
+  const item = document.createElement("div");
+  item.className = "preview-element " + (element.kind === "shape" ? element.shape : element.kind);
+  positionElement(item, element);
+  if (element.kind === "image" && /^https:\/\//.test(element.url || "")) {
+    const image = document.createElement("img");
+    image.src = element.url;
+    image.alt = element.text || "";
+    image.draggable = false;
+    if (thumbnail) image.loading = "lazy";
+    item.append(image);
+  } else item.textContent = element.kind === "audio" ? "▶ " + (element.text || "Listen") : element.text || "";
+  return item;
+}
+
+function updateGeometry(element, next) {
+  const round = value => Math.round(value * 10) / 10;
+  element.x = Math.min(99, Math.max(0, round(next.x)));
+  element.y = Math.min(99, Math.max(0, round(next.y)));
+  element.width = Math.min(100 - element.x, Math.max(1, round(next.width)));
+  element.height = Math.min(100 - element.y, Math.max(1, round(next.height)));
+}
+
+function bindCanvasPointer(item, element, canvas) {
+  item.addEventListener("pointerdown", event => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    item.focus({preventScroll:true});
+    selectedElement = element;
+    for (const other of canvas.children) {
+      other.classList.toggle("is-selected", other === item);
+      other.setAttribute("aria-pressed", String(other === item));
+    }
+    const resize = event.target.classList.contains("resize-handle");
+    const bounds = canvas.getBoundingClientRect();
+    const start = {x:element.x, y:element.y, width:element.width, height:element.height};
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const pointer = event.pointerId;
+    item.setPointerCapture(pointer);
+    function move(drag) {
+      if (drag.pointerId !== pointer) return;
+      const dx = (drag.clientX - startX) / bounds.width * 100;
+      const dy = (drag.clientY - startY) / bounds.height * 100;
+      updateGeometry(element, resize ? {...start,width:start.width+dx,height:start.height+dy} : {
+        ...start, x:Math.min(100-start.width,start.x+dx), y:Math.min(100-start.height,start.y+dy)
+      });
+      positionElement(item, element);
+    }
+    function finish(drag) {
+      if (drag.pointerId !== pointer) return;
+      item.removeEventListener("pointermove", move);
+      item.removeEventListener("pointerup", finish);
+      item.removeEventListener("pointercancel", finish);
+      if (Object.keys(start).some(key => start[key] !== element[key])) dirty();
+      renderInspector();
+      refreshThumbnail();
+    }
+    item.addEventListener("pointermove", move);
+    item.addEventListener("pointerup", finish);
+    item.addEventListener("pointercancel", finish);
+  });
+  item.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectedElement = element;
+      renderInspector();
+      for (const other of canvas.children) {
+        other.classList.toggle("is-selected", other === item);
+        other.setAttribute("aria-pressed", String(other === item));
+      }
+      return;
+    }
+    const delta = {ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[event.key];
+    if (!delta) return;
+    event.preventDefault();
+    selectedElement = element;
+    const [dx,dy] = delta;
+    updateGeometry(element, event.shiftKey
+      ? {...element,width:element.width+dx,height:element.height+dy}
+      : {...element,x:Math.min(100-element.width,element.x+dx),y:Math.min(100-element.height,element.y+dy)});
+    positionElement(item, element);
+    for (const other of canvas.children) {
+      other.classList.toggle("is-selected", other === item);
+      other.setAttribute("aria-pressed", String(other === item));
+    }
+    dirty();
+    renderInspector();
+    refreshThumbnail();
+  });
+}
+
+function refreshThumbnail() {
+  const block = lesson.blocks[selected];
+  const active = byId("blocks").children[selected];
+  if (!active) return;
+  active.querySelector(".block-label").textContent = (selected + 1) + ". " + block.phase + " · " + block.title;
+  fillThumbnail(active.querySelector(".thumbnail"), block);
+}
+
+function fillThumbnail(thumb, block) {
+  thumb.replaceChildren();
+  if (block.kind === "slide" && block.elements?.length) {
+    for (const element of block.elements) {
+      if (element.appear > 0) continue;
+      thumb.append(drawElement(element, true));
+    }
+  } else {
+    thumb.textContent = block.kind === "slide" ? block.title : block.kind.replace("_", " ");
+  }
+}
+
 function renderPreview() {
   const block = lesson.blocks[selected];
-  byId("preview").textContent = [
-    block.title,
-    block.kind === "slide" ? block.body : block.prompt,
-    block.media_url || "",
-    ...(block.quiz?.questions || []).map((question, index) =>
-      (index + 1) + ". " + question.prompt + "\n" + question.options.join(" · "))
-  ].filter(Boolean).join("\n\n");
   const canvas = byId("elementPreview");
-  canvas.hidden = block.kind !== "slide" || !block.elements?.length;
+  const isSlide = block.kind === "slide";
+  const elements = isSlide ? block.elements || [] : [];
+  canvas.hidden = !isSlide;
+  byId("canvasTools").hidden = !isSlide;
+  byId("preview").hidden = isSlide && Boolean(elements.length);
+  byId("preview").textContent = [
+    block.title, isSlide ? block.body : block.prompt, block.media_url || "",
+    ...(block.quiz?.questions || []).map((q, index) => (index + 1) + ". " + q.prompt + "\n" + q.options.join(" · "))
+  ].filter(Boolean).join("\n\n");
   canvas.replaceChildren();
-  if (!canvas.hidden) {
-    for (const element of block.elements) {
-      const item = document.createElement("div");
-      item.className = "preview-element " + (element.kind === "shape" ? element.shape : element.kind);
-      Object.assign(item.style, {left:element.x+"%", top:element.y+"%", width:element.width+"%", height:element.height+"%"});
-      if (element.kind === "image" && /^https:\/\//.test(element.url || "")) {
-        const image = document.createElement("img");
-        image.src = element.url;
-        image.alt = element.text || "";
-        item.append(image);
-      } else item.textContent = element.kind === "audio" ? "▶ " + (element.text || "Listen") : element.text || "";
+  if (isSlide) {
+    const reveal = byId("previewReveal");
+    const steps = [...new Set([0, ...elements.flatMap(element => [element.appear, element.disappear])
+      .filter(Number.isInteger)])].sort((a,b) => a-b);
+    if (revealPreview !== -1 && !steps.includes(revealPreview)) revealPreview = -1;
+    reveal.replaceChildren(new Option("Show all layers", "-1"), ...steps.map(step => new Option("Reveal " + step, step)));
+    reveal.value = String(revealPreview);
+    for (const [index, element] of elements.entries()) {
+      if (revealPreview >= 0 && (revealPreview < (element.appear || 0)
+          || (element.disappear != null && revealPreview >= element.disappear))) continue;
+      const item = drawElement(element);
+      item.tabIndex = 0;
+      item.setAttribute("role", "button");
+      item.setAttribute("aria-label", (index + 1) + ". " + element.kind + (element.text ? " · " + element.text : ""));
+      item.setAttribute("aria-pressed", String(selectedElement === element));
+      item.classList.toggle("is-selected", selectedElement === element);
+      const handle = document.createElement("span");
+      handle.className = "resize-handle";
+      handle.setAttribute("aria-hidden", "true");
+      item.append(handle);
+      bindCanvasPointer(item, element, canvas);
       canvas.append(item);
     }
   }
-  const active = byId("blocks").children[selected];
-  if (active) active.textContent = (selected + 1) + ". " + block.phase + " · " + block.title;
+  refreshThumbnail();
 }
 
 function button(parent, label, action) {
@@ -107,9 +240,18 @@ function render() {
   const list = byId("blocks");
   list.replaceChildren();
   lesson.blocks.forEach((block, index) => {
-    button(list, (index + 1) + ". " + block.phase + " · " + block.title, () => { selected = index; render(); });
-    list.lastChild.className = "block";
-    list.lastChild.setAttribute("aria-current", String(index === selected));
+    button(list, "", () => { selected = index; selectedElement = null; revealPreview = -1; render(); });
+    const item = list.lastChild;
+    item.className = "block";
+    item.setAttribute("aria-current", String(index === selected));
+    const thumb = document.createElement("span");
+    thumb.className = "thumbnail";
+    thumb.setAttribute("aria-hidden", "true");
+    fillThumbnail(thumb, block);
+    const label = document.createElement("span");
+    label.className = "block-label";
+    label.textContent = (index + 1) + ". " + block.phase + " · " + block.title;
+    item.append(thumb, label);
   });
   const block = lesson.blocks[selected];
   const fields = byId("fields");
@@ -124,7 +266,9 @@ function render() {
     field(fields, "Media type", block.media_type, value => { block.media_type = value || null; }, ["", "image", "audio", "video"]);
     field(fields, "Media URL (direct HTTPS or YouTube for video)", block.media_url, value => { block.media_url = value.trim() || null; });
     renderElements(fields, block);
+    renderInspector();
   } else {
+    byId("elementInspector").replaceChildren();
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
@@ -188,6 +332,8 @@ function move(offset) {
 function add(kind) {
   lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind, title: kind === "slide" ? "New slide" : "New task" });
   selected = lesson.blocks.length - 1;
+  selectedElement = null;
+  revealPreview = -1;
   dirty();
   render();
 }
@@ -197,6 +343,8 @@ byId("down").onclick = () => move(1);
 byId("remove").onclick = () => {
   if (lesson.blocks.length < 2) return;
   lesson.blocks.splice(selected, 1);
+  selectedElement = null;
+  revealPreview = -1;
   selected = Math.min(selected, lesson.blocks.length - 1);
   dirty();
   render();
@@ -250,43 +398,78 @@ byId("save").onclick = async () => {
 };
 
 
-function renderElements(fields, block) {
+
+function addCanvasElement(kind) {
+  const block = lesson?.blocks[selected];
+  if (!block || block.kind !== "slide") return;
   const elements = block.elements ||= [];
-  const section = document.createElement("details");
-  section.open = elements.length > 0;
-  const summary = document.createElement("summary");
-  summary.textContent = "Slide elements (" + elements.length + ")";
-  section.append(summary);
-  elements.forEach((element, index) => {
-    const item = document.createElement("details");
-    const title = document.createElement("summary");
-    title.textContent = (index + 1) + ". " + element.kind + (element.text ? " · " + element.text : "");
-    item.append(title);
-    field(item, "Element type", element.kind, value => {
-      element.kind = value;
-      if (value !== "image" && value !== "audio") delete element.url;
-      render();
-    }, ["text", "image", "audio", "shape", "icon"]);
-    field(item, "Text or accessible label", element.text, value => { element.text = value; });
-    if (element.kind === "shape") field(item, "Shape", element.shape || "rectangle",
-      value => { element.shape = value; }, ["rectangle", "circle", "arrow"]);
-    if (element.kind === "image" || element.kind === "audio") field(item, "Direct HTTPS URL", element.url,
-      value => { element.url = value.trim(); });
-    for (const [key, label] of [["x","Left (%)"],["y","Top (%)"],["width","Width (%)"],["height","Height (%)"],
-      ["appear","Appear on reveal (0 = visible initially)"],["disappear","Disappear on reveal (blank = stay visible)"]]) {
-      field(item, label, element[key] ?? (key === "appear" ? 0 : ""), value => {
-        element[key] = key === "disappear" && value.trim() === "" ? null : Number(value);
-      });
-    }
-    button(item, "Remove element", () => { elements.splice(index, 1); dirty(); render(); });
-    section.append(item);
-  });
-  button(section, "Add element", () => {
-    if (elements.length >= 60) return;
-    elements.push({kind:"text",text:"New element",x:5,y:5,width:35,height:15,appear:0});
+  if (elements.length >= 60) return status("A slide can contain up to 60 elements.");
+  const text = {text:"New text", image:"Image", audio:"Listen", shape:"", icon:"★"}[kind];
+  selectedElement = {kind,text,x:10,y:10,width:30,height:16,appear:0};
+  elements.push(selectedElement);
+  revealPreview = -1;
+  dirty();
+  render();
+}
+for (const control of document.querySelectorAll("[data-add-element]")) {
+  control.onclick = () => addCanvasElement(control.dataset.addElement);
+}
+byId("previewReveal").onchange = () => {
+  revealPreview = Number(byId("previewReveal").value);
+  renderPreview();
+};
+
+function renderInspector() {
+  const panel = byId("elementInspector");
+  panel.replaceChildren();
+  const block = lesson.blocks[selected];
+  const elements = block.elements || [];
+  if (!elements.length) return;
+  const heading = document.createElement("h3");
+  heading.textContent = "Element properties";
+  panel.append(heading);
+  const layer = document.createElement("select");
+  layer.setAttribute("aria-label", "Select slide element");
+  layer.add(new Option("Select an element", ""));
+  elements.forEach((element,index) => layer.add(new Option(
+    (index + 1) + ". " + element.kind + (element.text ? " · " + element.text : ""), String(index))));
+  layer.value = elements.includes(selectedElement) ? String(elements.indexOf(selectedElement)) : "";
+  layer.onchange = () => {
+    selectedElement = layer.value === "" ? null : elements[Number(layer.value)];
+    revealPreview = -1;
+    renderInspector();
+    renderPreview();
+  };
+  panel.append(layer);
+  const element = selectedElement;
+  if (!elements.includes(element)) return;
+  field(panel, "Text or accessible label", element.text, value => { element.text = value; });
+  if (element.kind === "shape") field(panel, "Shape", element.shape || "rectangle",
+    value => { element.shape = value; }, ["rectangle","circle","arrow"]);
+  if (element.kind === "image" || element.kind === "audio") field(panel, "Direct HTTPS URL", element.url,
+    value => { element.url = value.trim(); });
+  for (const [key,label] of [["x","Left (%)"],["y","Top (%)"],["width","Width (%)"],["height","Height (%)"],
+    ["appear","Appear on reveal"],["disappear","Disappear on reveal (optional)"]]) {
+    field(panel,label,element[key] ?? (key === "appear" ? 0 : ""),value => {
+      element[key] = key === "disappear" && !value.trim() ? null : Number(value);
+    });
+  }
+  const index = elements.indexOf(element);
+  function moveLayer(delta) {
+    const next = index + delta;
+    if (next < 0 || next >= elements.length) return;
+    [elements[index],elements[next]] = [elements[next],elements[index]];
     dirty();
     render();
-  });
+  }
+  button(panel,"Send backward",() => moveLayer(-1));
+  panel.lastChild.disabled = index === 0;
+  button(panel,"Bring forward",() => moveLayer(1));
+  panel.lastChild.disabled = index === elements.length - 1;
+  button(panel,"Remove element",() => { elements.splice(index,1); selectedElement = null; dirty(); render(); });
+}
+
+function renderElements(fields, block) {
   const importPanel = document.createElement("details");
   const importTitle = document.createElement("summary");
   importTitle.textContent = "Import element layout JSON";
@@ -303,6 +486,8 @@ function renderElements(fields, block) {
         throw new Error("Use an array of up to 60 slide elements.");
       }
       block.elements = layout;
+      selectedElement = null;
+      revealPreview = -1;
       dirty();
       render();
       status("Element layout applied. Save a version to keep it.");
@@ -310,6 +495,5 @@ function renderElements(fields, block) {
       status(error.message);
     }
   });
-  section.append(importPanel);
-  fields.append(section);
+  fields.append(importPanel);
 }

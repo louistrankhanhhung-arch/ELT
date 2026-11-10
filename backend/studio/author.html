@@ -5,23 +5,56 @@
 <title>REH Lesson Studio</title>
 <style>
 * { box-sizing:border-box } body { margin:0; font:16px system-ui; background:#f3f6fa; color:#172338 }
-header,main { max-width:1100px; margin:auto; padding:16px } h1,h2 { margin:0 0 12px }
+header,main { max-width:1600px; margin:auto; padding:16px } h1,h2 { margin:0 0 12px }
 section,aside { background:white; border:1px solid #dbe3ed; border-radius:10px; padding:16px; margin-bottom:12px }
-.grid { display:grid; grid-template-columns:minmax(200px,1fr) minmax(0,2fr); gap:12px }
+.grid { display:grid; grid-template-columns:minmax(150px,200px) minmax(0,1fr) minmax(240px,320px); gap:12px; align-items:start }
+.grid > * { min-width:0 } .grid > aside { max-height:75vh; overflow:auto }
 label { display:block; margin:8px 0 } input:not([type=checkbox]),select,textarea { display:block; width:100%; padding:8px; font:inherit; border:1px solid #aab9ca; border-radius:5px }
 button,.action { display:inline-block; background:#2459a9; color:white; border:0; border-radius:6px; padding:8px 12px; font:inherit; text-decoration:none; cursor:pointer; margin:4px 4px 4px 0 }
 [hidden] { display:none!important } button:disabled { opacity:.5; cursor:default } .block { width:100%; text-align:left; background:#e8eef8; color:#172338 }
 .block[aria-current=true] { background:#2459a9; color:white } pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit }
 fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
-@media(max-width:680px) { .grid { grid-template-columns:1fr } }
+@media(max-width:1050px) {
+  .grid { grid-template-columns:145px minmax(0,1fr) }
+  #inspector { grid-column:2 }
+}
+@media(max-width:680px) {
+  .grid { grid-template-columns:1fr }
+  .grid > aside { max-height:34vh }
+  #inspector { grid-column:auto }
+}
+.block { display:grid; grid-template-columns:1fr; gap:5px; font-size:.82rem }
+.thumbnail { display:grid; place-items:center; position:relative; width:100%; aspect-ratio:16/9; overflow:hidden;
+  border-radius:4px; background:#f3f7fd; color:#172338; container-type:inline-size; text-align:center; font-size:8px }
+.thumbnail .preview-element { font-size:3cqw }
+.thumbnail .preview-element.icon { font-size:6cqw }
+#canvasTools { display:flex; flex-wrap:wrap; align-items:end; gap:4px }
+#canvasTools button { padding:5px 8px; font-size:.85rem }
+#canvasTools label { margin:4px 0 4px auto; font-size:.85rem }
+#canvasTools select { padding:4px }
+#elementPreview { touch-action:none; user-select:none; border:1px solid #ccd8e9 }
+#elementPreview .preview-element { cursor:move; touch-action:none; white-space:pre-wrap }
+#elementPreview .preview-element.is-selected { outline:2px solid #2563eb; outline-offset:-2px }
+#elementPreview .preview-element:focus-visible { outline:2px solid #1d4ed8 }
+.resize-handle { display:none; position:absolute; right:0; bottom:0; width:min(18px,100%); height:min(18px,100%);
+  background:#2563eb; border:2px solid white; border-radius:3px; cursor:nwse-resize; touch-action:none }
+.is-selected .resize-handle { display:block }
+#elementInspector { border-bottom:1px solid #dbe3ed; margin-bottom:12px; padding-bottom:8px }
+#elementInspector:empty { display:none }
+#elementInspector h3 { margin:0 0 8px }
+#inspector label { font-size:.9rem }
+#inspector input,#inspector textarea,#inspector select { padding:5px }
+#fields { overflow-wrap:anywhere }
 #elementPreview { position:relative; width:100%; aspect-ratio:16/9; background:#eef5ff; container-type:inline-size; overflow:hidden }
 .preview-element { position:absolute; display:grid; place-items:center; text-align:center; overflow:hidden; font-size:2.5cqw }
 .preview-element img { width:100%; height:100%; object-fit:contain }
 .preview-element.icon { font-size:6cqw }
 .preview-element.audio { background:#2459a9;color:white;border-radius:5px }
 .preview-element.rectangle,.preview-element.circle,.preview-element.arrow {background:#d5e6ff;border:1px solid #7aa6dd}
-.preview-element.circle {border-radius:50%}
-.preview-element.arrow {clip-path:polygon(0 28%,68% 28%,68% 0,100% 50%,68% 100%,68% 72%,0 72%)}
+.preview-element.circle,.preview-element.arrow {background:transparent;border:0;isolation:isolate}
+.preview-element.circle::before,.preview-element.arrow::before {content:"";position:absolute;inset:0;background:#d5e6ff;z-index:-1}
+.preview-element.circle::before {border:1px solid #7aa6dd;border-radius:50%}
+.preview-element.arrow::before {clip-path:polygon(0 28%,68% 28%,68% 0,100% 50%,68% 100%,68% 72%,0 72%)}
 </style>
 <header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import a lesson from GPT Work, edit its blocks, and save a version for class.</p></header>
 <main>
@@ -43,9 +76,21 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
     <aside><h2>Lesson blocks</h2><div id="blocks"></div>
       <button id="addSlide">Add slide</button><button id="addTask">Add task</button>
     </aside>
-    <section><h2>Edit block</h2><div id="fields"></div>
-      <button id="up">Move up</button><button id="down">Move down</button><button id="remove">Remove block</button>
-      <h2>Preview</h2><pre id="preview"></pre><div id="elementPreview" hidden></div>
+    <section>
+      <h2>Slide canvas</h2>
+      <div id="canvasTools" hidden>
+        <button type="button" data-add-element="text">+ Text</button>
+        <button type="button" data-add-element="image">+ Image</button>
+        <button type="button" data-add-element="audio">+ Audio</button>
+        <button type="button" data-add-element="shape">+ Shape</button>
+        <button type="button" data-add-element="icon">+ Icon</button>
+        <label>Preview reveal <select id="previewReveal"></select></label>
+      </div>
+      <div id="elementPreview" aria-label="Editable slide canvas" hidden></div>
+      <pre id="preview"></pre>
+    </section>
+    <section id="inspector"><h2>Properties</h2><div id="elementInspector"></div><div id="fields"></div>
+      <button id="up">Move block up</button><button id="down">Move block down</button><button id="remove">Remove block</button>
     </section>
   </div>
   <button id="save">Save version</button>
@@ -55,6 +100,6 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 </section>
 </main>
 <script src="config.js"></script>
-<script src="author.js?v=slide-elements-1"></script>
+<script src="author.js?v=canvas-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>
