@@ -34,3 +34,27 @@ body.presentation-mode .task-actions { display: none; }
 #teacherNotes summary { cursor: pointer; font-weight: 650; }
 #teacherNotesText { max-height: 20vh; overflow: auto; margin-top: 6px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
 body.presentation-mode #teacherNotes { display: none; }
+
+.live-panel > summary { margin-bottom: 8px; }
+.live-panel #sessionBanner { margin: 8px 0; font-weight: 650; }
+.join-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.join-actions a { font-size: .85rem; padding: 6px 2px; }
+.live-panel > details { border: 1px solid var(--line); border-radius: 10px; margin: 8px 0; padding: 8px 10px; }
+.live-panel > details > summary { cursor: pointer; font-weight: 650; }
+.live-panel #writingPanel { padding: 8px 10px; }
+.live-panel #writingCount, .live-panel #studentCount { color: var(--muted); font-size: .85em; }
+.live-panel #pageAudience { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 5px; }
+#pageAudience li { background: #f2f6fa; border-radius: 7px; padding: 6px 8px; }
+#pageAudience small { display: block; color: var(--muted); margin-top: 2px; }
+#assignPage:not(:disabled) { background: var(--accent); color: white; }
+.label-tools { margin-top: 9px; border-top: 1px solid var(--line); padding-top: 8px; }
+.label-tools summary { cursor: pointer; font-size: .9rem; }
+#pageStudents { max-height: 150px; overflow: auto; margin: 6px 0; }
+#pageFeedback:empty, #writingFeedback:empty, #quickTaskFeedback:empty { display: none; }
+#quickTaskDialog { box-sizing: border-box; width: min(94vw, 580px); max-height: 90dvh; overflow: auto; padding: 18px; border: 1px solid var(--line); border-radius: 14px; color: var(--ink); }
+#quickTaskDialog::backdrop { background: #17233899; }
+#quickTaskDialog h2 { margin: 0 0 12px; }
+.quick-close { float: right; }
+#quickTaskDialog #writingAssignForm { display: grid; gap: 10px; }
+#quickTaskDialog #writingAssignForm > label { display: grid; gap: 4px; }
+#quickTaskDialog :is(textarea, input, select, fieldset) { box-sizing: border-box; max-width: 100%; min-width: 0; }
