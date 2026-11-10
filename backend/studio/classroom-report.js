@@ -128,9 +128,13 @@
         }
         container.append(scores);
         if (feedback.difficulties.length) container.append(node("p", feedback.difficulties.map(item => item.label).join(" · ")));
-        if (row.ai_state === "needs_review") {
+        if (!row.ai_published && ["needs_review", "ready"].includes(row.ai_state)) {
+          const needsReview = row.ai_state === "needs_review";
+          const editor = node("details");
+          editor.open = needsReview;
+          editor.append(node("summary", needsReview ? "Review suggested feedback" : "Edit score and feedback"));
           const review = node("fieldset");
-          review.append(node("legend", "Review suggested feedback"));
+          review.append(node("legend", "Rubric scores and feedback"));
           const scores = {};
           for (const criterion of feedback.criteria) {
             const label = node("label", criterion.label + " ");
@@ -146,7 +150,7 @@
           edit.setAttribute("aria-label", "Feedback");
           edit.style.cssText = "display:block;width:100%;margin:8px 0;font:inherit";
           review.append(edit);
-          const approve = control("Approve score", async () => {
+          const approve = control(needsReview ? "Approve score" : "Save changes", async () => {
             if (!edit.value.trim() || Object.values(scores).some(input => !input.value || !input.checkValidity())) {
               status.textContent = "Enter valid scores and feedback before approving.";
               return;
@@ -160,7 +164,8 @@
             catch (error) { status.textContent = error.message; approve.disabled = false; }
           });
           review.append(approve);
-          container.append(review);
+          editor.append(review);
+          container.append(editor);
         }
       }
       const show = control("Show on screen", () => actions.show(task, row));

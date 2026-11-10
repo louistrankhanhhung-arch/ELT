@@ -1990,11 +1990,11 @@ def approve_writing(pin: str, task_id: str, payload: WritingApproval):
         cur = conn.cursor()
         cur.execute(sql("""
             SELECT g.definition FROM writing_ai_grades g JOIN writing_tasks t ON t.task_id = g.task_id
-            WHERE t.pin = ? AND g.task_id = ? AND g.student_id = ? AND g.state = 'needs_review'
+            WHERE t.pin = ? AND g.task_id = ? AND g.student_id = ? AND g.state IN ('needs_review', 'ready') AND g.published = 0
         """), (pin, task_id, payload.student_id))
         row = cur.fetchone()
         if not row:
-            raise HTTPException(409, "This result is not awaiting review")
+            raise HTTPException(409, "Only unpublished Writing results can be edited")
         grade = json.loads(row["definition"])
         if set(payload.scores) != {item["id"] for item in grade["criteria"]} or not payload.feedback.strip():
             raise HTTPException(422, "Enter a score for every criterion and feedback")
@@ -2006,10 +2006,11 @@ def approve_writing(pin: str, task_id: str, payload: WritingApproval):
         grade.update(score=sum(payload.scores.values()), feedback=payload.feedback.strip(), needs_review=False)
         cur.execute(sql("""
             UPDATE writing_ai_grades SET state = 'ready', definition = ?, updated_at = ?
-            WHERE task_id = ? AND student_id = ? AND state = 'needs_review'
-        """), (json.dumps(grade), now_iso(), task_id, payload.student_id))
+            WHERE task_id = ? AND student_id = ? AND state IN ('needs_review', 'ready')
+              AND published = 0 AND definition = ?
+        """), (json.dumps(grade), now_iso(), task_id, payload.student_id, row["definition"]))
         if cur.rowcount != 1:
-            raise HTTPException(409, "This result has already been reviewed")
+            raise HTTPException(409, "This result changed or was published. Refresh the report.")
         conn.commit()
     return {"ok": True}
 
