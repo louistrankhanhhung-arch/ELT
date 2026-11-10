@@ -194,10 +194,10 @@ function renderSubmission(task, row, pin) {
       panel.append(play);
     } else panel.append(text("p", "Audio archived"));
   } else {
-    panel.append(text("pre", task.type === "multiple_choice" ? row.selected_option : row.response));
-    if (task.type === "multiple_choice") panel.append(text("p", "Score: " + row.score + "/" + row.max_score));
+    panel.append(text("pre", task.questions?.length ? row.selected_option : row.response));
+    if (task.questions?.length) panel.append(text("p", "Score: " + row.score + "/" + row.max_score));
   }
-  if (task.type !== "multiple_choice" && task.task_id !== "legacy-writing") panel.append(reviewForm(task, row, pin));
+  if (!task.questions?.length && task.task_id !== "legacy-writing") panel.append(reviewForm(task, row, pin));
   return panel;
 }
 function reviewForm(task,row,pin) {

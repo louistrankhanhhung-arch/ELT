@@ -202,6 +202,7 @@
       margin: 0 0 12px;
       padding: 8px 12px;
     }
+    #quizChoices input[data-typed-answer] { box-sizing: border-box; max-width: 100%; width: min(100%, 32rem); padding: 8px; font: inherit; }
     #quizChoices label {
       min-height: 36px;
       padding: 4px 0;
@@ -545,6 +546,8 @@
 
     function selectedQuizAnswers() {
       return [...quizChoices.querySelectorAll("fieldset")].map(group => {
+        const typed = group.querySelector("input[data-typed-answer]");
+        if (typed) return typed.value.trim() ? typed.value : null;
         const answer = group.querySelector("input:checked");
         return answer ? Number(answer.value) : null;
       });
@@ -565,12 +568,13 @@
         materials.replaceChildren();
         window.renderTaskMaterials(materials, task?.materials);
         const draft = writingDrafts.get(nextId) || "";
-        isQuiz = task?.type === "multiple_choice";
+        isQuiz = ["multiple_choice", "cloze", "short_answer"].includes(task?.type);
         isSpeaking = task?.type === "speaking";
-        document.getElementById("taskHeading").textContent = isSpeaking ? "Speaking" : isQuiz ? "Multiple choice" : "Writing";
+        document.getElementById("taskHeading").textContent = ({speaking: "Speaking", multiple_choice: "Multiple choice", cloze: "Cloze", short_answer: "Short answer"})[task?.type] || "Writing";
         writingInput.hidden = isQuiz;
         writingForm.elements.response.required = !isQuiz;
         quizChoices.hidden = !isQuiz;
+        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : "Enter your answers";
         quizChoices.querySelectorAll("fieldset").forEach(group => group.remove());
         if (isQuiz) {
           task.questions.forEach((question, questionIndex) => {
@@ -579,6 +583,19 @@
             legend.textContent = `${questionIndex + 1}. ${question.prompt}`;
             group.append(legend);
             window.renderTaskMaterials(group, question.materials);
+            if (task.type !== "multiple_choice") {
+              const label = document.createElement("label");
+              const answer = document.createElement("input");
+              answer.type = "text";
+              answer.dataset.typedAnswer = "";
+              answer.required = true;
+              answer.maxLength = 500;
+              answer.value = draft[questionIndex] || "";
+              label.append("Answer ", answer);
+              group.append(label);
+              quizChoices.append(group);
+              return;
+            }
             for (const index of optionOrder(task, question, questionIndex)) {
               const label = document.createElement("label");
               label.style.display = "block";
@@ -621,7 +638,7 @@
       const answers = isQuiz ? selectedQuizAnswers() : [];
       if (answers.some(answer => answer === null)) return;
       const responseText = isQuiz
-        ? JSON.stringify(answers.length === 1 ? answers[0] : answers)
+        ? JSON.stringify(answers.length === 1 && typeof answers[0] === "number" ? answers[0] : answers)
         : writingForm.elements.response.value;
       const taskId = writingTaskId;
       if (writingPanel.hidden || !taskId || submittedTasks.has(taskId) || !responseText.trim()) return;

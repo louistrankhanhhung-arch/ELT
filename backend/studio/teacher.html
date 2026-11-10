@@ -722,7 +722,7 @@
       const quiz = task?.quiz || block.quiz;
       const questions = assigned?.questions || task?.questions || quiz?.questions ||
         (Array.isArray(quiz?.options) ? [{ ...quiz, prompt: task.prompt }] : []);
-      reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option));
+      reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option) || question.accepted_answers?.length);
       if (!task) return;
       const heading = document.createElement("h2");
       heading.textContent = block.title || "Prepared task";
@@ -738,7 +738,7 @@
         questionText.textContent = question.prompt;
         const options = document.createElement("ol");
         options.type = "A";
-        question.options.forEach((option, index) => {
+        question.options?.forEach((option, index) => {
           const row = document.createElement("li");
           row.textContent = option;
           if (index === question.correct_option) {
@@ -752,7 +752,14 @@
         });
         item.append(questionText);
         window.renderTaskMaterials(item, question.materials);
-        item.append(options);
+        if (options.childElementCount) item.append(options);
+        if (question.accepted_answers?.length) {
+          const key = document.createElement("strong");
+          key.dataset.answerKey = "";
+          key.hidden = true;
+          key.textContent = "Accepted answers: " + question.accepted_answers.join(" / ");
+          item.append(key);
+        }
         list.append(item);
       }
       taskContent.append(list);
@@ -1037,10 +1044,10 @@
         const prompt = document.createElement("p");
         prompt.textContent = task.prompt;
         group.append(label, prompt);
-        if (task.type === "multiple_choice") {
+        if (task.questions?.length) {
           const key = document.createElement("p");
           key.textContent = task.questions.map((question, index) =>
-            `Q${index + 1}: ${question.options[question.correct_option]}`).join(" · ");
+            `Q${index + 1}: ${question.accepted_answers?.join(" / ") || question.options[question.correct_option]}`).join(" · ");
           const publish = document.createElement("button");
           publish.type = "button";
           publish.textContent = task.scores_published ? "Scores published" : "Publish scores";
@@ -1064,7 +1071,7 @@
           const name = document.createElement("summary");
           const answer = document.createElement("p");
           name.textContent = submission.student_name;
-          answer.textContent = task.type === "multiple_choice"
+          answer.textContent = task.questions?.length
             ? `${submission.selected_option} · Score: ${submission.score}/${submission.max_score}`
             : submission.response;
           answer.style.whiteSpace = "pre-wrap";

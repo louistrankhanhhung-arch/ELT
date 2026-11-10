@@ -41,7 +41,7 @@ function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
-        || !["slide", "page", "writing", "multiple_choice", "speaking"].includes(block.kind)
+        || !["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer"].includes(block.kind)
         || (block.elements != null && (!Array.isArray(block.elements) || !block.elements.every(validTable)))
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
@@ -280,7 +280,7 @@ function render() {
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
   field(fields, "Learning target ID (optional)", block.learning_target_id, value => { block.learning_target_id = value.trim() || null; }, null, false, true);
-  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "writing", "multiple_choice", "speaking"]);
+  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
   if (["slide", "page"].includes(block.kind)) {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
@@ -294,6 +294,7 @@ function render() {
     renderMaterialEditor(fields, block, 12);
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
+  if (isTextAssessment(block.kind)) renderTextQuestions(fields, block);
   if (block.kind === "page") renderPageTasks(fields, block);
   byId("up").disabled = selected === 0;
   byId("down").disabled = selected === lesson.blocks.length - 1;
@@ -310,19 +311,46 @@ function renderPageTasks(fields, block) {
     heading.textContent = "Task " + (index + 1);
     group.append(heading);
     field(group, "Task title", task.title, value => { task.title = value; });
-    field(group, "Task type", task.kind, value => { task.kind = value; if (value !== "multiple_choice") delete task.quiz; render(); },
-      ["writing", "multiple_choice", "speaking"]);
+    field(group, "Task type", task.kind, value => { task.kind = value; if (value !== "multiple_choice") delete task.quiz; if (!isTextAssessment(value)) delete task.text_questions; render(); },
+      ["writing", "multiple_choice", "speaking", "cloze", "short_answer"]);
     field(group, "Audience label (blank = everyone)", task.audience_label, value => { task.audience_label = value.trim() || null; });
     field(group, "Learning target ID (optional)", task.learning_target_id,
       value => { task.learning_target_id = value.trim() || null; }, null, false, true);
     field(group, "Task prompt", task.prompt, value => { task.prompt = value; }, null, true);
     renderMaterialEditor(group, task, 12);
     if (task.kind === "multiple_choice") renderQuiz(group, task);
+    if (isTextAssessment(task.kind)) renderTextQuestions(group, task);
     button(group, "Remove task", () => { tasks.splice(index, 1); dirty(); render(); });
     fields.append(group);
   });
   if (tasks.length < 20) button(fields, "Add task to Page", () => {
     tasks.push({id: crypto.randomUUID(), title: "New task", kind: "writing", prompt: ""});
+    dirty();
+    render();
+  });
+}
+
+function isTextAssessment(kind) { return kind === "cloze" || kind === "short_answer"; }
+
+function renderTextQuestions(parent, task) {
+  const items = task.text_questions ||= [];
+  const cloze = task.kind === "cloze";
+  items.forEach((item, index) => {
+    const group = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+    legend.textContent = (cloze ? "Blank " : "Question ") + (index + 1);
+    group.append(legend);
+    field(group, cloze ? "Sentence with one ___" : "Question", item.prompt, value => { item.prompt = value; });
+    field(group, "Accepted answers (one per line)", item.accepted_answers.join("\n"),
+      value => { item.accepted_answers = value.split(/\r?\n/).map(answer => answer.trim()).filter(Boolean); }, null, true);
+    field(group, "Learning target override (optional)", item.learning_target_id,
+      value => { item.learning_target_id = value.trim() || null; }, null, false, true);
+    renderMaterialEditor(group, item, 8);
+    button(group, "Remove item", () => { items.splice(index, 1); dirty(); render(); });
+    parent.append(group);
+  });
+  if (items.length < 30) button(parent, cloze ? "Add blank" : "Add question", () => {
+    items.push({prompt: "", accepted_answers: []});
     dirty();
     render();
   });
@@ -508,6 +536,7 @@ byId("save").onclick = async () => {
     const blocks = lesson.blocks.map(block => {
       const copy = { ...block };
       if (copy.kind !== "multiple_choice") delete copy.quiz;
+      if (!isTextAssessment(copy.kind)) delete copy.text_questions;
       if (copy.kind !== "page") delete copy.tasks;
       return copy;
     });

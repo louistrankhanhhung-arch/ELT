@@ -25,6 +25,7 @@ from urllib.parse import urlsplit
 from urllib.request import urlopen
 from uuid import uuid4
 import sqlite3
+import unicodedata
 import qrcode
 from qrcode.image.svg import SvgPathImage
 
@@ -960,10 +961,11 @@ def imported_lesson(deck_id: str):
             block["page_tasks"] = [{key: task[key] for key in ("id", "title")}
                                    for task in block["page_tasks"]]
         task = block.get("task")
-        if task and task.get("type") == "multiple_choice":
+        if task and task.get("type") in ("multiple_choice", "cloze", "short_answer"):
             task.pop("correct_option", None)
             for question in task.get("questions", []):
                 question.pop("correct_option", None)
+                question.pop("accepted_answers", None)
     return manifest
 
 
@@ -1141,6 +1143,41 @@ class QuizQuestion(BaseModel):
                 **({"learning_target_id": self.learning_target_id.strip()} if self.learning_target_id and self.learning_target_id.strip() else {})}
 
 
+class TextQuestion(BaseModel):
+    prompt: str = Field(min_length=1, max_length=4000)
+    accepted_answers: List[str] = Field(min_length=1, max_length=20)
+    question_id: Optional[str] = Field(default=None, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
+    materials: List[TaskMaterial] = Field(default_factory=list, max_length=8)
+
+
+def normalize_answer(value):
+    return " ".join(unicodedata.normalize("NFC", value).casefold().split())
+
+
+def work_assessment(block):
+    if block.kind == "multiple_choice" and block.quiz and not block.text_questions:
+        return block.quiz.normalized(block.prompt.strip())
+    if block.kind in ("cloze", "short_answer") and block.text_questions and not block.quiz:
+        questions = []
+        ids = set()
+        for index, item in enumerate(block.text_questions, 1):
+            prompt = item.prompt.strip()
+            answers = [answer.strip() for answer in item.accepted_answers]
+            question_id = item.question_id or f"q{index}"
+            if (not prompt or question_id in ids or any(not answer or len(answer) > 500 for answer in answers)
+                    or (block.kind == "cloze" and prompt.count("___") != 1)):
+                raise HTTPException(422, "Use unique question IDs, valid answers and one ___ per Cloze item")
+            ids.add(question_id)
+            questions.append({"prompt": prompt, "question_id": question_id, "accepted_answers": answers,
+                              "learning_target_id": item.learning_target_id,
+                              "materials": [material.normalized() for material in item.materials]})
+        return {"kind": block.kind, "questions": questions}
+    if block.kind in ("multiple_choice", "cloze", "short_answer") or block.quiz or block.text_questions:
+        raise HTTPException(422, "Add questions that match the task type")
+    return {}
+
+
 class QuizDefinition(BaseModel):
     questions: Optional[List[QuizQuestion]] = Field(default=None, min_length=1, max_length=30)
     shuffle: bool = False
@@ -1182,13 +1219,31 @@ def quiz_answers(raw, questions):
     return answers
 
 
+def assessment_items(raw, questions):
+    if questions and "accepted_answers" in questions[0]:
+        try:
+            answers = json.loads(raw)
+        except ValueError:
+            raise HTTPException(422, "Answer every question before submitting")
+        if not isinstance(answers, list) or len(answers) != len(questions) or any(
+            not isinstance(answer, str) or not answer.strip() or len(answer) > 500 for answer in answers
+        ):
+            raise HTTPException(422, "Enter an answer of up to 500 characters for each item")
+        return [{"selected_option": answer, "correct_option": " / ".join(question["accepted_answers"]),
+                 "is_correct": any(normalize_answer(answer) == normalize_answer(accepted)
+                                   for accepted in question["accepted_answers"])}
+                for answer, question in zip(answers, questions)]
+    return [{"selected_index": answer, "selected_option": question["options"][answer],
+             "correct_index": question["correct_option"], "correct_option": question["options"][question["correct_option"]],
+             "is_correct": answer == question["correct_option"]}
+            for answer, question in zip(quiz_answers(raw, questions), questions)]
+
+
 def grade_quiz(raw, quiz, prompt):
-    questions = quiz_questions(quiz, prompt)
-    answers = quiz_answers(raw, questions)
-    selected = [question["options"][answer] for answer, question in zip(answers, questions)]
-    score = sum(answer == question["correct_option"] for answer, question in zip(answers, questions))
+    items = assessment_items(raw, quiz_questions(quiz, prompt))
+    selected = [item["selected_option"] for item in items]
     return {"selected_option": selected[0] if len(selected) == 1 else json.dumps(selected, ensure_ascii=False),
-            "score": score, "max_score": len(questions)}
+            "score": sum(item["is_correct"] for item in items), "max_score": len(items)}
 
 
 def task_description(row):
@@ -1200,10 +1255,11 @@ def task_description(row):
         task["materials"] = json.loads(materials)
     if definition:
         quiz = json.loads(definition)
+        task["type"] = quiz.get("kind", "multiple_choice")
         task["questions"] = [{key: q[key] for key in ("prompt", "options", "materials") if key in q}
                              for q in quiz_questions(quiz, task["prompt"])]
         task["shuffle"] = quiz.get("shuffle", False)
-        if len(task["questions"]) == 1:
+        if len(task["questions"]) == 1 and task["type"] == "multiple_choice":
             task["options"] = task["questions"][0]["options"]
     return task
 
@@ -1281,8 +1337,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         speaking = block["task"]["type"] == "speaking"
         phase = block.get("phase")
         target = block.get("learning_target_id")
-        quiz = ({key: block["task"][key] for key in ("questions", "shuffle", "options", "correct_option") if key in block["task"]}
-                if block["task"]["type"] == "multiple_choice" else None)
+        quiz = ({key: block["task"][key] for key in ("questions", "shuffle", "options", "correct_option", "kind") if key in block["task"]}
+                if block["task"]["type"] in ("multiple_choice", "cloze", "short_answer") else None)
     if not prompt:
         raise HTTPException(422, "Enter a writing prompt")
     if speaking and quiz:
@@ -1390,8 +1446,8 @@ def assign_page(pin: str, payload: AssignPageRequest):
                     cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
                 if task["type"] == "speaking":
                     cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
-                elif task["type"] == "multiple_choice":
-                    quiz = {key: task[key] for key in ("questions", "options", "correct_option", "shuffle") if key in task}
+                elif task["type"] in ("multiple_choice", "cloze", "short_answer"):
+                    quiz = {key: task[key] for key in ("questions", "options", "correct_option", "shuffle", "kind") if key in task}
                     cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
             cur.executemany(sql("INSERT INTO page_task_recipients VALUES (?, ?) ON CONFLICT DO NOTHING"),
                             [(task_id, row["student_id"]) for row in recipients])
@@ -1437,8 +1493,10 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
                 raise HTTPException(409, "This task is not open for submissions")
             if active["type"] == "speaking":
                 raise HTTPException(422, "Submit an audio recording for this task")
-            if active["type"] == "multiple_choice":
-                quiz_answers(payload.response, active["questions"])
+            if active["type"] in ("multiple_choice", "cloze", "short_answer"):
+                cur.execute(sql("SELECT definition FROM writing_task_quizzes WHERE task_id = ?"), (task_id,))
+                definition = json.loads(cur.fetchone()["definition"])
+                assessment_items(payload.response, quiz_questions(definition, active["prompt"]))
             cur.execute(sql("""
                 INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
                 ON CONFLICT(task_id, student_id) DO NOTHING
@@ -1487,7 +1545,7 @@ def session_task_results(pin: str):
             task["materials"] = json.loads(materials)
         quiz = json.loads(definition) if definition else None
         speaking = task.pop("speaking_id")
-        task["type"] = "speaking" if speaking else "multiple_choice" if quiz else "writing"
+        task["type"] = "speaking" if speaking else quiz.get("kind", "multiple_choice") if quiz else "writing"
         task["scores_published"] = task["task_id"] in session["published_score_ids"]
         task["submissions"] = [row for row in responses if row["task_id"] == task["task_id"]]
         if quiz:
@@ -1547,16 +1605,8 @@ def student_scores(pin: str, payload: StudentScoresRequest):
     scores = []
     for row in rows:
         questions = quiz_questions(json.loads(row["definition"]), row["prompt"])
-        answers = quiz_answers(row["response"], questions)
-        items = [
-            {
-                "prompt": question["prompt"],
-                "selected_option": question["options"][answer],
-                "correct_option": question["options"][question["correct_option"]],
-                "is_correct": answer == question["correct_option"],
-            }
-            for answer, question in zip(answers, questions)
-        ]
+        items = [{"prompt": question["prompt"], **item}
+                 for question, item in zip(questions, assessment_items(row["response"], questions))]
         scores.append({"task_id": row["task_id"], "title": row["prompt"],
                        "score": sum(item["is_correct"] for item in items),
                        "max_score": len(items), "items": items})
@@ -1605,10 +1655,11 @@ class SlideElement(BaseModel):
 
 
 class WorkPageTask(BaseModel):
+    text_questions: List[TextQuestion] = Field(default_factory=list, max_length=30)
     materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     title: str = Field(min_length=1, max_length=160)
-    kind: Literal["writing", "multiple_choice", "speaking"]
+    kind: Literal["writing", "multiple_choice", "speaking", "cloze", "short_answer"]
     prompt: str = Field(min_length=1, max_length=4000)
     audience_label: Optional[str] = Field(default=None, max_length=60)
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
@@ -1616,13 +1667,14 @@ class WorkPageTask(BaseModel):
 
 
 class WorkBlock(BaseModel):
+    text_questions: List[TextQuestion] = Field(default_factory=list, max_length=30)
     materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     tasks: List[WorkPageTask] = Field(default_factory=list, max_length=20)
     elements: List[SlideElement] = Field(default_factory=list, max_length=60)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: EvidencePhase
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
-    kind: Literal["slide", "page", "writing", "multiple_choice", "speaking"]
+    kind: Literal["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
     notes: str = Field(default="", max_length=4000)
@@ -1697,20 +1749,20 @@ def save_work_lesson(payload: SaveWorkLesson):
                 entry["page_tasks"] = []
                 for task in block.tasks:
                     prompt = task.prompt.strip()
-                    if not prompt or not task.title.strip() or (task.kind == "multiple_choice") != bool(task.quiz):
+                    if not prompt or not task.title.strip():
                         raise HTTPException(422, f"Task {task.id}: enter a title, prompt and required quiz options")
                     entry["page_tasks"].append({
                         "id": task.id, "title": task.title.strip(), "type": task.kind, "prompt": prompt,
                         "audience_label": (task.audience_label or "").strip().casefold() or None,
                         "learning_target_id": (task.learning_target_id or "").strip() or None,
                         "materials": [item.normalized() for item in task.materials],
-                        **(task.quiz.normalized(prompt) if task.quiz else {}),
+                        **work_assessment(task),
                     })
         else:
             prompt = block.prompt.strip()
-            if not prompt or (block.kind == "multiple_choice") != bool(block.quiz):
+            if not prompt:
                 raise HTTPException(422, f"Block {block.id}: enter a prompt and the required task options")
-            quiz = block.quiz.normalized(prompt) if block.quiz else {}
+            quiz = work_assessment(block)
             entry.update(activity_kind="writing-task",
                          task={"schema_version": 1, "type": block.kind, "prompt": prompt,
                                "materials": [item.normalized() for item in block.materials], **quiz})
@@ -1919,16 +1971,11 @@ def session_evidence(pin):
             row["learner_id"] = identity.get("evidence_id")
             row["reh_student_id"] = identity.get("reh_student_id")
             if questions:
-                answers = quiz_answers(row["response"], questions)
                 row["items"] = [{
                     "question_id": question["question_id"],
                     "learning_target_id": question.get("learning_target_id") or task["learning_target_id"],
-                    "selected_index": answer,
-                    "selected_option": question["options"][answer],
-                    "correct_index": question["correct_option"],
-                    "correct_option": question["options"][question["correct_option"]],
-                    "is_correct": answer == question["correct_option"],
-                } for question, answer in zip(questions, answers)]
+                    **item,
+                } for question, item in zip(questions, assessment_items(row["response"], questions))]
     audio = [row for task in results["tasks"] for row in task["submissions"] if row.get("audio_bytes")]
     return {"schema_version": 1, "session": {key: session[key] for key in
             ("pin", "lesson_id", "lesson_path", "created_at", "ended_at", "status")},
