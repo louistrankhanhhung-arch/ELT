@@ -168,6 +168,49 @@
     #publishedScores details + details { margin-top: 8px; }
     #publishedScores li { padding-block: 5px; }
     #publishedScores li[data-incorrect] { color: #9b3024; }
+    /* A quiz is the activity surface, so the slide frame gives up its space. */
+    body:has(#writingPanel:not([hidden]) #quizChoices:not([hidden])) {
+      height: 100dvh;
+    }
+    body:has(#writingPanel:not([hidden]) #quizChoices:not([hidden])) .runtime {
+      display: none;
+    }
+    #writingPanel:has(#quizChoices:not([hidden])) {
+      flex: 1 1 0;
+      min-height: 0;
+      max-height: none;
+      margin: clamp(6px, 2vw, 12px);
+      padding: clamp(10px, 3vw, 20px);
+      overflow-y: auto;
+    }
+    #quizChoices, #quizChoices > fieldset {
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+    #quizChoices {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+    #quizChoices > fieldset {
+      border: 1px solid #d5e1ec;
+      border-radius: 8px;
+      margin: 0 0 12px;
+      padding: 8px 12px;
+    }
+    #quizChoices label {
+      min-height: 36px;
+      padding: 4px 0;
+      box-sizing: border-box;
+    }
+    body:has(#writingPanel:not([hidden]) #quizChoices:not([hidden])):has(#publishedScores:not([hidden])) #publishedScores {
+      flex: 1 1 0;
+      min-height: 0;
+      max-height: none;
+    }
+    body:has(#publishedScores:not([hidden])) #writingPanel:has(#quizChoices:not([hidden])) {
+      display: none;
+    }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
 </head>
