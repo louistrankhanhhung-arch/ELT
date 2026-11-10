@@ -1306,10 +1306,20 @@ def student_scores(pin: str, payload: StudentScoresRequest):
 
 
 class SlideElement(BaseModel):
-    kind: Literal["text", "image", "audio", "shape", "icon"]
+    kind: Literal["text", "image", "audio", "shape", "icon", "table"]
     text: str = Field(default="", max_length=500)
     url: Optional[str] = Field(default=None, max_length=2000)
-    shape: Literal["rectangle", "circle", "arrow"] = "rectangle"
+    shape: Literal["rectangle", "circle", "arrow", "line"] = "rectangle"
+    font_family: Optional[Literal["Arial", "Verdana", "Georgia", "Trebuchet MS", "Courier New", "system-ui"]] = None
+    font_size: Optional[int] = Field(default=None, ge=12, le=120)
+    text_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    fill_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    border_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+    fill_opacity: int = Field(default=100, ge=0, le=100)
+    border_opacity: int = Field(default=100, ge=0, le=100)
+    border_width: int = Field(default=2, ge=1, le=20)
+    cells: Optional[List[List[str]]] = Field(default=None, max_length=12)
+    header_row: bool = True
     x: float = Field(ge=0, le=99)
     y: float = Field(ge=0, le=99)
     width: float = Field(gt=0, le=100)
@@ -1328,6 +1338,11 @@ class SlideElement(BaseModel):
                 raise HTTPException(422, f"Block {block_id}: image and audio elements require a direct HTTPS URL")
         elif self.url:
             raise HTTPException(422, f"Block {block_id}: only image and audio elements accept a URL")
+        if self.kind == "table":
+            rows = self.cells or []
+            columns = len(rows[0]) if rows else 0
+            if not 1 <= columns <= 8 or any(len(row) != columns or any(len(cell) > 300 for cell in row) for row in rows):
+                raise HTTPException(422, f"Block {block_id}: use a rectangular table with 1–12 rows and 1–8 columns")
         return self.model_dump(exclude_none=True)
 
 

@@ -28,11 +28,21 @@ async function request(path, body) {
   return result;
 }
 
+function validTable(element) {
+  if (element?.kind !== "table") return true;
+  const rows = element.cells;
+  return Array.isArray(rows) && rows.length >= 1 && rows.length <= 12
+    && Array.isArray(rows[0]) && rows[0].length >= 1 && rows[0].length <= 8
+    && rows.every(row => Array.isArray(row) && row.length === rows[0].length
+      && row.every(cell => typeof cell === "string" && cell.length <= 300));
+}
+
 function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
         || !["slide", "writing", "multiple_choice", "speaking"].includes(block.kind)
+        || (block.elements != null && (!Array.isArray(block.elements) || !block.elements.every(validTable)))
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
   }
@@ -50,10 +60,11 @@ function loadDraft(value, parent = null) {
   render();
 }
 
-function field(parent, title, value, changed, choices, multiline = false, catalog = false) {
+function field(parent, title, value, changed, choices, multiline = false, catalog = false, inputType = "text") {
   const label = document.createElement("label");
   label.textContent = title;
   const input = document.createElement(choices ? "select" : multiline ? "textarea" : "input");
+  if (!choices && !multiline) input.type = inputType;
   if (choices) for (const choice of choices) input.add(new Option(choice || "None", choice));
   if (multiline) input.rows = 3;
   if (catalog) input.setAttribute("list", "learningTargets");
@@ -80,14 +91,22 @@ function drawElement(element, thumbnail = false) {
   const item = document.createElement("div");
   item.className = "preview-element " + (element.kind === "shape" ? element.shape : element.kind);
   positionElement(item, element);
-  if (element.kind === "image" && /^https:\/\//.test(element.url || "")) {
+  REHSlideStyle.apply(item, element);
+  if (element.kind === "shape") {
+    const label = document.createElement("span");
+    label.className = "shape-label";
+    label.textContent = element.text || "";
+    item.append(REHSlideStyle.shape(element), label);
+  } else if (element.kind === "table") {
+    item.append(REHSlideStyle.table(element));
+  } else if (element.kind === "image" && /^https:\/\//.test(element.url || "")) {
     const image = document.createElement("img");
     image.src = element.url;
     image.alt = element.text || "";
     image.draggable = false;
     if (thumbnail) image.loading = "lazy";
     item.append(image);
-  } else item.textContent = element.kind === "audio" ? "▶ " + (element.text || "Listen") : element.text || "";
+  } else item.textContent = element.kind === "audio" ? REHSlideStyle.audioLabel(element) : element.text || "";
   return item;
 }
 
@@ -404,8 +423,13 @@ function addCanvasElement(kind) {
   if (!block || block.kind !== "slide") return;
   const elements = block.elements ||= [];
   if (elements.length >= 60) return status("A slide can contain up to 60 elements.");
-  const text = {text:"New text", image:"Image", audio:"Listen", shape:"", icon:"★"}[kind];
+  const text = {text:"New text", image:"Image", audio:"", shape:"", icon:"★", table:""}[kind];
   selectedElement = {kind,text,x:10,y:10,width:30,height:16,appear:0};
+  if (kind === "table") {
+    selectedElement.width = 45;
+    selectedElement.height = 30;
+    selectedElement.cells = [["Heading 1","Heading 2"],["",""]];
+  }
   elements.push(selectedElement);
   revealPreview = -1;
   dirty();
@@ -443,9 +467,31 @@ function renderInspector() {
   panel.append(layer);
   const element = selectedElement;
   if (!elements.includes(element)) return;
-  field(panel, "Text or accessible label", element.text, value => { element.text = value; });
-  if (element.kind === "shape") field(panel, "Shape", element.shape || "rectangle",
-    value => { element.shape = value; }, ["rectangle","circle","arrow"]);
+  field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
+    element.text, value => { element.text = value; });
+  if (element.kind !== "image") {
+    field(panel, "Font", element.font_family || "", value => { element.font_family = value || null; },
+      ["","system-ui","Arial","Verdana","Georgia","Trebuchet MS","Courier New"]);
+    numericStyle(panel, element, "font_size", "Font size (12–120 px at 1280px)", 12, 120, null);
+    field(panel, "Text color", element.text_color || (element.kind === "audio" ? "#ffffff" : "#172338"),
+      value => { element.text_color = value; }, null, false, false, "color");
+  }
+  if (element.kind === "shape") {
+    field(panel, "Shape", element.shape || "rectangle", value => {
+      element.shape = value;
+      renderInspector();
+    }, ["rectangle","circle","arrow","line"]);
+    if (element.shape !== "line") {
+      field(panel, "Fill color", element.fill_color || "#d5e6ff",
+        value => { element.fill_color = value; }, null, false, false, "color");
+      numericStyle(panel, element, "fill_opacity", "Fill opacity (%)", 0, 100, 100);
+    }
+    field(panel, "Border / line color", element.border_color || "#7aa6dd",
+      value => { element.border_color = value; }, null, false, false, "color");
+    numericStyle(panel, element, "border_opacity", "Border / line opacity (%)", 0, 100, 100);
+    numericStyle(panel, element, "border_width", "Border / line width (px)", 1, 20, 2);
+  }
+  if (element.kind === "table") editTable(panel, element);
   if (element.kind === "image" || element.kind === "audio") field(panel, "Direct HTTPS URL", element.url,
     value => { element.url = value.trim(); });
   for (const [key,label] of [["x","Left (%)"],["y","Top (%)"],["width","Width (%)"],["height","Height (%)"],
@@ -469,6 +515,51 @@ function renderInspector() {
   button(panel,"Remove element",() => { elements.splice(index,1); selectedElement = null; dirty(); render(); });
 }
 
+function numericStyle(panel, element, key, label, min, max, fallback) {
+  field(panel, label, element[key] ?? fallback, value => {
+    if (value === "") {
+      if (fallback === null) element[key] = null;
+      return;
+    }
+    const number = Number(value);
+    if (Number.isInteger(number) && number >= min && number <= max) element[key] = number;
+  }, null, false, false, "number");
+  const input = panel.lastChild.querySelector("input");
+  input.min = min;
+  input.max = max;
+  input.addEventListener("change", () => { input.value = element[key] ?? fallback ?? ""; });
+}
+
+function editTable(panel, element) {
+  const rows = element.cells;
+  const header = document.createElement("label");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = element.header_row !== false;
+  checkbox.onchange = () => { element.header_row = checkbox.checked; dirty(); renderPreview(); };
+  header.append(checkbox, " Header row");
+  panel.append(header);
+  function editStructure(label, disabled, change) {
+    button(panel, label, () => { change(); dirty(); renderInspector(); renderPreview(); });
+    panel.lastChild.disabled = disabled;
+  }
+  editStructure("+ Row", rows.length >= 12, () => rows.push(Array(rows[0].length).fill("")));
+  editStructure("+ Column", rows[0].length >= 8, () => rows.forEach(row => row.push("")));
+  editStructure("Remove last row", rows.length <= 1, () => rows.pop());
+  editStructure("Remove last column", rows[0].length <= 1, () => rows.forEach(row => row.pop()));
+  for (const [i, row] of rows.entries()) {
+    const group = document.createElement("fieldset");
+    const heading = document.createElement("legend");
+    heading.textContent = "Row " + (i + 1);
+    group.append(heading);
+    row.forEach((cell,j) => {
+      field(group, "Column " + (j + 1), cell, value => { row[j] = value; });
+      group.lastChild.querySelector("input").maxLength = 300;
+    });
+    panel.append(group);
+  }
+}
+
 function renderElements(fields, block) {
   const importPanel = document.createElement("details");
   const importTitle = document.createElement("summary");
@@ -482,7 +573,8 @@ function renderElements(fields, block) {
     try {
       const layout = JSON.parse(input.value);
       if (!Array.isArray(layout) || layout.length > 60 || layout.some(element => !element ||
-          !["text","image","audio","shape","icon"].includes(element.kind))) {
+          !["text","image","audio","shape","icon","table"].includes(element.kind) ||
+          !validTable(element))) {
         throw new Error("Use an array of up to 60 slide elements.");
       }
       block.elements = layout;

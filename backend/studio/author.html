@@ -50,11 +50,12 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 .preview-element img { width:100%; height:100%; object-fit:contain }
 .preview-element.icon { font-size:6cqw }
 .preview-element.audio { background:#2459a9;color:white;border-radius:5px }
-.preview-element.rectangle,.preview-element.circle,.preview-element.arrow {background:#d5e6ff;border:1px solid #7aa6dd}
-.preview-element.circle,.preview-element.arrow {background:transparent;border:0;isolation:isolate}
-.preview-element.circle::before,.preview-element.arrow::before {content:"";position:absolute;inset:0;background:#d5e6ff;z-index:-1}
-.preview-element.circle::before {border:1px solid #7aa6dd;border-radius:50%}
-.preview-element.arrow::before {clip-path:polygon(0 28%,68% 28%,68% 0,100% 50%,68% 100%,68% 72%,0 72%)}
+
+.element-vector { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
+.shape-label { position:relative; pointer-events:none }
+.slide-table { width:100%; height:100%; border-collapse:collapse; table-layout:fixed; font:inherit; color:inherit; background:#fff }
+.slide-table td,.slide-table th { border:1px solid #92a8c6; padding:.2em; overflow-wrap:anywhere; text-align:center }
+.slide-table th { background:#d5e6ff; font-weight:700 }
 </style>
 <header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import a lesson from GPT Work, edit its blocks, and save a version for class.</p></header>
 <main>
@@ -84,6 +85,7 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
         <button type="button" data-add-element="audio">+ Audio</button>
         <button type="button" data-add-element="shape">+ Shape</button>
         <button type="button" data-add-element="icon">+ Icon</button>
+        <button type="button" data-add-element="table">+ Table</button>
         <label>Preview reveal <select id="previewReveal"></select></label>
       </div>
       <div id="elementPreview" aria-label="Editable slide canvas" hidden></div>
@@ -100,6 +102,7 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 </section>
 </main>
 <script src="config.js"></script>
-<script src="author.js?v=canvas-1"></script>
+<script src="slide-style.js?v=1"></script>
+<script src="author.js?v=canvas-style-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>
