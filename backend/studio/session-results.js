@@ -33,19 +33,98 @@ function text(tag, value) {
   return node;
 }
 function readableDate(value) { return new Date(value).toLocaleString("en-GB", {timeZone:"Asia/Ho_Chi_Minh"}); }
+let historyRequest = 0;
+let filters = {};
+let deleting = false;
+function historyChecks() { return [...el("sessionList").querySelectorAll("input:not(:disabled)")]; }
+function updateSelection() {
+  const checks = historyChecks();
+  const count = checks.filter(input => input.checked).length;
+  el("selectPage").disabled = !checks.length || deleting;
+  el("selectPage").checked = !!count && count === checks.length;
+  el("selectPage").indeterminate = count > 0 && count < checks.length;
+  el("deleteSessions").disabled = !count || deleting;
+  el("deleteSessions").textContent = count ? "Delete selected (" + count + ")" : "Delete selected";
+}
 async function loadHistory() {
-  const result = await (await request("/session-history?offset=" + offset)).json();
+  const version = ++historyRequest;
+  const params = new URLSearchParams({ ...filters, offset: String(offset) });
+  const result = await (await request("/session-history?" + params)).json();
+  if (version !== historyRequest) return;
+  if (!result.sessions.length && offset > 0) {
+    offset = Math.max(0, offset - 50);
+    return loadHistory();
+  }
   el("history").hidden = false;
+  el("historyEmpty").hidden = !!result.sessions.length;
   el("previous").disabled = offset === 0;
   el("next").disabled = !result.has_more;
   el("sessionList").replaceChildren(...result.sessions.map(session => {
     const row = document.createElement("li");
-    row.append(button(session.title + " · " + readableDate(session.created_at) + " · " + session.status + " · PIN " + session.pin,
-      () => openSession(session.pin).catch(error => status(error.message))));
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.value = session.pin;
+    check.disabled = session.status === "active";
+    check.setAttribute("aria-label", check.disabled ? "Active session PIN " + session.pin : "Select session PIN " + session.pin);
+    check.onchange = updateSelection;
+    const open = button(session.title, () => openSession(session.pin).catch(error => status(error.message)));
+    open.append(text("small", readableDate(session.created_at) + " · " + session.status + " · PIN " + session.pin));
+    row.append(check, open);
     return row;
   }));
-  if (!result.sessions.length) status("No saved sessions found.");
+  updateSelection();
 }
+el("toggleFilters").onclick = () => {
+  const form = el("historyFilters");
+  form.hidden = !form.hidden;
+  el("toggleFilters").setAttribute("aria-expanded", String(!form.hidden));
+  if (!form.hidden) el("historyQuery").focus();
+};
+function applyFilters() {
+  const state = el("historyStatus").value;
+  filters = { query: el("historyQuery").value.trim(), ...(state ? { status: state } : {}) };
+  offset = 0;
+  status("");
+  loadHistory().catch(error => status(error.message));
+}
+el("historyFilters").onsubmit = event => { event.preventDefault(); applyFilters(); };
+el("clearFilters").onclick = () => { el("historyFilters").reset(); applyFilters(); };
+el("selectPage").onchange = event => {
+  historyChecks().forEach(input => { input.checked = event.target.checked; });
+  updateSelection();
+};
+let pendingDelete = [];
+el("deleteSessions").onclick = () => {
+  pendingDelete = historyChecks().filter(input => input.checked).map(input => input.value);
+  if (!pendingDelete.length) return;
+  el("deleteSessionsSummary").textContent = pendingDelete.length + " selected session(s) · PIN " + pendingDelete.join(", ");
+  el("deleteSessionsDialog").returnValue = "";
+  el("deleteSessionsDialog").showModal();
+};
+el("deleteSessionsDialog").onclose = async event => {
+  if (event.target.returnValue !== "delete" || deleting || !pendingDelete.length) return;
+  const pins = pendingDelete;
+  deleting = true;
+  updateSelection();
+  try {
+    const result = await (await request("/session-history/delete", "POST", { pins, confirmation: "DELETE SESSIONS" })).json();
+    if (pins.includes(current?.session.pin)) {
+      current = null;
+      el("detail").hidden = true;
+      const url = new URL(location.href);
+      url.searchParams.delete("pin");
+      window.history.replaceState({}, "", url);
+    }
+    status("Deleted " + result.deleted + " session(s).");
+    await loadHistory();
+  } catch (error) {
+    status(error.message);
+  } finally {
+    deleting = false;
+    pendingDelete = [];
+    updateSelection();
+  }
+};
 async function openSession(pin) {
   const next = await (await request(apiPath(pin))).json();
   current = next;

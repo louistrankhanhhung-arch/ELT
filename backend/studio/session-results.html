@@ -10,7 +10,11 @@ h1,h2,h3{margin:0 0 8px}button{border:0;border-radius:6px;background:#2459a9;col
 button:disabled{opacity:.5;cursor:default}button.danger{background:#9e2c2c}input,select,textarea{font:inherit;padding:6px;max-width:100%}
 label{display:inline-block;margin:4px 8px 4px 0}textarea{display:block;width:100%;min-height:60px}summary{cursor:pointer;font-weight:600}
 details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}audio{max-width:100%}
-#sessionList{list-style:none;padding:0}#sessionList button{text-align:left;width:100%;background:#e8eef8;color:#172338} [hidden]{display:none!important}
+#sessionList{list-style:none;padding:0}#sessionList li{display:flex;align-items:center;gap:8px;border-top:1px solid #e0e7ef;padding:4px 0}
+#sessionList button{text-align:left;flex:1;min-width:0;background:#f3f6fa;color:#172338}
+#sessionList small{display:block;color:#4b5e73}#historyTools{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+#historyFilters{padding:8px 0}#deleteSessionsDialog{max-width:min(480px,92vw);border:1px solid #dbe3ed;border-radius:12px;padding:20px}
+#deleteSessionsDialog::backdrop{background:#17233899} [hidden]{display:none!important}
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
 <main>
@@ -21,7 +25,25 @@ details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;over
 <button id="load">Load session history</button><p id="status" role="status"></p>
 </section>
 <section id="history" hidden>
-<h2>Session history</h2><ul id="sessionList"></ul>
+<h2>Session history</h2>
+<div id="historyTools">
+<button id="toggleFilters" type="button" aria-expanded="false" aria-controls="historyFilters">Filter</button>
+<label><input id="selectPage" type="checkbox"> Select page</label>
+<button id="deleteSessions" class="danger" type="button" disabled>Delete selected</button>
+</div>
+<form id="historyFilters" hidden>
+<label>Lesson or PIN <input id="historyQuery" type="search" maxlength="160"></label>
+<label>Status <select id="historyStatus"><option value="">All statuses</option><option value="active">Active</option><option value="ended">Ended</option><option value="expired">Expired</option></select></label>
+<button>Apply filters</button><button id="clearFilters" type="button">Clear</button>
+</form>
+<p id="historyEmpty" hidden>No matching sessions.</p>
+<ul id="sessionList"></ul>
+<dialog id="deleteSessionsDialog" aria-labelledby="deleteSessionsTitle">
+<h2 id="deleteSessionsTitle">Delete sessions?</h2>
+<p id="deleteSessionsSummary"></p>
+<p>This permanently removes their responses, scores and recordings. Download any archives you want to keep first.</p>
+<form method="dialog"><button value="cancel" autofocus>Cancel</button><button class="danger" id="confirmDeleteSessions" value="delete">Delete permanently</button></form>
+</dialog>
 <button id="previous" disabled>Previous</button><button id="next" disabled>Next</button>
 </section>
 <section id="detail" hidden>
@@ -39,5 +61,5 @@ details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;over
 </section>
 </main>
 <script src="config.js"></script>
-<script src="session-results.js"></script>
+<script src="session-results.js?v=history-2"></script>
 </html>

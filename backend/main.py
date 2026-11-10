@@ -1550,21 +1550,69 @@ def read_speaking(pin: str, task_id: str, student_id: str):
 
 
 @app.get("/api/session-history", dependencies=[Depends(require_teacher)])
-def session_history(offset: int = 0):
+def session_history(offset: int = 0, query: str = "", status: Literal["active", "ended", "expired"] | None = None):
+    title = "r.manifest::json ->> 'title'" if USE_POSTGRES else "json_extract(r.manifest, '$.title')"
+    search = query.strip().lower()[:160]
     with closing(db()) as conn:
         cur = conn.cursor()
-        cur.execute(sql("""
-            SELECT s.pin, s.lesson_id, s.created_at, s.ended_at, s.expires_at, s.status, r.manifest
-            FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
-            ORDER BY s.created_at DESC, s.pin DESC LIMIT 51 OFFSET ?
-        """), (max(offset, 0),))
+        cur.execute(sql(f"""
+            WITH history AS (
+                SELECT s.pin, s.lesson_id, s.created_at, s.ended_at, s.expires_at,
+                       COALESCE({title}, s.lesson_id) AS title,
+                       CASE WHEN s.status = 'active' AND (s.expires_at <= ? OR (s.expires_at IS NULL AND s.created_at <= ?))
+                            THEN 'expired' ELSE s.status END AS status
+                FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
+            )
+            SELECT * FROM history
+            WHERE status = COALESCE(?, status)
+              AND (LOWER(title) LIKE ? OR LOWER(lesson_id) LIKE ? OR pin LIKE ?)
+            ORDER BY created_at DESC, pin DESC LIMIT 51 OFFSET ?
+        """), (now_iso(), (datetime.now(timezone.utc) - timedelta(hours=SESSION_TTL_HOURS)).isoformat(),
+               status, *([f"%{search}%"] * 3), max(offset, 0)))
         sessions = [dict(row) for row in cur.fetchall()]
-    for session in sessions:
-        manifest = session.pop("manifest")
-        session["title"] = json.loads(manifest)["title"] if manifest else session["lesson_id"]
-        if session["status"] == "active" and session["expires_at"] and parse_iso(session["expires_at"]) <= datetime.now(timezone.utc):
-            session["status"] = "expired"
     return {"sessions": sessions[:50], "has_more": len(sessions) > 50}
+
+
+class DeleteSessionsRequest(BaseModel):
+    pins: List[str] = Field(min_length=1, max_length=50)
+    confirmation: Literal["DELETE SESSIONS"]
+
+
+@app.post("/api/session-history/delete", dependencies=[Depends(require_teacher)])
+def delete_sessions(payload: DeleteSessionsRequest):
+    pins = sorted(set(payload.pins))
+    if any(not re.fullmatch(r"[0-9]{4}", pin) for pin in pins):
+        raise HTTPException(422, "Invalid session PIN")
+    placeholders = ", ".join("?" for _ in pins)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        if not USE_POSTGRES:
+            cur.execute("BEGIN IMMEDIATE")
+        lock = " FOR UPDATE" if USE_POSTGRES else ""
+        cur.execute(sql(f"SELECT pin, status, created_at, expires_at FROM sessions WHERE pin IN ({placeholders}) ORDER BY pin{lock}"), pins)
+        sessions = cur.fetchall()
+        if len(sessions) != len(pins):
+            raise HTTPException(409, "Some sessions no longer exist. Refresh session history.")
+        for session in sessions:
+            expires_at = (parse_iso(session["expires_at"]) if session["expires_at"]
+                          else parse_iso(session["created_at"]) + timedelta(hours=SESSION_TTL_HOURS))
+            if session["status"] == "active" and expires_at > datetime.now(timezone.utc):
+                raise HTTPException(409, "End active sessions before deleting them.")
+
+        task_ids = f"SELECT task_id FROM writing_tasks WHERE pin IN ({placeholders})"
+        for table in ("speaking_audio", "task_reviews", "writing_task_responses", "task_evidence_context",
+                      "published_quiz_scores", "speaking_tasks", "writing_task_quizzes"):
+            cur.execute(sql(f"DELETE FROM {table} WHERE task_id IN ({task_ids})"), pins)
+        cur.execute(sql(f"""
+            DELETE FROM evidence_student_links
+            WHERE student_id IN (SELECT student_id FROM session_students WHERE pin IN ({placeholders}))
+        """), pins)
+        for table in ("active_writing_tasks", "writing_tasks", "writing_submissions", "writing_assignments",
+                      "session_audio_archives", "session_slide_steps", "session_display_modes",
+                      "events", "session_students", "sessions"):
+            cur.execute(sql(f"DELETE FROM {table} WHERE pin IN ({placeholders})"), pins)
+        conn.commit()
+    return {"deleted": len(pins)}
 
 
 def session_evidence(pin):
