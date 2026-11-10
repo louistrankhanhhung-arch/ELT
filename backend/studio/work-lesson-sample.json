@@ -1,8 +1,131 @@
 {
   "schema_version": 1,
-  "title": "REH Sample · Describe a classmate",
+  "title": "REH Work Sample · Describe a classmate",
   "objective": "Use character adjectives and support them with an example.",
   "blocks": [
+    {
+      "id": "reh-opening",
+      "phase": "diagnosis",
+      "kind": "slide",
+      "title": "Describe a classmate",
+      "notes": "Replace this opening title and learning goal for each new lesson. Keep the shared REH frame, colours and type scale.",
+      "elements": [
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 100,
+          "fill_color": "#F7FAF3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 10,
+          "fill_color": "#0B3D25",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "ROOT ENGLISH HOUSE",
+          "x": 3,
+          "y": 1,
+          "width": 27,
+          "height": 8,
+          "font_size": 26,
+          "text_color": "#FFFFFF",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "LESSON START",
+          "x": 70,
+          "y": 1,
+          "width": 27,
+          "height": 8,
+          "font_size": 25,
+          "text_color": "#FFFFFF",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 7,
+          "y": 92,
+          "width": 86,
+          "height": 0.6,
+          "fill_color": "#A68832",
+          "border_opacity": 0
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 73,
+          "y": 23,
+          "width": 20,
+          "height": 43,
+          "fill_color": "#FFFFFF",
+          "border_opacity": 0
+        },
+        {
+          "kind": "image",
+          "text": "Root English House logo",
+          "url": "https://precious-cat-staging.up.railway.app/studio/reh-brand-mark.jpg",
+          "x": 74,
+          "y": 24,
+          "width": 18,
+          "height": 40
+        },
+        {
+          "kind": "text",
+          "text": "Describe a classmate",
+          "x": 6,
+          "y": 26,
+          "width": 65,
+          "height": 18,
+          "font_size": 60,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "Use an adjective and give an example.",
+          "x": 7,
+          "y": 47,
+          "width": 63,
+          "height": 12,
+          "font_size": 32,
+          "text_color": "#18352A",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 7,
+          "y": 66,
+          "width": 62,
+          "height": 12,
+          "fill_color": "#E9F2E3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "Think of someone who helps others.",
+          "x": 8,
+          "y": 66,
+          "width": 60,
+          "height": 12,
+          "font_size": 29,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        }
+      ]
+    },
     {
       "id": "diagnosis-1",
       "phase": "diagnosis",
@@ -16,7 +139,158 @@
       "kind": "slide",
       "title": "Character and evidence",
       "body": "An adjective describes character.\n\nExample: Maya is helpful because she explains difficult words to her classmates.",
-      "notes": "Ask learners which part of the sentence provides evidence."
+      "notes": "Ask learners which part of the sentence provides evidence.",
+      "elements": [
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 100,
+          "fill_color": "#F7FAF3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 10,
+          "fill_color": "#0B3D25",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "ROOT ENGLISH HOUSE",
+          "x": 3,
+          "y": 1,
+          "width": 27,
+          "height": 8,
+          "font_size": 26,
+          "text_color": "#FFFFFF",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "LEARN",
+          "x": 70,
+          "y": 1,
+          "width": 27,
+          "height": 8,
+          "font_size": 25,
+          "text_color": "#FFFFFF",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 7,
+          "y": 92,
+          "width": 86,
+          "height": 0.6,
+          "fill_color": "#A68832",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "Character and evidence",
+          "x": 6,
+          "y": 14,
+          "width": 88,
+          "height": 14,
+          "font_size": 54,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "Name the quality. Then show it with an example.",
+          "x": 7,
+          "y": 28,
+          "width": 86,
+          "height": 11,
+          "font_size": 32,
+          "text_color": "#18352A",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 7,
+          "y": 43,
+          "width": 26,
+          "height": 30,
+          "fill_color": "#E9F2E3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "QUALITY",
+          "x": 9,
+          "y": 45,
+          "width": 22,
+          "height": 8,
+          "font_size": 26,
+          "text_color": "#4D8627",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "helpful",
+          "x": 9,
+          "y": 53,
+          "width": 22,
+          "height": 17,
+          "font_size": 44,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 36,
+          "y": 43,
+          "width": 57,
+          "height": 30,
+          "fill_color": "#FFFFFF",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "EVIDENCE",
+          "x": 38,
+          "y": 45,
+          "width": 53,
+          "height": 8,
+          "font_size": 26,
+          "text_color": "#4D8627",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "Maya explains difficult words to her classmates.",
+          "x": 39,
+          "y": 54,
+          "width": 51,
+          "height": 15,
+          "font_size": 31,
+          "text_color": "#18352A",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "Maya is helpful because she explains difficult words.",
+          "x": 7,
+          "y": 76,
+          "width": 86,
+          "height": 11,
+          "font_size": 31,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        }
+      ]
     },
     {
       "id": "practice-1",
@@ -60,6 +334,141 @@
       "kind": "writing",
       "title": "Write a short description",
       "prompt": "Write two sentences about a fictional classmate. Use a character adjective and one specific example."
+    },
+    {
+      "id": "reh-checkpoint",
+      "phase": "verify",
+      "kind": "slide",
+      "title": "Before you go",
+      "notes": "Use this reusable checkpoint slide for retrieval, peer feedback or an exit task.",
+      "elements": [
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 100,
+          "fill_color": "#F7FAF3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 10,
+          "fill_color": "#0B3D25",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "ROOT ENGLISH HOUSE",
+          "x": 3,
+          "y": 1,
+          "width": 27,
+          "height": 8,
+          "font_size": 26,
+          "text_color": "#FFFFFF",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "text",
+          "text": "CHECK YOUR WORK",
+          "x": 70,
+          "y": 1,
+          "width": 27,
+          "height": 8,
+          "font_size": 25,
+          "text_color": "#FFFFFF",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 7,
+          "y": 92,
+          "width": 86,
+          "height": 0.6,
+          "fill_color": "#A68832",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "Before you go",
+          "x": 7,
+          "y": 15,
+          "width": 86,
+          "height": 15,
+          "font_size": 57,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 11,
+          "y": 35,
+          "width": 78,
+          "height": 12,
+          "fill_color": "#E9F2E3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "Name one quality.",
+          "x": 13,
+          "y": 35,
+          "width": 74,
+          "height": 12,
+          "font_size": 34,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 11,
+          "y": 51,
+          "width": 78,
+          "height": 12,
+          "fill_color": "#FFFFFF",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "Give a specific example.",
+          "x": 13,
+          "y": 51,
+          "width": 74,
+          "height": 12,
+          "font_size": 34,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        },
+        {
+          "kind": "shape",
+          "shape": "rectangle",
+          "x": 11,
+          "y": 67,
+          "width": 78,
+          "height": 12,
+          "fill_color": "#E9F2E3",
+          "border_opacity": 0
+        },
+        {
+          "kind": "text",
+          "text": "Link the ideas with because.",
+          "x": 13,
+          "y": 67,
+          "width": 74,
+          "height": 12,
+          "font_size": 34,
+          "text_color": "#0B3D25",
+          "font_family": "system-ui"
+        }
+      ]
     },
     {
       "id": "verify-1",
