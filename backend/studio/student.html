@@ -394,11 +394,22 @@
     let scoreRequestKey = "";
     const publishedScores = document.getElementById("publishedScores");
 
-    async function syncScores(ids) {
-      if (!studentId || !ids?.length) return;
+    async function syncScores(session) {
+      const taskId = session.active_writing_task?.task_id;
+      if (!studentId || !taskId || !session.published_score_ids?.includes(taskId)) {
+        scoreRequestKey = "";
+        publishedScores.hidden = true;
+        publishedScores.replaceChildren();
+        return;
+      }
+      const ids = [taskId];
       const key = JSON.stringify(ids) + ":" + submittedTasks.size;
       if (key === scoreRequestKey) return;
       scoreRequestKey = key;
+      if (publishedScores.firstElementChild?.dataset.taskId !== taskId) {
+        publishedScores.hidden = true;
+        publishedScores.replaceChildren();
+      }
       try {
         const response = await fetch(`${API_BASE}/sessions/${sessionPin}/published-scores`, {
           method: "POST",
@@ -408,9 +419,10 @@
         if (!response.ok) throw new Error("Could not load scores");
         const result = await response.json();
         if (scoreRequestKey !== key) return;
-        publishedScores.hidden = !result.scores.length;
+        const scores = result.scores.filter(score => score.task_id === taskId);
+        publishedScores.hidden = !scores.length;
         const existing = new Map([...publishedScores.children].map(card => [card.dataset.taskId, card.open]));
-        publishedScores.replaceChildren(...result.scores.map(score => {
+        publishedScores.replaceChildren(...scores.map(score => {
           const card = document.createElement("details");
           card.dataset.taskId = score.task_id;
           card.open = existing.get(score.task_id) ?? true;
@@ -650,7 +662,7 @@
         displayMode = session.display_mode || "follow";
         slideStep = session.slide_step || 0;
         syncWriting(session.active_writing_task);
-          void syncScores(session.published_score_ids);
+          void syncScores(session);
 
         renderSessionBlock();
         startSessionPolling();
@@ -758,7 +770,7 @@
           }
           showSlideStep();
           syncWriting(session.active_writing_task);
-          void syncScores(session.published_score_ids);
+          void syncScores(session);
         } catch (err) {
           console.error(err);
           if (!isDisconnected) {

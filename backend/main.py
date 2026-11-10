@@ -699,10 +699,12 @@ def next_block(pin: str):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
-        (next_index, pin)
+        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ? AND current_block_index <> ?"),
+        (next_index, pin, next_index)
     )
-    cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
+    if cur.rowcount:
+        cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
+        cur.execute(sql("DELETE FROM active_writing_tasks WHERE pin = ?"), (pin,))
     conn.commit()
     conn.close()
 
@@ -718,10 +720,12 @@ def previous_block(pin: str):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
-        (prev_index, pin)
+        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ? AND current_block_index <> ?"),
+        (prev_index, pin, prev_index)
     )
-    cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
+    if cur.rowcount:
+        cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
+        cur.execute(sql("DELETE FROM active_writing_tasks WHERE pin = ?"), (pin,))
     conn.commit()
     conn.close()
 
@@ -738,10 +742,12 @@ def set_block(pin: str, index: int):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
-        (index, pin)
+        sql("UPDATE sessions SET current_block_index = ? WHERE pin = ? AND current_block_index <> ?"),
+        (index, pin, index)
     )
-    cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
+    if cur.rowcount:
+        cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
+        cur.execute(sql("DELETE FROM active_writing_tasks WHERE pin = ?"), (pin,))
     conn.commit()
     conn.close()
 
