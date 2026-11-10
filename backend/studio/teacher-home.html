@@ -224,25 +224,18 @@
       window.ELT_CONFIG?.TEACHER_PIN ||
       "2468";
 
-    const importForm = document.createElement("form");
-    importForm.innerHTML = `
-      <label>Google Slides link <input name="url" type="url" required></label>
-      <label>Staging teacher access code <input name="token" type="password" required></label>
-      <button type="submit">Import and open lesson</button>
-      <p role="status"></p>
-    `;
     const authorLink = document.createElement("a");
     authorLink.href = "author.html";
-    authorLink.textContent = "Open Lesson Studio";
+    authorLink.textContent = "Studio";
     const resultsLink = document.createElement("a");
     resultsLink.href = "session-results.html";
-    resultsLink.textContent = "Session Results";
+    resultsLink.textContent = "Results";
     const catalogsLink = document.createElement("a");
     catalogsLink.href = "catalogs.html";
-    catalogsLink.textContent = "Roster and Learning Targets";
+    catalogsLink.textContent = "Roster and Learning targets";
     const lessonsLink = document.createElement("a");
     lessonsLink.href = "lesson-catalogue.html";
-    lessonsLink.textContent = "Lesson Catalogue";
+    lessonsLink.textContent = "Catalogue";
     const workspace = document.createElement("nav");
     workspace.className = "reh-workspace";
     workspace.setAttribute("aria-label", "Teacher workspace");
@@ -257,38 +250,7 @@
       link.append(caption);
       workspace.append(link);
     }
-    const importPanel = document.createElement("details");
-    importPanel.className = "reh-import";
-    const importSummary = document.createElement("summary");
-    importSummary.textContent = "Import Google Slides";
-    importPanel.append(importSummary, importForm);
-    catalogEl.before(workspace, importPanel);
-    importForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const button = importForm.querySelector("button");
-      const status = importForm.querySelector("[role=status]");
-      button.disabled = true;
-      status.textContent = "Importing Google Slides…";
-      try {
-        const response = await fetch(window.ELT_CONFIG.API_BASE + "/slides/import", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + importForm.elements.token.value.trim()
-          },
-          body: JSON.stringify({ url: importForm.elements.url.value.trim() })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Could not import this deck.");
-        const lesson = new URL("teacher.html", BASE_URL);
-        lesson.searchParams.set("lesson", result.lesson_path);
-        window.location.assign(lesson.href);
-      } catch (error) {
-        status.textContent = error.message;
-      } finally {
-        button.disabled = false;
-      }
-    });
+    catalogEl.before(workspace);
 
     function unlockTeacherApp() {
       const enteredPin = teacherPinInput.value.trim();

@@ -58,13 +58,20 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 .slide-table th { background:#d5e6ff; font-weight:700 }
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
-<header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import a lesson from GPT Work, edit its blocks, and save a version for class.</p></header>
+<header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import Google Slides or a GPT Work lesson, then edit and save a version for class.</p></header>
 <main>
 <section>
   <label>Staging teacher access code <input id="token" data-target-catalog-code type="password" autocomplete="off"></label>
   <button id="loadRevision" hidden>Load saved version</button>
   <button id="sample">Load Work sample</button>
   <a href="/api/work-lessons/schema">JSON schema</a> · <a href="work-lesson-sample.json" download>Download sample JSON</a>
+  <details><summary>Import Google Slides</summary>
+    <form id="googleSlidesImport">
+      <label>Google Slides link <input name="url" type="url" required></label>
+      <button type="submit">Import as draft</button>
+    </form>
+    <p>Slides are imported as images. You can reorder them, add editable elements and insert tasks.</p>
+  </details>
   <details><summary>Import Work JSON</summary>
     <label>Lesson JSON <textarea id="source" rows="7" spellcheck="false"></textarea></label>
     <button id="import">Import draft</button>
@@ -106,6 +113,6 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=1"></script>
-<script src="author.js?v=catalogue-metadata-1"></script>
+<script src="author.js?v=slides-draft-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>

@@ -8,7 +8,7 @@ let selectedElement = null;
 let revealPreview = -1;
 const authorParams = new URLSearchParams(location.search);
 let revision = authorParams.get("revision");
-const catalogueId = authorParams.get("catalogue");
+let catalogueId = authorParams.get("catalogue");
 
 function status(message) { byId("status").textContent = message; }
 
@@ -376,6 +376,42 @@ byId("course").onchange = dirty;
 byId("level").onchange = dirty;
 byId("title").oninput = dirty;
 byId("objective").oninput = dirty;
+byId("googleSlidesImport").onsubmit = async event => {
+  event.preventDefault();
+  if (lesson && !confirm("Replace the current draft with the imported slides?")) return;
+  const form = event.currentTarget;
+  const submit = form.querySelector("button");
+  submit.disabled = true;
+  status("Importing Google Slides…");
+  try {
+    const imported = await request("/slides/import", { url: form.elements.url.value.trim() });
+    const deck = await request("/" + imported.lesson_path);
+    loadDraft({
+      schema_version: 1,
+      title: deck.title,
+      blocks: deck.blocks.map(block => ({
+        id: block.id,
+        title: block.title,
+        kind: "slide",
+        phase: "teach",
+        elements: [{
+          kind: "image", text: block.title, url: api + "/" + block.image_path,
+          x: 0, y: 0, width: 100, height: 100
+        }]
+      }))
+    });
+    catalogueId = null;
+    const url = new URL(location.href);
+    url.searchParams.delete("revision");
+    url.searchParams.delete("catalogue");
+    history.replaceState({}, "", url);
+    status("Slides imported. Set the course, level and title, then save a version.");
+  } catch (error) {
+    status(error.message);
+  } finally {
+    submit.disabled = false;
+  }
+};
 byId("import").onclick = () => {
   try { loadDraft(JSON.parse(byId("source").value)); status("Draft imported. Review and save a version."); }
   catch (error) { status(error.message); }
