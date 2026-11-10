@@ -218,6 +218,10 @@
     .order-parts li { margin-block: 6px; padding: 8px; border: 1px solid #d5e1ec; border-radius: 8px; }
     .order-parts li > div { display: inline-flex; gap: 5px; margin: 5px 0 0 8px; }
     .order-parts button { min-width: 42px; min-height: 42px; }
+    .sentence-parts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+    .sentence-parts li { margin: 0; padding: 0; border: 0; max-width: 100%; }
+    #writingPanel .sentence-parts button { color: #17283b; background: #edf4fb; border: 1px solid #b7c9db; cursor: grab; max-width: 100%; overflow-wrap: anywhere; }
+    #writingPanel .sentence-parts button[aria-pressed="true"] { background: #d7f2eb; border-color: #08695f; outline: 2px solid #08695f; }
     #quizChoices label {
       min-height: 36px;
       padding: 4px 0;
@@ -598,6 +602,76 @@
       return order;
     }
 
+    function renderSentenceParts(parts, draft) {
+      const list = document.createElement("ul");
+      list.className = "order-parts sentence-parts";
+      let selected;
+      let dragged;
+
+      function select(row) {
+        selected?.firstElementChild.setAttribute("aria-pressed", "false");
+        selected = row;
+        selected?.firstElementChild.setAttribute("aria-pressed", "true");
+      }
+
+      function move(row, target) {
+        if (!target || row === target) return;
+        const rows = [...list.children];
+        if (rows.indexOf(row) < rows.indexOf(target)) target.after(row);
+        else target.before(row);
+      }
+
+      for (const index of Array.isArray(draft) ? draft : parts.map((_, index) => index)) {
+        const row = document.createElement("li");
+        row.dataset.part = index;
+        row.draggable = true;
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.textContent = parts[index];
+        chip.setAttribute("aria-pressed", "false");
+        chip.addEventListener("click", () => {
+          if (selected && selected !== row) {
+            const marker = document.createComment("");
+            selected.replaceWith(marker);
+            row.replaceWith(selected);
+            marker.replaceWith(row);
+            select(null);
+            chip.focus();
+          } else {
+            select(selected === row ? null : row);
+          }
+        });
+        chip.addEventListener("keydown", event => {
+          if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+          event.preventDefault();
+          move(row, event.key === "ArrowLeft" ? row.previousElementSibling : row.nextElementSibling);
+          chip.focus();
+        });
+        row.addEventListener("dragstart", event => {
+          select(null);
+          dragged = row;
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("text/plain", String(index));
+        });
+        row.addEventListener("dragover", event => {
+          if (!dragged) return;
+          event.preventDefault();
+          event.dataTransfer.dropEffect = "move";
+        });
+        row.addEventListener("drop", event => {
+          if (!dragged) return;
+          event.preventDefault();
+          move(dragged, row);
+          dragged.firstElementChild.focus();
+          dragged = null;
+        });
+        row.addEventListener("dragend", () => { dragged = null; });
+        row.append(chip);
+        list.append(row);
+      }
+      return list;
+    }
+
     function renderOrderingParts(parts, draft) {
       const list = document.createElement("ol");
       list.className = "order-parts";
@@ -669,7 +743,7 @@
         writingInput.hidden = isQuiz;
         writingForm.elements.response.required = !isQuiz;
         quizChoices.hidden = !isQuiz;
-        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : task?.type?.startsWith("ordering_") ? "Use the arrows to move each part" : "Enter your answers";
+        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : task?.type === "ordering_sentence" ? "Drag the words or tap two to swap them" : task?.type === "ordering_paragraph" ? "Use the arrows to move each part" : "Enter your answers";
         quizChoices.querySelectorAll("fieldset").forEach(group => group.remove());
         if (isQuiz) {
           task.questions.forEach((question, questionIndex) => {
@@ -679,7 +753,9 @@
             group.append(legend);
             window.renderTaskMaterials(group, question.materials);
             if (question.parts) {
-              group.append(renderOrderingParts(question.parts, draft[questionIndex]));
+              group.append(task.type === "ordering_sentence"
+                ? renderSentenceParts(question.parts, draft[questionIndex])
+                : renderOrderingParts(question.parts, draft[questionIndex]));
               quizChoices.append(group);
               return;
             }
