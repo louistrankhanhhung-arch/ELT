@@ -291,8 +291,11 @@ function render() {
   } else if (block.kind === "dialogue") {
     byId("elementInspector").replaceChildren();
     field(fields, "Shared instructions", block.body, value => { block.body = value; }, null, true);
+    renderMaterialEditor(fields, block, 12, "Shared input materials");
     field(fields, "Role A card", block.role_a, value => { block.role_a = value; }, null, true);
+    renderMaterialEditor(fields, block, 12, "Role A input materials", "role_a_materials");
     field(fields, "Role B card", block.role_b, value => { block.role_b = value; }, null, true);
+    renderMaterialEditor(fields, block, 12, "Role B input materials", "role_b_materials");
   } else {
     byId("elementInspector").replaceChildren();
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
@@ -389,12 +392,12 @@ function renderTextQuestions(parent, task) {
   });
 }
 
-function renderMaterialEditor(parent, owner, limit) {
-  const items = owner.materials ||= [];
+function renderMaterialEditor(parent, owner, limit, title = "Input materials", key = "materials") {
+  const items = owner[key] ||= [];
   const panel = document.createElement("details");
   panel.open = !!items.length;
   const summary = document.createElement("summary");
-  summary.textContent = "Input materials" + (items.length ? " (" + items.length + ")" : "");
+  summary.textContent = title + (items.length ? " (" + items.length + ")" : "");
   panel.append(summary);
   items.forEach((item, index) => {
     const group = document.createElement("fieldset");
@@ -572,7 +575,12 @@ byId("save").onclick = async () => {
       if (!isTextAssessment(copy.kind)) delete copy.text_questions;
       if (!isOrdering(copy.kind)) delete copy.ordering_questions;
       if (copy.kind !== "page") delete copy.tasks;
-      if (copy.kind !== "dialogue") { delete copy.role_a; delete copy.role_b; }
+      if (copy.kind !== "dialogue") {
+        delete copy.role_a;
+        delete copy.role_b;
+        delete copy.role_a_materials;
+        delete copy.role_b_materials;
+      }
       return copy;
     });
     const saved = await request("/work-lessons", { lesson: { ...lesson, blocks }, parent_revision: revision });

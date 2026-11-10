@@ -493,6 +493,13 @@
         node.textContent = value;
         dialogueCard.append(node);
       }
+      for (const [label, materials] of [["Shared materials", card.shared_materials], ["Role " + card.role + " materials", card.materials]]) {
+        if (!materials?.length) continue;
+        const heading = document.createElement("h3");
+        heading.textContent = label;
+        dialogueCard.append(heading);
+        window.renderTaskMaterials(dialogueCard, materials);
+      }
     }
 
     const pageTaskPicker = document.getElementById("pageTaskPicker");

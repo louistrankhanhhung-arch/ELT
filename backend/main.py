@@ -679,6 +679,12 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
                     **{key: own[key] for key in ("role", "group_number", "instructions", "card")},
                     "partners": [{"name": row["partner_name"], "role": row["partner_role"]} for row in roles],
                 }
+    if "dialogue_card" in session:
+        card = session["dialogue_card"]
+        block = load_imported_lesson(session["lesson_path"].split("/")[1])["blocks"][session["current_block_index"]]
+        dialogue = block["dialogue"]
+        card["shared_materials"] = dialogue.get("shared_materials", [])
+        card["materials"] = dialogue.get(card["role"].lower() + "_materials", [])
     if "students" in session:
         if session["lesson_path"].startswith("imports/"):
             try:
@@ -1836,6 +1842,8 @@ class WorkPageTask(BaseModel):
 
 
 class WorkBlock(BaseModel):
+    role_a_materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
+    role_b_materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     role_a: str = Field(default="", max_length=4000)
     role_b: str = Field(default="", max_length=4000)
     ordering_questions: List[OrderingQuestion] = Field(default_factory=list, max_length=30)
@@ -1918,7 +1926,12 @@ def save_work_lesson(payload: SaveWorkLesson):
             if block.kind == "dialogue":
                 if not block.role_a.strip() or not block.role_b.strip():
                     raise HTTPException(422, f"Dialogue {block.id}: enter instructions for both roles")
-                entry["dialogue"] = {"a": block.role_a.strip(), "b": block.role_b.strip()}
+                entry["dialogue"] = {
+                    "a": block.role_a.strip(), "b": block.role_b.strip(),
+                    "shared_materials": [item.normalized() for item in block.materials],
+                    "a_materials": [item.normalized() for item in block.role_a_materials],
+                    "b_materials": [item.normalized() for item in block.role_b_materials],
+                }
             if block.kind == "page":
                 if not block.tasks or len({task.id for task in block.tasks}) != len(block.tasks):
                     raise HTTPException(422, f"Page {block.id}: add tasks with unique IDs")
