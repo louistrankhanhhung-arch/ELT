@@ -287,5 +287,29 @@ function renderElements(fields, block) {
     dirty();
     render();
   });
+  const importPanel = document.createElement("details");
+  const importTitle = document.createElement("summary");
+  importTitle.textContent = "Import element layout JSON";
+  importPanel.append(importTitle);
+  const input = document.createElement("textarea");
+  input.rows = 5;
+  input.setAttribute("aria-label", "Element layout JSON");
+  importPanel.append(input);
+  button(importPanel, "Apply layout", () => {
+    try {
+      const layout = JSON.parse(input.value);
+      if (!Array.isArray(layout) || layout.length > 60 || layout.some(element => !element ||
+          !["text","image","audio","shape","icon"].includes(element.kind))) {
+        throw new Error("Use an array of up to 60 slide elements.");
+      }
+      block.elements = layout;
+      dirty();
+      render();
+      status("Element layout applied. Save a version to keep it.");
+    } catch (error) {
+      status(error.message);
+    }
+  });
+  section.append(importPanel);
   fields.append(section);
 }
