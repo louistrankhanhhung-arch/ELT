@@ -31,6 +31,15 @@
       .comparison div { padding:8px; background:#F7FAF3; border-radius:7px }
       .comparison small { display:block; color:#456052; font-weight:650 }
       .comparison p { margin:4px 0 0 }
+      .mastery { margin:12px 0; padding:14px; border-radius:10px; background:#F7FAF3; border:1px solid #CCDCC8 }
+      .mastery h3 { margin:0 0 8px; font-size:1rem }
+      .mastery p { margin:6px 0 12px; color:#456052; font-size:.9rem }
+      .mastery progress { display:block; width:100%; height:9px; margin:7px 0; accent-color:#286340 }
+      .mastery .missed-bar { accent-color:#ad651f }
+      .missed-questions details { padding:8px 0; border-top:1px solid #CCDCC8 }
+      .missed-questions summary strong { margin-right:8px }
+      .missed-names { display:flex; flex-wrap:wrap; gap:6px; list-style:none; margin:8px 0 0; padding:0 }
+      .missed-names li { padding:3px 8px; border-radius:8px; background:#E9F2E3; font-size:.85rem }
       audio { max-width:100%; display:block; margin:8px 0 }
       :focus-visible { outline:3px solid #4D8627; outline-offset:2px }
     `;
@@ -115,6 +124,56 @@
       container.append(show);
     }
 
+    function renderMastery(task, roster) {
+      const panel = node("section", null, "mastery");
+      const graded = task.submissions.filter(row => Number.isFinite(row.score) && row.max_score > 0);
+      const mastered = graded.filter(row => row.score * 5 >= row.max_score * 4).length;
+      panel.append(node("h3", "Class mastery"));
+      if (!graded.length) {
+        panel.append(node("p", "Mastery will appear when a graded response is submitted."));
+        return panel;
+      }
+
+      const percent = Math.round(mastered * 100 / graded.length);
+      const meter = node("progress");
+      meter.max = graded.length;
+      meter.value = mastered;
+      meter.setAttribute("aria-label", "Students who reached mastery");
+      const average = Math.round(100 * graded.reduce((sum, row) => sum + row.score / row.max_score, 0) / graded.length);
+      panel.append(node("strong", `${percent}% reached mastery`), meter,
+        node("p", `${mastered}/${graded.length} graded students scored at least 80% · Average score ${average}% · ${task.submissions.length}/${roster.length} submitted`));
+
+      const mistakes = task.questions.map((question, index) => {
+        const checked = graded.filter(row => typeof row.items?.[index]?.is_correct === "boolean");
+        const names = checked.filter(row => row.items[index].is_correct === false).map(row => row.student_name);
+        return {index, prompt: question.prompt, names, checked: checked.length};
+      }).filter(item => item.names.length).sort((a, b) => b.names.length - a.names.length || a.index - b.index);
+      panel.append(node("h3", "Most missed questions"));
+      if (!mistakes.length) {
+        panel.append(node("p", graded.some(row => row.items?.length) ? "No missed questions." : "Question details are unavailable."));
+        return panel;
+      }
+      const list = node("div", null, "missed-questions");
+      for (const item of mistakes.slice(0, 3)) {
+        const detail = node("details");
+        detail.dataset.key = `${task.task_id}:missed:${item.index}`;
+        const summary = node("summary");
+        summary.append(node("strong", `Q${item.index + 1}. ${item.prompt}`),
+          node("span", `${item.names.length}/${item.checked} incorrect`, "badge incorrect"));
+        const bar = node("progress");
+        bar.max = item.checked;
+        bar.value = item.names.length;
+        bar.setAttribute("aria-label", `Incorrect answers for question ${item.index + 1}`);
+        bar.className = "missed-bar";
+        const names = node("ul", null, "missed-names");
+        for (const name of item.names) names.append(node("li", name));
+        detail.append(summary, bar, names);
+        list.append(detail);
+      }
+      panel.append(list);
+      return panel;
+    }
+
     function render(result) {
       const wasOpen = new Set([...entries.querySelectorAll("details[open]")].map(item => item.dataset.key));
       const initial = !entries.querySelector(".task");
@@ -128,6 +187,9 @@
         group.append(node("summary", `${window.classroomReportTitle(task, index)} · ${submitted.size}/${roster.length} submitted`),
           node("p", task.prompt));
         if (task.questions?.length) {
+          const mastery = renderMastery(task, roster);
+          for (const detail of mastery.querySelectorAll("details")) detail.open = wasOpen.has(detail.dataset.key);
+          group.append(mastery);
           const publish = control(task.scores_published ? "Scores published" : "Publish scores", async () => {
             publish.disabled = true;
             try {
