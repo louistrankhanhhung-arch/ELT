@@ -751,7 +751,7 @@
       const quiz = task?.quiz || block.quiz;
       const questions = assigned?.questions || task?.questions || quiz?.questions ||
         (Array.isArray(quiz?.options) ? [{ ...quiz, prompt: task.prompt }] : []);
-      reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option) || question.accepted_answers?.length);
+      reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option) || question.accepted_answers?.length || question.correct_order?.length);
       if (!task) return;
       const heading = document.createElement("h2");
       heading.textContent = block.title || "Prepared task";
@@ -767,7 +767,7 @@
         questionText.textContent = question.prompt;
         const options = document.createElement("ol");
         options.type = "A";
-        question.options?.forEach((option, index) => {
+        (question.options || question.parts)?.forEach((option, index) => {
           const row = document.createElement("li");
           row.textContent = option;
           if (index === question.correct_option) {
@@ -782,11 +782,13 @@
         item.append(questionText);
         window.renderTaskMaterials(item, question.materials);
         if (options.childElementCount) item.append(options);
-        if (question.accepted_answers?.length) {
+        if (question.accepted_answers?.length || question.correct_order?.length) {
           const key = document.createElement("strong");
           key.dataset.answerKey = "";
           key.hidden = true;
-          key.textContent = "Accepted answers: " + question.accepted_answers.join(" / ");
+          key.textContent = question.correct_order
+            ? "Correct order: " + question.correct_order.map(index => question.parts[index]).join(question.separator)
+            : "Accepted answers: " + question.accepted_answers.join(" / ");
           item.append(key);
         }
         list.append(item);

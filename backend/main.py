@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from random import randint
+from random import randint, shuffle
 from datetime import datetime, timezone, timedelta
 from typing import List, Literal, Optional
 import base64
@@ -961,11 +961,12 @@ def imported_lesson(deck_id: str):
             block["page_tasks"] = [{key: task[key] for key in ("id", "title")}
                                    for task in block["page_tasks"]]
         task = block.get("task")
-        if task and task.get("type") in ("multiple_choice", "cloze", "short_answer"):
+        if task and task.get("type") in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
             task.pop("correct_option", None)
             for question in task.get("questions", []):
                 question.pop("correct_option", None)
                 question.pop("accepted_answers", None)
+                question.pop("correct_order", None)
     return manifest
 
 
@@ -1143,6 +1144,14 @@ class QuizQuestion(BaseModel):
                 **({"learning_target_id": self.learning_target_id.strip()} if self.learning_target_id and self.learning_target_id.strip() else {})}
 
 
+class OrderingQuestion(BaseModel):
+    prompt: str = Field(min_length=1, max_length=4000)
+    parts: List[str] = Field(min_length=2, max_length=16)
+    question_id: Optional[str] = Field(default=None, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
+    materials: List[TaskMaterial] = Field(default_factory=list, max_length=8)
+
+
 class TextQuestion(BaseModel):
     prompt: str = Field(min_length=1, max_length=4000)
     accepted_answers: List[str] = Field(min_length=1, max_length=20)
@@ -1156,6 +1165,33 @@ def normalize_answer(value):
 
 
 def work_assessment(block):
+    if block.kind in ("ordering_sentence", "ordering_paragraph"):
+        if not block.ordering_questions or block.quiz or block.text_questions:
+            raise HTTPException(422, "Add ordering items that match the task type")
+        questions = []
+        ids = set()
+        for index, item in enumerate(block.ordering_questions, 1):
+            prompt = item.prompt.strip()
+            parts = [part.strip() for part in item.parts]
+            question_id = item.question_id or f"q{index}"
+            if not prompt or question_id in ids or len(set(parts)) < 2 or any(not part or len(part) > 500 for part in parts):
+                raise HTTPException(422, "Use unique question IDs and at least two different, non-empty parts")
+            ids.add(question_id)
+            order = list(range(len(parts)))
+            shuffle(order)
+            if [parts[position] for position in order] == parts:
+                swap = next(position for position in range(1, len(parts)) if parts[order[position]] != parts[order[0]])
+                order[0], order[swap] = order[swap], order[0]
+            questions.append({
+                "prompt": prompt, "question_id": question_id, "parts": [parts[position] for position in order],
+                "correct_order": [order.index(position) for position in range(len(parts))],
+                "separator": " " if block.kind == "ordering_sentence" else "\n",
+                "learning_target_id": item.learning_target_id,
+                "materials": [material.normalized() for material in item.materials],
+            })
+        return {"kind": block.kind, "questions": questions}
+    if block.ordering_questions:
+        raise HTTPException(422, "Ordering items require an ordering task")
     if block.kind == "multiple_choice" and block.quiz and not block.text_questions:
         return block.quiz.normalized(block.prompt.strip())
     if block.kind in ("cloze", "short_answer") and block.text_questions and not block.quiz:
@@ -1173,7 +1209,7 @@ def work_assessment(block):
                               "learning_target_id": item.learning_target_id,
                               "materials": [material.normalized() for material in item.materials]})
         return {"kind": block.kind, "questions": questions}
-    if block.kind in ("multiple_choice", "cloze", "short_answer") or block.quiz or block.text_questions:
+    if block.kind in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph") or block.quiz or block.text_questions:
         raise HTTPException(422, "Add questions that match the task type")
     return {}
 
@@ -1220,6 +1256,26 @@ def quiz_answers(raw, questions):
 
 
 def assessment_items(raw, questions):
+    if questions and "correct_order" in questions[0]:
+        try:
+            responses = json.loads(raw)
+        except ValueError:
+            raise HTTPException(422, "Order all parts before submitting")
+        if not isinstance(responses, list) or len(responses) != len(questions):
+            raise HTTPException(422, "Submit one order for every item")
+        items = []
+        for answer, question in zip(responses, questions):
+            parts = question["parts"]
+            if (not isinstance(answer, list) or len(answer) != len(parts)
+                    or any(type(position) is not int for position in answer)
+                    or sorted(answer) != list(range(len(parts)))):
+                raise HTTPException(422, "Use each part exactly once")
+            selected = [parts[position] for position in answer]
+            expected = [parts[position] for position in question["correct_order"]]
+            separator = question["separator"]
+            items.append({"selected_option": separator.join(selected), "correct_option": separator.join(expected),
+                          "is_correct": selected == expected})
+        return items
     if questions and "accepted_answers" in questions[0]:
         try:
             answers = json.loads(raw)
@@ -1256,7 +1312,7 @@ def task_description(row):
     if definition:
         quiz = json.loads(definition)
         task["type"] = quiz.get("kind", "multiple_choice")
-        task["questions"] = [{key: q[key] for key in ("prompt", "options", "materials") if key in q}
+        task["questions"] = [{key: q[key] for key in ("prompt", "options", "materials", "parts") if key in q}
                              for q in quiz_questions(quiz, task["prompt"])]
         task["shuffle"] = quiz.get("shuffle", False)
         if len(task["questions"]) == 1 and task["type"] == "multiple_choice":
@@ -1338,7 +1394,7 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         phase = block.get("phase")
         target = block.get("learning_target_id")
         quiz = ({key: block["task"][key] for key in ("questions", "shuffle", "options", "correct_option", "kind") if key in block["task"]}
-                if block["task"]["type"] in ("multiple_choice", "cloze", "short_answer") else None)
+                if block["task"]["type"] in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph") else None)
     if not prompt:
         raise HTTPException(422, "Enter a writing prompt")
     if speaking and quiz:
@@ -1446,7 +1502,7 @@ def assign_page(pin: str, payload: AssignPageRequest):
                     cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
                 if task["type"] == "speaking":
                     cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
-                elif task["type"] in ("multiple_choice", "cloze", "short_answer"):
+                elif task["type"] in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
                     quiz = {key: task[key] for key in ("questions", "options", "correct_option", "shuffle", "kind") if key in task}
                     cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
             cur.executemany(sql("INSERT INTO page_task_recipients VALUES (?, ?) ON CONFLICT DO NOTHING"),
@@ -1493,7 +1549,7 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
                 raise HTTPException(409, "This task is not open for submissions")
             if active["type"] == "speaking":
                 raise HTTPException(422, "Submit an audio recording for this task")
-            if active["type"] in ("multiple_choice", "cloze", "short_answer"):
+            if active["type"] in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
                 cur.execute(sql("SELECT definition FROM writing_task_quizzes WHERE task_id = ?"), (task_id,))
                 definition = json.loads(cur.fetchone()["definition"])
                 assessment_items(payload.response, quiz_questions(definition, active["prompt"]))
@@ -1673,11 +1729,12 @@ class SlideElement(BaseModel):
 
 
 class WorkPageTask(BaseModel):
+    ordering_questions: List[OrderingQuestion] = Field(default_factory=list, max_length=30)
     text_questions: List[TextQuestion] = Field(default_factory=list, max_length=30)
     materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     title: str = Field(min_length=1, max_length=160)
-    kind: Literal["writing", "multiple_choice", "speaking", "cloze", "short_answer"]
+    kind: Literal["writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]
     prompt: str = Field(min_length=1, max_length=4000)
     audience_label: Optional[str] = Field(default=None, max_length=60)
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
@@ -1685,6 +1742,7 @@ class WorkPageTask(BaseModel):
 
 
 class WorkBlock(BaseModel):
+    ordering_questions: List[OrderingQuestion] = Field(default_factory=list, max_length=30)
     text_questions: List[TextQuestion] = Field(default_factory=list, max_length=30)
     materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     tasks: List[WorkPageTask] = Field(default_factory=list, max_length=20)
@@ -1692,7 +1750,7 @@ class WorkBlock(BaseModel):
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: EvidencePhase
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
-    kind: Literal["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer"]
+    kind: Literal["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
     notes: str = Field(default="", max_length=4000)

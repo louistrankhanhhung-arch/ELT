@@ -41,7 +41,7 @@ function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
-        || !["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer"].includes(block.kind)
+        || !["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"].includes(block.kind)
         || (block.elements != null && (!Array.isArray(block.elements) || !block.elements.every(validTable)))
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
@@ -67,7 +67,7 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   label.textContent = title;
   const input = document.createElement(choices ? "select" : multiline ? "textarea" : "input");
   if (!choices && !multiline) input.type = inputType;
-  if (choices) for (const choice of choices) input.add(new Option(choice || "None", choice));
+  if (choices) for (const choice of choices) input.add(new Option(({ordering_sentence: "Ordering Sentence", ordering_paragraph: "Ordering Paragraph"})[choice] || choice || "None", choice));
   if (multiline) input.rows = 3;
   if (catalog) input.setAttribute("list", "learningTargets");
   input.value = value ?? "";
@@ -280,7 +280,7 @@ function render() {
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
   field(fields, "Learning target ID (optional)", block.learning_target_id, value => { block.learning_target_id = value.trim() || null; }, null, false, true);
-  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer"]);
+  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
   if (["slide", "page"].includes(block.kind)) {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
@@ -295,6 +295,7 @@ function render() {
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
   if (isTextAssessment(block.kind)) renderTextQuestions(fields, block);
+  if (isOrdering(block.kind)) renderOrderingQuestions(fields, block);
   if (block.kind === "page") renderPageTasks(fields, block);
   byId("up").disabled = selected === 0;
   byId("down").disabled = selected === lesson.blocks.length - 1;
@@ -311,8 +312,8 @@ function renderPageTasks(fields, block) {
     heading.textContent = "Task " + (index + 1);
     group.append(heading);
     field(group, "Task title", task.title, value => { task.title = value; });
-    field(group, "Task type", task.kind, value => { task.kind = value; if (value !== "multiple_choice") delete task.quiz; if (!isTextAssessment(value)) delete task.text_questions; render(); },
-      ["writing", "multiple_choice", "speaking", "cloze", "short_answer"]);
+    field(group, "Task type", task.kind, value => { task.kind = value; if (value !== "multiple_choice") delete task.quiz; if (!isTextAssessment(value)) delete task.text_questions; if (!isOrdering(value)) delete task.ordering_questions; render(); },
+      ["writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]);
     field(group, "Audience label (blank = everyone)", task.audience_label, value => { task.audience_label = value.trim() || null; });
     field(group, "Learning target ID (optional)", task.learning_target_id,
       value => { task.learning_target_id = value.trim() || null; }, null, false, true);
@@ -320,11 +321,38 @@ function renderPageTasks(fields, block) {
     renderMaterialEditor(group, task, 12);
     if (task.kind === "multiple_choice") renderQuiz(group, task);
     if (isTextAssessment(task.kind)) renderTextQuestions(group, task);
+    if (isOrdering(task.kind)) renderOrderingQuestions(group, task);
     button(group, "Remove task", () => { tasks.splice(index, 1); dirty(); render(); });
     fields.append(group);
   });
   if (tasks.length < 20) button(fields, "Add task to Page", () => {
     tasks.push({id: crypto.randomUUID(), title: "New task", kind: "writing", prompt: ""});
+    dirty();
+    render();
+  });
+}
+
+function isOrdering(kind) { return kind === "ordering_sentence" || kind === "ordering_paragraph"; }
+
+function renderOrderingQuestions(parent, task) {
+  const items = task.ordering_questions ||= [];
+  items.forEach((item, index) => {
+    const group = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+    legend.textContent = "Ordering item " + (index + 1);
+    group.append(legend);
+    field(group, "Question", item.prompt, value => { item.prompt = value; });
+    const label = task.kind === "ordering_sentence" ? "Words or chunks" : "Sentences or chunks";
+    field(group, label + " in the correct order (one per line)", item.parts.join("\n"),
+      value => { item.parts = value.split(/\r?\n/).map(part => part.trim()).filter(Boolean); }, null, true);
+    field(group, "Learning target override (optional)", item.learning_target_id,
+      value => { item.learning_target_id = value.trim() || null; }, null, false, true);
+    renderMaterialEditor(group, item, 8);
+    button(group, "Remove item", () => { items.splice(index, 1); dirty(); render(); });
+    parent.append(group);
+  });
+  if (items.length < 30) button(parent, "Add ordering item", () => {
+    items.push({prompt: "Put the parts in the correct order.", parts: []});
     dirty();
     render();
   });
@@ -537,6 +565,7 @@ byId("save").onclick = async () => {
       const copy = { ...block };
       if (copy.kind !== "multiple_choice") delete copy.quiz;
       if (!isTextAssessment(copy.kind)) delete copy.text_questions;
+      if (!isOrdering(copy.kind)) delete copy.ordering_questions;
       if (copy.kind !== "page") delete copy.tasks;
       return copy;
     });

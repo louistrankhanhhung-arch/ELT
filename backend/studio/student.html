@@ -214,6 +214,10 @@
       padding: 8px 12px;
     }
     #quizChoices input[data-typed-answer] { box-sizing: border-box; max-width: 100%; width: min(100%, 32rem); padding: 8px; font: inherit; }
+    .order-parts { padding-inline-start: 1.6em; }
+    .order-parts li { margin-block: 6px; padding: 8px; border: 1px solid #d5e1ec; border-radius: 8px; }
+    .order-parts li > div { display: inline-flex; gap: 5px; margin: 5px 0 0 8px; }
+    .order-parts button { min-width: 42px; min-height: 42px; }
     #quizChoices label {
       min-height: 36px;
       padding: 4px 0;
@@ -594,8 +598,49 @@
       return order;
     }
 
+    function renderOrderingParts(parts, draft) {
+      const list = document.createElement("ol");
+      list.className = "order-parts";
+      function updateButtons() {
+        [...list.children].forEach((row, index) => {
+          row.querySelector("[data-move='up']").disabled = index === 0;
+          row.querySelector("[data-move='down']").disabled = index === list.children.length - 1;
+        });
+      }
+      const order = Array.isArray(draft) ? draft : parts.map((_, index) => index);
+      for (const index of order) {
+        const row = document.createElement("li");
+        row.dataset.part = index;
+        const text = document.createElement("span");
+        text.textContent = parts[index];
+        const controls = document.createElement("div");
+        for (const direction of ["up", "down"]) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.move = direction;
+          button.textContent = direction === "up" ? "↑" : "↓";
+          button.setAttribute("aria-label", "Move " + direction + ": " + parts[index]);
+          button.addEventListener("click", () => {
+            const adjacent = direction === "up" ? row.previousElementSibling : row.nextElementSibling;
+            if (!adjacent) return;
+            if (direction === "up") adjacent.before(row);
+            else adjacent.after(row);
+            updateButtons();
+            (button.disabled ? controls.querySelector("button:not(:disabled)") : button)?.focus();
+          });
+          controls.append(button);
+        }
+        row.append(text, controls);
+        list.append(row);
+      }
+      updateButtons();
+      return list;
+    }
+
     function selectedQuizAnswers() {
       return [...quizChoices.querySelectorAll("fieldset")].map(group => {
+        const ordered = group.querySelector(".order-parts");
+        if (ordered) return [...ordered.children].map(row => Number(row.dataset.part));
         const typed = group.querySelector("input[data-typed-answer]");
         if (typed) return typed.value.trim() ? typed.value : null;
         const answer = group.querySelector("input:checked");
@@ -618,13 +663,13 @@
         materials.replaceChildren();
         window.renderTaskMaterials(materials, task?.materials);
         const draft = writingDrafts.get(nextId) || "";
-        isQuiz = ["multiple_choice", "cloze", "short_answer"].includes(task?.type);
+        isQuiz = ["multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"].includes(task?.type);
         isSpeaking = task?.type === "speaking";
-        document.getElementById("taskHeading").textContent = ({speaking: "Speaking", multiple_choice: "Multiple choice", cloze: "Cloze", short_answer: "Short answer"})[task?.type] || "Writing";
+        document.getElementById("taskHeading").textContent = ({speaking: "Speaking", multiple_choice: "Multiple choice", cloze: "Cloze", short_answer: "Short answer", ordering_sentence: "Ordering sentence", ordering_paragraph: "Ordering paragraph"})[task?.type] || "Writing";
         writingInput.hidden = isQuiz;
         writingForm.elements.response.required = !isQuiz;
         quizChoices.hidden = !isQuiz;
-        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : "Enter your answers";
+        quizChoices.querySelector("legend").textContent = task?.type === "multiple_choice" ? "Choose one answer" : task?.type?.startsWith("ordering_") ? "Use the arrows to move each part" : "Enter your answers";
         quizChoices.querySelectorAll("fieldset").forEach(group => group.remove());
         if (isQuiz) {
           task.questions.forEach((question, questionIndex) => {
@@ -633,6 +678,11 @@
             legend.textContent = `${questionIndex + 1}. ${question.prompt}`;
             group.append(legend);
             window.renderTaskMaterials(group, question.materials);
+            if (question.parts) {
+              group.append(renderOrderingParts(question.parts, draft[questionIndex]));
+              quizChoices.append(group);
+              return;
+            }
             if (task.type !== "multiple_choice") {
               const label = document.createElement("label");
               const answer = document.createElement("input");
