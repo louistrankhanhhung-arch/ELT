@@ -1889,7 +1889,12 @@ def generate_writing_grade(key, prompt, rubric, response, materials):
     with urlopen(request, timeout=50) as result:
         output = json.load(result)
     if output.get("status") != "completed":
-        raise ValueError("Grading did not complete")
+        reason = (output.get("incomplete_details") or {}).get("reason")
+        if reason == "max_output_tokens":
+            raise RuntimeError("OpenAI hit the output token limit.")
+        if reason == "content_filter":
+            raise RuntimeError("OpenAI stopped the response at the content filter.")
+        raise RuntimeError("OpenAI did not complete the grading response.")
     chunks = [part["text"] for item in output["output"] if item["type"] == "message"
               for part in item["content"] if part["type"] == "output_text"]
     return validated_writing_grade(json.loads("".join(chunks)), rubric, response)
@@ -1927,12 +1932,29 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
     if not claimed:
         return {"ok": True}
     grade = None
+    error_detail = ""
     try:
         grade = generate_writing_grade(key, row["prompt"], json.loads(row["definition"]),
                                        row["response"], json.loads(row["materials"] or "[]"))
         state = "needs_review" if grade["needs_review"] else "ready"
-    except (OSError, ValueError, KeyError, TypeError):
+    except HTTPError as error:
         state = "failed"
+        try:
+            code = json.load(error).get("error", {}).get("code")
+        except (OSError, ValueError, AttributeError):
+            code = None
+        known = {"model_not_found", "insufficient_quota", "invalid_api_key", "rate_limit_exceeded",
+                 "unsupported_parameter", "invalid_json_schema", "invalid_request_error", "billing_hard_limit_reached"}
+        error_detail = f"OpenAI API HTTP {error.code}" + (f" ({code})" if isinstance(code, str) and code in known else "") + "."
+    except RuntimeError as error:
+        state = "failed"
+        error_detail = str(error) if str(error).startswith("OpenAI ") else "Writing grading did not complete."
+    except OSError:
+        state = "failed"
+        error_detail = "Could not connect to OpenAI or the request timed out."
+    except (ValueError, KeyError, TypeError):
+        state = "failed"
+        error_detail = "The grading response did not match the Writing rubric or format."
     with closing(db()) as conn:
         conn.cursor().execute(sql("""
             UPDATE writing_ai_grades SET state = ?, definition = ?, updated_at = ?
@@ -1940,7 +1962,7 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
         """), (state, json.dumps(grade) if grade else None, now_iso(), task_id, payload.student_id, lease))
         conn.commit()
     if state == "failed":
-        raise HTTPException(502, "Writing grading could not complete. Try again.")
+        raise HTTPException(502, error_detail or "Writing grading could not complete.")
     return {"ok": True}
 
 
