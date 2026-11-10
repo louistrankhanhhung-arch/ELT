@@ -383,6 +383,7 @@
       <button id="prevBtn">← Previous</button>
       <button id="nextBtn">Next →</button>
       <button id="presentationBtn">Present</button>
+      <button type="button" id="stopShowingSubmission" hidden>Back to lesson</button>
       <button type="button" id="openQuickTask" hidden>Quick assign</button>
       <button id="expandSlide" aria-pressed="false">Expand slide</button>
       <button id="startSessionBtn">Start Session</button>
@@ -697,6 +698,21 @@
     let projectionWindow;
     let projectionFrame;
     let projectionTask;
+    let projectedSubmission;
+    let projectedRecording;
+    const stopShowingSubmission = document.getElementById("stopShowingSubmission");
+
+    function clearProjectedSubmission() {
+      projectedSubmission = null;
+      if (projectedRecording) URL.revokeObjectURL(projectedRecording);
+      projectedRecording = null;
+      stopShowingSubmission.hidden = true;
+    }
+
+    stopShowingSubmission.addEventListener("click", () => {
+      clearProjectedSubmission();
+      syncProjection();
+    });
     const taskStage = document.getElementById("taskStage");
     const taskContent = document.getElementById("taskContent");
     const assignOnStage = document.getElementById("assignOnStage");
@@ -705,9 +721,18 @@
 
     function syncProjection() {
       if (!projectionWindow || projectionWindow.closed) return;
+      if (projectedSubmission) {
+        projectionFrame.style.display = "none";
+        projectionTask.hidden = false;
+        if (projectionTask.firstChild !== projectedSubmission) projectionTask.replaceChildren(projectedSubmission);
+        return;
+      }
       projectionFrame.style.display = taskStage.hidden ? "block" : "none";
       projectionTask.hidden = taskStage.hidden;
-      if (taskStage.hidden) projectionFrame.src = previewFrame.src;
+      if (taskStage.hidden) {
+        projectionTask.replaceChildren();
+        if (projectionFrame.src !== previewFrame.src) projectionFrame.src = previewFrame.src;
+      }
       else projectionTask.replaceChildren(taskContent.cloneNode(true));
     }
 
@@ -770,7 +795,7 @@
       reviewTask.setAttribute("aria-pressed", String(!shown));
       reviewTask.textContent = shown ? "Show answer key" : "Hide answer key";
       taskContent.querySelectorAll("[data-answer-key]").forEach(key => { key.hidden = shown; });
-      if (projectionWindow && !projectionWindow.closed && !taskStage.hidden) {
+      if (projectionWindow && !projectionWindow.closed && !taskStage.hidden && !projectedSubmission) {
         projectionTask.replaceChildren(taskContent.cloneNode(true));
       }
     });
@@ -1075,7 +1100,11 @@
             ? `${submission.selected_option} · Score: ${submission.score}/${submission.max_score}`
             : submission.response;
           answer.style.whiteSpace = "pre-wrap";
-          row.append(name);
+          const show = document.createElement("button");
+          show.type = "button";
+          show.textContent = "Show on screen";
+          show.addEventListener("click", () => void showSubmission(pin, task, submission));
+          row.append(name, show);
           if (task.type === "speaking") {
             const listen = document.createElement("button");
             listen.type = "button";
@@ -1224,6 +1253,7 @@
         return;
       }
 
+      clearProjectedSubmission();
       blockIndex = index;
       pageFeedback.textContent = "";
       pageAudience = [];
@@ -1423,6 +1453,8 @@
           throw new Error("Failed to end session");
         }
 
+        clearProjectedSubmission();
+        syncProjection();
         sessionBanner.textContent = `Session ended · PIN ${sessionPin}`;
         showJoinSession.hidden = true;
         joinWindow?.close();
@@ -1902,12 +1934,12 @@
       window.location.href = "./teacher-home.html";
     });
 
-    presentationBtn.addEventListener("click", () => {
+    function openProjection() {
       if (!projectionWindow || projectionWindow.closed) {
         projectionWindow = window.open("about:blank", "_blank", "popup");
         if (!projectionWindow) {
           alert("Allow pop-ups for this site to open the presentation window.");
-          return;
+          return false;
         }
         const page = projectionWindow.document;
         page.title = "Classroom presentation";
@@ -1927,9 +1959,68 @@
         syncProjection();
       }
       projectionWindow.focus();
-    });
+      return true;
+    }
 
-    window.addEventListener("pagehide", () => projectionWindow?.close());
+    presentationBtn.addEventListener("click", openProjection);
+
+    async function showSubmission(pin, task, submission) {
+      if (!openProjection()) return;
+      clearProjectedSubmission();
+      const page = projectionWindow.document;
+      const card = page.createElement("article");
+      card.style.cssText = "max-width:960px;margin:auto;overflow-wrap:anywhere";
+      const addText = (parent, tag, value) => {
+        const node = page.createElement(tag);
+        node.textContent = value;
+        parent.append(node);
+        return node;
+      };
+      addText(card, "h1", "Sample response");
+      addText(card, "p", task.prompt);
+      projectedSubmission = card;
+      stopShowingSubmission.hidden = false;
+      if (task.type === "speaking") {
+        const status = addText(card, "p", "Loading recording…");
+        syncProjection();
+        try {
+          const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/${task.task_id}/speaking/${submission.student_id}`, {
+            headers: teacherHeaders()
+          });
+          if (!response.ok) throw new Error("Could not load the recording.");
+          const recording = await response.blob();
+          if (projectedSubmission !== card || projectionWindow.closed) return;
+          projectedRecording = URL.createObjectURL(recording);
+          const player = page.createElement("audio");
+          player.controls = true;
+          player.style.maxWidth = "100%";
+          player.src = projectedRecording;
+          status.replaceWith(player);
+        } catch (error) {
+          if (projectedSubmission === card) status.textContent = error.message;
+        }
+      } else if (task.questions?.length) {
+        const list = page.createElement("ol");
+        card.append(list);
+        const selected = task.questions.length === 1 ? [submission.selected_option] : JSON.parse(submission.selected_option);
+        task.questions.forEach((question, index) => {
+          const row = page.createElement("li");
+          addText(row, "strong", question.prompt);
+          addText(row, "p", selected[index] ?? "");
+          list.append(row);
+        });
+        syncProjection();
+      } else {
+        addText(card, "h2", "Student response");
+        addText(card, "p", submission.response);
+        syncProjection();
+      }
+    }
+
+    window.addEventListener("pagehide", () => {
+      clearProjectedSubmission();
+      projectionWindow?.close();
+    });
     document.getElementById("expandSlide").addEventListener("click", event => {
       const expanded = document.body.classList.toggle("slide-expanded");
       event.currentTarget.setAttribute("aria-pressed", String(expanded));
