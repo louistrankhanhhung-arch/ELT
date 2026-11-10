@@ -2,6 +2,7 @@
 const el = id => document.getElementById(id);
 const base = window.ELT_CONFIG.API_BASE;
 let offset = 0;
+let pageSize = 20;
 let current = null;
 let pinFromLink = new URLSearchParams(location.search).get("pin");
 let archivedPin = null;
@@ -51,14 +52,26 @@ async function loadHistory() {
   const params = new URLSearchParams({ ...filters, offset: String(offset) });
   const result = await (await request("/session-history?" + params)).json();
   if (version !== historyRequest) return;
+  pageSize = result.page_size;
   if (!result.sessions.length && offset > 0) {
-    offset = Math.max(0, offset - 50);
+    offset = Math.max(0, offset - pageSize);
     return loadHistory();
   }
   el("history").hidden = false;
   el("historyEmpty").hidden = !!result.sessions.length;
   el("previous").disabled = offset === 0;
   el("next").disabled = !result.has_more;
+  const currentPage = Math.floor(offset / pageSize) + 1;
+  const pages = Array.from({length: result.total_pages}, (_, index) => index + 1);
+  el("historyPages").replaceChildren(...pages.map(page => {
+    const control = button(String(page), () => {
+      offset = (page - 1) * pageSize;
+      loadHistory().catch(error => status(error.message));
+    });
+    control.setAttribute("aria-label", "Page " + page);
+    if (page === currentPage) control.setAttribute("aria-current", "page");
+    return control;
+  }));
   el("sessionList").replaceChildren(...result.sessions.map(session => {
     const row = document.createElement("li");
     const check = document.createElement("input");
@@ -219,8 +232,8 @@ el("load").onclick = async () => {
     status("");
   } catch (error) { status(error.message); }
 };
-el("previous").onclick = () => { offset = Math.max(0, offset - 50); loadHistory().catch(error => status(error.message)); };
-el("next").onclick = () => { offset += 50; loadHistory().catch(error => status(error.message)); };
+el("previous").onclick = () => { offset = Math.max(0, offset - pageSize); loadHistory().catch(error => status(error.message)); };
+el("next").onclick = () => { offset += pageSize; loadHistory().catch(error => status(error.message)); };
 el("studentFilter").onchange = renderTasks;
 el("archive").onclick = async () => {
   const pin = current.session.pin;

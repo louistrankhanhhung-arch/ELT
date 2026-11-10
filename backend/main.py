@@ -1553,6 +1553,8 @@ def read_speaking(pin: str, task_id: str, student_id: str):
 def session_history(offset: int = 0, query: str = "", status: Literal["active", "ended", "expired"] | None = None):
     title = "r.manifest::json ->> 'title'" if USE_POSTGRES else "json_extract(r.manifest, '$.title')"
     search = query.strip().lower()[:160]
+    page_size = 20
+    offset = max(offset, 0)
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql(f"""
@@ -1563,14 +1565,18 @@ def session_history(offset: int = 0, query: str = "", status: Literal["active", 
                             THEN 'expired' ELSE s.status END AS status
                 FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
             )
-            SELECT * FROM history
+            SELECT *, COUNT(*) OVER () AS total FROM history
             WHERE status = COALESCE(?, status)
               AND (LOWER(title) LIKE ? OR LOWER(lesson_id) LIKE ? OR pin LIKE ?)
-            ORDER BY created_at DESC, pin DESC LIMIT 51 OFFSET ?
+            ORDER BY created_at DESC, pin DESC LIMIT ? OFFSET ?
         """), (now_iso(), (datetime.now(timezone.utc) - timedelta(hours=SESSION_TTL_HOURS)).isoformat(),
-               status, *([f"%{search}%"] * 3), max(offset, 0)))
+               status, *([f"%{search}%"] * 3), page_size, offset))
         sessions = [dict(row) for row in cur.fetchall()]
-    return {"sessions": sessions[:50], "has_more": len(sessions) > 50}
+    total = sessions[0]["total"] if sessions else 0
+    for session in sessions:
+        del session["total"]
+    return {"sessions": sessions, "has_more": offset + page_size < total,
+            "total_pages": (total + page_size - 1) // page_size, "page_size": page_size}
 
 
 class DeleteSessionsRequest(BaseModel):

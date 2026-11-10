@@ -15,6 +15,7 @@ details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;over
 #sessionList small{display:block;color:#4b5e73}#historyTools{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 #historyFilters{padding:8px 0}#deleteSessionsDialog{max-width:min(480px,92vw);border:1px solid #dbe3ed;border-radius:12px;padding:20px}
 #deleteSessionsDialog::backdrop{background:#17233899} [hidden]{display:none!important}
+#historyPages button[aria-current="page"]{background:#172338;color:white;font-weight:700}
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
 <main>
@@ -44,7 +45,7 @@ details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;over
 <p>This permanently removes their responses, scores and recordings. Download any archives you want to keep first.</p>
 <form method="dialog"><button value="cancel" autofocus>Cancel</button><button class="danger" id="confirmDeleteSessions" value="delete">Delete permanently</button></form>
 </dialog>
-<button id="previous" disabled>Previous</button><button id="next" disabled>Next</button>
+<nav aria-label="Session history pages"><button id="previous" disabled>Previous</button><span id="historyPages"></span><button id="next" disabled>Next</button></nav>
 </section>
 <section id="detail" hidden>
 <h2 id="sessionTitle"></h2><p id="sessionSummary"></p>
@@ -61,5 +62,5 @@ details{padding:8px 0;border-top:1px solid #e0e7ef}pre{white-space:pre-wrap;over
 </section>
 </main>
 <script src="config.js"></script>
-<script src="session-results.js?v=history-2"></script>
+<script src="session-results.js?v=history-3"></script>
 </html>
