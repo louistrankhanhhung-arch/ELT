@@ -51,6 +51,8 @@ function loadDraft(value, parent = null) {
   selected = 0;
   selectedElement = null;
   revealPreview = -1;
+  byId("course").value = lesson.course || "";
+  byId("level").value = lesson.level ?? "";
   byId("title").value = lesson.title;
   byId("objective").value = lesson.objective || "";
   byId("editor").hidden = false;
@@ -370,6 +372,8 @@ byId("remove").onclick = () => {
 };
 byId("addSlide").onclick = () => add("slide");
 byId("addTask").onclick = () => add("writing");
+byId("course").onchange = dirty;
+byId("level").onchange = dirty;
 byId("title").oninput = dirty;
 byId("objective").oninput = dirty;
 byId("import").onclick = () => {
@@ -394,6 +398,8 @@ byId("loadRevision").onclick = async () => {
 byId("save").onclick = async () => {
   byId("save").disabled = true;
   try {
+    lesson.course = byId("course").value || null;
+    lesson.level = Number(byId("level").value) || null;
     lesson.title = byId("title").value.trim();
     lesson.objective = byId("objective").value.trim();
     const blocks = lesson.blocks.map(block => {

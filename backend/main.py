@@ -1412,6 +1412,8 @@ class WorkBlock(BaseModel):
 
 class WorkLesson(BaseModel):
     schema_version: Literal[1]
+    course: Literal["Recovery", "Foundation", "Bridge"] | None = None
+    level: int | None = Field(default=None, ge=1, le=12)
     title: str = Field(min_length=1, max_length=160)
     objective: str = Field(default="", max_length=1000)
     blocks: List[WorkBlock] = Field(min_length=1, max_length=100)
@@ -1479,6 +1481,10 @@ def save_work_lesson(payload: SaveWorkLesson):
                 "origin": "work", "objective": lesson.objective, "blocks": blocks,
                 "parent_revision": payload.parent_revision,
                 "work_source": lesson.model_dump(exclude_none=True)}
+    if lesson.course is not None:
+        manifest["course"] = lesson.course
+    if lesson.level is not None:
+        manifest["level"] = lesson.level
     with closing(db()) as conn:
         conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
         conn.commit()

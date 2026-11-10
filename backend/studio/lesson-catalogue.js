@@ -141,12 +141,15 @@ async function loadList() {
   }
 }
 
+let savedMetadata;
 async function loadPublishForm() {
   if (!revision || !catalogueId || entry) return;
   const loaded = await request("/lesson-catalogue/" + encodeURIComponent(catalogueId));
   entry = loaded;
+  const lesson = await savedMetadata;
   for (const [key] of metadataFields) {
-    el("publishForm").elements[key].value = key === "course" && loaded.course === "Unassigned course" ? "" : loaded[key];
+    const fallback = key === "course" && loaded.course === "Unassigned course" ? "" : loaded[key];
+    el("publishForm").elements[key].value = (key === "course" || key === "level") ? lesson?.[key] ?? fallback : fallback;
   }
 }
 
@@ -168,6 +171,8 @@ el("token").addEventListener("input", () => {
   if (el("token").value.trim()) unlockTimer = setTimeout(loadList, 650);
 });
 if (/^[a-f0-9]{32}$/.test(revision || "")) {
+  savedMetadata = fetch(api + "/imports/" + revision)
+    .then(response => response.ok ? response.json() : null).catch(() => null);
   el("publishPanel").hidden = false;
   el("revisionInfo").textContent = "This action publishes the selected saved version.";
   if (catalogueId) {
@@ -175,9 +180,13 @@ if (/^[a-f0-9]{32}$/.test(revision || "")) {
     el("publishButton").textContent = "Publish new version";
 
   } else {
-    fetch(api + "/imports/" + revision).then(response => response.ok ? response.json() : null).then(lesson => {
-      if (lesson && !el("publishForm").elements.title.value) el("publishForm").elements.title.value = lesson.title;
-    }).catch(() => {});
+    savedMetadata.then(lesson => {
+      if (!lesson) return;
+      for (const key of ["course", "level", "title"]) {
+        const field = el("publishForm").elements[key];
+        if (!field.value && lesson[key] != null) field.value = lesson[key];
+      }
+    });
   }
 }
 el("publishForm").onsubmit = async event => {
