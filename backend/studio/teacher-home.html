@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="reh-page">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -175,13 +175,14 @@
       display: none;
     }
   </style>
+<link rel="stylesheet" href="runtime-ui.css?v=1">
 </head>
 <body>
   <main class="shell hidden" id="teacherApp">
     <header>
-      <h1>Teacher Lessons</h1>
+      <h1>Teacher workspace</h1>
       <div class="subtitle">
-        Select a lesson to start a classroom session.
+        Open a lesson for class, prepare materials, or review student work.
       </div>
     </header>
 
@@ -225,7 +226,6 @@
 
     const importForm = document.createElement("form");
     importForm.innerHTML = `
-      <h2>Import Google Slides</h2>
       <label>Google Slides link <input name="url" type="url" required></label>
       <label>Staging teacher access code <input name="token" type="password" required></label>
       <button type="submit">Import and open lesson</button>
@@ -243,8 +243,26 @@
     const lessonsLink = document.createElement("a");
     lessonsLink.href = "lesson-catalogue.html";
     lessonsLink.textContent = "Lesson Catalogue";
-    catalogEl.before(lessonsLink, document.createTextNode(" · "), authorLink, document.createTextNode(" · "),
-      resultsLink, document.createTextNode(" · "), catalogsLink, importForm);
+    const workspace = document.createElement("nav");
+    workspace.className = "reh-workspace";
+    workspace.setAttribute("aria-label", "Teacher workspace");
+    for (const [link, description] of [
+      [lessonsLink, "Browse published lessons by course and level."],
+      [authorLink, "Create or edit slides and tasks."],
+      [resultsLink, "Review submissions and export evidence."],
+      [catalogsLink, "Manage student IDs and learning targets."],
+    ]) {
+      const caption = document.createElement("small");
+      caption.textContent = description;
+      link.append(caption);
+      workspace.append(link);
+    }
+    const importPanel = document.createElement("details");
+    importPanel.className = "reh-import";
+    const importSummary = document.createElement("summary");
+    importSummary.textContent = "Import Google Slides";
+    importPanel.append(importSummary, importForm);
+    catalogEl.before(workspace, importPanel);
     importForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const button = importForm.querySelector("button");

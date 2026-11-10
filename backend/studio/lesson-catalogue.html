@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="reh-page">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lesson Catalogue | REH</title>
 <style>
@@ -14,8 +14,12 @@ button:disabled{opacity:.5}[hidden]{display:none!important}
 .level-group h4,.level-group h5{margin:0 0 6px;font-size:1rem} .level-group p{margin:6px 0}
 .level-group details{margin-top:8px}summary{cursor:pointer}
 </style>
-<a href="teacher-home.html">Teacher home</a>
-<h1>Lesson Catalogue</h1><p>Open a published lesson to start a separate classroom session.</p>
+<link rel="stylesheet" href="runtime-ui.css?v=1">
+<header>
+  <a class="reh-back" href="teacher-home.html">← Teacher home</a>
+  <h1>Lesson Catalogue</h1>
+  <p class="reh-caption">Browse published lessons by course and level.</p>
+</header>
 <section>
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
 <button id="openCatalogue" type="button">Open catalogue</button>

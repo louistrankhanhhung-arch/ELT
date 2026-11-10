@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="reh-classroom">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -367,6 +367,7 @@
     #writingResults summary { cursor: pointer; }
     body.presentation-mode #writingPanel { display: none; }
   </style>
+<link rel="stylesheet" href="runtime-ui.css?v=1">
 </head>
 <body>
   <header>
@@ -380,7 +381,6 @@
       <button id="prevBtn">← Previous</button>
       <button id="nextBtn">Next →</button>
       <button id="presentationBtn">Present ⛶</button>
-      <button id="openStudentBtn">Open Student View</button>
       <button id="startSessionBtn">Start Session</button>
       <button id="endSessionBtn" disabled>End Session</button>
       <label>Student mode
@@ -391,13 +391,19 @@
         </select>
       </label>
       <span id="displayModeStatus" role="status"></span>
-      <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
-      <a href="lesson-catalogue.html" id="saveToCatalogue" hidden>Save to Catalogue</a>
-      <a href="session-results.html" id="sessionResultsLink">Session Results</a>
       <button id="previousReveal" hidden>Previous reveal</button>
       <button id="nextReveal" hidden>Next reveal</button>
       <span id="revealStatus" role="status"></span>
-      <button id="copyStudentBtn">Copy Join Link</button>
+      <details class="reh-tools">
+        <summary>More actions</summary>
+        <div>
+          <button id="openStudentBtn">Open Student View</button>
+          <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
+          <a href="lesson-catalogue.html" id="saveToCatalogue" hidden>Save to Catalogue</a>
+          <a href="session-results.html" id="sessionResultsLink">Session Results</a>
+          <button id="copyStudentBtn">Copy Join Link</button>
+        </div>
+      </details>
     </div>
   </header>
   <details id="writingPanel">
