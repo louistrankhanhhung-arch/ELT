@@ -368,19 +368,21 @@
     body.presentation-mode #writingPanel { display: none; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
+  <link rel="stylesheet" href="classroom-ui.css?v=1">
 </head>
 <body>
   <header>
     <div class="title">
       <h1 id="lessonTitle">Loading lesson...</h1>
-      <p id="lessonMeta">Teacher Mock Controller</p>
+      <p id="lessonMeta"></p>
     </div>
 
     <div class="controls">
       <button id="homeBtn">⌂ Home</button>
       <button id="prevBtn">← Previous</button>
       <button id="nextBtn">Next →</button>
-      <button id="presentationBtn">Present ⛶</button>
+      <button id="presentationBtn">Present</button>
+      <button id="expandSlide" aria-pressed="false">Expand slide</button>
       <button id="startSessionBtn">Start Session</button>
       <button id="endSessionBtn" disabled>End Session</button>
       <label>Student mode
@@ -391,9 +393,7 @@
         </select>
       </label>
       <span id="displayModeStatus" role="status"></span>
-      <button id="previousReveal" hidden>Previous reveal</button>
-      <button id="nextReveal" hidden>Next reveal</button>
-      <span id="revealStatus" role="status"></span>
+
       <details class="reh-tools">
         <summary>More actions</summary>
         <div>
@@ -401,14 +401,32 @@
           <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
           <a href="lesson-catalogue.html" id="saveToCatalogue" hidden>Save to Catalogue</a>
           <a href="session-results.html" id="sessionResultsLink">Session Results</a>
-          <button id="copyStudentBtn">Copy Join Link</button>
+          <button id="annotationPresentation">Fullscreen with annotation tools</button>
         </div>
       </details>
     </div>
   </header>
-  <details id="writingPanel">
+  <main class="app">
+    <aside class="sidebar" id="blockList"></aside>
 
-    <summary>Tasks · Assignments and responses</summary>
+    <section class="preview">
+      <div class="current" id="currentBlock">Current block: —</div>
+
+      <div class="reveal-tools"><button id="previousReveal" hidden>Previous reveal</button>
+      <button id="nextReveal" hidden>Next reveal</button>
+      <span id="revealStatus" role="status"></span></div>
+      <iframe id="previewFrame"></iframe>
+      <div class="error" id="errorBox" style="display:none;"></div>
+    </section>
+    <details class="live-panel" open>
+      <summary>Live Session</summary>
+      <div id="sessionAccess"></div>
+      <p id="sessionBanner" role="status">Start a session to invite students.</p>
+      <button id="copyStudentBtn" hidden>Copy Join Link</button>
+      <div id="monitorPanel" hidden></div>
+      <details id="writingPanel">
+
+    <summary>Assign task and view responses</summary>
     <form id="writingAssignForm">
       <label>Task type
         <select name="taskType"><option value="writing">Writing</option><option value="speaking">Speaking</option><option value="multiple_choice">Multiple choice</option></select>
@@ -443,28 +461,7 @@
     <p id="writingCount"></p>
     <div id="writingResults"></div>
   </details>
-
-  <main class="app">
-    <aside class="sidebar" id="blockList"></aside>
-
-    <section class="preview">
-      <div class="current" id="currentBlock">Current block: —</div>
-
-      <div
-        id="sessionBanner"
-        style="display:none;padding:10px 14px;background:#fff7d6;border-bottom:1px solid #ddd;font-weight:bold;"
-      ></div>
-
-      <div
-        id="monitorPanel"
-        style="display:none;padding:10px 14px;background:#eef7ff;border-bottom:1px solid #ddd;font-size:14px;"
-      >
-        Joined students: 0
-      </div>
-
-      <iframe id="previewFrame"></iframe>
-      <div class="error" id="errorBox" style="display:none;"></div>
-    </section>
+    </details>
   </main>
 
   <canvas id="annotationCanvas"></canvas>
@@ -544,7 +541,7 @@
     teacherTokenInput.setAttribute("aria-label", "Staging teacher access code");
     teacherTokenInput.autocomplete = "off";
     teacherTokenInput.dataset.targetCatalogCode = "";
-    document.getElementById("startSessionBtn").before(teacherTokenInput);
+    document.getElementById("sessionAccess").append(teacherTokenInput);
     let teacherToken = "";
     function teacherHeaders() {
       return teacherToken ? { Authorization: "Bearer " + teacherToken } : {};
@@ -615,6 +612,9 @@
         .filter(step => Number.isInteger(step))])].sort((a, b) => a - b);
     }
 
+    let projectionWindow;
+    let projectionFrame;
+
     function showReveal() {
       const steps = revealSteps();
       previousReveal.hidden = nextReveal.hidden = steps.length === 1;
@@ -622,8 +622,12 @@
       previousReveal.disabled = revealPending || index <= 0;
       nextReveal.disabled = revealPending || index >= steps.length - 1;
       revealStatus.textContent = steps.length > 1 ? "Reveal " + (index + 1) + "/" + steps.length : "";
-      previewFrame.contentWindow?.postMessage({ type: "reh-slide-step", block: currentLesson?.blocks[blockIndex]?.id,
-        step: slideStep, interactive: true }, location.origin);
+      const message = { type: "reh-slide-step", block: currentLesson?.blocks[blockIndex]?.id,
+        step: slideStep, interactive: true };
+      previewFrame.contentWindow?.postMessage(message, location.origin);
+      if (projectionWindow && !projectionWindow.closed) {
+        projectionFrame?.contentWindow?.postMessage(message, location.origin);
+      }
     }
 
     async function changeReveal(direction) {
@@ -657,7 +661,7 @@
     nextReveal.onclick = () => changeReveal(1);
     previewFrame.addEventListener("load", showReveal);
     window.addEventListener("message", event => {
-      if (event.origin === location.origin && event.source === previewFrame.contentWindow
+      if (event.origin === location.origin && (event.source === previewFrame.contentWindow || event.source === projectionFrame?.contentWindow)
           && event.data?.type === "reh-slide-ready") showReveal();
     });
     const writingPanel = document.getElementById("writingPanel");
@@ -823,11 +827,13 @@
       assignWriting({ block_id: currentLesson.blocks[blockIndex].id }, assignPrepared);
     });
 
+    let latestTasks = [];
     async function updateWritingResults(pin) {
       const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/results`, { headers: teacherHeaders() });
       if (!response.ok || pin !== sessionPin) return;
       const result = await response.json();
       if (pin !== sessionPin) return;
+      latestTasks = result.tasks;
       writingExport.hidden = !result.tasks.length;
       const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length, task.scores_published])]);
       if (summary === lastWritingSummary) return;
@@ -990,7 +996,7 @@
           currentLesson.title || currentLesson.lesson_id || "Lesson";
 
         lessonMeta.textContent =
-          `${currentLesson.lesson_id || ""} · ${currentLesson.level || ""} · v${currentLesson.version || ""}`;
+          [currentLesson.level, currentLesson.version && `Version ${currentLesson.version}`].filter(Boolean).join(" · ");
 
         renderBlockList(currentLesson.blocks || []);
         goToBlock(blockIndex, false);
@@ -1042,6 +1048,7 @@
         `Current block: ${blockIndex + 1}/${blocks.length} · ${block.title || block.id} · ${block.activity_kind || block.type}`;
 
       previewFrame.src = block.task ? "about:blank" : window.runtimePlayerUrl(block, "teacher");
+      if (projectionWindow && !projectionWindow.closed) projectionFrame.src = previewFrame.src;
       syncWritingControls();
       if (block.task) writingPanel.open = true;
       previewFrame.style.display = "block";
@@ -1121,9 +1128,12 @@
         
         sessionBanner.style.display = "block";
         sessionBanner.textContent =
-          `LIVE SESSION · PIN: ${session.pin} · BLOCK: ${blockIndex + 1}`;
+          `Live · PIN ${session.pin}`;
 
-        monitorPanel.style.display = "block";
+        monitorPanel.hidden = false;
+        monitorPanel.replaceChildren();
+        copyStudentBtn.hidden = false;
+        teacherTokenInput.hidden = true;
         startMonitorPolling();
         
         startSessionBtn.textContent = "Session Active";
@@ -1186,7 +1196,8 @@
           throw new Error("Failed to end session");
         }
 
-        sessionBanner.textContent = `SESSION ENDED · PIN: ${sessionPin}`;
+        sessionBanner.textContent = `Session ended · PIN ${sessionPin}`;
+        teacherTokenInput.hidden = false;
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";
         endSessionBtn.disabled = true;
@@ -1219,51 +1230,64 @@
     }
 
     async function updateMonitor() {
-      if (!sessionPin) return;
+      const pin = sessionPin;
+      if (!pin) return;
 
       try {
-        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`, { headers: teacherHeaders() });
-
-        if (!res.ok) return;
-
+        const res = await fetch(`${API_BASE}/sessions/${pin}/state`, { headers: teacherHeaders() });
+        if (!res.ok || pin !== sessionPin) return;
         const session = await res.json();
-        if (session.active_writing_task) await updateWritingResults(sessionPin);
+        if (session.active_writing_task) await updateWritingResults(pin);
+        if (pin !== sessionPin || endSessionBtn.disabled) return;
+
         const students = session.students || [];
-        const events = session.events || [];
-        
-        const completedStudentIds = new Set(
-          events
-            .filter(e =>
-              e.event_type === "block_completed" &&
-              e.block_index === blockIndex
-            )
-            .map(e => e.student_id)
-        );
-        
-        const completedCount = completedStudentIds.size;
-        
-        const names = students
-          .map(s => s.student_name)
-          .filter(Boolean);
-        
-        const previewNames = names.slice(0, 3);
-        
-        const remaining =
-          names.length - previewNames.length;
-        
-        monitorPanel.innerHTML =
-          `<strong>Joined students: ${students.length}</strong>` +
-          `<br><strong>Completed current block: ${completedCount}/${students.length}</strong>` +
-          (
-            previewNames.length
-              ? `<br>${previewNames.join(", ")}`
-              : ""
-          ) +
-          (
-            remaining > 0
-              ? ` +${remaining} more`
-              : ""
-          );
+        const completed = new Set((session.events || [])
+          .filter(event => event.event_type === "block_completed" && event.block_index === blockIndex)
+          .map(event => event.student_id));
+        const activeId = session.active_writing_task?.task_id;
+        const task = activeId && latestTasks.find(item => item.task_id === activeId);
+        const submissions = new Map((task?.submissions || []).map(item => [item.student_id, item]));
+        const total = document.createElement("p");
+        total.textContent = task
+          ? `Joined: ${students.length} · Submitted: ${submissions.size}/${students.length}`
+          : `Joined: ${students.length} · Block complete: ${completed.size}/${students.length}`;
+        const prompt = document.createElement("p");
+        prompt.textContent = task?.prompt || "";
+        prompt.hidden = !task;
+        const list = document.createElement("ul");
+        for (const student of students) {
+          const row = document.createElement("li");
+          const name = document.createElement("strong");
+          name.textContent = student.learner_id || student.student_name || "Student";
+          const status = document.createElement("span");
+          const submitted = submissions.has(student.student_id);
+          status.textContent = task ? (submitted ? "Submitted" : "Awaiting submission")
+            : (completed.has(student.student_id) ? "Block complete" : "Joined");
+          row.append(name, status);
+          if (submitted) {
+            const view = document.createElement("a");
+            const responseId = task.task_id + "-" + student.student_id;
+            view.href = "#" + encodeURIComponent(responseId);
+            view.textContent = "View response";
+            view.addEventListener("click", event => {
+              event.preventDefault();
+              const response = document.getElementById(responseId);
+              if (!response) return;
+              writingPanel.open = true;
+              response.open = true;
+              response.parentElement.open = true;
+              response.scrollIntoView({ block: "nearest" });
+              response.querySelector("summary").focus();
+            });
+            row.append(view);
+          }
+          list.append(row);
+        }
+        const signature = JSON.stringify([pin, task?.task_id, total.textContent, list.textContent]);
+        if (monitorPanel.dataset.signature !== signature) {
+          monitorPanel.dataset.signature = signature;
+          monitorPanel.replaceChildren(total, prompt, list);
+        }
       } catch (err) {
         console.error(err);
       }
@@ -1566,10 +1590,34 @@
       window.location.href = "./teacher-home.html";
     });
 
-    presentationBtn.addEventListener(
-      "click",
-      enterPresentationMode
-    );
+    presentationBtn.addEventListener("click", () => {
+      if (!projectionWindow || projectionWindow.closed) {
+        projectionWindow = window.open("about:blank", "_blank", "popup");
+        if (!projectionWindow) {
+          alert("Allow pop-ups for this site to open the presentation window.");
+          return;
+        }
+        const page = projectionWindow.document;
+        page.title = "Classroom presentation";
+        page.body.style.cssText = "margin:0;background:#102339;height:100vh";
+        projectionFrame = page.createElement("iframe");
+        projectionFrame.title = "Lesson slide";
+        projectionFrame.allow = "autoplay; fullscreen";
+        projectionFrame.style.cssText = "display:block;width:100%;height:100%;border:0";
+        projectionFrame.addEventListener("load", showReveal);
+        projectionFrame.src = previewFrame.src;
+        page.body.append(projectionFrame);
+      }
+      projectionWindow.focus();
+    });
+
+    window.addEventListener("pagehide", () => projectionWindow?.close());
+    document.getElementById("annotationPresentation").addEventListener("click", enterPresentationMode);
+    document.getElementById("expandSlide").addEventListener("click", event => {
+      const expanded = document.body.classList.toggle("slide-expanded");
+      event.currentTarget.setAttribute("aria-pressed", String(expanded));
+      event.currentTarget.textContent = expanded ? "Restore layout" : "Expand slide";
+    });
 
     exitPresentationBtn.addEventListener(
       "click",
