@@ -41,7 +41,7 @@ function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
-        || !["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"].includes(block.kind)
+        || !["slide", "page", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"].includes(block.kind)
         || (block.elements != null && (!Array.isArray(block.elements) || !block.elements.every(validTable)))
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
@@ -67,7 +67,7 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   label.textContent = title;
   const input = document.createElement(choices ? "select" : multiline ? "textarea" : "input");
   if (!choices && !multiline) input.type = inputType;
-  if (choices) for (const choice of choices) input.add(new Option(({ordering_sentence: "Ordering Sentence", ordering_paragraph: "Ordering Paragraph"})[choice] || choice || "None", choice));
+  if (choices) for (const choice of choices) input.add(new Option(({ordering_sentence: "Ordering Sentence", ordering_paragraph: "Ordering Paragraph", dialogue: "Dialogue Card A/B"})[choice] || choice || "None", choice));
   if (multiline) input.rows = 3;
   if (catalog) input.setAttribute("list", "learningTargets");
   input.value = value ?? "";
@@ -218,7 +218,7 @@ function renderPreview() {
   byId("canvasTools").hidden = !isSlide;
   byId("preview").hidden = isSlide && Boolean(elements.length);
   byId("preview").textContent = [
-    block.title, isSlide ? block.body : block.prompt, block.media_url || "",
+    block.title, isSlide || block.kind === "dialogue" ? block.body : block.prompt, block.media_url || "",
     ...(block.quiz?.questions || []).map((q, index) => (index + 1) + ". " + q.prompt + "\n" + q.options.join(" · "))
   ].filter(Boolean).join("\n\n");
   canvas.replaceChildren();
@@ -280,7 +280,7 @@ function render() {
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
   field(fields, "Learning target ID (optional)", block.learning_target_id, value => { block.learning_target_id = value.trim() || null; }, null, false, true);
-  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]);
+  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
   if (["slide", "page"].includes(block.kind)) {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
@@ -288,6 +288,11 @@ function render() {
     field(fields, "Media URL (direct HTTPS or YouTube for video)", block.media_url, value => { block.media_url = value.trim() || null; });
     renderElements(fields, block);
     renderInspector();
+  } else if (block.kind === "dialogue") {
+    byId("elementInspector").replaceChildren();
+    field(fields, "Shared instructions", block.body, value => { block.body = value; }, null, true);
+    field(fields, "Role A card", block.role_a, value => { block.role_a = value; }, null, true);
+    field(fields, "Role B card", block.role_b, value => { block.role_b = value; }, null, true);
   } else {
     byId("elementInspector").replaceChildren();
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
@@ -567,6 +572,7 @@ byId("save").onclick = async () => {
       if (!isTextAssessment(copy.kind)) delete copy.text_questions;
       if (!isOrdering(copy.kind)) delete copy.ordering_questions;
       if (copy.kind !== "page") delete copy.tasks;
+      if (copy.kind !== "dialogue") { delete copy.role_a; delete copy.role_b; }
       return copy;
     });
     const saved = await request("/work-lessons", { lesson: { ...lesson, blocks }, parent_revision: revision });

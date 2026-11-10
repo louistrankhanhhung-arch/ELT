@@ -224,6 +224,10 @@
     .paragraph-parts button { width: 100%; text-align: left; }
     #writingPanel .order-parts button { color: #17283b; background: #edf4fb; border: 1px solid #b7c9db; cursor: grab; max-width: 100%; overflow-wrap: anywhere; }
     #writingPanel .order-parts button[aria-pressed="true"] { background: #d7f2eb; border-color: #08695f; outline: 2px solid #08695f; }
+    #dialogueCard { flex: 1 1 0; min-height: 0; overflow: auto; margin: 10px; padding: clamp(14px, 4vw, 32px); background: #fff; border: 1px solid #d5e1ec; border-radius: 12px; }
+    #dialogueCard h2 { color: #08695f; margin-top: 0; }
+    #dialogueCard p { white-space: pre-wrap; overflow-wrap: anywhere; }
+    body:has(#dialogueCard:not([hidden])) .runtime { display: none; }
     #quizChoices label {
       min-height: 36px;
       padding: 4px 0;
@@ -255,6 +259,7 @@
     </div>
   </header>
   <label id="pageTaskPicker" hidden style="padding:8px 12px">Your tasks <select id="pageTaskSelect" style="max-width:100%"></select></label>
+  <section id="dialogueCard" hidden aria-label="Dialogue card"></section>
   <section id="publishedScores" hidden aria-label="Quiz results"></section>
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
@@ -467,12 +472,36 @@
     let scoreRequestKey = "";
     const publishedScores = document.getElementById("publishedScores");
 
+    const dialogueCard = document.getElementById("dialogueCard");
+    function renderDialogueCard(card) {
+      const show = card && displayMode !== "focus";
+      dialogueCard.hidden = !show;
+      const key = show ? JSON.stringify(card) : "";
+      if (key === dialogueCard.dataset.card) return;
+      dialogueCard.dataset.card = key;
+      dialogueCard.replaceChildren();
+      if (!show) return;
+      for (const [tag, value] of [
+        ["h2", "Role " + card.role],
+        ["p", "Group " + card.group_number + " · " + card.partners.map(partner => partner.name + " (Role " + partner.role + ")").join(", ")],
+        ["p", card.instructions],
+        ["p", card.card],
+        ["small", card.partners.length > 1 ? "If two people share a role, take turns." : ""]
+      ]) {
+        if (!value) continue;
+        const node = document.createElement(tag);
+        node.textContent = value;
+        dialogueCard.append(node);
+      }
+    }
+
     const pageTaskPicker = document.getElementById("pageTaskPicker");
     const pageTaskSelect = document.getElementById("pageTaskSelect");
     let pageTaskState;
     pageTaskSelect.addEventListener("change", () => { if (pageTaskState) syncBlockTask(pageTaskState); });
 
     function syncBlockTask(session) {
+      renderDialogueCard(session.dialogue_card);
       pageTaskState = session;
       const tasks = session.page_tasks || [];
       for (const task of tasks) if (task.submitted) submittedTasks.add(task.task_id);
@@ -988,6 +1017,7 @@
             focusMessage.hidden = true;
             writingPanel.hidden = true;
             pageTaskPicker.hidden = true;
+            renderDialogueCard(null);
             pageTaskState = null;
             void syncScores(null);
             stopRecording();

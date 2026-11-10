@@ -442,6 +442,13 @@
       <p id="sessionBanner" role="status">Start a session to invite students.</p>
       <div class="join-actions"><a id="showJoinSession" target="_blank" rel="noopener" hidden>Open Join Screen</a>
       <button id="copyStudentBtn" hidden>Copy Join Link</button></div>
+      <details id="dialogueControls" hidden>
+        <summary>Dialogue Card A/B</summary>
+        <button type="button" id="pairDialogue">Pair students</button>
+        <button type="button" id="swapDialogue" disabled>Swap roles</button>
+        <p id="dialogueFeedback" role="status"></p>
+        <ul id="dialogueGroups"></ul>
+      </details>
       <details id="pageControls" hidden>
         <summary>Assign Page</summary>
         <ul id="pageAudience"></ul>
@@ -1242,6 +1249,9 @@
       blockIndex = index;
       pageFeedback.textContent = "";
       pageAudience = [];
+      dialogueGroups = [];
+      dialogueFeedback.textContent = "";
+      renderDialogueControls();
       renderPageControls();
       if (!pageControls.hidden) pageControls.open = true;
       renderTeacherNotes();
@@ -1375,6 +1385,8 @@
         startSessionBtn.textContent = "Session Active";
         endSessionBtn.disabled = false;
         pageRoster = [];
+        dialogueGroups = [];
+        renderDialogueControls();
         pageAudience = [];
         renderPageControls();
         if (!pageControls.hidden) pageControls.open = true;
@@ -1447,6 +1459,7 @@
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";
         endSessionBtn.disabled = true;
+        renderDialogueControls();
         renderPageControls();
         renderPageControls();
         syncWritingControls();
@@ -1476,6 +1489,57 @@
         updateMonitor();
       }, 2000);
     }
+
+    const dialogueControls = document.getElementById("dialogueControls");
+    const pairDialogue = document.getElementById("pairDialogue");
+    const swapDialogue = document.getElementById("swapDialogue");
+    const dialogueFeedback = document.getElementById("dialogueFeedback");
+    let dialogueGroups = [];
+    let dialogueBusy = false;
+
+    function renderDialogueControls() {
+      const show = Boolean(sessionPin && !endSessionBtn.disabled && currentLesson?.blocks[blockIndex]?.dialogue);
+      if (show && dialogueControls.hidden) dialogueControls.open = true;
+      dialogueControls.hidden = !show;
+      if (!show) return;
+      pairDialogue.disabled = dialogueBusy || pageRoster.length < 2 || dialogueGroups.length === pageRoster.length;
+      pairDialogue.textContent = dialogueGroups.length ? "Re-pair including new students" : "Pair students";
+      swapDialogue.disabled = dialogueBusy || !dialogueGroups.length;
+      const groups = new Map();
+      for (const entry of dialogueGroups) {
+        if (!groups.has(entry.group_number)) groups.set(entry.group_number, []);
+        groups.get(entry.group_number).push(entry.student_name + " · " + entry.role);
+      }
+      document.getElementById("dialogueGroups").replaceChildren(...[...groups].map(([number, names]) => {
+        const row = document.createElement("li");
+        row.textContent = "Group " + number + ": " + names.join(" / ");
+        return row;
+      }));
+    }
+
+    async function changeDialogue(action) {
+      const pin = sessionPin;
+      const block = currentLesson?.blocks[blockIndex];
+      if (!pin || !block?.dialogue || dialogueBusy) return;
+      if (action === "pair" && dialogueGroups.length && !confirm("Re-pair all students for this activity?")) return;
+      dialogueBusy = true;
+      renderDialogueControls();
+      try {
+        await writingRequest(`/sessions/${pin}/dialogue`, { block_id: block.id, action });
+        if (pin === sessionPin && currentLesson.blocks[blockIndex]?.id === block.id) {
+          dialogueFeedback.textContent = action === "swap" ? "Roles swapped." : "Role cards sent.";
+          await updateMonitor();
+        }
+      } catch (error) {
+        dialogueFeedback.textContent = error.message;
+      } finally {
+        dialogueBusy = false;
+        renderDialogueControls();
+      }
+    }
+
+    pairDialogue.addEventListener("click", () => void changeDialogue("pair"));
+    swapDialogue.addEventListener("click", () => void changeDialogue("swap"));
 
     const pageControls = document.getElementById("pageControls");
     const pageStudents = document.getElementById("pageStudents");
@@ -1568,6 +1632,8 @@
         const students = session.students || [];
         document.getElementById("studentCount").textContent = `(${students.length})`;
         pageRoster = students;
+        dialogueGroups = session.current_block_index === blockIndex ? session.dialogue_groups || [] : [];
+        renderDialogueControls();
         pageAudience = session.current_block_index === blockIndex ? session.page_audience || [] : [];
         renderPageControls();
         const completed = new Set((session.events || [])

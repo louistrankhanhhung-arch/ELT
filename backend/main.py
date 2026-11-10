@@ -385,6 +385,19 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS dialogue_roles (
+            pin TEXT NOT NULL REFERENCES sessions(pin),
+            block_index INTEGER NOT NULL,
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            group_number INTEGER NOT NULL,
+            role TEXT NOT NULL CHECK (role IN ('A', 'B')),
+            card_a TEXT NOT NULL,
+            card_b TEXT NOT NULL,
+            instructions TEXT NOT NULL,
+            PRIMARY KEY (pin, block_index, student_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS task_materials (
             task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
             definition TEXT NOT NULL
@@ -648,6 +661,24 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
                 ORDER BY t.assigned_at, t.block_id
             """), (pin, session["current_block_index"], student_id))
             session["page_tasks"] = [task_description(dict(row)) for row in cur.fetchall()]
+            cur.execute(sql("""
+                SELECT own.role, own.group_number, own.instructions,
+                       CASE WHEN own.role = 'A' THEN own.card_a ELSE own.card_b END AS card,
+                       peers.role AS partner_role, s.student_name AS partner_name
+                FROM dialogue_roles own
+                JOIN dialogue_roles peers ON peers.pin = own.pin AND peers.block_index = own.block_index
+                    AND peers.group_number = own.group_number AND peers.student_id <> own.student_id
+                JOIN session_students s ON s.student_id = peers.student_id
+                WHERE own.pin = ? AND own.block_index = ? AND own.student_id = ?
+                ORDER BY peers.role, s.student_name
+            """), (pin, session["current_block_index"], student_id))
+            roles = cur.fetchall()
+            if roles:
+                own = roles[0]
+                session["dialogue_card"] = {
+                    **{key: own[key] for key in ("role", "group_number", "instructions", "card")},
+                    "partners": [{"name": row["partner_name"], "role": row["partner_role"]} for row in roles],
+                }
     if "students" in session:
         if session["lesson_path"].startswith("imports/"):
             try:
@@ -668,6 +699,13 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
                 labels.setdefault(row["student_id"], []).append(row["label"])
             for student in session["students"]:
                 student["labels"] = labels.get(student["student_id"], [])
+            cur.execute(sql("""
+                SELECT d.group_number, d.role, s.student_name FROM dialogue_roles d
+                JOIN session_students s ON s.student_id = d.student_id
+                WHERE d.pin = ? AND d.block_index = ?
+                ORDER BY d.group_number, d.role, s.student_name
+            """), (pin, session["current_block_index"]))
+            session["dialogue_groups"] = [dict(row) for row in cur.fetchall()]
     return session
 
 
@@ -957,6 +995,8 @@ def imported_lesson(deck_id: str):
     manifest = load_imported_lesson(deck_id)
     manifest.pop("work_source", None)
     for block in manifest["blocks"]:
+        if "dialogue" in block:
+            block["dialogue"] = True
         if "page_tasks" in block:
             block["page_tasks"] = [{key: task[key] for key in ("id", "title")}
                                    for task in block["page_tasks"]]
@@ -1429,6 +1469,60 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
     return {"task_id": task_id, "display_mode": "interact"}
 
 
+class DialogueAssignment(BaseModel):
+    block_id: str
+    action: Literal["pair", "swap"]
+
+
+@app.post("/api/sessions/{pin}/dialogue", dependencies=[Depends(require_teacher)])
+def assign_dialogue(pin: str, payload: DialogueAssignment):
+    session = require_active_session(pin)
+    index = session["current_block_index"]
+    if not re.fullmatch(r"imports/[a-f0-9]{32}", session["lesson_path"]):
+        raise HTTPException(422, "This lesson has no dialogue card")
+    blocks = load_imported_lesson(session["lesson_path"].split("/")[1])["blocks"]
+    if not 0 <= index < len(blocks) or blocks[index]["id"] != payload.block_id or not blocks[index].get("dialogue"):
+        raise HTTPException(409, "Open the dialogue block before pairing students")
+    block = blocks[index]
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        if not USE_POSTGRES:
+            cur.execute("BEGIN IMMEDIATE")
+        lock = " FOR UPDATE" if USE_POSTGRES else ""
+        cur.execute(sql("SELECT current_block_index, status FROM sessions WHERE pin = ?" + lock), (pin,))
+        current = cur.fetchone()
+        if not current or current["status"] != "active" or current["current_block_index"] != index:
+            raise HTTPException(409, "The dialogue block is no longer open")
+        cur.execute(sql("SELECT student_id FROM dialogue_roles WHERE pin = ? AND block_index = ?"), (pin, index))
+        previous = {row["student_id"] for row in cur.fetchall()}
+        if payload.action == "swap":
+            if not previous:
+                raise HTTPException(409, "Pair students before swapping roles")
+            cur.execute(sql("""
+                UPDATE dialogue_roles SET role = CASE WHEN role = 'A' THEN 'B' ELSE 'A' END
+                WHERE pin = ? AND block_index = ?
+            """), (pin, index))
+        else:
+            cur.execute(sql("SELECT student_id FROM session_students WHERE pin = ? ORDER BY student_id"), (pin,))
+            students = [row["student_id"] for row in cur.fetchall()]
+            if len(students) < 2:
+                raise HTTPException(409, "At least two students must join first")
+            if previous != set(students):
+                shuffle(students)
+                groups = [students[start:start + 2] for start in range(0, len(students), 2)]
+                if len(groups[-1]) == 1:
+                    last = groups.pop()
+                    groups[-1].extend(last)
+                cur.execute(sql("DELETE FROM dialogue_roles WHERE pin = ? AND block_index = ?"), (pin, index))
+                cur.executemany(sql("INSERT INTO dialogue_roles VALUES (?, ?, ?, ?, ?, ?, ?, ?)"), [
+                    (pin, index, student, number, "A" if position == 0 else "B",
+                     block["dialogue"]["a"], block["dialogue"]["b"], block.get("body", ""))
+                    for number, group in enumerate(groups, 1) for position, student in enumerate(group)
+                ])
+        conn.commit()
+    return {"ok": True}
+
+
 class PageLabelsRequest(BaseModel):
     student_ids: List[str] = Field(min_length=1, max_length=200)
     label: str = Field(min_length=1, max_length=60)
@@ -1742,6 +1836,8 @@ class WorkPageTask(BaseModel):
 
 
 class WorkBlock(BaseModel):
+    role_a: str = Field(default="", max_length=4000)
+    role_b: str = Field(default="", max_length=4000)
     ordering_questions: List[OrderingQuestion] = Field(default_factory=list, max_length=30)
     text_questions: List[TextQuestion] = Field(default_factory=list, max_length=30)
     materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
@@ -1750,7 +1846,7 @@ class WorkBlock(BaseModel):
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: EvidencePhase
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
-    kind: Literal["slide", "page", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]
+    kind: Literal["slide", "page", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
     notes: str = Field(default="", max_length=4000)
@@ -1808,7 +1904,7 @@ def save_work_lesson(payload: SaveWorkLesson):
         entry = {"id": block.id, "title": title, "type": "activity", "phase": block.phase,
                  "learning_target_id": (block.learning_target_id or "").strip() or None,
                  "completion": {"mode": "teacher_next"}}
-        if block.kind in ("slide", "page"):
+        if block.kind in ("slide", "page", "dialogue"):
             media = block.media_url
             if bool(media) != bool(block.media_type):
                 raise HTTPException(422, f"Block {block.id}: enter both a media type and URL")
@@ -1819,6 +1915,10 @@ def save_work_lesson(payload: SaveWorkLesson):
             entry.update(activity_kind="native-slide", body=block.body,
                          media_type=block.media_type, media_url=media, native_revision=revision,
                          elements=[element.checked(block.id) for element in block.elements])
+            if block.kind == "dialogue":
+                if not block.role_a.strip() or not block.role_b.strip():
+                    raise HTTPException(422, f"Dialogue {block.id}: enter instructions for both roles")
+                entry["dialogue"] = {"a": block.role_a.strip(), "b": block.role_b.strip()}
             if block.kind == "page":
                 if not block.tasks or len({task.id for task in block.tasks}) != len(block.tasks):
                     raise HTTPException(422, f"Page {block.id}: add tasks with unique IDs")
@@ -1991,7 +2091,7 @@ def delete_sessions(payload: DeleteSessionsRequest):
             DELETE FROM session_student_labels
             WHERE student_id IN (SELECT student_id FROM session_students WHERE pin IN ({placeholders}))
         """), pins)
-        for table in ("active_writing_tasks", "writing_tasks", "writing_submissions", "writing_assignments",
+        for table in ("dialogue_roles", "active_writing_tasks", "writing_tasks", "writing_submissions", "writing_assignments",
                       "session_audio_archives", "session_slide_steps", "session_display_modes",
                       "events", "session_students", "sessions"):
             cur.execute(sql(f"DELETE FROM {table} WHERE pin IN ({placeholders})"), pins)
