@@ -644,8 +644,9 @@
       taskStageStatus.textContent = "";
       reviewTask.setAttribute("aria-pressed", "false");
       reviewTask.textContent = "Show answer key";
+      const assigned = sessionPin && [...latestTasks].reverse().find(item => item.block_id === block.id);
       const quiz = task?.quiz || block.quiz;
-      const questions = task?.questions || quiz?.questions ||
+      const questions = assigned?.questions || task?.questions || quiz?.questions ||
         (Array.isArray(quiz?.options) ? [{ ...quiz, prompt: task.prompt }] : []);
       reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option));
       if (!task) return;
@@ -921,6 +922,13 @@
       const result = await response.json();
       if (pin !== sessionPin) return;
       latestTasks = result.tasks;
+      const block = currentLesson?.blocks[blockIndex];
+      if (block?.task && reviewTask.hidden && latestTasks.some(task => task.block_id === block.id && task.questions?.length)) {
+        const feedback = taskStageStatus.textContent;
+        renderTaskPreview(block);
+        taskStageStatus.textContent = feedback;
+        syncProjection();
+      }
       writingExport.hidden = !result.tasks.length;
       const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length, task.scores_published])]);
       if (summary === lastWritingSummary) return;
@@ -1195,6 +1203,9 @@
         const session = await res.json();
 
         sessionPin = session.pin;
+        latestTasks = [];
+        renderTaskPreview(currentLesson.blocks[blockIndex]);
+        syncProjection();
         slideStep = session.slide_step || 0;
         showReveal();
         document.getElementById("sessionResultsLink").href = "session-results.html?pin=" + encodeURIComponent(sessionPin);
