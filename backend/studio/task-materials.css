@@ -8,4 +8,5 @@
 .task-materials figcaption { font-size: .9em; margin-top: 4px; }
 
 .sentence-preview { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 8px 0; }
-.sentence-preview li { max-width: 100%; padding: .35em .65em; border: 1px solid #b7c9db; border-radius: 8px; background: #edf4fb; color: #17283b; overflow-wrap: anywhere; }
+.paragraph-preview { display: grid; gap: 8px; list-style: none; padding: 0; margin: 8px 0; }
+.sentence-preview li, .paragraph-preview li { max-width: 100%; padding: .35em .65em; border: 1px solid #b7c9db; border-radius: 8px; background: #edf4fb; color: #17283b; overflow-wrap: anywhere; }
