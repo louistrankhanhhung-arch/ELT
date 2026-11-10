@@ -365,6 +365,9 @@
     #writingPanel p:empty { display: none; }
     #writingResults details { border-top: 1px solid #e1e8f0; padding: 8px 0; }
     #writingResults summary { cursor: pointer; }
+    .live-submission-status { list-style: none; padding: 0; font-size: .88rem; }
+    .live-submission-status li { padding: 4px 0; }
+    .live-submission-status li[data-submitted="true"] { color: #08695f; }
     body.presentation-mode #writingPanel { display: none; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
@@ -459,7 +462,7 @@
 
     <summary>Results <span id="writingCount"></span></summary>
 
-    <button type="button" id="writingExport" hidden>Export CSV</button>
+    <button type="button" id="openReport" hidden>Report</button>
     <div id="writingResults"></div>
   </details>
     </details>
@@ -547,6 +550,7 @@
 
   <script src="./config.js?v=3"></script>
 <script src="task-materials.js?v=1"></script>
+  <script src="classroom-report.js?v=1"></script>
   <script src="catalog-options.js" defer></script>
   <script>
     const BASE_URL =
@@ -851,7 +855,9 @@
     });
     const writingPanel = document.getElementById("writingPanel");
     const writingAssignForm = document.getElementById("writingAssignForm");
-    const writingExport = document.getElementById("writingExport");
+    const reportButton = document.getElementById("openReport");
+    let reportWindow;
+    let taskReport;
     const writingFeedback = document.getElementById("writingFeedback");
     const quickDialog = document.getElementById("quickTaskDialog");
     const openQuick = document.getElementById("openQuickTask");
@@ -1040,7 +1046,7 @@
 
     let latestTasks = [];
     async function updateWritingResults(pin) {
-      const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/results`, { headers: teacherHeaders() });
+      const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/results?include_roster=true`, { headers: teacherHeaders() });
       if (!response.ok || pin !== sessionPin) return;
       const result = await response.json();
       if (pin !== sessionPin) return;
@@ -1052,102 +1058,76 @@
         taskStageStatus.textContent = feedback;
         syncProjection();
       }
-      writingExport.hidden = !result.tasks.length;
-      const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length, task.scores_published, task.recipient_count])]);
+      reportButton.hidden = !result.tasks.length;
+      const summary = JSON.stringify([result.students, result.tasks.map(task =>
+        [task.task_id, task.submissions.map(row => row.student_id), task.recipient_ids])]);
       if (summary === lastWritingSummary) return;
       lastWritingSummary = summary;
       const open = new Set([...writingResults.querySelectorAll("details[open]")].map(row => row.id));
       writingCount.textContent = `(${result.tasks.length})`;
-      writingResults.querySelectorAll("audio").forEach(player => URL.revokeObjectURL(player.src));
       writingResults.replaceChildren(...result.tasks.map((task, index) => {
         const group = document.createElement("details");
         group.id = task.task_id;
         group.open = open.has(group.id);
         const label = document.createElement("summary");
-        const title = task.page_task_title || `${task.block_id ? "Prepared" : "Quick"} #${index + 1}`;
-        label.textContent = `${title} · Submitted: ${task.submissions.length}/${task.page_index != null ? task.recipient_count : result.joined}`;
-        const prompt = document.createElement("p");
-        prompt.textContent = task.prompt;
-        group.append(label, prompt);
-        if (task.questions?.length) {
-          const key = document.createElement("p");
-          key.textContent = task.questions.map((question, index) =>
-            `Q${index + 1}: ${question.accepted_answers?.join(" / ") || question.options[question.correct_option]}`).join(" · ");
-          const publish = document.createElement("button");
-          publish.type = "button";
-          publish.textContent = task.scores_published ? "Scores published" : "Publish scores";
-          publish.disabled = task.scores_published || !task.submissions.length;
-          publish.addEventListener("click", async () => {
-            publish.disabled = true;
-            try {
-              await writingRequest(`/sessions/${pin}/tasks/${task.task_id}/publish-scores`, {});
-              await updateWritingResults(pin);
-            } catch (error) {
-              setWritingFeedback(error.message);
-              publish.disabled = false;
-            }
-          });
-          group.append(key, publish);
+        const recipients = task.recipient_ids ? result.students.filter(student => task.recipient_ids.includes(student.student_id)) : result.students;
+        const submitted = new Set(task.submissions.map(row => row.student_id));
+        label.textContent = `${window.classroomReportTitle(task, index)} · ${submitted.size}/${recipients.length} submitted`;
+        const list = document.createElement("ul");
+        list.className = "live-submission-status";
+        for (const student of recipients) {
+          const row = document.createElement("li");
+          const done = submitted.has(student.student_id);
+          row.textContent = student.student_name + (done ? " · Submitted" : " · Awaiting submission");
+          row.dataset.submitted = String(done);
+          list.append(row);
         }
-        for (const submission of task.submissions) {
-          const row = document.createElement("details");
-          row.id = task.task_id + "-" + submission.student_id;
-          row.open = open.has(row.id);
-          const name = document.createElement("summary");
-          const answer = document.createElement("p");
-          name.textContent = submission.student_name;
-          answer.textContent = task.questions?.length
-            ? `${submission.selected_option} · Score: ${submission.score}/${submission.max_score}`
-            : submission.response;
-          answer.style.whiteSpace = "pre-wrap";
-          const show = document.createElement("button");
-          show.type = "button";
-          show.textContent = "Show on screen";
-          show.addEventListener("click", () => void showSubmission(pin, task, submission));
-          row.append(name, show);
-          if (task.type === "speaking") {
-            const listen = document.createElement("button");
-            listen.type = "button";
-            listen.textContent = "Load recording";
-            listen.addEventListener("click", async () => {
-              listen.disabled = true;
-              try {
-                const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/${task.task_id}/speaking/${submission.student_id}`, {
-                  headers: teacherHeaders()
-                });
-                if (!response.ok) throw new Error("Could not load the recording.");
-                const player = document.createElement("audio");
-                player.controls = true;
-                player.src = URL.createObjectURL(await response.blob());
-                row.append(player);
-                listen.remove();
-              } catch (error) {
-                setWritingFeedback(error.message);
-                listen.disabled = false;
-              }
-            });
-            row.append(listen);
-          } else {
-            row.append(answer);
-          }
-          group.append(row);
-        }
+        group.append(label, list);
         return group;
       }));
     }
 
-    writingExport.addEventListener("click", async () => {
-      try {
-        const response = await fetch(`${API_BASE}/sessions/${sessionPin}/tasks/export`, { headers: teacherHeaders() });
-        if (!response.ok) throw new Error("Could not export the CSV.");
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(await response.blob());
-        link.download = `writing-${sessionPin}.csv`;
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-      } catch (error) {
-        setWritingFeedback(error.message);
+    async function exportTaskResults(pin) {
+      const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/export`, { headers: teacherHeaders() });
+      if (!response.ok) throw new Error("Could not export the CSV.");
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(await response.blob());
+      link.download = `writing-${pin}.csv`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    }
+
+    reportButton.addEventListener("click", () => {
+      const pin = sessionPin;
+      if (!pin) return;
+      if (!reportWindow || reportWindow.closed) {
+        reportWindow = window.open("about:blank", "_blank", "popup,width=950,height=780");
+        if (!reportWindow) {
+          setWritingFeedback("Allow pop-ups to open the report.");
+          return;
+        }
+        taskReport = window.createClassroomReport(reportWindow, pin, {
+          load: async () => {
+            const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/results?include_roster=true`, {
+              headers: teacherHeaders(), cache: "no-store"
+            });
+            if (!response.ok) throw new Error("Could not load the report.");
+            return response.json();
+          },
+          publish: task => writingRequest(`/sessions/${pin}/tasks/${task.task_id}/publish-scores`, {}),
+          audio: async (task, row) => {
+            const response = await fetch(`${API_BASE}/sessions/${pin}/tasks/${task.task_id}/speaking/${row.student_id}`, {
+              headers: teacherHeaders()
+            });
+            if (!response.ok) throw new Error("Could not load the recording.");
+            return response.blob();
+          },
+          show: (task, row) => showSubmission(pin, task, row),
+          export: () => exportTaskResults(pin)
+        });
       }
+      reportWindow.focus();
+      void taskReport.refresh();
     });
     const displayMode = document.getElementById("displayMode");
     const displayModeStatus = document.getElementById("displayModeStatus");
@@ -1360,10 +1340,10 @@
         document.getElementById("editWorkLesson").hidden = true;
         writingPanel.hidden = false;
         writingAssignForm.hidden = false;
-        writingExport.hidden = true;
+        reportWindow?.close();
+        reportButton.hidden = true;
         setWritingFeedback("");
         writingCount.textContent = "";
-        writingResults.querySelectorAll("audio").forEach(player => URL.revokeObjectURL(player.src));
         writingResults.replaceChildren();
         lastWritingSummary = "";
         savedDisplayMode = session.display_mode || "follow";
@@ -1588,7 +1568,7 @@
         const completed = new Set((session.events || [])
           .filter(event => event.event_type === "block_completed" && event.block_index === blockIndex)
           .map(event => event.student_id));
-        const task = session.active_writing_task && latestTasks.at(-1);
+        const task = latestTasks.find(item => item.task_id === session.active_writing_task?.task_id);
         const submissions = new Map((task?.submissions || []).map(item => [item.student_id, item]));
         const total = document.createElement("p");
         total.textContent = task
@@ -1604,23 +1584,6 @@
           status.textContent = task ? (submitted ? "Submitted" : "Awaiting submission")
             : (completed.has(student.student_id) ? "Block complete" : "Joined");
           row.append(name, status);
-          if (submitted) {
-            const view = document.createElement("a");
-            const responseId = task.task_id + "-" + student.student_id;
-            view.href = "#" + encodeURIComponent(responseId);
-            view.textContent = "View response";
-            view.addEventListener("click", event => {
-              event.preventDefault();
-              const response = document.getElementById(responseId);
-              if (!response) return;
-              writingPanel.open = true;
-              response.closest("details").open = true;
-              response.parentElement.open = true;
-              response.scrollIntoView({ block: "nearest" });
-              response.querySelector("summary").focus();
-            });
-            row.append(view);
-          }
           list.append(row);
         }
         const signature = JSON.stringify([pin, task?.task_id, total.textContent, list.textContent]);
@@ -2020,6 +1983,7 @@
     window.addEventListener("pagehide", () => {
       clearProjectedSubmission();
       projectionWindow?.close();
+      reportWindow?.close();
     });
     document.getElementById("expandSlide").addEventListener("click", event => {
       const expanded = document.body.classList.toggle("slide-expanded");

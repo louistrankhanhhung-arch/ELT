@@ -1510,7 +1510,7 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
 
 
 @app.get("/api/sessions/{pin}/tasks/results", dependencies=[Depends(require_teacher)])
-def session_task_results(pin: str):
+def session_task_results(pin: str, include_roster: bool = False):
     session = get_session(pin)
     if not session:
         raise HTTPException(404, "Session not found")
@@ -1538,6 +1538,14 @@ def session_task_results(pin: str):
             WHERE t.pin = ? ORDER BY r.submitted_at, r.student_id
         """), (pin,))
         responses = [dict(row) for row in cur.fetchall()]
+        recipients = {}
+        if include_roster:
+            cur.execute(sql("""
+                SELECT r.task_id, r.student_id FROM page_task_recipients r
+                JOIN writing_tasks t ON t.task_id = r.task_id WHERE t.pin = ?
+            """), (pin,))
+            for row in cur.fetchall():
+                recipients.setdefault(row["task_id"], []).append(row["student_id"])
     for task in tasks:
         definition = task.pop("definition")
         materials = task.pop("materials_json", None)
@@ -1548,12 +1556,22 @@ def session_task_results(pin: str):
         task["type"] = "speaking" if speaking else quiz.get("kind", "multiple_choice") if quiz else "writing"
         task["scores_published"] = task["task_id"] in session["published_score_ids"]
         task["submissions"] = [row for row in responses if row["task_id"] == task["task_id"]]
+        if include_roster and task["page_index"] is not None:
+            task["recipient_ids"] = recipients.get(task["task_id"], [])
         if quiz:
             task.update(quiz)
             task["questions"] = quiz_questions(quiz, task["prompt"])
             for row in task["submissions"]:
                 row.update(grade_quiz(row["response"], quiz, task["prompt"]))
-    return {"joined": len(session["students"]), "tasks": tasks}
+                if include_roster:
+                    questions = task["questions"]
+                    row["items"] = [{"prompt": question["prompt"], **item}
+                                    for question, item in zip(questions, assessment_items(row["response"], questions))]
+    result = {"joined": len(session["students"]), "tasks": tasks}
+    if include_roster:
+        result["students"] = [{key: student[key] for key in ("student_id", "student_name")}
+                              for student in session["students"]]
+    return result
 
 
 @app.get("/api/sessions/{pin}/tasks/export", dependencies=[Depends(require_teacher)])
