@@ -168,14 +168,14 @@
     #publishedScores details + details { margin-top: 8px; }
     #publishedScores li { padding-block: 5px; }
     #publishedScores li[data-incorrect] { color: #9b3024; }
-    /* A quiz is the activity surface, so the slide frame gives up its space. */
-    body:has(#writingPanel:not([hidden]) #quizChoices:not([hidden])) {
+    /* Written activities use the viewport below the lesson header. */
+    body:has(#writingPanel:not([hidden]):not([data-speaking])) {
       height: 100dvh;
     }
-    body:has(#writingPanel:not([hidden]) #quizChoices:not([hidden])) .runtime {
+    body:has(#writingPanel:not([hidden]):not([data-speaking])) .runtime {
       display: none;
     }
-    #writingPanel:has(#quizChoices:not([hidden])) {
+    #writingPanel:not([data-speaking]) {
       flex: 1 1 0;
       min-height: 0;
       max-height: none;
@@ -568,6 +568,7 @@
         }
         writingStatus.textContent = submittedTasks.has(nextId) ? "Response submitted." : "";
       }
+      writingPanel.toggleAttribute("data-speaking", isSpeaking);
       writingPanel.hidden = !nextId || displayMode !== "interact" || !studentId;
       if (task) document.getElementById("writingPrompt").textContent = task.prompt;
       writingForm.hidden = isSpeaking || submittedTasks.has(nextId);
