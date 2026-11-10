@@ -236,6 +236,12 @@ def init_db():
             published_at TEXT NOT NULL
         )
     """)
+    if USE_POSTGRES:
+        cur.execute("ALTER TABLE lesson_catalogue ADD COLUMN IF NOT EXISTS course TEXT NOT NULL DEFAULT 'Unassigned course'")
+    else:
+        cur.execute("PRAGMA table_info(lesson_catalogue)")
+        if not any(row["name"] == "course" for row in cur.fetchall()):
+            cur.execute("ALTER TABLE lesson_catalogue ADD COLUMN course TEXT NOT NULL DEFAULT 'Unassigned course'")
     cur.execute("""
         CREATE TABLE IF NOT EXISTS lesson_revisions (
             revision_id TEXT PRIMARY KEY,
@@ -1789,21 +1795,26 @@ def read_catalog(kind: Literal["students", "targets"], active_only: bool = False
     return {"rows": rows[:500], "has_more": len(rows) > 500}
 
 
-class CatalogueEntryRequest(BaseModel):
-    revision_id: str = Field(pattern=r"^[a-f0-9]{32}$")
+class CatalogueMetadata(BaseModel):
+    course: Optional[str] = Field(default=None, max_length=160)
     title: str = Field(min_length=1, max_length=160)
     level: str = Field(min_length=1, max_length=80)
     cluster: str = Field(min_length=1, max_length=120)
+
+
+class CatalogueEntryRequest(CatalogueMetadata):
+    revision_id: str = Field(pattern=r"^[a-f0-9]{32}$")
 
 
 class PublishCatalogueRequest(CatalogueEntryRequest):
     expected_revision: str = Field(pattern=r"^[a-f0-9]{32}$")
 
 
-def catalogue_metadata(payload):
-    fields = tuple(value.strip() for value in (payload.title, payload.level, payload.cluster))
+def catalogue_metadata(payload, default_course="Unassigned course"):
+    course = payload.course if payload.course is not None else default_course
+    fields = tuple(value.strip() for value in (payload.title, payload.level, payload.cluster, course))
     if not all(fields):
-        raise HTTPException(422, "Enter a title, level and cluster")
+        raise HTTPException(422, "Enter a course, title, level and cluster")
     return fields
 
 
@@ -1827,9 +1838,9 @@ def list_catalogue(search: str = "", offset: int = 0):
         cur.execute(sql("""
             SELECT * FROM lesson_catalogue
             WHERE LOWER(title) LIKE ? ESCAPE '!' OR LOWER(level) LIKE ? ESCAPE '!'
-               OR LOWER(cluster) LIKE ? ESCAPE '!'
-            ORDER BY LOWER(title), catalogue_id LIMIT 51 OFFSET ?
-        """), (pattern, pattern, pattern, max(0, offset)))
+               OR LOWER(cluster) LIKE ? ESCAPE '!' OR LOWER(course) LIKE ? ESCAPE '!'
+            ORDER BY LOWER(course), LOWER(level), LOWER(title), catalogue_id LIMIT 51 OFFSET ?
+        """), (pattern, pattern, pattern, pattern, max(0, offset)))
         entries = [dict(row) for row in cur.fetchall()]
     return {"entries": entries[:50], "has_more": len(entries) > 50}
 
@@ -1848,15 +1859,16 @@ def catalogue_entry(catalogue_id: str):
 @app.post("/api/lesson-catalogue", dependencies=[Depends(require_teacher)])
 def create_catalogue_entry(payload: CatalogueEntryRequest):
     manifest = load_imported_lesson(payload.revision_id)
-    title, level, cluster = catalogue_metadata(payload)
+    title, level, cluster, course = catalogue_metadata(payload)
     catalogue_id = uuid4().hex
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            INSERT INTO lesson_catalogue VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO lesson_catalogue (catalogue_id, revision_id, title, level, cluster, version, origin, published_at, course)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(revision_id) DO NOTHING
         """), (catalogue_id, payload.revision_id, title, level, cluster, manifest["version"],
-               manifest.get("origin", "google_slides"), now_iso()))
+               manifest.get("origin", "google_slides"), now_iso(), course))
         if cur.rowcount != 1:
             raise HTTPException(409, "This lesson version is already in the catalogue")
         conn.commit()
@@ -1872,7 +1884,7 @@ def publish_catalogue_version(catalogue_id: str, payload: PublishCatalogueReques
     if (manifest.get("origin", "google_slides") != entry["origin"]
             or not is_newer_lesson_revision(manifest, entry["revision_id"])):
         raise HTTPException(422, "Open the published lesson, save a newer version, then publish that version")
-    title, level, cluster = catalogue_metadata(payload)
+    title, level, cluster, course = catalogue_metadata(payload, entry["course"])
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
@@ -1881,9 +1893,9 @@ def publish_catalogue_version(catalogue_id: str, payload: PublishCatalogueReques
         if cur.fetchone():
             raise HTTPException(409, "This lesson version is already in the catalogue")
         cur.execute(sql("""
-            UPDATE lesson_catalogue SET revision_id = ?, title = ?, level = ?, cluster = ?, version = ?, published_at = ?
+            UPDATE lesson_catalogue SET revision_id = ?, title = ?, level = ?, cluster = ?, course = ?, version = ?, published_at = ?
             WHERE catalogue_id = ? AND revision_id = ?
-        """), (payload.revision_id, title, level, cluster, manifest["version"], now_iso(),
+        """), (payload.revision_id, title, level, cluster, course, manifest["version"], now_iso(),
                catalogue_id, payload.expected_revision))
         if cur.rowcount != 1:
             raise HTTPException(409, "The published version changed. Reload the catalogue.")
@@ -1920,3 +1932,15 @@ def update_slide_step(pin: str, payload: SlideStepRequest):
             raise HTTPException(409, "The current slide has changed")
         conn.commit()
     return {"slide_step": payload.step}
+
+
+@app.patch("/api/lesson-catalogue/{catalogue_id}", dependencies=[Depends(require_teacher)])
+def edit_catalogue_metadata(catalogue_id: str, payload: CatalogueMetadata):
+    entry = catalogue_entry(catalogue_id)
+    title, level, cluster, course = catalogue_metadata(payload, entry["course"])
+    with closing(db()) as conn:
+        conn.cursor().execute(sql("""
+            UPDATE lesson_catalogue SET title = ?, level = ?, cluster = ?, course = ? WHERE catalogue_id = ?
+        """), (title, level, cluster, course, catalogue_id))
+        conn.commit()
+    return catalogue_entry(catalogue_id)

@@ -8,25 +8,31 @@ section,article{background:white;border:1px solid #dbe3ed;border-radius:10px;pad
 label{display:block;margin:8px 0}input{display:block;width:min(100%,420px);padding:7px;border:1px solid #aab9ca;border-radius:5px;font:inherit}
 button,.action{display:inline-block;background:#2459a9;color:white;border:0;border-radius:6px;padding:8px 12px;margin:4px 6px 4px 0;font:inherit;text-decoration:none;cursor:pointer}
 button:disabled{opacity:.5}[hidden]{display:none!important}
+.course-group{border-top:1px solid #dbe3ed;padding-top:14px;margin-top:14px}
+.level-group{margin:12px 0 20px;padding-left:14px;border-left:3px solid #dce7f7}
+.level-group article{padding:12px;margin:8px 0;background:#f8fbff}
+.level-group h4,.level-group h5{margin:0 0 6px;font-size:1rem} .level-group p{margin:6px 0}
+.level-group details{margin-top:8px}summary{cursor:pointer}
 </style>
 <a href="teacher-home.html">Teacher home</a>
 <h1>Lesson Catalogue</h1><p>Open a published lesson to start a separate classroom session.</p>
 <section>
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
-<form id="searchForm"><label>Search by title, level or cluster <input id="query" maxlength="160"></label>
-<button>Find lessons</button></form>
+<button id="openCatalogue" type="button">Open catalogue</button>
+<label id="filterLabel" hidden>Filter by course, level, lesson or cluster <input id="query" type="search" maxlength="160"></label>
 <p id="status" role="status"></p>
 </section>
 <section id="publishPanel" hidden>
 <h2 id="publishTitle">Save to Catalogue</h2><p id="revisionInfo"></p>
 <form id="publishForm">
-<label>Catalogue title <input name="title" maxlength="160" required></label>
+<label>Course <input name="course" maxlength="160" list="courseNames" required></label>
+<label>Lesson title <input name="title" maxlength="160" required></label>
 <label>Level <input name="level" maxlength="80" required></label>
 <label>Cluster <input name="cluster" maxlength="120" required></label>
 <button id="publishButton">Save to Catalogue</button>
 </form>
 </section>
-<section id="results" hidden><h2>Published lessons</h2><div id="entries"></div>
-<button id="previous" disabled>Previous</button><button id="next" disabled>Next</button></section>
-<script src="config.js"></script><script src="lesson-catalogue.js"></script>
+<section id="results" hidden><h2>Published lessons</h2><div id="entries"></div></section>
+<datalist id="courseNames"></datalist>
+<script src="config.js"></script><script src="lesson-catalogue.js?v=course-level-1"></script>
 </html>
