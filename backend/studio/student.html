@@ -164,10 +164,21 @@
     #writingResults summary { cursor: pointer; }
     body.presentation-mode #writingPanel { display: none; }
       #publishedScores { flex: 0 0 auto; max-height: 42vh; overflow: auto; padding: 10px 16px; background: white; border-bottom: 1px solid #d5e1ec; }
-    #publishedScores summary { cursor: pointer; font-weight: 650; }
-    #publishedScores details + details { margin-top: 8px; }
-    #publishedScores li { padding-block: 5px; }
-    #publishedScores li[data-incorrect] { color: #9b3024; }
+    #publishedScores article { max-width: 850px; margin-inline: auto; }
+    .score-header, .score-question { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .score-header h2, #publishedScores article > p { margin: 4px 0 10px; }
+    .score-points { background: #e3f4f0; color: #07554f; padding: 7px 14px; border-radius: 10px; font-size: 1.35rem; }
+    .score-toggle { padding: 8px 12px; background: white; border: 1px solid #aabbd0; border-radius: 8px; color: #17283b; cursor: pointer; }
+    .score-review { list-style: none; margin: 12px 0; padding: 0; display: grid; gap: 10px; }
+    .score-review li { padding: 12px; border: 1px solid #d5e1ec; border-radius: 10px; overflow-wrap: anywhere; }
+    .score-review li[data-correct="false"] { border-inline-start: 4px solid #ad651f; }
+    .score-badge { padding: 3px 8px; border-radius: 20px; color: #07554f; background: #e3f4f0; font-size: .8rem; font-weight: 650; }
+    [data-correct="false"] .score-badge { color: #773c09; background: #fff0dc; }
+    .score-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)); gap: 8px; margin: 10px 0 0; }
+    .score-comparison > div { min-width: 0; background: #f3f6fa; padding: 8px; border-radius: 7px; }
+    .score-comparison > div + div { background: #eaf6f2; }
+    .score-comparison dt { font-size: .8rem; color: #40566b; font-weight: 650; }
+    .score-comparison dd { margin: 4px 0 0; white-space: pre-wrap; }
     /* Written activities use the viewport below the lesson header. */
     body:has(#writingPanel:not([hidden]):not([data-speaking])) {
       height: 100dvh;
@@ -498,31 +509,70 @@
         if (scoreRequestKey !== key) return;
         const scores = result.scores.filter(score => score.task_id === taskId);
         publishedScores.hidden = !scores.length;
-        const existing = new Map([...publishedScores.children].map(card => [card.dataset.taskId, card.open]));
         publishedScores.replaceChildren(...scores.map(score => {
-          const card = document.createElement("details");
+          const card = document.createElement("article");
           card.dataset.taskId = score.task_id;
-          card.open = existing.get(score.task_id) ?? true;
-          const summary = document.createElement("summary");
-          summary.textContent = `${score.title}: ${score.score}/${score.max_score}`;
-          card.append(summary);
+          const header = document.createElement("div");
+          header.className = "score-header";
+          const title = document.createElement("h2");
+          title.textContent = "Your results";
+          const points = document.createElement("strong");
+          points.className = "score-points";
+          points.textContent = `${score.score} / ${score.max_score}`;
+          header.append(title, points);
+          const note = document.createElement("p");
+          const items = score.items || [];
+          const mistakes = items.filter(item => !item.is_correct).length;
+          note.textContent = !items.length ? "Your score has been published."
+            : mistakes ? `${mistakes} ${mistakes === 1 ? "answer" : "answers"} to review. Compare your answer with the expected answer below.`
+            : "All answers are correct.";
+          card.append(header, note);
+          if (!items.length) return card;
+
+          const toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "score-toggle";
           const list = document.createElement("ol");
-          for (const item of score.items || []) {
+          list.className = "score-review";
+          items.forEach((item, index) => {
             const row = document.createElement("li");
+            row.dataset.correct = String(item.is_correct);
+            const heading = document.createElement("div");
+            heading.className = "score-question";
             const prompt = document.createElement("strong");
-            prompt.textContent = item.prompt;
-            const answer = document.createElement("div");
-            answer.textContent = `Your answer: ${item.selected_option} · ${item.is_correct ? "Correct" : "Incorrect"}`;
-            row.append(prompt, answer);
-            if (!item.is_correct) {
-              row.dataset.incorrect = "";
-              const correct = document.createElement("div");
-              correct.textContent = `Correct answer: ${item.correct_option}`;
-              row.append(correct);
+            prompt.textContent = `${index + 1}. ${item.prompt}`;
+            const badge = document.createElement("span");
+            badge.className = "score-badge";
+            badge.textContent = item.is_correct ? "Correct" : "Try again";
+            heading.append(prompt, badge);
+            row.append(heading);
+            const comparison = document.createElement("dl");
+            comparison.className = "score-comparison";
+            function appendAnswer(label, value) {
+              const pair = document.createElement("div");
+              const caption = document.createElement("dt");
+              caption.textContent = label;
+              const answer = document.createElement("dd");
+              answer.textContent = value;
+              pair.append(caption, answer);
+              comparison.append(pair);
             }
+            appendAnswer("Your answer", item.selected_option);
+            if (!item.is_correct) appendAnswer("Expected answer", item.correct_option);
+            row.append(comparison);
             list.append(row);
+          });
+          let showAll = !mistakes;
+          function updateReview() {
+            for (const row of list.children) row.hidden = !showAll && row.dataset.correct === "true";
+            toggle.textContent = showAll ? "Show answers to review" : "Show all answers";
           }
-          if (list.childElementCount) card.append(list);
+          if (mistakes && mistakes < items.length) {
+            toggle.addEventListener("click", () => { showAll = !showAll; updateReview(); });
+            card.append(toggle);
+          }
+          updateReview();
+          card.append(list);
           return card;
         }));
       } catch {
