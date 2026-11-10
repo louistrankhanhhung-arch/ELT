@@ -1179,8 +1179,12 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
             INSERT INTO active_writing_tasks VALUES (?, ?)
             ON CONFLICT(pin) DO UPDATE SET task_id = excluded.task_id
         """), (pin, task_id))
+        cur.execute(sql("""
+            INSERT INTO session_display_modes (pin, mode) VALUES (?, 'interact')
+            ON CONFLICT(pin) DO UPDATE SET mode = excluded.mode
+        """), (pin,))
         conn.commit()
-    return {"task_id": task_id}
+    return {"task_id": task_id, "display_mode": "interact"}
 
 
 @app.post("/api/sessions/{pin}/tasks/{task_id}/submissions")
@@ -1305,9 +1309,20 @@ def student_scores(pin: str, payload: StudentScoresRequest):
         rows = cur.fetchall()
     scores = []
     for row in rows:
-        grade = grade_quiz(row["response"], json.loads(row["definition"]), row["prompt"])
+        questions = quiz_questions(json.loads(row["definition"]), row["prompt"])
+        answers = quiz_answers(row["response"], questions)
+        items = [
+            {
+                "prompt": question["prompt"],
+                "selected_option": question["options"][answer],
+                "correct_option": question["options"][question["correct_option"]],
+                "is_correct": answer == question["correct_option"],
+            }
+            for answer, question in zip(answers, questions)
+        ]
         scores.append({"task_id": row["task_id"], "title": row["prompt"],
-                       "score": grade["score"], "max_score": grade["max_score"]})
+                       "score": sum(item["is_correct"] for item in items),
+                       "max_score": len(items), "items": items})
     return {"scores": scores}
 
 

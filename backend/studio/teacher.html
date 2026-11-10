@@ -877,8 +877,14 @@
       button.disabled = true;
       if (payload.block_id) assignPrepared.disabled = assignOnStage.disabled = true;
       try {
-        await writingRequest(`/sessions/${sessionPin}/tasks/writing`, payload);
-        writingFeedback.textContent = "Assigned. Use Interact to let students submit.";
+        const pin = sessionPin;
+        const result = await writingRequest(`/sessions/${pin}/tasks/writing`, payload);
+        if (pin !== sessionPin || endSessionBtn.disabled) return;
+        if (result.display_mode === "interact") {
+          savedDisplayMode = displayMode.value = "interact";
+          displayModeStatus.textContent = "";
+        }
+        writingFeedback.textContent = "Assigned. Students can now submit in Interact mode.";
         if (payload.block_id === currentLesson.blocks[blockIndex]?.id) taskStageStatus.textContent = writingFeedback.textContent;
         if (payload.prompt) {
           writingAssignForm.reset();

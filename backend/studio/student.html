@@ -163,6 +163,11 @@
     #writingResults details { border-top: 1px solid #e1e8f0; padding: 8px 0; }
     #writingResults summary { cursor: pointer; }
     body.presentation-mode #writingPanel { display: none; }
+      #publishedScores { flex: 0 0 auto; max-height: 42vh; overflow: auto; padding: 10px 16px; background: white; border-bottom: 1px solid #d5e1ec; }
+    #publishedScores summary { cursor: pointer; font-weight: 650; }
+    #publishedScores details + details { margin-top: 8px; }
+    #publishedScores li { padding-block: 5px; }
+    #publishedScores li[data-incorrect] { color: #9b3024; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
 </head>
@@ -179,7 +184,7 @@
       <div class="status" id="statusText">Student runtime</div>
     </div>
   </header>
-  <p id="publishedScores" hidden role="status"></p>
+  <section id="publishedScores" hidden aria-label="Quiz results"></section>
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
@@ -404,8 +409,33 @@
         const result = await response.json();
         if (scoreRequestKey !== key) return;
         publishedScores.hidden = !result.scores.length;
-        publishedScores.textContent = result.scores.map(score =>
-          `${score.title}: ${score.score}/${score.max_score}`).join(" · ");
+        const existing = new Map([...publishedScores.children].map(card => [card.dataset.taskId, card.open]));
+        publishedScores.replaceChildren(...result.scores.map(score => {
+          const card = document.createElement("details");
+          card.dataset.taskId = score.task_id;
+          card.open = existing.get(score.task_id) ?? true;
+          const summary = document.createElement("summary");
+          summary.textContent = `${score.title}: ${score.score}/${score.max_score}`;
+          card.append(summary);
+          const list = document.createElement("ol");
+          for (const item of score.items || []) {
+            const row = document.createElement("li");
+            const prompt = document.createElement("strong");
+            prompt.textContent = item.prompt;
+            const answer = document.createElement("div");
+            answer.textContent = `Your answer: ${item.selected_option} · ${item.is_correct ? "Correct" : "Incorrect"}`;
+            row.append(prompt, answer);
+            if (!item.is_correct) {
+              row.dataset.incorrect = "";
+              const correct = document.createElement("div");
+              correct.textContent = `Correct answer: ${item.correct_option}`;
+              row.append(correct);
+            }
+            list.append(row);
+          }
+          if (list.childElementCount) card.append(list);
+          return card;
+        }));
       } catch {
         if (scoreRequestKey === key) scoreRequestKey = "";
       }
