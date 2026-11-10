@@ -383,6 +383,27 @@ def init_db():
             PRIMARY KEY (deck_id, page_number)
         )
     """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS page_task_instances (
+            task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
+            block_index INTEGER NOT NULL,
+            title TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS page_task_recipients (
+            task_id TEXT NOT NULL REFERENCES page_task_instances(task_id),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            PRIMARY KEY (task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS session_student_labels (
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            label TEXT NOT NULL,
+            PRIMARY KEY (student_id, label)
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -587,7 +608,8 @@ def start_session(payload: StartSessionRequest):
 
 
 @app.get("/api/sessions/{pin}/state")
-def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer),
+                      student_id: Optional[str] = None):
     session = get_session(pin)
 
     if not session:
@@ -600,6 +622,43 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
         except HTTPException:
             session.pop("students", None)
             session.pop("events", None)
+    if student_id and session["status"] == "active":
+        with closing(db()) as conn:
+            cur = conn.cursor()
+            cur.execute(sql("""
+                SELECT t.task_id, t.prompt, p.title, q.definition, sp.task_id AS speaking_id,
+                       CASE WHEN response.student_id IS NULL THEN 0 ELSE 1 END AS submitted
+                FROM page_task_recipients r
+                JOIN page_task_instances p ON p.task_id = r.task_id
+                JOIN writing_tasks t ON t.task_id = p.task_id
+                LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+                LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
+                LEFT JOIN writing_task_responses response ON response.task_id = t.task_id
+                    AND response.student_id = r.student_id
+                WHERE t.pin = ? AND p.block_index = ? AND r.student_id = ?
+                ORDER BY t.assigned_at, t.block_id
+            """), (pin, session["current_block_index"], student_id))
+            session["page_tasks"] = [task_description(dict(row)) for row in cur.fetchall()]
+    if "students" in session:
+        if session["lesson_path"].startswith("imports/"):
+            try:
+                block = load_imported_lesson(session["lesson_path"].split("/")[1])["blocks"][session["current_block_index"]]
+            except (HTTPException, IndexError):
+                block = {}
+            session["page_audience"] = [{key: task[key] for key in ("id", "title", "audience_label")}
+                                        for task in block.get("page_tasks", [])]
+        with closing(db()) as conn:
+            cur = conn.cursor()
+            cur.execute(sql("""
+                SELECT l.student_id, l.label FROM session_student_labels l
+                JOIN session_students s ON s.student_id = l.student_id WHERE s.pin = ?
+                ORDER BY l.label
+            """), (pin,))
+            labels = {}
+            for row in cur.fetchall():
+                labels.setdefault(row["student_id"], []).append(row["label"])
+            for student in session["students"]:
+                student["labels"] = labels.get(student["student_id"], [])
     return session
 
 
@@ -889,6 +948,9 @@ def imported_lesson(deck_id: str):
     manifest = load_imported_lesson(deck_id)
     manifest.pop("work_source", None)
     for block in manifest["blocks"]:
+        if "page_tasks" in block:
+            block["page_tasks"] = [{key: task[key] for key in ("id", "title")}
+                                   for task in block["page_tasks"]]
         task = block.get("task")
         if task and task.get("type") == "multiple_choice":
             task.pop("correct_option", None)
@@ -1215,6 +1277,104 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
     return {"task_id": task_id, "display_mode": "interact"}
 
 
+class PageLabelsRequest(BaseModel):
+    student_ids: List[str] = Field(min_length=1, max_length=200)
+    label: str = Field(min_length=1, max_length=60)
+    remove: bool = False
+
+
+@app.post("/api/sessions/{pin}/page-labels", dependencies=[Depends(require_teacher)])
+def update_page_labels(pin: str, payload: PageLabelsRequest):
+    session = require_active_session(pin)
+    ids = set(payload.student_ids)
+    label = payload.label.strip().casefold()
+    if not label or not ids.issubset({student["student_id"] for student in session["students"]}):
+        raise HTTPException(422, "Choose a label and students in this session")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        if payload.remove:
+            cur.executemany(sql("DELETE FROM session_student_labels WHERE student_id = ? AND label = ?"),
+                            [(student_id, label) for student_id in ids])
+        else:
+            cur.executemany(sql("INSERT INTO session_student_labels VALUES (?, ?) ON CONFLICT DO NOTHING"),
+                            [(student_id, label) for student_id in ids])
+        conn.commit()
+    return {"ok": True}
+
+
+class AssignPageRequest(BaseModel):
+    block_id: str
+
+
+@app.post("/api/sessions/{pin}/assign-page", dependencies=[Depends(require_teacher)])
+def assign_page(pin: str, payload: AssignPageRequest):
+    session = require_active_session(pin)
+    index = session["current_block_index"]
+    if not re.fullmatch(r"imports/[a-f0-9]{32}", session["lesson_path"]):
+        raise HTTPException(422, "This lesson has no Pages")
+    block = load_imported_lesson(session["lesson_path"].split("/")[1])["blocks"][index]
+    if block["id"] != payload.block_id or not block.get("page_tasks"):
+        raise HTTPException(409, "Open the Page before assigning it")
+    counts = []
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        if not USE_POSTGRES:
+            cur.execute("BEGIN IMMEDIATE")
+        lock = " FOR UPDATE" if USE_POSTGRES else ""
+        cur.execute(sql("SELECT current_block_index, status FROM sessions WHERE pin = ?" + lock), (pin,))
+        locked = cur.fetchone()
+        if not locked or locked["status"] != "active" or locked["current_block_index"] != index:
+            raise HTTPException(409, "The Page is no longer open")
+        for order, task in enumerate(block["page_tasks"]):
+            label = task["audience_label"]
+            cur.execute(sql("""
+                SELECT s.student_id FROM session_students s WHERE s.pin = ? AND
+                (? = '' OR EXISTS (SELECT 1 FROM session_student_labels l
+                    WHERE l.student_id = s.student_id AND l.label = ?))
+            """), (pin, label or "", label or ""))
+            recipients = cur.fetchall()
+            if not recipients:
+                counts.append({"title": task["title"], "added": 0})
+                continue
+            block_key = f"page:{block['id']}:{order:02d}:{task['id']}"
+            cur.execute(sql("SELECT task_id FROM writing_tasks WHERE pin = ? AND block_id = ?"), (pin, block_key))
+            existing = cur.fetchone()
+            task_id = existing["task_id"] if existing else uuid4().hex
+            if not existing:
+                cur.execute(sql("INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)"),
+                            (task_id, pin, block_key, task["prompt"], now_iso()))
+                cur.execute(sql("INSERT INTO page_task_instances VALUES (?, ?, ?)"), (task_id, index, task["title"]))
+                cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?)"),
+                            (task_id, block.get("phase"), task["learning_target_id"]))
+                if task["type"] == "speaking":
+                    cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
+                elif task["type"] == "multiple_choice":
+                    quiz = {key: task[key] for key in ("questions", "options", "correct_option", "shuffle") if key in task}
+                    cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
+            cur.executemany(sql("INSERT INTO page_task_recipients VALUES (?, ?) ON CONFLICT DO NOTHING"),
+                            [(task_id, row["student_id"]) for row in recipients])
+            counts.append({"title": task["title"], "added": cur.rowcount})
+        conn.commit()
+    return {"tasks": counts}
+
+
+def available_task(cur, session, task_id, student_id):
+    active = session["active_writing_task"]
+    if active and active["task_id"] == task_id and session["display_mode"] == "interact":
+        return active
+    cur.execute(sql("""
+        SELECT t.task_id, q.definition, sp.task_id AS speaking_id, t.prompt
+        FROM page_task_recipients r JOIN page_task_instances p ON p.task_id = r.task_id
+        JOIN writing_tasks t ON t.task_id = p.task_id JOIN sessions s ON s.pin = t.pin
+        LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+        LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
+        WHERE t.pin = ? AND t.task_id = ? AND r.student_id = ?
+            AND s.status = 'active' AND p.block_index = s.current_block_index
+    """), (session["pin"], task_id, student_id))
+    row = cur.fetchone()
+    return task_description(dict(row)) if row else None
+
+
 @app.post("/api/sessions/{pin}/tasks/{task_id}/submissions")
 def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionRequest):
     session = require_active_session(pin)
@@ -1230,8 +1390,8 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
         """), (pin, task_id, payload.student_id))
         prior = cur.fetchone()
         if prior is None:
-            active = session["active_writing_task"]
-            if not active or active["task_id"] != task_id or session["display_mode"] != "interact":
+            active = available_task(cur, session, task_id, payload.student_id)
+            if not active:
                 raise HTTPException(409, "This task is not open for submissions")
             if active["type"] == "speaking":
                 raise HTTPException(422, "Submit an audio recording for this task")
@@ -1257,9 +1417,12 @@ def session_task_results(pin: str):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id
+            SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id,
+                   p.title AS page_task_title, p.block_index AS page_index,
+                   (SELECT COUNT(*) FROM page_task_recipients r WHERE r.task_id = p.task_id) AS recipient_count
             FROM writing_tasks t LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
             LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
+            LEFT JOIN page_task_instances p ON p.task_id = t.task_id
             WHERE t.pin = ? ORDER BY t.assigned_at, t.task_id
         """), (pin,))
         tasks = [dict(row) for row in cur.fetchall()]
@@ -1395,12 +1558,23 @@ class SlideElement(BaseModel):
         return self.model_dump(exclude_none=True)
 
 
+class WorkPageTask(BaseModel):
+    id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
+    title: str = Field(min_length=1, max_length=160)
+    kind: Literal["writing", "multiple_choice", "speaking"]
+    prompt: str = Field(min_length=1, max_length=4000)
+    audience_label: Optional[str] = Field(default=None, max_length=60)
+    learning_target_id: Optional[str] = Field(default=None, max_length=120)
+    quiz: Optional[QuizDefinition] = None
+
+
 class WorkBlock(BaseModel):
+    tasks: List[WorkPageTask] = Field(default_factory=list, max_length=20)
     elements: List[SlideElement] = Field(default_factory=list, max_length=60)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: EvidencePhase
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
-    kind: Literal["slide", "writing", "multiple_choice", "speaking"]
+    kind: Literal["slide", "page", "writing", "multiple_choice", "speaking"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
     notes: str = Field(default="", max_length=4000)
@@ -1458,7 +1632,7 @@ def save_work_lesson(payload: SaveWorkLesson):
         entry = {"id": block.id, "title": title, "type": "activity", "phase": block.phase,
                  "learning_target_id": (block.learning_target_id or "").strip() or None,
                  "completion": {"mode": "teacher_next"}}
-        if block.kind == "slide":
+        if block.kind in ("slide", "page"):
             media = block.media_url
             if bool(media) != bool(block.media_type):
                 raise HTTPException(422, f"Block {block.id}: enter both a media type and URL")
@@ -1469,6 +1643,20 @@ def save_work_lesson(payload: SaveWorkLesson):
             entry.update(activity_kind="native-slide", body=block.body,
                          media_type=block.media_type, media_url=media, native_revision=revision,
                          elements=[element.checked(block.id) for element in block.elements])
+            if block.kind == "page":
+                if not block.tasks or len({task.id for task in block.tasks}) != len(block.tasks):
+                    raise HTTPException(422, f"Page {block.id}: add tasks with unique IDs")
+                entry["page_tasks"] = []
+                for task in block.tasks:
+                    prompt = task.prompt.strip()
+                    if not prompt or not task.title.strip() or (task.kind == "multiple_choice") != bool(task.quiz):
+                        raise HTTPException(422, f"Task {task.id}: enter a title, prompt and required quiz options")
+                    entry["page_tasks"].append({
+                        "id": task.id, "title": task.title.strip(), "type": task.kind, "prompt": prompt,
+                        "audience_label": (task.audience_label or "").strip().casefold() or None,
+                        "learning_target_id": (task.learning_target_id or "").strip() or None,
+                        **(task.quiz.normalized(prompt) if task.quiz else {}),
+                    })
         else:
             prompt = block.prompt.strip()
             if not prompt or (block.kind == "multiple_choice") != bool(block.quiz):
@@ -1520,8 +1708,8 @@ def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest):
         """), (pin, task_id, payload.student_id))
         prior = cur.fetchone()
         if prior is None:
-            active = session["active_writing_task"]
-            if not active or active["task_id"] != task_id or active["type"] != "speaking" or session["display_mode"] != "interact":
+            active = available_task(cur, session, task_id, payload.student_id)
+            if not active or active["type"] != "speaking":
                 raise HTTPException(409, "This speaking task is not open for submissions")
             cur.execute(sql("""
                 INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
@@ -1617,6 +1805,12 @@ def delete_sessions(payload: DeleteSessionsRequest):
             cur.execute(sql(f"DELETE FROM {table} WHERE task_id IN ({task_ids})"), pins)
         cur.execute(sql(f"""
             DELETE FROM evidence_student_links
+            WHERE student_id IN (SELECT student_id FROM session_students WHERE pin IN ({placeholders}))
+        """), pins)
+        cur.execute(sql(f"DELETE FROM page_task_recipients WHERE task_id IN ({task_ids})"), pins)
+        cur.execute(sql(f"DELETE FROM page_task_instances WHERE task_id IN ({task_ids})"), pins)
+        cur.execute(sql(f"""
+            DELETE FROM session_student_labels
             WHERE student_id IN (SELECT student_id FROM session_students WHERE pin IN ({placeholders}))
         """), pins)
         for table in ("active_writing_tasks", "writing_tasks", "writing_submissions", "writing_assignments",

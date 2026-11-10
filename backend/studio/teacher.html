@@ -437,6 +437,18 @@
       <a id="showJoinSession" target="_blank" rel="noopener" hidden>Open Join Screen</a>
       <button id="copyStudentBtn" hidden>Copy Join Link</button>
       <div id="monitorPanel" hidden></div>
+      <details id="pageControls" hidden>
+        <summary>Assign Page and manage labels</summary>
+        <form id="labelForm">
+          <label>Label <input id="pageLabel" maxlength="60" list="pageLabels" required></label>
+          <datalist id="pageLabels"></datalist>
+          <div id="pageStudents"></div>
+          <button type="submit">Add label</button><button type="submit" value="remove">Remove label</button>
+        </form>
+        <ul id="pageAudience"></ul>
+        <button type="button" id="assignPage">Assign Page</button>
+        <p id="pageFeedback" role="status"></p>
+      </details>
       <details id="writingPanel">
 
     <summary>Tasks · Assignments and responses</summary>
@@ -990,7 +1002,7 @@
         syncProjection();
       }
       writingExport.hidden = !result.tasks.length;
-      const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length, task.scores_published])]);
+      const summary = JSON.stringify([result.joined, result.tasks.map(task => [task.task_id, task.submissions.length, task.scores_published, task.recipient_count])]);
       if (summary === lastWritingSummary) return;
       lastWritingSummary = summary;
       const open = new Set([...writingResults.querySelectorAll("details[open]")].map(row => row.id));
@@ -1001,7 +1013,8 @@
         group.id = task.task_id;
         group.open = open.has(group.id) || index === result.tasks.length - 1;
         const label = document.createElement("summary");
-        label.textContent = `${task.block_id ? "Prepared" : "Quick"} #${index + 1} · Submitted: ${task.submissions.length}/${result.joined}`;
+        const title = task.page_task_title || `${task.block_id ? "Prepared" : "Quick"} #${index + 1}`;
+        label.textContent = `${title} · Submitted: ${task.submissions.length}/${task.page_index != null ? task.recipient_count : result.joined}`;
         const prompt = document.createElement("p");
         prompt.textContent = task.prompt;
         group.append(label, prompt);
@@ -1186,6 +1199,10 @@
       }
 
       blockIndex = index;
+      pageFeedback.textContent = "";
+      pageAudience = [];
+      renderPageControls();
+      if (!pageControls.hidden) pageControls.open = true;
       renderTeacherNotes();
       slideStep = 0;
       showReveal();
@@ -1314,6 +1331,10 @@
         
         startSessionBtn.textContent = "Session Active";
         endSessionBtn.disabled = false;
+        pageRoster = [];
+        pageAudience = [];
+        renderPageControls();
+        if (!pageControls.hidden) pageControls.open = true;
         syncWritingControls();
         if (joinWindow && !joinWindow.closed) joinWindow.location.replace(joinScreen.href);
       } catch (err) {
@@ -1381,6 +1402,8 @@
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";
         endSessionBtn.disabled = true;
+        renderPageControls();
+        renderPageControls();
         syncWritingControls();
         displayMode.disabled = true;
         displayModeStatus.textContent = "";
@@ -1409,6 +1432,76 @@
       }, 2000);
     }
 
+    const pageControls = document.getElementById("pageControls");
+    const pageStudents = document.getElementById("pageStudents");
+    const pageFeedback = document.getElementById("pageFeedback");
+    let pageRoster = [];
+    let pageAudience = [];
+    let pageBusy = false;
+
+    function renderPageControls() {
+      const tasks = currentLesson?.blocks[blockIndex]?.page_tasks;
+      pageControls.hidden = !sessionPin || endSessionBtn.disabled || !tasks?.length;
+      if (pageControls.hidden) return;
+      const selected = new Set([...pageStudents.querySelectorAll("input:checked")].map(input => input.value));
+      const signature = JSON.stringify([sessionPin, pageRoster.map(student => [student.student_id, student.student_name, student.labels])]);
+      if (pageStudents.dataset.signature !== signature) {
+        pageStudents.dataset.signature = signature;
+        pageStudents.replaceChildren(...pageRoster.map(student => {
+          const label = document.createElement("label");
+          label.style.display = "block";
+          const check = document.createElement("input");
+          check.type = "checkbox";
+          check.value = student.student_id;
+          check.checked = selected.has(check.value);
+          const labels = student.labels || [];
+          label.append(check, " " + student.student_name + (labels.length ? " · " + labels.join(", ") : ""));
+          return label;
+        }));
+      }
+      document.getElementById("pageLabels").replaceChildren(...[...new Set(pageAudience.map(task => task.audience_label).filter(Boolean))]
+        .map(label => new Option(label)));
+      document.getElementById("pageAudience").replaceChildren(...pageAudience.map(task => {
+        const count = pageRoster.filter(student => !task.audience_label || student.labels?.includes(task.audience_label)).length;
+        const row = document.createElement("li");
+        row.textContent = task.title + " · " + (task.audience_label || "Everyone") + " · " + count;
+        return row;
+      }));
+      document.getElementById("assignPage").disabled = pageBusy || !pageRoster.length || !pageAudience.length;
+    }
+
+    async function runPageAction(path, payload, describe) {
+      if (pageBusy || !sessionPin || endSessionBtn.disabled) return;
+      pageBusy = true;
+      renderPageControls();
+      const pin = sessionPin;
+      try {
+        const result = await writingRequest(`/sessions/${pin}/${path}`, payload);
+        if (pin !== sessionPin) return;
+        pageFeedback.textContent = describe(result);
+        await updateMonitor();
+      } catch (error) {
+        pageFeedback.textContent = error.message;
+      } finally {
+        pageBusy = false;
+        renderPageControls();
+      }
+    }
+
+    document.getElementById("labelForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const student_ids = [...pageStudents.querySelectorAll("input:checked")].map(input => input.value);
+      if (!student_ids.length) { pageFeedback.textContent = "Select at least one student."; return; }
+      const remove = event.submitter?.value === "remove";
+      void runPageAction("page-labels", { student_ids, label: document.getElementById("pageLabel").value, remove },
+        () => remove ? "Label removed." : "Label added.");
+    });
+    document.getElementById("assignPage").addEventListener("click", () => {
+      const block_id = currentLesson.blocks[blockIndex].id;
+      void runPageAction("assign-page", { block_id },
+        result => result.tasks.map(task => task.title + ": " + task.added + " new recipient(s)").join(" · "));
+    });
+
     async function updateMonitor() {
       const pin = sessionPin;
       if (!pin) return;
@@ -1417,10 +1510,13 @@
         const res = await fetch(`${API_BASE}/sessions/${pin}/state`, { headers: teacherHeaders() });
         if (!res.ok || pin !== sessionPin) return;
         const session = await res.json();
-        if (session.active_writing_task) await updateWritingResults(pin);
+        if (session.active_writing_task || currentLesson?.blocks[blockIndex]?.page_tasks?.length) await updateWritingResults(pin);
         if (pin !== sessionPin || endSessionBtn.disabled) return;
 
         const students = session.students || [];
+        pageRoster = students;
+        pageAudience = session.current_block_index === blockIndex ? session.page_audience || [] : [];
+        renderPageControls();
         const completed = new Set((session.events || [])
           .filter(event => event.event_type === "block_completed" && event.block_index === blockIndex)
           .map(event => event.student_id));

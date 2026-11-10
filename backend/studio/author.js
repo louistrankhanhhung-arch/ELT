@@ -41,7 +41,7 @@ function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
-        || !["slide", "writing", "multiple_choice", "speaking"].includes(block.kind)
+        || !["slide", "page", "writing", "multiple_choice", "speaking"].includes(block.kind)
         || (block.elements != null && (!Array.isArray(block.elements) || !block.elements.every(validTable)))
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
@@ -199,20 +199,20 @@ function refreshThumbnail() {
 
 function fillThumbnail(thumb, block) {
   thumb.replaceChildren();
-  if (block.kind === "slide" && block.elements?.length) {
+  if (["slide", "page"].includes(block.kind) && block.elements?.length) {
     for (const element of block.elements) {
       if (element.appear > 0) continue;
       thumb.append(drawElement(element, true));
     }
   } else {
-    thumb.textContent = block.kind === "slide" ? block.title : block.kind.replace("_", " ");
+    thumb.textContent = ["slide", "page"].includes(block.kind) ? block.title : block.kind.replace("_", " ");
   }
 }
 
 function renderPreview() {
   const block = lesson.blocks[selected];
   const canvas = byId("elementPreview");
-  const isSlide = block.kind === "slide";
+  const isSlide = ["slide", "page"].includes(block.kind);
   const elements = isSlide ? block.elements || [] : [];
   canvas.hidden = !isSlide;
   byId("canvasTools").hidden = !isSlide;
@@ -280,9 +280,9 @@ function render() {
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
   field(fields, "Learning target ID (optional)", block.learning_target_id, value => { block.learning_target_id = value.trim() || null; }, null, false, true);
-  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "writing", "multiple_choice", "speaking"]);
+  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "writing", "multiple_choice", "speaking"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
-  if (block.kind === "slide") {
+  if (["slide", "page"].includes(block.kind)) {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
     field(fields, "Media type", block.media_type, value => { block.media_type = value || null; }, ["", "image", "audio", "video"]);
     field(fields, "Media URL (direct HTTPS or YouTube for video)", block.media_url, value => { block.media_url = value.trim() || null; });
@@ -293,10 +293,37 @@ function render() {
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
+  if (block.kind === "page") renderPageTasks(fields, block);
   byId("up").disabled = selected === 0;
   byId("down").disabled = selected === lesson.blocks.length - 1;
   byId("remove").disabled = lesson.blocks.length === 1;
   renderPreview();
+}
+
+function renderPageTasks(fields, block) {
+  const tasks = block.tasks ||= [];
+  tasks.forEach((task, index) => {
+    const group = document.createElement("details");
+    group.open = true;
+    const heading = document.createElement("summary");
+    heading.textContent = "Task " + (index + 1);
+    group.append(heading);
+    field(group, "Task title", task.title, value => { task.title = value; });
+    field(group, "Task type", task.kind, value => { task.kind = value; if (value !== "multiple_choice") delete task.quiz; render(); },
+      ["writing", "multiple_choice", "speaking"]);
+    field(group, "Audience label (blank = everyone)", task.audience_label, value => { task.audience_label = value.trim() || null; });
+    field(group, "Learning target ID (optional)", task.learning_target_id,
+      value => { task.learning_target_id = value.trim() || null; }, null, false, true);
+    field(group, "Task prompt", task.prompt, value => { task.prompt = value; }, null, true);
+    if (task.kind === "multiple_choice") renderQuiz(group, task);
+    button(group, "Remove task", () => { tasks.splice(index, 1); dirty(); render(); });
+    fields.append(group);
+  });
+  if (tasks.length < 20) button(fields, "Add task to Page", () => {
+    tasks.push({id: crypto.randomUUID(), title: "New task", kind: "writing", prompt: ""});
+    dirty();
+    render();
+  });
 }
 
 function renderQuiz(fields, block) {
@@ -351,7 +378,7 @@ function move(offset) {
   render();
 }
 function add(kind) {
-  lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind, title: kind === "slide" ? "New slide" : "New task" });
+  lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind, title: kind === "slide" ? "New slide" : kind === "page" ? "New Page" : "New task" });
   selected = lesson.blocks.length - 1;
   selectedElement = null;
   revealPreview = -1;
@@ -371,6 +398,7 @@ byId("remove").onclick = () => {
   render();
 };
 byId("addSlide").onclick = () => add("slide");
+byId("addPage").onclick = () => add("page");
 byId("addTask").onclick = () => add("writing");
 byId("course").onchange = dirty;
 byId("level").onchange = dirty;
@@ -441,6 +469,7 @@ byId("save").onclick = async () => {
     const blocks = lesson.blocks.map(block => {
       const copy = { ...block };
       if (copy.kind !== "multiple_choice") delete copy.quiz;
+      if (copy.kind !== "page") delete copy.tasks;
       return copy;
     });
     const saved = await request("/work-lessons", { lesson: { ...lesson, blocks }, parent_revision: revision });
@@ -462,7 +491,7 @@ byId("save").onclick = async () => {
 
 function addCanvasElement(kind) {
   const block = lesson?.blocks[selected];
-  if (!block || block.kind !== "slide") return;
+  if (!block || !["slide", "page"].includes(block.kind)) return;
   const elements = block.elements ||= [];
   if (elements.length >= 60) return status("A slide can contain up to 60 elements.");
   const text = {text:"New text", image:"Image", audio:"", shape:"", icon:"★", table:""}[kind];

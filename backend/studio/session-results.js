@@ -165,8 +165,9 @@ function renderTasks() {
   const filter = el("studentFilter").value;
   el("tasks").replaceChildren(...current.tasks.map((task,index) => {
     const article = document.createElement("article");
-    article.append(text("h3", "Task " + (index + 1) + " · " + task.type.replace("_"," ") + (task.phase ? " · " + task.phase : "")));
+    article.append(text("h3", (task.page_task_title || "Task " + (index + 1)) + " · " + task.type.replace("_"," ") + (task.phase ? " · " + task.phase : "")));
     article.append(text("pre", task.prompt));
+    if (task.page_index != null) article.append(text("p", "Submitted: " + task.submissions.length + "/" + task.recipient_count));
     const rows = task.submissions.filter(row => !filter || row.student_id === filter);
     article.append(text("p", rows.length + " submission(s)"));
     for (const row of rows) article.append(renderSubmission(task, row, current.session.pin));

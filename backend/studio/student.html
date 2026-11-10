@@ -183,6 +183,8 @@
       padding: clamp(10px, 3vw, 20px);
       overflow-y: auto;
     }
+    body:has(#pageTaskPicker:not([hidden])) #writingPanel:not([hidden]) { flex: 1 1 0; min-height: 0; max-height: none; }
+    body:has(#pageTaskPicker:not([hidden])) .runtime { display: none; }
     #quizChoices, #quizChoices > fieldset {
       min-inline-size: 0;
       overflow-wrap: anywhere;
@@ -227,6 +229,7 @@
       <div class="status" id="statusText">Student runtime</div>
     </div>
   </header>
+  <label id="pageTaskPicker" hidden style="padding:8px 12px">Your tasks <select id="pageTaskSelect" style="max-width:100%"></select></label>
   <section id="publishedScores" hidden aria-label="Quiz results"></section>
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
@@ -437,11 +440,29 @@
     let scoreRequestKey = "";
     const publishedScores = document.getElementById("publishedScores");
 
+    const pageTaskPicker = document.getElementById("pageTaskPicker");
+    const pageTaskSelect = document.getElementById("pageTaskSelect");
+    let pageTaskState;
+    pageTaskSelect.addEventListener("change", () => { if (pageTaskState) syncBlockTask(pageTaskState); });
+
     function syncBlockTask(session) {
+      pageTaskState = session;
+      const tasks = session.page_tasks || [];
+      for (const task of tasks) if (task.submitted) submittedTasks.add(task.task_id);
+      const selected = pageTaskSelect.value;
+      const options = tasks.map(task => [task.task_id, task.title + (submittedTasks.has(task.task_id) ? " · Submitted" : "")]);
+      if (JSON.stringify(options) !== pageTaskSelect.dataset.options) {
+        pageTaskSelect.replaceChildren(...options.map(([id, label]) => new Option(label, id)));
+        pageTaskSelect.dataset.options = JSON.stringify(options);
+        pageTaskSelect.value = tasks.some(task => task.task_id === selected) ? selected
+          : tasks.find(task => !submittedTasks.has(task.task_id))?.task_id || tasks[0]?.task_id || "";
+      }
+      pageTaskPicker.hidden = !tasks.length;
       const block = currentLesson?.blocks[blockIndex];
       const active = session.active_writing_task;
-      const task = block && active && (!active.block_id || active.block_id === block.id) ? active : null;
-      syncWriting(task);
+      const pageTask = tasks.find(task => task.task_id === pageTaskSelect.value);
+      const task = pageTask || (block && active && (!active.block_id || active.block_id === block.id) ? active : null);
+      syncWriting(task, Boolean(pageTask));
       void syncScores(task?.task_id, session.published_score_ids);
     }
 
@@ -528,7 +549,7 @@
     const writingDrafts = new Map();
     const submittedTasks = new Set();
 
-    function syncWriting(task) {
+    function syncWriting(task, assignedPageTask = false) {
       const nextId = task?.task_id || null;
       if (nextId !== writingTaskId) {
         if (writingTaskId) {
@@ -569,7 +590,7 @@
         writingStatus.textContent = submittedTasks.has(nextId) ? "Response submitted." : "";
       }
       writingPanel.toggleAttribute("data-speaking", isSpeaking);
-      writingPanel.hidden = !nextId || displayMode !== "interact" || !studentId;
+      writingPanel.hidden = !nextId || (!assignedPageTask && displayMode !== "interact") || !studentId;
       if (task) document.getElementById("writingPrompt").textContent = task.prompt;
       writingForm.hidden = isSpeaking || submittedTasks.has(nextId);
       speakingPanel.hidden = !isSpeaking || submittedTasks.has(nextId);
@@ -688,7 +709,7 @@
       }
 
       try {
-        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+        const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state${studentId ? "?student_id=" + encodeURIComponent(studentId) : ""}`);
 
         if (!res.ok) {
           throw new Error("Session not found: " + sessionPin);
@@ -767,7 +788,7 @@
         if (pollInFlight) return;
         pollInFlight = true;
         try {
-          const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state`);
+          const res = await fetch(`${API_BASE}/sessions/${sessionPin}/state${studentId ? "?student_id=" + encodeURIComponent(studentId) : ""}`);
           if (!res.ok) {
             throw new Error("Polling failed: " + res.status);
           }
@@ -793,6 +814,9 @@
             playerFrame.src = "about:blank";
             focusMessage.hidden = true;
             writingPanel.hidden = true;
+            pageTaskPicker.hidden = true;
+            pageTaskState = null;
+            void syncScores(null);
             stopRecording();
             audioPreview.pause();
             completeBtn.disabled = true;
