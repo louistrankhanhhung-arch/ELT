@@ -1871,7 +1871,8 @@ def generate_writing_grade(key, prompt, rubric, response, materials):
     }
     model = os.environ.get("WRITING_AI_MODEL", "gpt-6.1-terra")
     request = UrlRequest("https://api.openai.com/v1/responses", method="POST",
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json",
+                 "Accept": "application/json", "User-Agent": "REH-Runtime/1.0"},
         data=json.dumps({
             "model": model, "store": False, "max_output_tokens": 1600,
             "instructions": (
@@ -1949,6 +1950,15 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
                  "organization_spend_limit_exceeded", "project_spend_limit_exceeded",
                  "organization_usage_limit_exceeded", "slow_down", "rate_limit_error", "quota_error"}
         error_detail = f"OpenAI API HTTP {error.code}" + (f" ({code})" if isinstance(code, str) and code in known else "") + "."
+        if error.code == 429:
+            request_id = error.headers.get("x-request-id", "")
+            if re.fullmatch(r"req_[A-Za-z0-9_-]{1,128}", request_id):
+                error_detail += f" Request ID: {request_id}."
+            if error.headers.get_content_type() == "text/html":
+                error_detail += " Received an HTML rate-limit page instead of an API response."
+            retry_after = error.headers.get("Retry-After", "")
+            if re.fullmatch(r"[0-9]{1,6}", retry_after):
+                error_detail += f" Retry after {retry_after} seconds."
     except RuntimeError as error:
         state = "failed"
         error_detail = str(error) if str(error).startswith("OpenAI ") else "Writing grading did not complete."
