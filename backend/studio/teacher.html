@@ -397,11 +397,11 @@
       <details class="reh-tools">
         <summary>More actions</summary>
         <div>
-          <button id="openStudentBtn">Open Student View</button>
-          <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
-          <a href="lesson-catalogue.html" id="saveToCatalogue" hidden>Save to Catalogue</a>
-          <a href="session-results.html" id="sessionResultsLink">Session Results</a>
-          <button id="annotationPresentation">Fullscreen with annotation tools</button>
+
+          <button type="button" id="editWorkLesson" hidden>Edit</button>
+
+          <button type="button" id="sessionResultsLink" data-destination="session-results.html">Results</button>
+
         </div>
       </details>
     </div>
@@ -624,7 +624,6 @@
     const monitorPanel = document.getElementById("monitorPanel");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
-    const openStudentBtn = document.getElementById("openStudentBtn");
     const homeBtn = document.getElementById("homeBtn");
     const copyStudentBtn = document.getElementById("copyStudentBtn");
 
@@ -1133,20 +1132,12 @@
         teacherNotes.hidden = currentLesson.origin !== "work" || !/^imports\/[a-f0-9]{32}$/.test(lessonPath);
         void loadTeacherNotes();
         const catalogueId = params.get("catalogue");
-        if (/^imports\/[a-f0-9]{32}$/.test(lessonPath)) {
-          const save = document.getElementById("saveToCatalogue");
-          const destination = new URL("lesson-catalogue.html", BASE_URL);
-          destination.searchParams.set("revision", lessonPath.split("/")[1]);
-          if (catalogueId) destination.searchParams.set("catalogue", catalogueId);
-          save.href = destination.href;
-          save.hidden = false;
-        }
         if (currentLesson.origin === "work") {
           const edit = document.getElementById("editWorkLesson");
           const editor = new URL("author.html", BASE_URL);
           editor.searchParams.set("revision", lessonPath.split("/")[1]);
           if (catalogueId) editor.searchParams.set("catalogue", catalogueId);
-          edit.href = editor.href;
+          edit.dataset.destination = editor.href;
           edit.hidden = false;
         }
 
@@ -1292,9 +1283,8 @@
         syncProjection();
         slideStep = session.slide_step || 0;
         showReveal();
-        document.getElementById("sessionResultsLink").href = "session-results.html?pin=" + encodeURIComponent(sessionPin);
+        document.getElementById("sessionResultsLink").dataset.destination = "session-results.html?pin=" + encodeURIComponent(sessionPin);
         document.getElementById("editWorkLesson").hidden = true;
-        document.getElementById("saveToCatalogue").hidden = true;
         writingPanel.hidden = false;
         writingAssignForm.hidden = false;
         writingExport.hidden = true;
@@ -1751,9 +1741,12 @@
       endSession();
     });
 
-    openStudentBtn.addEventListener("click", () => {
-      window.open(buildStudentUrl(), "_blank");
-    });
+    for (const id of ["editWorkLesson", "sessionResultsLink"]) {
+      const action = document.getElementById(id);
+      action.addEventListener("click", () => {
+        window.location.assign(action.dataset.destination);
+      });
+    }
 
     copyStudentBtn.addEventListener("click", async () => {
       if (!sessionPin) {
@@ -1801,7 +1794,6 @@
     });
 
     window.addEventListener("pagehide", () => projectionWindow?.close());
-    document.getElementById("annotationPresentation").addEventListener("click", enterPresentationMode);
     document.getElementById("expandSlide").addEventListener("click", event => {
       const expanded = document.body.classList.toggle("slide-expanded");
       event.currentTarget.setAttribute("aria-pressed", String(expanded));
