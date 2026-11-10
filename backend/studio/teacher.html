@@ -440,7 +440,7 @@
       <summary>Live Session</summary>
       <div id="sessionAccess"></div>
       <p id="sessionBanner" role="status">Start a session to invite students.</p>
-      <div class="join-actions"><a id="showJoinSession" target="_blank" rel="noopener" hidden>Open Join Screen</a>
+      <div class="join-actions"><button type="button" id="showJoinSession" hidden>Join Screen</button>
       <button id="copyStudentBtn" hidden>Copy Join Link</button></div>
       <details id="dialogueControls" hidden>
         <summary>Dialogue Card A/B</summary>
@@ -1308,9 +1308,8 @@
       }
     }
 
-    showJoinSession.addEventListener("click", event => {
-      event.preventDefault();
-      openJoinScreen(showJoinSession.href);
+    showJoinSession.addEventListener("click", () => {
+      openJoinScreen(showJoinSession.dataset.destination);
       if (!joinWindow) alert("Allow pop-ups to open the Join Screen.");
     });
 
@@ -1376,7 +1375,7 @@
         monitorPanel.replaceChildren();
         copyStudentBtn.hidden = false;
         joinScreen.searchParams.set("pin", sessionPin);
-        showJoinSession.href = joinScreen.href;
+        showJoinSession.dataset.destination = joinScreen.href;
         showJoinSession.hidden = false;
         teacherTokenInput.hidden = true;
         void loadTeacherNotes();
