@@ -368,7 +368,7 @@
     body.presentation-mode #writingPanel { display: none; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
-  <link rel="stylesheet" href="classroom-ui.css?v=1">
+  <link rel="stylesheet" href="classroom-ui.css?v=2">
 </head>
 <body>
   <header>
@@ -415,6 +415,14 @@
       <div class="reveal-tools"><button id="previousReveal" hidden>Previous reveal</button>
       <button id="nextReveal" hidden>Next reveal</button>
       <span id="revealStatus" role="status"></span></div>
+      <div id="taskStage" hidden>
+        <div id="taskContent"></div>
+        <div class="task-actions">
+          <button id="assignOnStage" disabled>Assign prepared task</button>
+          <button id="reviewTask" hidden aria-pressed="false">Show answer key</button>
+          <span id="taskStageStatus" role="status"></span>
+        </div>
+      </div>
       <iframe id="previewFrame"></iframe>
       <div class="error" id="errorBox" style="display:none;"></div>
     </section>
@@ -426,7 +434,7 @@
       <div id="monitorPanel" hidden></div>
       <details id="writingPanel">
 
-    <summary>Assign task and view responses</summary>
+    <summary>Tasks · Assignments and responses</summary>
     <form id="writingAssignForm">
       <label>Task type
         <select name="taskType"><option value="writing">Writing</option><option value="speaking">Speaking</option><option value="multiple_choice">Multiple choice</option></select>
@@ -614,6 +622,71 @@
 
     let projectionWindow;
     let projectionFrame;
+    let projectionTask;
+    const taskStage = document.getElementById("taskStage");
+    const taskContent = document.getElementById("taskContent");
+    const assignOnStage = document.getElementById("assignOnStage");
+    const reviewTask = document.getElementById("reviewTask");
+    const taskStageStatus = document.getElementById("taskStageStatus");
+
+    function syncProjection() {
+      if (!projectionWindow || projectionWindow.closed) return;
+      projectionFrame.style.display = taskStage.hidden ? "block" : "none";
+      projectionTask.hidden = taskStage.hidden;
+      if (taskStage.hidden) projectionFrame.src = previewFrame.src;
+      else projectionTask.replaceChildren(taskContent.cloneNode(true));
+    }
+
+    function renderTaskPreview(block) {
+      const task = block.task;
+      taskStage.hidden = !task;
+      taskContent.replaceChildren();
+      taskStageStatus.textContent = "";
+      reviewTask.setAttribute("aria-pressed", "false");
+      reviewTask.textContent = "Show answer key";
+      const questions = task?.questions || [];
+      reviewTask.hidden = !questions.some(question => Number.isInteger(question.correct_option));
+      if (!task) return;
+      const heading = document.createElement("h2");
+      heading.textContent = block.title || "Prepared task";
+      const prompt = document.createElement("p");
+      prompt.textContent = task.prompt || "";
+      taskContent.append(heading, prompt);
+      if (!questions.length) return;
+      const list = document.createElement("ol");
+      for (const question of questions) {
+        const item = document.createElement("li");
+        const questionText = document.createElement("p");
+        questionText.textContent = question.prompt;
+        const options = document.createElement("ol");
+        options.type = "A";
+        question.options.forEach((option, index) => {
+          const row = document.createElement("li");
+          row.textContent = option;
+          if (index === question.correct_option) {
+            const key = document.createElement("strong");
+            key.dataset.answerKey = "";
+            key.hidden = true;
+            key.textContent = " · Correct answer";
+            row.append(key);
+          }
+          options.append(row);
+        });
+        item.append(questionText, options);
+        list.append(item);
+      }
+      taskContent.append(list);
+    }
+
+    reviewTask.addEventListener("click", () => {
+      const shown = reviewTask.getAttribute("aria-pressed") === "true";
+      reviewTask.setAttribute("aria-pressed", String(!shown));
+      reviewTask.textContent = shown ? "Show answer key" : "Hide answer key";
+      taskContent.querySelectorAll("[data-answer-key]").forEach(key => { key.hidden = shown; });
+      if (projectionWindow && !projectionWindow.closed && !taskStage.hidden) {
+        projectionTask.replaceChildren(taskContent.cloneNode(true));
+      }
+    });
 
     function showReveal() {
       const steps = revealSteps();
@@ -745,6 +818,9 @@
       copyLessonLink.hidden = live;
       assignQuick.hidden = !live;
       assignPrepared.hidden = !live || !prepared;
+      assignOnStage.disabled = !live || !prepared;
+      if (prepared && !live) taskStageStatus.textContent = "Start a session to assign this task.";
+      else if (live && taskStageStatus.textContent === "Start a session to assign this task.") taskStageStatus.textContent = "";
       preparedPrompt.hidden = !prepared;
       preparedPrompt.textContent = prepared ? prepared.prompt : "";
       writingAssignForm.hidden = !live && currentLesson?.origin === "work";
@@ -796,9 +872,11 @@
     async function assignWriting(payload, button) {
       if (!sessionPin) return;
       button.disabled = true;
+      if (payload.block_id) assignPrepared.disabled = assignOnStage.disabled = true;
       try {
         await writingRequest(`/sessions/${sessionPin}/tasks/writing`, payload);
         writingFeedback.textContent = "Assigned. Use Interact to let students submit.";
+        if (payload.block_id === currentLesson.blocks[blockIndex]?.id) taskStageStatus.textContent = writingFeedback.textContent;
         if (payload.prompt) {
           writingAssignForm.reset();
           quizQuestions.replaceChildren();
@@ -807,8 +885,13 @@
         await updateWritingResults(sessionPin);
       } catch (error) {
         writingFeedback.textContent = error.message;
+        if (payload.block_id === currentLesson.blocks[blockIndex]?.id) taskStageStatus.textContent = error.message;
       } finally {
         button.disabled = false;
+        if (payload.block_id) {
+          assignPrepared.disabled = false;
+          syncWritingControls();
+        }
       }
     }
 
@@ -823,9 +906,11 @@
         }
       }
     });
-    assignPrepared.addEventListener("click", () => {
-      assignWriting({ block_id: currentLesson.blocks[blockIndex].id }, assignPrepared);
-    });
+    for (const button of [assignPrepared, assignOnStage]) {
+      button.addEventListener("click", () => {
+        assignWriting({ block_id: currentLesson.blocks[blockIndex].id }, button);
+      });
+    }
 
     let latestTasks = [];
     async function updateWritingResults(pin) {
@@ -1048,10 +1133,10 @@
         `Current block: ${blockIndex + 1}/${blocks.length} · ${block.title || block.id} · ${block.activity_kind || block.type}`;
 
       previewFrame.src = block.task ? "about:blank" : window.runtimePlayerUrl(block, "teacher");
-      if (projectionWindow && !projectionWindow.closed) projectionFrame.src = previewFrame.src;
+      renderTaskPreview(block);
+      syncProjection();
       syncWritingControls();
-      if (block.task) writingPanel.open = true;
-      previewFrame.style.display = "block";
+      previewFrame.style.display = block.task ? "none" : "block";
       errorBox.style.display = "none";
 
       prevBtn.disabled = blockIndex <= 0;
@@ -1244,16 +1329,12 @@
         const completed = new Set((session.events || [])
           .filter(event => event.event_type === "block_completed" && event.block_index === blockIndex)
           .map(event => event.student_id));
-        const activeId = session.active_writing_task?.task_id;
-        const task = activeId && latestTasks.find(item => item.task_id === activeId);
+        const task = session.active_writing_task && latestTasks.at(-1);
         const submissions = new Map((task?.submissions || []).map(item => [item.student_id, item]));
         const total = document.createElement("p");
         total.textContent = task
           ? `Joined: ${students.length} · Submitted: ${submissions.size}/${students.length}`
           : `Joined: ${students.length} · Block complete: ${completed.size}/${students.length}`;
-        const prompt = document.createElement("p");
-        prompt.textContent = task?.prompt || "";
-        prompt.hidden = !task;
         const list = document.createElement("ul");
         for (const student of students) {
           const row = document.createElement("li");
@@ -1274,7 +1355,7 @@
               const response = document.getElementById(responseId);
               if (!response) return;
               writingPanel.open = true;
-              response.open = true;
+              response.closest("details").open = true;
               response.parentElement.open = true;
               response.scrollIntoView({ block: "nearest" });
               response.querySelector("summary").focus();
@@ -1286,7 +1367,7 @@
         const signature = JSON.stringify([pin, task?.task_id, total.textContent, list.textContent]);
         if (monitorPanel.dataset.signature !== signature) {
           monitorPanel.dataset.signature = signature;
-          monitorPanel.replaceChildren(total, prompt, list);
+          monitorPanel.replaceChildren(total, list);
         }
       } catch (err) {
         console.error(err);
@@ -1296,6 +1377,7 @@
     function showError(message) {
       console.error(message);
       previewFrame.style.display = "none";
+      taskStage.hidden = true;
       errorBox.style.display = "block";
       errorBox.textContent = message;
       currentBlock.textContent = "Current block: error";
@@ -1605,8 +1687,10 @@
         projectionFrame.allow = "autoplay; fullscreen";
         projectionFrame.style.cssText = "display:block;width:100%;height:100%;border:0";
         projectionFrame.addEventListener("load", showReveal);
-        projectionFrame.src = previewFrame.src;
-        page.body.append(projectionFrame);
+        projectionTask = page.createElement("main");
+        projectionTask.style.cssText = "box-sizing:border-box;height:100%;overflow:auto;background:#f7fafc;color:#17283b;padding:clamp(20px,5vw,72px);font:clamp(18px,2.4vw,36px) system-ui;white-space:pre-wrap";
+        page.body.append(projectionFrame, projectionTask);
+        syncProjection();
       }
       projectionWindow.focus();
     });

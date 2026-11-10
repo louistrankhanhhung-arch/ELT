@@ -20,6 +20,12 @@
   .reh-classroom body:not(.slide-expanded):not(.presentation-mode) .app { grid-template-columns: minmax(100px, 24%) minmax(0, 1fr); grid-template-rows: minmax(220px, 1fr) minmax(48px, 30%); overflow: auto; }
   .live-panel { grid-column: 1 / -1; border-top: 1px solid var(--line); }
 }
-@media (min-width: 851px) {
-  .reh-classroom body:not(.slide-expanded):not(.presentation-mode) .app:has(.live-panel:not([open])) { grid-template-columns: minmax(160px, 19%) minmax(0, 1fr) auto; }
-}
+
+#taskStage { flex: 1; min-height: 0; overflow: auto; padding: clamp(16px, 3vw, 36px); background: #f7fafc; }
+#taskContent { white-space: pre-wrap; overflow-wrap: anywhere; }
+#taskContent h2 { margin-top: 0; }
+#taskContent > ol > li { padding-bottom: 12px; }
+#taskContent [data-answer-key] { color: var(--accent); }
+.task-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--line); padding-block: 12px; }
+#assignOnStage:not(:disabled) { background: var(--accent); color: white; }
+body.presentation-mode .task-actions { display: none; }
