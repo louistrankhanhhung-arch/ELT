@@ -9,6 +9,16 @@ body { margin:0; min-height:100vh; display:grid; place-items:center; background:
 main { width:min(90%,960px); padding:24px 0 } h1 { font-size:1.45em; margin:0 0 12px }
 p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height:55vh } audio { max-width:100% }
 .youtube { display:block; width:min(100%,800px); aspect-ratio:16/9; border:0 }
+.slide-canvas { position:relative; width:min(96vw, calc(94vh * 16 / 9)); aspect-ratio:16/9; background:#f3f7fd; color:#152b48; border-radius:10px; overflow:hidden; container-type:inline-size }
+.slide-canvas .element { position:absolute; box-sizing:border-box; display:flex; justify-content:center; align-items:center; text-align:center; white-space:pre-wrap; padding:.25em; font-size:clamp(10px, 2.4cqw, 30px); overflow:hidden }
+.slide-canvas .element[hidden] { display:none }
+.slide-canvas img { width:100%; height:100%; max-height:none; object-fit:contain }
+.slide-canvas .icon { font-size:clamp(18px, 6cqw, 72px) }
+.slide-canvas .shape { background:#d5e6ff; border:2px solid #7aa6dd }
+.slide-canvas .circle { border-radius:50% }
+.slide-canvas .arrow { clip-path:polygon(0 28%, 68% 28%, 68% 0, 100% 50%, 68% 100%, 68% 72%, 0 72%) }
+.slide-canvas button { width:100%; height:100%; font:inherit; color:white; background:#2459a9; border:0; border-radius:8px }
+.slide-canvas button:disabled { opacity:.6 }
 </style>
 <main><h1></h1><p></p><div id="media"></div></main>
 <script src="config.js"></script>
@@ -28,6 +38,60 @@ function youtubeVideoId(source) {
   return /^[A-Za-z0-9_-]{11}$/.test(id || "") ? id : null;
 }
 
+let step = 0;
+let interactive = params.get("role") === "teacher";
+let currentAudio = null;
+let items = [];
+function applyStep() {
+  for (const [element, node] of items) {
+    node.hidden = step < element.appear || (element.disappear != null && step >= element.disappear);
+    const button = node.querySelector("button");
+    if (button) button.disabled = !interactive;
+  }
+  if (currentAudio && (!interactive || currentAudio.node.hidden)) currentAudio.audio.pause();
+}
+window.addEventListener("message", event => {
+  if (event.source !== parent || event.origin !== location.origin
+      || event.data?.type !== "reh-slide-step" || event.data.block !== params.get("block")) return;
+  step = event.data.step;
+  interactive = event.data.interactive;
+  applyStep();
+});
+function showElements(elements) {
+  const canvas = document.createElement("div");
+  canvas.className = "slide-canvas";
+  items = elements.map(element => {
+    const node = document.createElement("div");
+    node.className = "element " + element.kind + (element.kind === "shape" ? " " + element.shape : "");
+    Object.assign(node.style, {left:element.x+"%", top:element.y+"%", width:element.width+"%", height:element.height+"%"});
+    if (element.kind === "image") {
+      const img = document.createElement("img");
+      img.src = element.url;
+      img.alt = element.text;
+      node.append(img);
+    } else if (element.kind === "audio") {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "▶ " + (element.text || "Listen");
+      button.addEventListener("click", () => {
+        if (!interactive || node.hidden) return;
+        currentAudio?.audio.pause();
+        const audio = new Audio(element.url);
+        currentAudio = {audio, node};
+        audio.play().catch(() => { button.textContent = "Audio unavailable"; });
+      });
+      node.append(button);
+    } else {
+      node.textContent = element.text;
+    }
+    canvas.append(node);
+    return [element, node];
+  });
+  document.querySelector("main").replaceWith(canvas);
+  applyStep();
+  parent.postMessage({ type:"reh-slide-ready" }, location.origin);
+}
+
 async function showSlide() {
   if (!/^[a-f0-9]{32}$/.test(revision || "")) throw new Error("Invalid slide");
   const response = await fetch(window.runtimeLessonUrl("imports/" + revision));
@@ -35,6 +99,7 @@ async function showSlide() {
   const lesson = await response.json();
   const block = lesson.blocks.find(block => block.id === params.get("block") && block.activity_kind === "native-slide");
   if (!block) throw new Error("Slide not found");
+  if (block.elements?.length) { showElements(block.elements); return; }
   document.querySelector("h1").textContent = block.title;
   document.querySelector("p").textContent = block.body;
   if (block.media_url) {

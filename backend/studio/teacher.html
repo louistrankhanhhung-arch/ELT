@@ -394,6 +394,9 @@
       <a href="author.html" id="editWorkLesson" hidden>Edit in Studio</a>
       <a href="lesson-catalogue.html" id="saveToCatalogue" hidden>Save to Catalogue</a>
       <a href="session-results.html" id="sessionResultsLink">Session Results</a>
+      <button id="previousReveal" hidden>Previous reveal</button>
+      <button id="nextReveal" hidden>Next reveal</button>
+      <span id="revealStatus" role="status"></span>
       <button id="copyStudentBtn">Copy Join Link</button>
     </div>
   </header>
@@ -594,6 +597,63 @@
 
     let currentLesson = null;
     let sessionPin = null;
+    let slideStep = 0;
+    let revealPending = false;
+    const previousReveal = document.getElementById("previousReveal");
+    const nextReveal = document.getElementById("nextReveal");
+    const revealStatus = document.getElementById("revealStatus");
+
+    function revealSteps() {
+      const elements = currentLesson?.blocks[blockIndex]?.elements || [];
+      return [...new Set([0, ...elements.flatMap(element => [element.appear, element.disappear])
+        .filter(step => Number.isInteger(step))])].sort((a, b) => a - b);
+    }
+
+    function showReveal() {
+      const steps = revealSteps();
+      previousReveal.hidden = nextReveal.hidden = steps.length === 1;
+      const index = steps.indexOf(slideStep);
+      previousReveal.disabled = revealPending || index <= 0;
+      nextReveal.disabled = revealPending || index >= steps.length - 1;
+      revealStatus.textContent = steps.length > 1 ? "Reveal " + (index + 1) + "/" + steps.length : "";
+      previewFrame.contentWindow?.postMessage({ type: "reh-slide-step", block: currentLesson?.blocks[blockIndex]?.id,
+        step: slideStep, interactive: true }, location.origin);
+    }
+
+    async function changeReveal(direction) {
+      const steps = revealSteps();
+      const step = steps[steps.indexOf(slideStep) + direction];
+      if (step === undefined || revealPending) return;
+      const pin = sessionPin;
+      const block = blockIndex;
+      revealPending = true;
+      showReveal();
+      let failed = false;
+      try {
+        if (pin && !endSessionBtn.disabled) {
+          const response = await fetch(`${API_BASE}/sessions/${pin}/slide-step`, {
+            method: "POST",
+            headers: { ...teacherHeaders(), "Content-Type": "application/json" },
+            body: JSON.stringify({ block_index: block, step })
+          });
+          if (!response.ok) throw new Error("Could not change reveal");
+        }
+        if (block === blockIndex && pin === sessionPin) slideStep = step;
+      } catch {
+        failed = true;
+      } finally {
+        revealPending = false;
+        showReveal();
+        if (failed) revealStatus.textContent = "Could not sync reveal. Try again.";
+      }
+    }
+    previousReveal.onclick = () => changeReveal(-1);
+    nextReveal.onclick = () => changeReveal(1);
+    previewFrame.addEventListener("load", showReveal);
+    window.addEventListener("message", event => {
+      if (event.origin === location.origin && event.source === previewFrame.contentWindow
+          && event.data?.type === "reh-slide-ready") showReveal();
+    });
     const writingPanel = document.getElementById("writingPanel");
     const writingAssignForm = document.getElementById("writingAssignForm");
     const writingExport = document.getElementById("writingExport");
@@ -965,6 +1025,8 @@
       }
 
       blockIndex = index;
+      slideStep = 0;
+      showReveal();
 
       document.querySelectorAll(".block-btn").forEach(btn => {
         btn.classList.toggle("active", Number(btn.dataset.index) === blockIndex);
@@ -1033,6 +1095,8 @@
         const session = await res.json();
 
         sessionPin = session.pin;
+        slideStep = session.slide_step || 0;
+        showReveal();
         document.getElementById("sessionResultsLink").href = "session-results.html?pin=" + encodeURIComponent(sessionPin);
         document.getElementById("editWorkLesson").hidden = true;
         document.getElementById("saveToCatalogue").hidden = true;

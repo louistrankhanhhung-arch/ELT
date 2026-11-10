@@ -238,6 +238,18 @@
     let currentLesson = null;
     let lastSessionBlockIndex = null;
     let displayMode = "follow";
+    let slideStep = 0;
+
+    function showSlideStep() {
+      const block = currentLesson?.blocks[blockIndex];
+      playerFrame.contentWindow?.postMessage({ type: "reh-slide-step", block: block?.id,
+        step: slideStep, interactive: !sessionPin || displayMode === "interact" }, location.origin);
+    }
+    playerFrame.addEventListener("load", showSlideStep);
+    window.addEventListener("message", event => {
+      if (event.origin === location.origin && event.source === playerFrame.contentWindow
+          && event.data?.type === "reh-slide-ready") showSlideStep();
+    });
     const writingPanel = document.getElementById("writingPanel");
     const writingForm = document.getElementById("writingForm");
     const writingStatus = document.getElementById("writingStatus");
@@ -605,6 +617,7 @@
         blockIndex = session.current_block_index || 0;
         lastSessionBlockIndex = blockIndex;
         displayMode = session.display_mode || "follow";
+        slideStep = session.slide_step || 0;
         syncWriting(session.active_writing_task);
           void syncScores(session.published_score_ids);
 
@@ -644,6 +657,7 @@
       if (!interact) playerFrame.blur();
       const source = focus || block.task ? "about:blank" : window.runtimePlayerUrl(block, "student");
       if (playerFrame.src !== source) playerFrame.src = source;
+      showSlideStep();
       statusText.textContent = `PIN ${sessionPin} · ${displayMode}`;
 
       prevBtn.disabled = true;
@@ -704,12 +718,14 @@
           const nextIndex = session.current_block_index || 0;
 
           const nextMode = session.display_mode || "follow";
+          slideStep = session.slide_step || 0;
           if (nextIndex !== lastSessionBlockIndex || nextMode !== displayMode) {
             displayMode = nextMode;
             blockIndex = nextIndex;
             lastSessionBlockIndex = nextIndex;
             renderSessionBlock();
           }
+          showSlideStep();
           syncWriting(session.active_writing_task);
           void syncScores(session.published_score_ids);
         } catch (err) {

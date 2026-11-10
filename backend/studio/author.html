@@ -14,6 +14,14 @@ button,.action { display:inline-block; background:#2459a9; color:white; border:0
 .block[aria-current=true] { background:#2459a9; color:white } pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit }
 fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 @media(max-width:680px) { .grid { grid-template-columns:1fr } }
+#elementPreview { position:relative; width:100%; aspect-ratio:16/9; background:#eef5ff; container-type:inline-size; overflow:hidden }
+.preview-element { position:absolute; display:grid; place-items:center; text-align:center; overflow:hidden; font-size:2.5cqw }
+.preview-element img { width:100%; height:100%; object-fit:contain }
+.preview-element.icon { font-size:6cqw }
+.preview-element.audio { background:#2459a9;color:white;border-radius:5px }
+.preview-element.rectangle,.preview-element.circle,.preview-element.arrow {background:#d5e6ff;border:1px solid #7aa6dd}
+.preview-element.circle {border-radius:50%}
+.preview-element.arrow {clip-path:polygon(0 28%,68% 28%,68% 0,100% 50%,68% 100%,68% 72%,0 72%)}
 </style>
 <header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import a lesson from GPT Work, edit its blocks, and save a version for class.</p></header>
 <main>
@@ -37,7 +45,7 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
     </aside>
     <section><h2>Edit block</h2><div id="fields"></div>
       <button id="up">Move up</button><button id="down">Move down</button><button id="remove">Remove block</button>
-      <h2>Preview</h2><pre id="preview"></pre>
+      <h2>Preview</h2><pre id="preview"></pre><div id="elementPreview" hidden></div>
     </section>
   </div>
   <button id="save">Save version</button>
@@ -47,6 +55,6 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 </section>
 </main>
 <script src="config.js"></script>
-<script src="author.js?v=lesson-catalogue-1"></script>
+<script src="author.js?v=slide-elements-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>

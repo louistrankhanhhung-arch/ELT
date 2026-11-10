@@ -356,6 +356,12 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS session_slide_steps (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin),
+            block_index INTEGER NOT NULL, step INTEGER NOT NULL
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS session_display_modes (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
             mode TEXT NOT NULL
@@ -417,6 +423,8 @@ def get_session(pin: str):
     events = [dict(row) for row in cur.fetchall()]
     cur.execute(sql("SELECT mode FROM session_display_modes WHERE pin = ?"), (pin,))
     display = cur.fetchone()
+    cur.execute(sql("SELECT step FROM session_slide_steps WHERE pin = ? AND block_index = ?"), (pin, session["current_block_index"]))
+    slide_step = cur.fetchone()
     cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
     writing = cur.fetchone()
     cur.execute(sql("""
@@ -437,6 +445,7 @@ def get_session(pin: str):
     data = dict(session)
     data["students"] = students
     data["events"] = events
+    data["slide_step"] = slide_step["step"] if slide_step else 0
     data["display_mode"] = display["mode"] if display else "follow"
     data["published_score_ids"] = published_scores
     data["active_writing_task"] = task_description(dict(active_writing)) if active_writing else None
@@ -687,6 +696,7 @@ def next_block(pin: str):
         sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
         (next_index, pin)
     )
+    cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
     conn.commit()
     conn.close()
 
@@ -705,6 +715,7 @@ def previous_block(pin: str):
         sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
         (prev_index, pin)
     )
+    cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
     conn.commit()
     conn.close()
 
@@ -724,6 +735,7 @@ def set_block(pin: str, index: int):
         sql("UPDATE sessions SET current_block_index = ? WHERE pin = ?"),
         (index, pin)
     )
+    cur.execute(sql("DELETE FROM session_slide_steps WHERE pin = ?"), (pin,))
     conn.commit()
     conn.close()
 
@@ -1293,7 +1305,34 @@ def student_scores(pin: str, payload: StudentScoresRequest):
     return {"scores": scores}
 
 
+class SlideElement(BaseModel):
+    kind: Literal["text", "image", "audio", "shape", "icon"]
+    text: str = Field(default="", max_length=500)
+    url: Optional[str] = Field(default=None, max_length=2000)
+    shape: Literal["rectangle", "circle", "arrow"] = "rectangle"
+    x: float = Field(ge=0, le=99)
+    y: float = Field(ge=0, le=99)
+    width: float = Field(gt=0, le=100)
+    height: float = Field(gt=0, le=100)
+    appear: int = Field(default=0, ge=0, le=30)
+    disappear: Optional[int] = Field(default=None, ge=1, le=30)
+
+    def checked(self, block_id):
+        if self.x + self.width > 100 or self.y + self.height > 100:
+            raise HTTPException(422, f"Block {block_id}: slide element must fit within the canvas")
+        if self.disappear is not None and self.disappear <= self.appear:
+            raise HTTPException(422, f"Block {block_id}: disappear must follow appear")
+        if self.kind in {"image", "audio"}:
+            url = urlsplit(self.url or "")
+            if url.scheme != "https" or not url.hostname or url.username or url.password:
+                raise HTTPException(422, f"Block {block_id}: image and audio elements require a direct HTTPS URL")
+        elif self.url:
+            raise HTTPException(422, f"Block {block_id}: only image and audio elements accept a URL")
+        return self.model_dump(exclude_none=True)
+
+
 class WorkBlock(BaseModel):
+    elements: List[SlideElement] = Field(default_factory=list, max_length=60)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: EvidencePhase
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
@@ -1362,7 +1401,8 @@ def save_work_lesson(payload: SaveWorkLesson):
                 if url.scheme != "https" or not url.hostname or url.username or url.password:
                     raise HTTPException(422, f"Block {block.id}: use a direct HTTPS media URL")
             entry.update(activity_kind="native-slide", body=block.body,
-                         media_type=block.media_type, media_url=media, native_revision=revision)
+                         media_type=block.media_type, media_url=media, native_revision=revision,
+                         elements=[element.checked(block.id) for element in block.elements])
         else:
             prompt = block.prompt.strip()
             if not prompt or (block.kind == "multiple_choice") != bool(block.quiz):
@@ -1834,3 +1874,34 @@ def publish_catalogue_version(catalogue_id: str, payload: PublishCatalogueReques
             raise HTTPException(409, "The published version changed. Reload the catalogue.")
         conn.commit()
     return catalogue_entry(catalogue_id)
+
+
+class SlideStepRequest(BaseModel):
+    block_index: int = Field(ge=0)
+    step: int = Field(ge=0, le=30)
+
+
+@app.post("/api/sessions/{pin}/slide-step", dependencies=[Depends(require_teacher)])
+def update_slide_step(pin: str, payload: SlideStepRequest):
+    session = require_active_session(pin)
+    if not session["lesson_path"].startswith("imports/"):
+        raise HTTPException(422, "This lesson has no animated slides")
+    blocks = load_imported_lesson(session["lesson_path"].split("/", 1)[1])["blocks"]
+    if payload.block_index >= len(blocks):
+        raise HTTPException(422, "Invalid block")
+    elements = blocks[payload.block_index].get("elements", [])
+    steps = {0, *(step for element in elements for step in (element.get("appear"), element.get("disappear")) if step is not None)}
+    if not elements or payload.step not in steps:
+        raise HTTPException(422, "Invalid slide step")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            INSERT INTO session_slide_steps (pin, block_index, step)
+            SELECT pin, current_block_index, ? FROM sessions
+            WHERE pin = ? AND current_block_index = ? AND status = 'active'
+            ON CONFLICT(pin) DO UPDATE SET block_index = excluded.block_index, step = excluded.step
+        """), (payload.step, pin, payload.block_index))
+        if cur.rowcount != 1:
+            raise HTTPException(409, "The current slide has changed")
+        conn.commit()
+    return {"slide_step": payload.step}

@@ -74,6 +74,23 @@ function renderPreview() {
     ...(block.quiz?.questions || []).map((question, index) =>
       (index + 1) + ". " + question.prompt + "\n" + question.options.join(" · "))
   ].filter(Boolean).join("\n\n");
+  const canvas = byId("elementPreview");
+  canvas.hidden = block.kind !== "slide" || !block.elements?.length;
+  canvas.replaceChildren();
+  if (!canvas.hidden) {
+    for (const element of block.elements) {
+      const item = document.createElement("div");
+      item.className = "preview-element " + (element.kind === "shape" ? element.shape : element.kind);
+      Object.assign(item.style, {left:element.x+"%", top:element.y+"%", width:element.width+"%", height:element.height+"%"});
+      if (element.kind === "image" && /^https:\/\//.test(element.url || "")) {
+        const image = document.createElement("img");
+        image.src = element.url;
+        image.alt = element.text || "";
+        item.append(image);
+      } else item.textContent = element.kind === "audio" ? "▶ " + (element.text || "Listen") : element.text || "";
+      canvas.append(item);
+    }
+  }
   const active = byId("blocks").children[selected];
   if (active) active.textContent = (selected + 1) + ". " + block.phase + " · " + block.title;
 }
@@ -106,6 +123,7 @@ function render() {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
     field(fields, "Media type", block.media_type, value => { block.media_type = value || null; }, ["", "image", "audio", "video"]);
     field(fields, "Media URL (direct HTTPS or YouTube for video)", block.media_url, value => { block.media_url = value.trim() || null; });
+    renderElements(fields, block);
   } else {
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
   }
@@ -230,3 +248,44 @@ byId("save").onclick = async () => {
   } catch (error) { status(error.message); }
   finally { byId("save").disabled = false; }
 };
+
+
+function renderElements(fields, block) {
+  const elements = block.elements ||= [];
+  const section = document.createElement("details");
+  section.open = elements.length > 0;
+  const summary = document.createElement("summary");
+  summary.textContent = "Slide elements (" + elements.length + ")";
+  section.append(summary);
+  elements.forEach((element, index) => {
+    const item = document.createElement("details");
+    const title = document.createElement("summary");
+    title.textContent = (index + 1) + ". " + element.kind + (element.text ? " · " + element.text : "");
+    item.append(title);
+    field(item, "Element type", element.kind, value => {
+      element.kind = value;
+      if (value !== "image" && value !== "audio") delete element.url;
+      render();
+    }, ["text", "image", "audio", "shape", "icon"]);
+    field(item, "Text or accessible label", element.text, value => { element.text = value; });
+    if (element.kind === "shape") field(item, "Shape", element.shape || "rectangle",
+      value => { element.shape = value; }, ["rectangle", "circle", "arrow"]);
+    if (element.kind === "image" || element.kind === "audio") field(item, "Direct HTTPS URL", element.url,
+      value => { element.url = value.trim(); });
+    for (const [key, label] of [["x","Left (%)"],["y","Top (%)"],["width","Width (%)"],["height","Height (%)"],
+      ["appear","Appear on reveal (0 = visible initially)"],["disappear","Disappear on reveal (blank = stay visible)"]]) {
+      field(item, label, element[key] ?? (key === "appear" ? 0 : ""), value => {
+        element[key] = key === "disappear" && value.trim() === "" ? null : Number(value);
+      });
+    }
+    button(item, "Remove element", () => { elements.splice(index, 1); dirty(); render(); });
+    section.append(item);
+  });
+  button(section, "Add element", () => {
+    if (elements.length >= 60) return;
+    elements.push({kind:"text",text:"New element",x:5,y:5,width:35,height:15,appear:0});
+    dirty();
+    render();
+  });
+  fields.append(section);
+}
