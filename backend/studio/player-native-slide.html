@@ -78,7 +78,14 @@ function showElements(elements) {
         currentAudio?.audio.pause();
         const audio = new Audio(element.url);
         currentAudio = {audio, node};
-        audio.play().catch(() => { button.textContent = "Audio unavailable"; });
+        button.textContent = "▶ " + (element.text || "Listen");
+        audio.addEventListener("playing", () => button.setAttribute("aria-pressed", "true"));
+        for (const event of ["pause", "ended"]) {
+          audio.addEventListener(event, () => button.setAttribute("aria-pressed", "false"));
+        }
+        audio.play().catch(error => {
+          if (error.name !== "AbortError" && currentAudio?.audio === audio) button.textContent = "Audio unavailable";
+        });
       });
       node.append(button);
     } else {
