@@ -372,7 +372,7 @@
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
   <link rel="stylesheet" href="classroom-ui.css?v=4">
-<link rel="stylesheet" href="task-materials.css?v=1">
+<link rel="stylesheet" href="task-materials.css?v=2">
 </head>
 <body>
   <header>
@@ -765,8 +765,10 @@
         const item = document.createElement("li");
         const questionText = document.createElement("p");
         questionText.textContent = question.prompt;
-        const options = document.createElement("ol");
-        options.type = "A";
+        const sentence = task.type === "ordering_sentence";
+        const options = document.createElement(sentence ? "ul" : "ol");
+        if (sentence) options.className = "sentence-preview";
+        else options.type = "A";
         (question.options || question.parts)?.forEach((option, index) => {
           const row = document.createElement("li");
           row.textContent = option;
@@ -1918,7 +1920,7 @@
         projectionTask.style.cssText = "box-sizing:border-box;height:100%;overflow:auto;background:#f7fafc;color:#17283b;padding:clamp(20px,5vw,72px);font:clamp(18px,2.4vw,36px) system-ui;white-space:pre-wrap";
         const materialsStyle = page.createElement("link");
         materialsStyle.rel = "stylesheet";
-        materialsStyle.href = new URL("task-materials.css?v=1", location.href).href;
+        materialsStyle.href = new URL("task-materials.css?v=2", location.href).href;
         page.head.append(materialsStyle);
         page.body.append(projectionFrame, projectionTask);
         syncProjection();
