@@ -1940,11 +1940,14 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
     except HTTPError as error:
         state = "failed"
         try:
-            code = json.load(error).get("error", {}).get("code")
+            info = json.load(error).get("error", {})
+            code = info.get("code") or info.get("type")
         except (OSError, ValueError, AttributeError):
             code = None
         known = {"model_not_found", "insufficient_quota", "invalid_api_key", "rate_limit_exceeded",
-                 "unsupported_parameter", "invalid_json_schema", "invalid_request_error", "billing_hard_limit_reached"}
+                 "unsupported_parameter", "invalid_json_schema", "invalid_request_error", "billing_hard_limit_reached",
+                 "organization_spend_limit_exceeded", "project_spend_limit_exceeded",
+                 "organization_usage_limit_exceeded", "slow_down", "rate_limit_error", "quota_error"}
         error_detail = f"OpenAI API HTTP {error.code}" + (f" ({code})" if isinstance(code, str) and code in known else "") + "."
     except RuntimeError as error:
         state = "failed"
