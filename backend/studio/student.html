@@ -394,9 +394,16 @@
     let scoreRequestKey = "";
     const publishedScores = document.getElementById("publishedScores");
 
-    async function syncScores(session) {
-      const taskId = session.active_writing_task?.task_id;
-      if (!studentId || !taskId || !session.published_score_ids?.includes(taskId)) {
+    function syncBlockTask(session) {
+      const block = currentLesson?.blocks[blockIndex];
+      const active = session.active_writing_task;
+      const task = block && active && (!active.block_id || active.block_id === block.id) ? active : null;
+      syncWriting(task);
+      void syncScores(task?.task_id, session.published_score_ids);
+    }
+
+    async function syncScores(taskId, publishedIds) {
+      if (!studentId || !taskId || !publishedIds?.includes(taskId)) {
         scoreRequestKey = "";
         publishedScores.hidden = true;
         publishedScores.replaceChildren();
@@ -661,8 +668,7 @@
         lastSessionBlockIndex = blockIndex;
         displayMode = session.display_mode || "follow";
         slideStep = session.slide_step || 0;
-        syncWriting(session.active_writing_task);
-          void syncScores(session);
+        syncBlockTask(session);
 
         renderSessionBlock();
         startSessionPolling();
@@ -769,8 +775,7 @@
             renderSessionBlock();
           }
           showSlideStep();
-          syncWriting(session.active_writing_task);
-          void syncScores(session);
+          syncBlockTask(session);
         } catch (err) {
           console.error(err);
           if (!isDisconnected) {
