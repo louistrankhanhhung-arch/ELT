@@ -368,7 +368,7 @@
     body.presentation-mode #writingPanel { display: none; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
-  <link rel="stylesheet" href="classroom-ui.css?v=2">
+  <link rel="stylesheet" href="classroom-ui.css?v=3">
 </head>
 <body>
   <header>
@@ -412,6 +412,10 @@
     <section class="preview">
       <div class="current" id="currentBlock">Current block: —</div>
 
+      <details id="teacherNotes" open hidden>
+        <summary>Teacher notes</summary>
+        <div id="teacherNotesText"></div>
+      </details>
       <div class="reveal-tools"><button id="previousReveal" hidden>Previous reveal</button>
       <button id="nextReveal" hidden>Next reveal</button>
       <span id="revealStatus" role="status"></span></div>
@@ -555,6 +559,56 @@
     function teacherHeaders() {
       return teacherToken ? { Authorization: "Bearer " + teacherToken } : {};
     }
+
+    const teacherNotes = document.getElementById("teacherNotes");
+    const teacherNotesText = document.getElementById("teacherNotesText");
+    let notesByBlock = null;
+    let notesCode = null;
+    let notesTimer;
+
+    function renderTeacherNotes() {
+      if (teacherNotes.hidden) return;
+      const block = currentLesson?.blocks[blockIndex];
+      teacherNotesText.textContent = notesByBlock
+        ? notesByBlock.get(block?.id) || "No notes for this block."
+        : "Enter the teacher access code in Live Session to view notes.";
+    }
+
+    async function loadTeacherNotes() {
+      if (teacherNotes.hidden) return;
+      const code = teacherTokenInput.value.trim();
+      if (notesByBlock && notesCode === code) return;
+      notesByBlock = null;
+      notesCode = code;
+      renderTeacherNotes();
+      try {
+        const response = await fetch(`${API_BASE}/work-lessons/${lessonPath.split("/")[1]}`, {
+          headers: code ? { Authorization: "Bearer " + code } : {},
+          cache: "no-store"
+        });
+        if (notesCode !== code || teacherTokenInput.value.trim() !== code) return;
+        if (!response.ok) {
+          if (code) teacherNotesText.textContent = "Could not load teacher notes. Check the access code.";
+          return;
+        }
+        const { lesson } = await response.json();
+        if (notesCode !== code || teacherTokenInput.value.trim() !== code) return;
+        notesByBlock = new Map(lesson.blocks.map(block => [block.id, block.notes?.trim()]));
+        renderTeacherNotes();
+      } catch {
+        if (notesCode === code && teacherTokenInput.value.trim() === code) {
+          teacherNotesText.textContent = "Could not load teacher notes. Try entering the access code again.";
+        }
+      }
+    }
+
+    teacherTokenInput.addEventListener("input", () => {
+      clearTimeout(notesTimer);
+      notesByBlock = null;
+      notesCode = null;
+      renderTeacherNotes();
+      notesTimer = setTimeout(loadTeacherNotes, 400);
+    });
 
     const lessonUrl = window.runtimeLessonUrl(lessonPath);
 
@@ -1076,6 +1130,8 @@
         }
 
         currentLesson = await res.json();
+        teacherNotes.hidden = currentLesson.origin !== "work" || !/^imports\/[a-f0-9]{32}$/.test(lessonPath);
+        void loadTeacherNotes();
         const catalogueId = params.get("catalogue");
         if (/^imports\/[a-f0-9]{32}$/.test(lessonPath)) {
           const save = document.getElementById("saveToCatalogue");
@@ -1139,6 +1195,7 @@
       }
 
       blockIndex = index;
+      renderTeacherNotes();
       slideStep = 0;
       showReveal();
 
@@ -1262,6 +1319,7 @@
         showJoinSession.href = joinScreen.href;
         showJoinSession.hidden = false;
         teacherTokenInput.hidden = true;
+        void loadTeacherNotes();
         startMonitorPolling();
         
         startSessionBtn.textContent = "Session Active";

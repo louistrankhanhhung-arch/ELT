@@ -29,3 +29,8 @@
 .task-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--line); padding-block: 12px; }
 #assignOnStage:not(:disabled) { background: var(--accent); color: white; }
 body.presentation-mode .task-actions { display: none; }
+
+#teacherNotes { flex: 0 0 auto; padding: 8px 12px; background: #f7fafc; border-bottom: 1px solid var(--line); }
+#teacherNotes summary { cursor: pointer; font-weight: 650; }
+#teacherNotesText { max-height: 20vh; overflow: auto; margin-top: 6px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
+body.presentation-mode #teacherNotes { display: none; }
