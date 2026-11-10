@@ -35,6 +35,10 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <form id="historyFilters" hidden>
 <label>Lesson or PIN <input id="historyQuery" type="search" maxlength="160"></label>
 <label>Status <select id="historyStatus"><option value="">All statuses</option><option value="active">Active</option><option value="ended">Ended</option><option value="expired">Expired</option></select></label>
+<label>Course <input id="historyCourse" list="historyCourses" maxlength="160" placeholder="All courses"></label>
+<datalist id="historyCourses"><option value="Recovery"><option value="Foundation"><option value="Bridge"></datalist>
+<label>Level <input id="historyLevel" list="historyLevels" maxlength="80" placeholder="All levels"></label>
+<datalist id="historyLevels"><option value="1"><option value="2"><option value="3"><option value="4"><option value="5"><option value="6"><option value="7"><option value="8"><option value="9"><option value="10"><option value="11"><option value="12"></datalist>
 <button>Apply filters</button><button id="clearFilters" type="button">Clear</button>
 </form>
 <p id="historyEmpty" hidden>No matching sessions.</p>
@@ -62,5 +66,5 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 </section>
 </main>
 <script src="config.js"></script>
-<script src="session-results.js?v=text-assessment-1"></script>
+<script src="session-results.js?v=course-level-filter-1"></script>
 </html>

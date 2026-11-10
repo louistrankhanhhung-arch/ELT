@@ -2035,8 +2035,14 @@ def read_speaking(pin: str, task_id: str, student_id: str):
 
 
 @app.get("/api/session-history", dependencies=[Depends(require_teacher)])
-def session_history(offset: int = 0, query: str = "", status: Literal["active", "ended", "expired"] | None = None):
+def session_history(offset: int = 0, query: str = "", status: Literal["active", "ended", "expired"] | None = None,
+                    course: str = "", level: str = ""):
     title = "r.manifest::json ->> 'title'" if USE_POSTGRES else "json_extract(r.manifest, '$.title')"
+    def metadata(key):
+        value = f"r.manifest::json ->> '{key}'" if USE_POSTGRES else f"json_extract(r.manifest, '$.{key}')"
+        return f"""COALESCE(NULLIF(TRIM(CAST({value} AS TEXT)), ''),
+            (SELECT c.{key} FROM lesson_catalogue c WHERE c.revision_id = r.revision_id
+             ORDER BY c.published_at DESC, c.catalogue_id LIMIT 1), '')"""
     search = query.strip().lower()[:160]
     page_size = 20
     offset = max(offset, 0)
@@ -2046,16 +2052,19 @@ def session_history(offset: int = 0, query: str = "", status: Literal["active", 
             WITH history AS (
                 SELECT s.pin, s.lesson_id, s.created_at, s.ended_at, s.expires_at,
                        COALESCE({title}, s.lesson_id) AS title,
+                       {metadata("course")} AS course, {metadata("level")} AS level,
                        CASE WHEN s.status = 'active' AND (s.expires_at <= ? OR (s.expires_at IS NULL AND s.created_at <= ?))
                             THEN 'expired' ELSE s.status END AS status
                 FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
             )
             SELECT *, COUNT(*) OVER () AS total FROM history
             WHERE status = COALESCE(?, status)
+              AND LOWER(course) = COALESCE(NULLIF(?, ''), LOWER(course))
+              AND LOWER(level) = COALESCE(NULLIF(?, ''), LOWER(level))
               AND (LOWER(title) LIKE ? OR LOWER(lesson_id) LIKE ? OR pin LIKE ?)
             ORDER BY created_at DESC, pin DESC LIMIT ? OFFSET ?
         """), (now_iso(), (datetime.now(timezone.utc) - timedelta(hours=SESSION_TTL_HOURS)).isoformat(),
-               status, *([f"%{search}%"] * 3), page_size, offset))
+               status, course.strip().lower()[:160], level.strip().lower()[:80], *([f"%{search}%"] * 3), page_size, offset))
         sessions = [dict(row) for row in cur.fetchall()]
     total = sessions[0]["total"] if sessions else 0
     for session in sessions:

@@ -95,7 +95,12 @@ el("toggleFilters").onclick = () => {
 };
 function applyFilters() {
   const state = el("historyStatus").value;
-  filters = { query: el("historyQuery").value.trim(), ...(state ? { status: state } : {}) };
+  filters = {
+    query: el("historyQuery").value.trim(),
+    course: el("historyCourse").value.trim(),
+    level: el("historyLevel").value.trim(),
+    ...(state ? { status: state } : {})
+  };
   offset = 0;
   status("");
   loadHistory().catch(error => status(error.message));
