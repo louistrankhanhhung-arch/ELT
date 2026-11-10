@@ -14,9 +14,9 @@
     body {
       display: flex;
       flex-direction: column;
-      background: #f7f3f8;
-      font-family: Arial, sans-serif;
-      color: #222;
+      background: #F7FAF3;
+      font-family: system-ui, "Segoe UI", sans-serif;
+      color: #18352A;
       overflow: hidden;
     }
 
@@ -28,7 +28,7 @@
       gap: 12px;
       padding: 8px 12px;
       background: #ffffff;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #CCDCC8;
       font-size: 14px;
     }
 
@@ -44,7 +44,7 @@
     }
 
     .block-title {
-      color: #666;
+      color: #456052;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -54,7 +54,7 @@
     .status {
       flex: 0 0 auto;
       font-size: 13px;
-      color: #666;
+      color: #456052;
     }
 
     .nav-controls {
@@ -66,7 +66,7 @@
 
     .nav-btn {
       padding: 6px 10px;
-      border: 1px solid #ddd;
+      border: 1px solid #CCDCC8;
       border-radius: 8px;
       background: #ffffff;
       cursor: pointer;
@@ -127,9 +127,9 @@
       margin: 12px;
       padding: 14px 16px;
       background: #fff;
-      border: 1px solid #dbe3ed;
+      border: 1px solid #CCDCC8;
       border-radius: 10px;
-      color: #172338;
+      color: #18352A;
       overflow: auto;
       max-height: 40vh;
       flex-shrink: 0;
@@ -143,13 +143,13 @@
       width: min(100%, 48rem);
       margin: 6px 0 10px;
       padding: 9px 10px;
-      border: 1px solid #b5c4d5;
+      border: 1px solid #A5BDA0;
       border-radius: 6px;
       font: inherit;
       resize: vertical;
     }
     #writingPanel button {
-      background: #2459a9;
+      background: #286340;
       border: 0;
       border-radius: 6px;
       color: #fff;
@@ -160,24 +160,24 @@
     #writingPanel button:disabled { opacity: .55; cursor: default; }
     #writingPanel p { margin: 8px 0; }
     #writingPanel p:empty { display: none; }
-    #writingResults details { border-top: 1px solid #e1e8f0; padding: 8px 0; }
+    #writingResults details { border-top: 1px solid #CCDCC8; padding: 8px 0; }
     #writingResults summary { cursor: pointer; }
     body.presentation-mode #writingPanel { display: none; }
-      #publishedScores { flex: 0 0 auto; max-height: 42vh; overflow: auto; padding: 10px 16px; background: white; border-bottom: 1px solid #d5e1ec; }
+      #publishedScores { flex: 0 0 auto; max-height: 42vh; overflow: auto; padding: 10px 16px; background: white; border-bottom: 1px solid #CCDCC8; }
     #publishedScores article { max-width: 850px; margin-inline: auto; }
     .score-header, .score-question { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
     .score-header h2, #publishedScores article > p { margin: 4px 0 10px; }
-    .score-points { background: #e3f4f0; color: #07554f; padding: 7px 14px; border-radius: 10px; font-size: 1.35rem; }
-    .score-toggle { padding: 8px 12px; background: white; border: 1px solid #aabbd0; border-radius: 8px; color: #17283b; cursor: pointer; }
+    .score-points { background: #E9F2E3; color: #286340; padding: 7px 14px; border-radius: 10px; font-size: 1.35rem; }
+    .score-toggle { padding: 8px 12px; background: white; border: 1px solid #A5BDA0; border-radius: 8px; color: #18352A; cursor: pointer; }
     .score-review { list-style: none; margin: 12px 0; padding: 0; display: grid; gap: 10px; }
-    .score-review li { padding: 12px; border: 1px solid #d5e1ec; border-radius: 10px; overflow-wrap: anywhere; }
+    .score-review li { padding: 12px; border: 1px solid #CCDCC8; border-radius: 10px; overflow-wrap: anywhere; }
     .score-review li[data-correct="false"] { border-inline-start: 4px solid #ad651f; }
-    .score-badge { padding: 3px 8px; border-radius: 20px; color: #07554f; background: #e3f4f0; font-size: .8rem; font-weight: 650; }
+    .score-badge { padding: 3px 8px; border-radius: 20px; color: #286340; background: #E9F2E3; font-size: .8rem; font-weight: 650; }
     [data-correct="false"] .score-badge { color: #773c09; background: #fff0dc; }
     .score-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)); gap: 8px; margin: 10px 0 0; }
-    .score-comparison > div { min-width: 0; background: #f3f6fa; padding: 8px; border-radius: 7px; }
-    .score-comparison > div + div { background: #eaf6f2; }
-    .score-comparison dt { font-size: .8rem; color: #40566b; font-weight: 650; }
+    .score-comparison > div { min-width: 0; background: #F7FAF3; padding: 8px; border-radius: 7px; }
+    .score-comparison > div + div { background: #E9F2E3; }
+    .score-comparison dt { font-size: .8rem; color: #456052; font-weight: 650; }
     .score-comparison dd { margin: 4px 0 0; white-space: pre-wrap; }
     /* Written activities use the viewport below the lesson header. */
     body:has(#writingPanel:not([hidden]):not([data-speaking])) {
@@ -208,24 +208,24 @@
       padding: 0;
     }
     #quizChoices > fieldset {
-      border: 1px solid #d5e1ec;
+      border: 1px solid #CCDCC8;
       border-radius: 8px;
       margin: 0 0 12px;
       padding: 8px 12px;
     }
     #quizChoices input[data-typed-answer] { box-sizing: border-box; max-width: 100%; width: min(100%, 32rem); padding: 8px; font: inherit; }
     .order-parts { padding-inline-start: 1.6em; }
-    .order-parts li { margin-block: 6px; padding: 8px; border: 1px solid #d5e1ec; border-radius: 8px; }
+    .order-parts li { margin-block: 6px; padding: 8px; border: 1px solid #CCDCC8; border-radius: 8px; }
     .order-parts button { min-width: 42px; min-height: 42px; }
     .sentence-parts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
     .sentence-parts li { margin: 0; padding: 0; border: 0; max-width: 100%; }
     .paragraph-parts { list-style: none; padding: 0; }
     .paragraph-parts li { padding: 0; border: 0; }
     .paragraph-parts button { width: 100%; text-align: left; }
-    #writingPanel .order-parts button { color: #17283b; background: #edf4fb; border: 1px solid #b7c9db; cursor: grab; max-width: 100%; overflow-wrap: anywhere; }
-    #writingPanel .order-parts button[aria-pressed="true"] { background: #d7f2eb; border-color: #08695f; outline: 2px solid #08695f; }
-    #dialogueCard { flex: 1 1 0; min-height: 0; overflow: auto; margin: 10px; padding: clamp(14px, 4vw, 32px); background: #fff; border: 1px solid #d5e1ec; border-radius: 12px; }
-    #dialogueCard h2 { color: #08695f; margin-top: 0; }
+    #writingPanel .order-parts button { color: #18352A; background: #E9F2E3; border: 1px solid #A5BDA0; cursor: grab; max-width: 100%; overflow-wrap: anywhere; }
+    #writingPanel .order-parts button[aria-pressed="true"] { background: #E9F2E3; border-color: #286340; outline: 2px solid #286340; }
+    #dialogueCard { flex: 1 1 0; min-height: 0; overflow: auto; margin: 10px; padding: clamp(14px, 4vw, 32px); background: #fff; border: 1px solid #CCDCC8; border-radius: 12px; }
+    #dialogueCard h2 { color: #286340; margin-top: 0; }
     #dialogueCard p { white-space: pre-wrap; overflow-wrap: anywhere; }
     body:has(#dialogueCard:not([hidden])) .runtime { display: none; }
     #quizChoices label {
@@ -242,8 +242,8 @@
       display: none;
     }
   </style>
-<link rel="stylesheet" href="runtime-ui.css?v=1">
-<link rel="stylesheet" href="task-materials.css?v=1">
+<link rel="stylesheet" href="runtime-ui.css?v=reh-1">
+<link rel="stylesheet" href="task-materials.css?v=reh-1">
 </head>
 <body>
   <header class="topbar">

@@ -4,16 +4,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>REH Lesson Studio</title>
 <style>
-* { box-sizing:border-box } body { margin:0; font:16px system-ui; background:#f3f6fa; color:#172338 }
+* { box-sizing:border-box } body { margin:0; font:16px system-ui; background:#F7FAF3; color:#18352A }
 header,main { max-width:1600px; margin:auto; padding:16px } h1,h2 { margin:0 0 12px }
-section,aside { background:white; border:1px solid #dbe3ed; border-radius:10px; padding:16px; margin-bottom:12px }
+section,aside { background:white; border:1px solid #CCDCC8; border-radius:10px; padding:16px; margin-bottom:12px }
 .grid { display:grid; grid-template-columns:minmax(150px,200px) minmax(0,1fr) minmax(240px,320px); gap:12px; align-items:start }
 .grid > * { min-width:0 } .grid > aside { max-height:75vh; overflow:auto }
-label { display:block; margin:8px 0 } input:not([type=checkbox]),select,textarea { display:block; width:100%; padding:8px; font:inherit; border:1px solid #aab9ca; border-radius:5px }
-button,.action { display:inline-block; background:#2459a9; color:white; border:0; border-radius:6px; padding:8px 12px; font:inherit; text-decoration:none; cursor:pointer; margin:4px 4px 4px 0 }
-[hidden] { display:none!important } button:disabled { opacity:.5; cursor:default } .block { width:100%; text-align:left; background:#e8eef8; color:#172338 }
-.block[aria-current=true] { background:#2459a9; color:white } pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit }
-fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
+label { display:block; margin:8px 0 } input:not([type=checkbox]),select,textarea { display:block; width:100%; padding:8px; font:inherit; border:1px solid #A5BDA0; border-radius:5px }
+button,.action { display:inline-block; background:#286340; color:white; border:0; border-radius:6px; padding:8px 12px; font:inherit; text-decoration:none; cursor:pointer; margin:4px 4px 4px 0 }
+[hidden] { display:none!important } button:disabled { opacity:.5; cursor:default } .block { width:100%; text-align:left; background:#E9F2E3; color:#18352A }
+.block[aria-current=true] { background:#286340; color:white } pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit }
+fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 @media(max-width:1050px) {
   .grid { grid-template-columns:145px minmax(0,1fr) }
   #inspector { grid-column:2 }
@@ -25,39 +25,39 @@ fieldset { margin:8px 0; border:1px solid #dbe3ed; border-radius:6px }
 }
 .block { display:grid; grid-template-columns:1fr; gap:5px; font-size:.82rem }
 .thumbnail { display:grid; place-items:center; position:relative; width:100%; aspect-ratio:16/9; overflow:hidden;
-  border-radius:4px; background:#f3f7fd; color:#172338; container-type:inline-size; text-align:center; font-size:8px }
+  border-radius:4px; background:#F7FAF3; color:#18352A; container-type:inline-size; text-align:center; font-size:8px }
 .thumbnail .preview-element { font-size:3cqw }
 .thumbnail .preview-element.icon { font-size:6cqw }
 #canvasTools { display:flex; flex-wrap:wrap; align-items:end; gap:4px }
 #canvasTools button { padding:5px 8px; font-size:.85rem }
 #canvasTools label { margin:4px 0 4px auto; font-size:.85rem }
 #canvasTools select { padding:4px }
-#elementPreview { touch-action:none; user-select:none; border:1px solid #ccd8e9 }
+#elementPreview { touch-action:none; user-select:none; border:1px solid #CCDCC8 }
 #elementPreview .preview-element { cursor:move; touch-action:none; white-space:pre-wrap }
-#elementPreview .preview-element.is-selected { outline:2px solid #2563eb; outline-offset:-2px }
-#elementPreview .preview-element:focus-visible { outline:2px solid #1d4ed8 }
+#elementPreview .preview-element.is-selected { outline:2px solid #286340; outline-offset:-2px }
+#elementPreview .preview-element:focus-visible { outline:2px solid #286340 }
 .resize-handle { display:none; position:absolute; right:0; bottom:0; width:min(18px,100%); height:min(18px,100%);
-  background:#2563eb; border:2px solid white; border-radius:3px; cursor:nwse-resize; touch-action:none }
+  background:#286340; border:2px solid white; border-radius:3px; cursor:nwse-resize; touch-action:none }
 .is-selected .resize-handle { display:block }
-#elementInspector { border-bottom:1px solid #dbe3ed; margin-bottom:12px; padding-bottom:8px }
+#elementInspector { border-bottom:1px solid #CCDCC8; margin-bottom:12px; padding-bottom:8px }
 #elementInspector:empty { display:none }
 #elementInspector h3 { margin:0 0 8px }
 #inspector label { font-size:.9rem }
 #inspector input,#inspector textarea,#inspector select { padding:5px }
 #fields { overflow-wrap:anywhere }
-#elementPreview { position:relative; width:100%; aspect-ratio:16/9; background:#eef5ff; container-type:inline-size; overflow:hidden }
+#elementPreview { position:relative; width:100%; aspect-ratio:16/9; background:#E9F2E3; container-type:inline-size; overflow:hidden }
 .preview-element { position:absolute; display:grid; place-items:center; text-align:center; overflow:hidden; font-size:2.5cqw }
 .preview-element img { width:100%; height:100%; object-fit:contain }
 .preview-element.icon { font-size:6cqw }
-.preview-element.audio { background:#2459a9;color:white;border-radius:5px }
+.preview-element.audio { background:#286340;color:white;border-radius:5px }
 
 .element-vector { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
 .shape-label { position:relative; pointer-events:none }
 .slide-table { width:100%; height:100%; border-collapse:collapse; table-layout:fixed; font:inherit; color:inherit; background:#fff }
-.slide-table td,.slide-table th { border:1px solid #92a8c6; padding:.2em; overflow-wrap:anywhere; text-align:center }
-.slide-table th { background:#d5e6ff; font-weight:700 }
+.slide-table td,.slide-table th { border:1px solid #A5BDA0; padding:.2em; overflow-wrap:anywhere; text-align:center }
+.slide-table th { background:#E9F2E3; font-weight:700 }
 </style>
-<link rel="stylesheet" href="runtime-ui.css?v=1">
+<link rel="stylesheet" href="runtime-ui.css?v=reh-1">
 <header><a href="teacher-home.html">Teacher home</a><h1>Lesson Studio</h1><p>Import Google Slides or a GPT Work lesson, then edit and save a version for class.</p></header>
 <main>
 <section>

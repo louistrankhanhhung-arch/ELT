@@ -9,4 +9,4 @@
 
 .sentence-preview { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 8px 0; }
 .paragraph-preview { display: grid; gap: 8px; list-style: none; padding: 0; margin: 8px 0; }
-.sentence-preview li, .paragraph-preview li { max-width: 100%; padding: .35em .65em; border: 1px solid #b7c9db; border-radius: 8px; background: #edf4fb; color: #17283b; overflow-wrap: anywhere; }
+.sentence-preview li, .paragraph-preview li { max-width: 100%; padding: .35em .65em; border: 1px solid #A5BDA0; border-radius: 8px; background: #E9F2E3; color: #18352A; overflow-wrap: anywhere; }

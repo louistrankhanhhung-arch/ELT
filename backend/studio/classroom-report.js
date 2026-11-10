@@ -9,30 +9,30 @@
     const style = doc.createElement("style");
     style.textContent = `
       * { box-sizing:border-box }
-      body { margin:0; padding:clamp(14px,4vw,38px); background:#f2f6fa; color:#17283b; font:16px system-ui }
+      body { margin:0; padding:clamp(14px,4vw,38px); background:#F7FAF3; color:#18352A; font:16px system-ui }
       main { max-width:960px; margin:auto }
       h1 { margin:0; font-size:clamp(1.65rem,5vw,2.4rem) }
       p { overflow-wrap:anywhere; white-space:pre-wrap }
       header, .task-heading, .student-heading { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px }
-      button { padding:8px 12px; border:1px solid #b8c7d6; border-radius:8px; background:white; color:#17283b; cursor:pointer; font:inherit }
+      button { padding:8px 12px; border:1px solid #A5BDA0; border-radius:8px; background:white; color:#18352A; cursor:pointer; font:inherit }
       button:disabled { opacity:.55; cursor:default }
       details { overflow-wrap:anywhere }
       summary { cursor:pointer }
-      .task { margin:12px 0; padding:14px; background:white; border:1px solid #d5e1ec; border-radius:12px }
+      .task { margin:12px 0; padding:14px; background:white; border:1px solid #CCDCC8; border-radius:12px }
       .task > summary { font-weight:750 }
-      .student { border-top:1px solid #d5e1ec; padding:10px 0 }
+      .student { border-top:1px solid #CCDCC8; padding:10px 0 }
       .student-heading { display:inline-flex; width:calc(100% - 22px); font-weight:650 }
-      .badge { border-radius:14px; padding:4px 9px; background:#e3f4f0; color:#07554f; font-size:.82rem; font-weight:650 }
-      .pending { color:#4b5e73; background:#edf1f5 }
+      .badge { border-radius:14px; padding:4px 9px; background:#E9F2E3; color:#286340; font-size:.82rem; font-weight:650 }
+      .pending { color:#456052; background:#E9F2E3 }
       .incorrect { color:#773c09; background:#fff0dc }
       .answers { margin:10px 0; padding:0; list-style:none }
-      .answers li { border:1px solid #d5e1ec; border-radius:8px; padding:10px; margin:8px 0 }
+      .answers li { border:1px solid #CCDCC8; border-radius:8px; padding:10px; margin:8px 0 }
       .comparison { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr)); gap:8px; margin-top:8px }
-      .comparison div { padding:8px; background:#f2f6fa; border-radius:7px }
-      .comparison small { display:block; color:#4b5e73; font-weight:650 }
+      .comparison div { padding:8px; background:#F7FAF3; border-radius:7px }
+      .comparison small { display:block; color:#456052; font-weight:650 }
       .comparison p { margin:4px 0 0 }
       audio { max-width:100%; display:block; margin:8px 0 }
-      :focus-visible { outline:3px solid #1876aa; outline-offset:2px }
+      :focus-visible { outline:3px solid #4D8627; outline-offset:2px }
     `;
     doc.head.append(style);
     function node(tag, text, className) {

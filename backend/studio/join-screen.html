@@ -5,19 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Join Session | REH</title>
   <style>
-    body { margin: 0; min-height: 100dvh; display: grid; place-items: center; background: #10233b; color: #17283b; font: 18px system-ui, sans-serif; }
+    body { margin: 0; min-height: 100dvh; display: grid; place-items: center; background: #0B3D25; color: #18352A; font: 18px system-ui, sans-serif; }
     main { box-sizing: border-box; width: min(94vw, 800px); margin: 3vh auto; padding: clamp(16px, 3vh, 36px); border-radius: 18px; background: white; text-align: center; }
+    .join-brand { display:flex; justify-content:center; align-items:center; gap:8px; color:#286340; font-weight:750; font-size:.8rem; letter-spacing:.09em; }
+    .join-brand img { width:44px; height:44px; margin:0; object-fit:contain; }
     h1 { margin: 0; font-size: clamp(2rem, 6vw, 4rem); }
     p { margin: .5em 0; }
     strong { font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: .12em; margin-left: .3em; }
     img { display: block; width: min(66vw, 39vh, 340px); height: auto; margin: auto; }
-    a { color: #08695f; overflow-wrap: anywhere; }
+    a { color: #286340; overflow-wrap: anywhere; }
     #shortLink { display: block; font-weight: 650; }
-    #download { display: inline-block; margin-top: 14px; padding: 8px 14px; background: #08695f; color: white; border-radius: 8px; text-decoration: none; }
+    #download { display: inline-block; margin-top: 14px; padding: 8px 14px; background: #286340; color: white; border-radius: 8px; text-decoration: none; }
   </style>
 </head>
 <body>
   <main>
+    <div class="join-brand"><img src="reh-brand-mark.jpg" alt="" width="44" height="44"><span>ROOT ENGLISH HOUSE</span></div>
     <h1>Join Session</h1>
     <p id="status" role="status">Starting the session…</p>
     <section id="details" hidden>
