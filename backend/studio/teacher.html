@@ -369,6 +369,7 @@
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
   <link rel="stylesheet" href="classroom-ui.css?v=4">
+<link rel="stylesheet" href="task-materials.css?v=1">
 </head>
 <body>
   <header>
@@ -544,6 +545,7 @@
   </div>
 
   <script src="./config.js?v=3"></script>
+<script src="task-materials.js?v=1"></script>
   <script src="catalog-options.js" defer></script>
   <script>
     const BASE_URL =
@@ -727,6 +729,7 @@
       const prompt = document.createElement("p");
       prompt.textContent = task.prompt || "";
       taskContent.append(heading, prompt);
+      window.renderTaskMaterials(taskContent, task.materials);
       if (!questions.length) return;
       const list = document.createElement("ol");
       for (const question of questions) {
@@ -747,7 +750,9 @@
           }
           options.append(row);
         });
-        item.append(questionText, options);
+        item.append(questionText);
+        window.renderTaskMaterials(item, question.materials);
+        item.append(options);
         list.append(item);
       }
       taskContent.append(list);
@@ -1907,6 +1912,10 @@
         projectionFrame.addEventListener("load", showReveal);
         projectionTask = page.createElement("main");
         projectionTask.style.cssText = "box-sizing:border-box;height:100%;overflow:auto;background:#f7fafc;color:#17283b;padding:clamp(20px,5vw,72px);font:clamp(18px,2.4vw,36px) system-ui;white-space:pre-wrap";
+        const materialsStyle = page.createElement("link");
+        materialsStyle.rel = "stylesheet";
+        materialsStyle.href = new URL("task-materials.css?v=1", location.href).href;
+        page.head.append(materialsStyle);
         page.body.append(projectionFrame, projectionTask);
         syncProjection();
       }

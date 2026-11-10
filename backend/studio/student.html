@@ -185,6 +185,8 @@
     }
     body:has(#pageTaskPicker:not([hidden])) #writingPanel:not([hidden]) { flex: 1 1 0; min-height: 0; max-height: none; }
     body:has(#pageTaskPicker:not([hidden])) .runtime { display: none; }
+    body:has(#writingPanel:not([hidden]) #writingMaterials:not(:empty)) .runtime { display: none; }
+    #writingPanel:has(#writingMaterials:not(:empty)) { flex: 1 1 0; min-height: 0; max-height: none; }
     #quizChoices, #quizChoices > fieldset {
       min-inline-size: 0;
       overflow-wrap: anywhere;
@@ -215,6 +217,7 @@
     }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=1">
+<link rel="stylesheet" href="task-materials.css?v=1">
 </head>
 <body>
   <header class="topbar">
@@ -234,6 +237,7 @@
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
+    <div id="writingMaterials"></div>
     <form id="writingForm">
       <label id="writingInput">Response <textarea name="response" rows="10" maxlength="20000" required></textarea></label>
       <fieldset id="quizChoices" hidden><legend>Choose one answer</legend></fieldset>
@@ -256,6 +260,7 @@
   </main>
 
   <script src="./config.js?v=2"></script>
+<script src="task-materials.js?v=1"></script>
   <script>
     const BASE_URL =
       window.ELT_CONFIG?.BASE_URL ||
@@ -556,6 +561,9 @@
           writingDrafts.set(writingTaskId, isQuiz ? selectedQuizAnswers() : writingForm.elements.response.value);
         }
         writingTaskId = nextId;
+        const materials = document.getElementById("writingMaterials");
+        materials.replaceChildren();
+        window.renderTaskMaterials(materials, task?.materials);
         const draft = writingDrafts.get(nextId) || "";
         isQuiz = task?.type === "multiple_choice";
         isSpeaking = task?.type === "speaking";
@@ -570,6 +578,7 @@
             const legend = document.createElement("legend");
             legend.textContent = `${questionIndex + 1}. ${question.prompt}`;
             group.append(legend);
+            window.renderTaskMaterials(group, question.materials);
             for (const index of optionOrder(task, question, questionIndex)) {
               const label = document.createElement("label");
               label.style.display = "block";
@@ -590,7 +599,15 @@
         writingStatus.textContent = submittedTasks.has(nextId) ? "Response submitted." : "";
       }
       writingPanel.toggleAttribute("data-speaking", isSpeaking);
-      writingPanel.hidden = !nextId || (!assignedPageTask && displayMode !== "interact") || !studentId;
+      const hideTask = !nextId || (!assignedPageTask && displayMode !== "interact") || !studentId;
+      if (writingPanel.hidden !== hideTask) {
+        if (hideTask) writingPanel.querySelectorAll(".task-materials audio, .task-materials video").forEach(media => media.pause());
+        writingPanel.querySelectorAll(".task-materials iframe").forEach(frame => {
+          if (hideTask) { frame.dataset.mediaSrc = frame.src; frame.src = "about:blank"; }
+          else if (frame.dataset.mediaSrc) { frame.src = frame.dataset.mediaSrc; delete frame.dataset.mediaSrc; }
+        });
+      }
+      writingPanel.hidden = hideTask;
       if (task) document.getElementById("writingPrompt").textContent = task.prompt;
       writingForm.hidden = isSpeaking || submittedTasks.has(nextId);
       speakingPanel.hidden = !isSpeaking || submittedTasks.has(nextId);

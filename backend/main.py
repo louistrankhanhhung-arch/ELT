@@ -384,6 +384,12 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS task_materials (
+            task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
+            definition TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS page_task_instances (
             task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
             block_index INTEGER NOT NULL,
@@ -457,10 +463,11 @@ def get_session(pin: str):
     cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
     writing = cur.fetchone()
     cur.execute(sql("""
-        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id FROM active_writing_tasks a
+        SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id, m.definition AS materials_json FROM active_writing_tasks a
         JOIN writing_tasks t ON t.task_id = a.task_id
         LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
-        LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id WHERE a.pin = ?
+        LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
+        LEFT JOIN task_materials m ON m.task_id = t.task_id WHERE a.pin = ?
     """), (pin,))
     active_writing = cur.fetchone()
     cur.execute(sql("""
@@ -626,13 +633,14 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
         with closing(db()) as conn:
             cur = conn.cursor()
             cur.execute(sql("""
-                SELECT t.task_id, t.prompt, p.title, q.definition, sp.task_id AS speaking_id,
+                SELECT t.task_id, t.prompt, p.title, q.definition, sp.task_id AS speaking_id, m.definition AS materials_json,
                        CASE WHEN response.student_id IS NULL THEN 0 ELSE 1 END AS submitted
                 FROM page_task_recipients r
                 JOIN page_task_instances p ON p.task_id = r.task_id
                 JOIN writing_tasks t ON t.task_id = p.task_id
                 LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
                 LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
+                LEFT JOIN task_materials m ON m.task_id = t.task_id
                 LEFT JOIN writing_task_responses response ON response.task_id = t.task_id
                     AND response.student_id = r.student_id
                 WHERE t.pin = ? AND p.block_index = ? AND r.student_id = ?
@@ -1091,7 +1099,30 @@ def export_writing(pin: str):
     )
 
 
+class TaskMaterial(BaseModel):
+    kind: Literal["text", "image", "audio", "video"]
+    text: str = Field(default="", max_length=4000)
+    url: Optional[str] = Field(default=None, max_length=2000)
+
+    def normalized(self):
+        text = self.text.strip()
+        if self.kind == "text":
+            if not text:
+                raise HTTPException(422, "Enter text for the task material")
+            return {"kind": self.kind, "text": text}
+        url = (self.url or "").strip()
+        try:
+            parsed = urlsplit(url)
+            valid = parsed.scheme == "https" and parsed.hostname and not parsed.username and not parsed.password
+        except ValueError:
+            valid = False
+        if not valid:
+            raise HTTPException(422, "Use an HTTPS link for task media")
+        return {"kind": self.kind, "text": text, "url": url}
+
+
 class QuizQuestion(BaseModel):
+    materials: List[TaskMaterial] = Field(default_factory=list, max_length=8)
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
     question_id: Optional[str] = Field(default=None, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
     prompt: str = Field(min_length=1, max_length=4000)
@@ -1105,6 +1136,7 @@ class QuizQuestion(BaseModel):
         if len(set(options)) != len(options) or self.correct_option >= len(options):
             raise HTTPException(422, "Use distinct options and select an existing correct option")
         return {"prompt": self.prompt.strip(), "options": options, "correct_option": self.correct_option,
+                **({"materials": [item.normalized() for item in self.materials]} if self.materials else {}),
                 **({"question_id": self.question_id} if self.question_id else {}),
                 **({"learning_target_id": self.learning_target_id.strip()} if self.learning_target_id and self.learning_target_id.strip() else {})}
 
@@ -1162,10 +1194,14 @@ def grade_quiz(raw, quiz, prompt):
 def task_description(row):
     definition = row.pop("definition", None)
     speaking = row.pop("speaking_id", None)
+    materials = row.pop("materials_json", None)
     task = {"schema_version": 1, "type": "speaking" if speaking else "multiple_choice" if definition else "writing", **row}
+    if materials:
+        task["materials"] = json.loads(materials)
     if definition:
         quiz = json.loads(definition)
-        task["questions"] = [{"prompt": q["prompt"], "options": q["options"]} for q in quiz_questions(quiz, task["prompt"])]
+        task["questions"] = [{key: q[key] for key in ("prompt", "options", "materials") if key in q}
+                             for q in quiz_questions(quiz, task["prompt"])]
         task["shuffle"] = quiz.get("shuffle", False)
         if len(task["questions"]) == 1:
             task["options"] = task["questions"][0]["options"]
@@ -1230,6 +1266,7 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
     speaking = payload.speaking
     phase = payload.phase
     target = (payload.learning_target_id or "").strip() or None
+    materials = []
     if payload.block_id:
         if not session["lesson_path"].startswith("imports/"):
             raise HTTPException(422, "This lesson has no prepared task blocks")
@@ -1240,6 +1277,7 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         if block["id"] != payload.block_id or block.get("activity_kind") != "writing-task":
             raise HTTPException(409, "Move to the prepared task block before assigning it")
         prompt = block["task"]["prompt"]
+        materials = block["task"].get("materials", [])
         speaking = block["task"]["type"] == "speaking"
         phase = block.get("phase")
         target = block.get("learning_target_id")
@@ -1263,6 +1301,8 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
             cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
         elif quiz:
             cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
+        if materials:
+            cur.execute(sql("INSERT INTO task_materials VALUES (?, ?) ON CONFLICT DO NOTHING"), (task_id, json.dumps(materials)))
         cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?) ON CONFLICT(task_id) DO NOTHING"),
                     (task_id, phase, target))
         cur.execute(sql("""
@@ -1346,6 +1386,8 @@ def assign_page(pin: str, payload: AssignPageRequest):
                 cur.execute(sql("INSERT INTO page_task_instances VALUES (?, ?, ?)"), (task_id, index, task["title"]))
                 cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?)"),
                             (task_id, block.get("phase"), task["learning_target_id"]))
+                if task.get("materials"):
+                    cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
                 if task["type"] == "speaking":
                     cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
                 elif task["type"] == "multiple_choice":
@@ -1418,11 +1460,12 @@ def session_task_results(pin: str):
         cur = conn.cursor()
         cur.execute(sql("""
             SELECT t.task_id, t.block_id, t.prompt, t.assigned_at, q.definition, sp.task_id AS speaking_id,
-                   p.title AS page_task_title, p.block_index AS page_index,
+                   p.title AS page_task_title, p.block_index AS page_index, m.definition AS materials_json,
                    (SELECT COUNT(*) FROM page_task_recipients r WHERE r.task_id = p.task_id) AS recipient_count
             FROM writing_tasks t LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
             LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
             LEFT JOIN page_task_instances p ON p.task_id = t.task_id
+            LEFT JOIN task_materials m ON m.task_id = t.task_id
             WHERE t.pin = ? ORDER BY t.assigned_at, t.task_id
         """), (pin,))
         tasks = [dict(row) for row in cur.fetchall()]
@@ -1439,6 +1482,9 @@ def session_task_results(pin: str):
         responses = [dict(row) for row in cur.fetchall()]
     for task in tasks:
         definition = task.pop("definition")
+        materials = task.pop("materials_json", None)
+        if materials:
+            task["materials"] = json.loads(materials)
         quiz = json.loads(definition) if definition else None
         speaking = task.pop("speaking_id")
         task["type"] = "speaking" if speaking else "multiple_choice" if quiz else "writing"
@@ -1559,6 +1605,7 @@ class SlideElement(BaseModel):
 
 
 class WorkPageTask(BaseModel):
+    materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     title: str = Field(min_length=1, max_length=160)
     kind: Literal["writing", "multiple_choice", "speaking"]
@@ -1569,6 +1616,7 @@ class WorkPageTask(BaseModel):
 
 
 class WorkBlock(BaseModel):
+    materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     tasks: List[WorkPageTask] = Field(default_factory=list, max_length=20)
     elements: List[SlideElement] = Field(default_factory=list, max_length=60)
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
@@ -1655,6 +1703,7 @@ def save_work_lesson(payload: SaveWorkLesson):
                         "id": task.id, "title": task.title.strip(), "type": task.kind, "prompt": prompt,
                         "audience_label": (task.audience_label or "").strip().casefold() or None,
                         "learning_target_id": (task.learning_target_id or "").strip() or None,
+                        "materials": [item.normalized() for item in task.materials],
                         **(task.quiz.normalized(prompt) if task.quiz else {}),
                     })
         else:
@@ -1663,7 +1712,8 @@ def save_work_lesson(payload: SaveWorkLesson):
                 raise HTTPException(422, f"Block {block.id}: enter a prompt and the required task options")
             quiz = block.quiz.normalized(prompt) if block.quiz else {}
             entry.update(activity_kind="writing-task",
-                         task={"schema_version": 1, "type": block.kind, "prompt": prompt, **quiz})
+                         task={"schema_version": 1, "type": block.kind, "prompt": prompt,
+                               "materials": [item.normalized() for item in block.materials], **quiz})
         blocks.append(entry)
     manifest = {"lesson_id": f"work-{revision}", "title": lesson.title.strip(), "version": str(version),
                 "origin": "work", "objective": lesson.objective, "blocks": blocks,
@@ -1800,7 +1850,7 @@ def delete_sessions(payload: DeleteSessionsRequest):
                 raise HTTPException(409, "End active sessions before deleting them.")
 
         task_ids = f"SELECT task_id FROM writing_tasks WHERE pin IN ({placeholders})"
-        for table in ("speaking_audio", "task_reviews", "writing_task_responses", "task_evidence_context",
+        for table in ("speaking_audio", "task_reviews", "writing_task_responses", "task_evidence_context", "task_materials",
                       "published_quiz_scores", "speaking_tasks", "writing_task_quizzes"):
             cur.execute(sql(f"DELETE FROM {table} WHERE task_id IN ({task_ids})"), pins)
         cur.execute(sql(f"""

@@ -291,6 +291,7 @@ function render() {
   } else {
     byId("elementInspector").replaceChildren();
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
+    renderMaterialEditor(fields, block, 12);
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
   if (block.kind === "page") renderPageTasks(fields, block);
@@ -315,6 +316,7 @@ function renderPageTasks(fields, block) {
     field(group, "Learning target ID (optional)", task.learning_target_id,
       value => { task.learning_target_id = value.trim() || null; }, null, false, true);
     field(group, "Task prompt", task.prompt, value => { task.prompt = value; }, null, true);
+    renderMaterialEditor(group, task, 12);
     if (task.kind === "multiple_choice") renderQuiz(group, task);
     button(group, "Remove task", () => { tasks.splice(index, 1); dirty(); render(); });
     fields.append(group);
@@ -324,6 +326,42 @@ function renderPageTasks(fields, block) {
     dirty();
     render();
   });
+}
+
+function renderMaterialEditor(parent, owner, limit) {
+  const items = owner.materials ||= [];
+  const panel = document.createElement("details");
+  panel.open = !!items.length;
+  const summary = document.createElement("summary");
+  summary.textContent = "Input materials" + (items.length ? " (" + items.length + ")" : "");
+  panel.append(summary);
+  items.forEach((item, index) => {
+    const group = document.createElement("fieldset");
+    const heading = document.createElement("legend");
+    heading.textContent = "Material " + (index + 1);
+    group.append(heading);
+    field(group, "Type", item.kind, value => {
+      item.kind = value;
+      if (value === "text") delete item.url;
+      render();
+    }, ["text", "image", "audio", "video"]);
+    if (item.kind !== "text") field(group, "Media URL (HTTPS)", item.url, value => { item.url = value.trim(); });
+    field(group, item.kind === "text" ? "Text" : "Caption (optional)", item.text,
+      value => { item.text = value; }, null, true);
+    if (index > 0) button(group, "Move up", () => {
+      [items[index - 1], items[index]] = [items[index], items[index - 1]];
+      dirty();
+      render();
+    });
+    button(group, "Remove material", () => { items.splice(index, 1); dirty(); render(); });
+    panel.append(group);
+  });
+  if (items.length < limit) button(panel, "Add material", () => {
+    items.push({kind: "text", text: ""});
+    dirty();
+    render();
+  });
+  parent.append(panel);
 }
 
 function renderQuiz(fields, block) {
@@ -346,6 +384,7 @@ function renderQuiz(fields, block) {
     legend.textContent = "Question " + (index + 1);
     group.append(legend);
     field(group, "Question", question.prompt, value => { question.prompt = value; });
+    renderMaterialEditor(group, question, 8);
     field(group, "Question ID (optional)", question.question_id, value => { question.question_id = value.trim() || null; });
     field(group, "Learning target override (optional)", question.learning_target_id,
       value => { question.learning_target_id = value.trim() || null; }, null, false, true);
