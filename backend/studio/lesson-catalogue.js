@@ -102,6 +102,7 @@ function renderList() {
       for (const item of lessons.sort((a,b) => a.title.localeCompare(b.title, undefined, {numeric:true}))) {
         const row = document.createElement("article");
         row.append(node("h5",item.title), node("p",[item.cluster,"Version " + item.version].join(" · ")));
+        row.append(lessonLink("Assign homework", "homework.html", {catalogue:item.catalogue_id}));
         row.append(lessonLink("Open Classroom", "teacher.html", {lesson:"imports/" + item.revision_id, catalogue:item.catalogue_id}));
         if (item.origin === "work") row.append(lessonLink("Edit in Studio", "author.html",
           {revision:item.revision_id, catalogue:item.catalogue_id}));

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" class="reh-page">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Homework | REH</title>
+<link rel="stylesheet" href="runtime-ui.css?v=reh-1"><link rel="stylesheet" href="task-materials.css?v=reh-1">
+<style>
+body { max-width: 1000px; margin: auto; padding: 18px; }
+section { background: white; border: 1px solid #CCDCC8; border-radius: 12px; padding: 14px; margin: 12px 0; }
+label { display: block; margin: 8px 0; }
+input, select, textarea, button { font: inherit; padding: 8px; max-width: 100%; }
+button { cursor: pointer; border: 1px solid #286340; background: #286340; color: white; border-radius: 7px; }
+button:disabled { opacity: .55; }
+fieldset { min-width: 0; margin: 10px 0; border: 1px solid #CCDCC8; border-radius: 8px; }
+textarea { box-sizing: border-box; width: 100%; }
+iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
+.prompt, .answer-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.review { padding: 12px; background: #F7FAF3; border-radius: 8px; }
+.review li { margin-block: 8px; }
+.review [data-incorrect] { border-left: 3px solid #A68832; padding-left: 8px; }
+.order-controls button, .assignment-list button { margin: 4px; }
+[hidden] { display: none !important; }
+</style>
+</head><body>
+<main id="teacher" hidden>
+<a href="teacher-home.html">Teacher home</a><h1>Homework</h1>
+<nav aria-label="Results views"><a href="session-results.html">Session History</a> · <a href="class-reports.html">Class Reports</a> · <a href="homework.html" aria-current="page">Homework</a></nav>
+<section>
+<label>Teacher access code <input id="token" type="password" autocomplete="off"></label>
+<button type="button" id="load">Load homework workspace</button>
+</section>
+<section id="assignPanel" hidden>
+<h2>Assign homework</h2>
+<form id="assign">
+<label>Published lesson <select id="lesson" required></select></label>
+<fieldset><legend>Slides and tasks</legend><div id="blocks"></div></fieldset>
+<label>Class code <select id="classCode" required></select></label>
+<label><input id="selectedOnly" type="checkbox"> Choose individual students</label>
+<div id="recipients" hidden></div>
+<label>Due date <input id="due" type="date" required></label>
+<button type="submit">Assign homework</button>
+</form>
+</section>
+<section id="assignmentsPanel" hidden><h2>Assignments</h2><div id="assignments" class="assignment-list"></div><button id="older" hidden>Older assignments</button></section>
+<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><a id="evidence">Open detailed results</a><div id="links"></div></section>
+</main>
+<main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><div id="items"></div></main>
+<p id="status" role="status"></p>
+<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="homework.js?v=1"></script>
+</body></html>

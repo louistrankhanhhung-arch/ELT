@@ -441,6 +441,19 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS homework (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin),
+            title TEXT NOT NULL, due_on TEXT NOT NULL, items TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS homework_access (
+            token TEXT PRIMARY KEY, pin TEXT NOT NULL REFERENCES homework(pin),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            UNIQUE(pin, student_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS task_materials (
             task_id TEXT PRIMARY KEY REFERENCES writing_tasks(task_id),
             definition TEXT NOT NULL
@@ -2299,20 +2312,25 @@ class SpeakingSubmissionRequest(BaseModel):
     audio_base64: str = Field(min_length=1, max_length=6_990_508)
 
 
-@app.post("/api/sessions/{pin}/tasks/{task_id}/speaking")
-def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest):
-    session = require_active_session(pin)
-    if not any(student["student_id"] == payload.student_id for student in session["students"]):
-        raise HTTPException(403, "Join the session before submitting")
+def validate_speaking_audio(encoded, media_type):
     try:
-        audio = base64.b64decode(payload.audio_base64, validate=True)
+        audio = base64.b64decode(encoded, validate=True)
     except (ValueError, binascii.Error):
         raise HTTPException(422, "Invalid recording")
     signatures = {"audio/webm": audio.startswith(b"\x1a\x45\xdf\xa3"),
                   "audio/mp4": audio[4:8] == b"ftyp",
                   "audio/ogg": audio.startswith(b"OggS")}
-    if len(audio) > 5 * 1024 * 1024 or not signatures[payload.media_type]:
+    if len(audio) > 5 * 1024 * 1024 or not signatures[media_type]:
         raise HTTPException(422, "Use a supported audio recording under 5 MB")
+    return audio
+
+
+@app.post("/api/sessions/{pin}/tasks/{task_id}/speaking")
+def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest):
+    session = require_active_session(pin)
+    if not any(student["student_id"] == payload.student_id for student in session["students"]):
+        raise HTTPException(403, "Join the session before submitting")
+    audio = validate_speaking_audio(payload.audio_base64, payload.media_type)
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
@@ -2379,6 +2397,7 @@ def session_history(offset: int = 0, query: str = "", status: Literal["active", 
                        CASE WHEN s.status = 'active' AND (s.expires_at <= ? OR (s.expires_at IS NULL AND s.created_at <= ?))
                             THEN 'expired' ELSE s.status END AS status
                 FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
+                WHERE s.status <> 'homework'
             )
             SELECT *, COUNT(*) OVER () AS total FROM history
             WHERE status = COALESCE(?, status)
@@ -3320,3 +3339,248 @@ def edit_catalogue_metadata(catalogue_id: str, payload: CatalogueMetadata):
         """), (title, level, cluster, course, catalogue_id))
         conn.commit()
     return catalogue_entry(catalogue_id)
+
+
+class HomeworkRequest(BaseModel):
+    catalogue_id: str
+    class_code: str
+    due_on: date
+    block_ids: List[str] = Field(min_length=1, max_length=100)
+    student_ids: Optional[List[str]] = Field(default=None, max_length=500)
+
+
+class HomeworkSubmission(BaseModel):
+    response: str = Field(default="", max_length=20000)
+    media_type: Optional[Literal["audio/webm", "audio/mp4", "audio/ogg"]] = None
+    audio_base64: Optional[str] = Field(default=None, max_length=6_990_508)
+
+
+def homework_today():
+    return datetime.now(timezone(timedelta(hours=7))).date()
+
+
+def homework_class_roster(cur, code):
+    today = homework_today().isoformat()
+    cur.execute(sql("""
+        SELECT DISTINCT r.student_id, r.display_name
+        FROM reh_enrollments e JOIN reh_roster r ON r.student_id = e.student_id
+        WHERE e.class_code = ? AND e.started_on <= ? AND (e.ended_on IS NULL OR e.ended_on >= ?)
+          AND r.status = 'active'
+        ORDER BY r.display_name, r.student_id
+    """), (code, today, today))
+    return [dict(row) for row in cur.fetchall()]
+
+
+@app.get("/api/homework/roster/{class_code}", dependencies=[Depends(require_teacher)])
+def get_homework_roster(class_code: str):
+    with closing(db()) as conn:
+        return {"students": homework_class_roster(conn.cursor(), class_code.strip().upper())}
+
+
+@app.post("/api/homework", dependencies=[Depends(require_teacher)])
+def create_homework(payload: HomeworkRequest):
+    if payload.due_on < homework_today():
+        raise HTTPException(422, "Choose today or a future due date")
+    entry = catalogue_entry(payload.catalogue_id)
+    manifest = load_imported_lesson(entry["revision_id"])
+    selected = set(payload.block_ids)
+    valid = {block["id"] for block in manifest["blocks"] if not block.get("dialogue")}
+    valid.update(f"{block['id']}:{task['id']}" for block in manifest["blocks"] for task in block.get("page_tasks", []))
+    blocks = [block for block in manifest["blocks"] if block["id"] in selected or
+              any(f"{block['id']}:{task['id']}" in selected for task in block.get("page_tasks", []))]
+    if not selected.issubset(valid):
+        raise HTTPException(422, "Choose valid lesson blocks. Live dialogue cards require a classroom session.")
+    code = payload.class_code.strip().upper()
+    pin = "HW-" + uuid4().hex
+    created = now_iso()
+    items = []
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        roster = homework_class_roster(cur, code)
+        requested = {item.strip().upper() for item in payload.student_ids} if payload.student_ids is not None else None
+        if requested is not None:
+            if not requested.issubset({row["student_id"] for row in roster}):
+                raise HTTPException(422, "Choose students currently enrolled in the class")
+            roster = [row for row in roster if row["student_id"] in requested]
+        if not roster:
+            raise HTTPException(422, "No eligible students selected")
+
+        cur.execute(sql("""
+            INSERT INTO sessions (pin, lesson_id, lesson_path, total_blocks, current_block_index, status, created_at)
+            VALUES (?, ?, ?, ?, 0, 'homework', ?)
+        """), (pin, manifest["lesson_id"], f"imports/{entry['revision_id']}", len(blocks), created))
+        set_session_class(cur, pin, code)
+        cur.execute(sql("INSERT INTO homework VALUES (?, ?, ?, ?)"), (pin, entry["title"], payload.due_on.isoformat(), "[]"))
+        for learner in roster:
+            roster_id = learner["student_id"]
+            member = uuid4().hex
+            cur.execute(sql("""
+                INSERT INTO session_students (student_id, pin, student_name, joined_at, last_seen_at)
+                VALUES (?, ?, ?, ?, ?)
+            """), (member, pin, learner["display_name"], created, created))
+            cur.execute(sql("INSERT INTO evidence_roster_ids VALUES (?, ?) ON CONFLICT(roster_id) DO NOTHING"),
+                        (roster_id, uuid4().hex))
+            cur.execute(sql("SELECT evidence_id FROM evidence_roster_ids WHERE roster_id = ?"), (roster_id,))
+            evidence_id = cur.fetchone()["evidence_id"]
+            cur.execute(sql("INSERT INTO evidence_student_links VALUES (?, ?)"), (member, evidence_id))
+            cur.execute(sql("INSERT INTO homework_access VALUES (?, ?, ?)"), (uuid4().hex + uuid4().hex, pin, member))
+
+        for block in blocks:
+            tasks = [task for task in block.get("page_tasks", []) if f"{block['id']}:{task['id']}" in selected]
+            if block.get("task") and block["id"] in selected:
+                tasks = [block["task"]]
+            if not block.get("task") and block["id"] in selected:
+                items.append({"block_id": block["id"], "title": block["title"]})
+            for task in tasks:
+                task_id = uuid4().hex
+                task_key = block["id"] if block.get("task") else f"homework:{block['id']}:{task['id']}"
+                cur.execute(sql("INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)"),
+                            (task_id, pin, task_key, task["prompt"], created))
+                if task["type"] == "speaking":
+                    cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
+                elif task["type"] != "writing":
+                    definition = {key: task[key] for key in ("kind", "questions", "shuffle", "options", "correct_option") if key in task}
+                    cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(definition)))
+                if task.get("materials"):
+                    cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
+                if task.get("writing_rubric"):
+                    cur.execute(sql("INSERT INTO writing_ai_rubrics VALUES (?, ?)"), (task_id, json.dumps(task["writing_rubric"])))
+                cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?)"),
+                            (task_id, block.get("phase"), task.get("learning_target_id") or block.get("learning_target_id")))
+                items.append({"task_id": task_id, "title": task.get("title") or block["title"]})
+        cur.execute(sql("UPDATE homework SET items = ? WHERE pin = ?"), (json.dumps(items), pin))
+        conn.commit()
+    return {"id": pin, "assigned": len(roster)}
+
+
+@app.get("/api/homework", dependencies=[Depends(require_teacher)])
+def list_homework(offset: int = 0):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT h.pin, h.title, h.due_on, c.class_code, s.created_at
+            FROM homework h JOIN session_classes c ON c.pin = h.pin JOIN sessions s ON s.pin = h.pin
+            ORDER BY s.created_at DESC, h.pin LIMIT 51 OFFSET ?
+        """), (max(offset, 0),))
+        rows = [dict(row) for row in cur.fetchall()]
+    return {"assignments": rows[:50], "has_more": len(rows) > 50}
+
+
+@app.get("/api/homework/{pin}/report", dependencies=[Depends(require_teacher)])
+def homework_report(pin: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT u.student_id, u.student_name, ids.roster_id, a.token
+            FROM homework_access a JOIN session_students u ON u.student_id = a.student_id
+            JOIN evidence_student_links l ON l.student_id = u.student_id
+            JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
+            WHERE a.pin = ? ORDER BY u.student_name, ids.roster_id
+        """), (pin,))
+        recipients = [dict(row) for row in cur.fetchall()]
+    result = session_task_results(pin)
+    return {"recipients": recipients, "tasks": [{"task_id": task["task_id"], "prompt": task["prompt"],
+             "submissions": [{key: row.get(key) for key in ("student_id", "score", "max_score")} for row in task["submissions"]]}
+             for task in result["tasks"]]}
+
+
+def homework_access(cur, credentials):
+    if not credentials or not re.fullmatch(r"[a-f0-9]{64}", credentials.credentials):
+        raise HTTPException(401, "Use your personal homework link")
+    cur.execute(sql("""
+        SELECT h.*, a.student_id, s.lesson_path FROM homework_access a JOIN homework h ON h.pin = a.pin
+        JOIN sessions s ON s.pin = h.pin WHERE a.token = ?
+    """), (credentials.credentials,))
+    row = cur.fetchone()
+    if not row:
+        raise HTTPException(404, "Homework link not found")
+    return dict(row)
+
+
+def homework_task(cur, pin, task_id):
+    cur.execute(sql("""
+        SELECT t.task_id, t.prompt, q.definition, a.task_id AS speaking_id, m.definition AS materials_json
+        FROM writing_tasks t LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+        LEFT JOIN speaking_tasks a ON a.task_id = t.task_id LEFT JOIN task_materials m ON m.task_id = t.task_id
+        WHERE t.pin = ? AND t.task_id = ?
+    """), (pin, task_id))
+    row = cur.fetchone()
+    if not row:
+        raise HTTPException(404, "Task not found in this homework")
+    return dict(row)
+
+
+def homework_feedback(task, response):
+    if not task["definition"]:
+        return None
+    quiz = json.loads(task["definition"])
+    questions = quiz_questions(quiz, task["prompt"])
+    items = assessment_items(response, questions)
+    return {"score": sum(item["is_correct"] for item in items), "max_score": len(items),
+            "items": [{"prompt": question["prompt"], **item} for question, item in zip(questions, items)]}
+
+
+@app.get("/api/homework/student")
+def read_homework(response: Response, credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    response.headers["Cache-Control"] = "private, no-store"
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        assignment = homework_access(cur, credentials)
+        items = json.loads(assignment["items"])
+        for item in items:
+            if "task_id" not in item:
+                continue
+            task = homework_task(cur, assignment["pin"], item["task_id"])
+            cur.execute(sql("SELECT response FROM writing_task_responses WHERE task_id = ? AND student_id = ?"),
+                        (item["task_id"], assignment["student_id"]))
+            row = cur.fetchone()
+            result = homework_feedback(task, row["response"]) if row else None
+            if row and result is None:
+                cur.execute(sql("""
+                    SELECT definition FROM writing_ai_grades WHERE task_id = ? AND student_id = ? AND published = 1
+                """), (item["task_id"], assignment["student_id"]))
+                grade_row = cur.fetchone()
+                if grade_row:
+                    grade = json.loads(grade_row["definition"])
+                    result = {key: grade[key] for key in ("score", "max_score", "feedback")}
+            item.update(task=task_description(task.copy()), submitted=row is not None, result=result)
+    return {"title": assignment["title"], "due_on": assignment["due_on"],
+            "closed": homework_today().isoformat() > assignment["due_on"], "lesson_path": assignment["lesson_path"], "items": items}
+
+
+@app.post("/api/homework/student/tasks/{task_id}")
+def submit_homework(task_id: str, payload: HomeworkSubmission,
+                    credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        assignment = homework_access(cur, credentials)
+        if homework_today().isoformat() > assignment["due_on"]:
+            raise HTTPException(409, "The homework deadline has passed")
+        task = homework_task(cur, assignment["pin"], task_id)
+        if task["speaking_id"]:
+            if not payload.audio_base64 or not payload.media_type:
+                raise HTTPException(422, "Record an answer before submitting")
+            audio = validate_speaking_audio(payload.audio_base64, payload.media_type)
+            response = "[Audio recording]"
+        else:
+            if not payload.response.strip():
+                raise HTTPException(422, "Enter an answer before submitting")
+            audio = None
+            response = payload.response
+        result = homework_feedback(task, response)
+        student_id = assignment["student_id"]
+        cur.execute(sql("""
+            INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
+            ON CONFLICT(task_id, student_id) DO NOTHING
+        """), (task_id, student_id, response, now_iso()))
+        if cur.rowcount != 1:
+            raise HTTPException(409, "This task was already submitted. Reload to see the saved result.")
+        if audio is not None:
+            cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
+                        (task_id, student_id, payload.media_type, audio))
+        if result:
+            cur.execute(sql("INSERT INTO published_quiz_scores VALUES (?) ON CONFLICT(task_id) DO NOTHING"), (task_id,))
+        conn.commit()
+    return {"submitted": True, "result": result}
+
+
