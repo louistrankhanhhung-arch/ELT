@@ -20,14 +20,14 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
 <main>
 <a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Session Results</h1>
-<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html" aria-current="page">Session History</a> <a class="reh-nav-button" href="class-reports.html">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a></nav>
+<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html" aria-current="page">Session Results</a> <a class="reh-nav-button" href="class-reports.html">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a> <a class="reh-nav-button" href="learner-profiles.html">Learner Profile</a></nav>
 <p>Reopen a classroom session to review and export saved evidence.</p>
 <section>
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
-<button id="load">Load session history</button><p id="status" role="status"></p>
+<button id="load">Load session results</button><p id="status" role="status"></p>
 </section>
 <section id="history" hidden>
-<h2>Session history</h2>
+<h2>Classroom sessions</h2>
 <div id="historyTools">
 <button id="toggleFilters" type="button" aria-expanded="false" aria-controls="historyFilters">Filter</button>
 <label><input id="selectPage" type="checkbox"> Select page</label>
@@ -50,7 +50,7 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <p>This permanently removes their responses, scores and recordings. Download any archives you want to keep first.</p>
 <form method="dialog"><button value="cancel" autofocus>Cancel</button><button class="danger" id="confirmDeleteSessions" value="delete">Delete permanently</button></form>
 </dialog>
-<nav aria-label="Session history pages"><button id="previous" disabled>Previous</button><span id="historyPages"></span><button id="next" disabled>Next</button></nav>
+<nav aria-label="Session Results pages"><button id="previous" disabled>Previous</button><span id="historyPages"></span><button id="next" disabled>Next</button></nav>
 </section>
 <section id="detail" hidden>
 <h2 id="sessionTitle"></h2><p id="sessionSummary"></p>
