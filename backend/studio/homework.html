@@ -18,6 +18,12 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 .review li { margin-block: 8px; }
 .review [data-incorrect] { border-left: 3px solid #A68832; padding-left: 8px; }
 .order-controls button, .assignment-list button { margin: 4px; }
+#detail article { border: 1px solid #CCDCC8; padding: 14px; margin: 12px 0; }
+#detail details { border-top: 1px solid #CCDCC8; padding: 8px 0; }
+#detail summary { cursor: pointer; font-weight: 600; }
+#detail pre { font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
+#detail audio { max-width: 100%; }
+#detail .danger { background: #9e2c2c; border-color: #9e2c2c; }
 [hidden] { display: none !important; }
 </style>
 </head><body>
@@ -41,10 +47,23 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 </form>
 </section>
 <section id="assignmentsPanel" hidden><h2>Assignments</h2><div id="assignments" class="assignment-list"></div><button id="older" hidden>Older assignments</button></section>
-<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><a class="reh-nav-button" id="evidence">Open detailed results</a><div id="links"></div></section>
+<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><button type="button" id="evidence" aria-controls="detail" aria-expanded="false">Open detailed results</button><div id="links"></div></section>
+<section id="detail" hidden>
+<h2 id="sessionTitle"></h2><p id="sessionSummary"></p>
+<label>Student <select id="studentFilter"><option value="">All students</option></select></label>
+<button id="archive">Download archive</button>
+<details id="deletePanel" hidden>
+<summary>Delete archived audio</summary>
+<p id="deleteSummary"></p>
+<label><input type="checkbox" id="verified"> I opened the ZIP and verified that the original recordings are saved.</label>
+<label>Type DELETE AUDIO <input id="confirmation" autocomplete="off"></label>
+<button class="danger" id="deleteAudio" disabled>Delete audio permanently</button>
+</details>
+<div id="tasks"></div>
+</section>
 </main>
 <main id="join" hidden><h1>Join Homework</h1><form id="joinForm"><label>Homework PIN <input id="joinPin" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required></label><label>Student ID <input id="studentId" maxlength="120" required></label><button type="submit">Open homework</button></form></main>
 <main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><p id="attemptNotice" hidden>While you work, REH records device type, page switches and approximate time on questions.</p><div id="items"></div></main>
 <p id="status" role="status"></p>
-<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="task-attempt-signals.js?v=1"></script><script src="homework.js?v=attempt-1"></script>
+<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="task-attempt-signals.js?v=1"></script><script src="evidence-detail.js?v=1"></script><script src="homework.js?v=inline-1"></script>
 </body></html>

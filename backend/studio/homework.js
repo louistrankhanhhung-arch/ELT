@@ -25,16 +25,28 @@
     item.onclick = handler;
     return item;
   };
-  async function request(path, payload) {
+  async function evidenceRequest(path, method = "GET", payload) {
     const code = studentMode ? access : el("token").value.trim();
     const response = await fetch(api + path, {
-      method: payload === undefined ? "GET" : "POST", cache: "no-store",
+      method, cache: "no-store",
       headers: {...(code ? {Authorization: "Bearer " + code} : {}), ...(payload === undefined ? {} : {"Content-Type":"application/json"})},
       body: payload === undefined ? undefined : JSON.stringify(payload)
     });
-    const result = await response.json();
-    if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Check the entered values.");
-    return result;
+    if (!response.ok) {
+      const result = await response.json().catch(() => ({}));
+      throw new Error(typeof result.detail === "string" ? result.detail : "Request failed (" + response.status + ").");
+    }
+    return response;
+  }
+  async function request(path, payload) {
+    return (await evidenceRequest(path, payload === undefined ? "GET" : "POST", payload)).json();
+  }
+  const evidence = window.createEvidenceDetail(el("detail"), evidenceRequest, status);
+  let reportVersion = 0;
+  function closeEvidence() {
+    evidence.clear();
+    el("evidence").textContent = "Open detailed results";
+    el("evidence").setAttribute("aria-expanded", "false");
   }
   function check(value, text) {
     const label = node("label");
@@ -69,11 +81,29 @@
     if (!result.students.length) el("recipients").append(node("p", "No active students enrolled in this class."));
   }
   async function showReport(item) {
+    const version = ++reportVersion;
+    closeEvidence();
+    el("evidence").disabled = true;
     const report = await request("/homework/" + encodeURIComponent(item.pin) + "/report");
+    if (version !== reportVersion) return;
     el("report").hidden = false;
     el("reportTitle").textContent = item.title;
     el("reportCount").textContent = report.recipients.length + " assigned · " + report.tasks.length + " tasks";
-    el("evidence").href = "session-results.html?pin=" + encodeURIComponent(item.pin);
+    const control = el("evidence");
+    control.disabled = false;
+    control.onclick = () => {
+      if (!el("detail").hidden) {
+        closeEvidence();
+        return;
+      }
+      control.disabled = true;
+      void run(async () => {
+        if (!await evidence.open(item.pin)) return;
+        control.textContent = "Hide detailed results";
+        control.setAttribute("aria-expanded", "true");
+        el("detail").scrollIntoView({block: "start"});
+      }).finally(() => { if (version === reportVersion) control.disabled = false; });
+    };
     renderSchedule(item, report);
     el("links").replaceChildren(...report.recipients.map(learner => {
       const submitted = report.tasks.filter(task => task.submissions.some(answer => answer.student_id === learner.student_id)).length;
