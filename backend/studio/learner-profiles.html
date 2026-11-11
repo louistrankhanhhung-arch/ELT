@@ -50,8 +50,9 @@ td small { display: block; }
     break-inside: avoid;
   }
   .parent-report-footer a { color: #286340; text-decoration: none; }
-  @page { margin: 14mm; }
-  body { padding: 0; background: white; }
+  @page { margin: 14mm 0; }
+  @page :first { margin: 0; }
+  body { box-sizing: border-box; padding: 14mm; background: white; }
   .no-print { display: none !important; }
   .report-header, .summary-card, .target-point, #recentFeedback { break-inside: avoid; }
   .summary-card { print-color-adjust: exact; }
