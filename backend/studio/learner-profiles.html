@@ -110,14 +110,15 @@ td small { display: block; }
 <datalist id="classCodes"></datalist>
 </details>
 <div id="profile" hidden>
-<header class="report-header"><img src="reh-brand-mark.jpg" alt="" width="58" height="58"><div><span class="report-brand">Root English House · Learning Progress Report</span><h2 id="profileName"></h2><p id="profileScope"></p></div></header>
-<div class="no-print"><button id="export">Download CSV</button> <button id="print">Print parent report</button></div>
-<section><h3>Learning summary</h3><div class="summary-grid" id="metrics"></div><p class="summary-note">A task reaches mastery at 80% or higher. Mastery is calculated from scored tasks.</p><div id="recentFeedback" hidden></div><div id="signals" class="no-print"></div></section>
+<header class="report-header"><img src="reh-brand-mark.jpg" alt="" width="58" height="58"><div><span class="report-brand" id="reportBrand">Root English House · Learning Progress Report</span><h2 id="profileName"></h2><p id="profileScope"></p></div></header>
+<div class="no-print"><label>Report language <select id="reportLanguage"><option value="en">English</option><option value="vi">Tiếng Việt</option></select></label><button id="export">Download CSV</button> <button id="print">Print parent report</button></div>
+<label id="viFeedbackLabel" class="no-print" hidden>Nhận xét tiếng Việt cho phụ huynh <textarea id="viFeedback" rows="3" maxlength="1000" placeholder="Nhập nhận xét muốn đưa vào báo cáo"></textarea></label>
+<section><h3 id="summaryTitle">Learning summary</h3><div class="summary-grid" id="metrics"></div><p class="summary-note" id="summaryNote">A task reaches mastery at 80% or higher. Mastery is calculated from scored tasks.</p><div id="recentFeedback" hidden></div><div id="signals" class="no-print"></div></section>
 <section class="no-print"><h3>Enrollment history</h3><ul id="enrollments"></ul></section>
-<section><h3>Progress by Learning Target</h3><div id="targets"></div></section>
+<section><h3 id="targetsTitle">Progress by Learning Target</h3><div id="targets"></div></section>
 <section id="sessions" class="no-print"><h3>Learning history</h3><div id="visits"></div></section>
 </div>
 <script src="config.js"></script>
-<script src="learner-profiles.js?v=4"></script>
+<script src="learner-profiles.js?v=parent-vi-1"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@
   const el = id => document.getElementById(id);
   const api = window.ELT_CONFIG.API_BASE;
   let profile;
+  let reportFilters;
   let version = 0;
   const status = value => { el("status").textContent = value; };
   const node = (tag, value) => {
@@ -30,11 +31,37 @@
     return link;
   }
 
+  function renderFeedback(data) {
+    const vietnamese = el("reportLanguage").value === "vi";
+    const recent = data.records.find(row => row.feedback);
+    const value = vietnamese ? el("viFeedback").value.trim() : recent?.feedback;
+    const feedback = el("recentFeedback");
+    feedback.hidden = !value;
+    feedback.replaceChildren();
+    if (!value) return;
+    feedback.append(node("h4", vietnamese ? "Nhận xét của giáo viên" : "Recent feedback"));
+    if (!vietnamese && recent) feedback.append(node("small", recent.date + " · " + recent.lesson));
+    feedback.append(node("p", value));
+  }
+
   function render(data, filters) {
+    const vietnamese = el("reportLanguage").value === "vi";
+    const label = (english, vietnameseText) => vietnamese ? vietnameseText : english;
+    const displayDate = value => vietnamese && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value.split("-").reverse().join("/") : value;
+    el("profile").lang = vietnamese ? "vi" : "en";
+    el("reportBrand").textContent = label("Root English House · Learning Progress Report", "Root English House · Báo cáo tiến độ học tập");
+    el("summaryTitle").textContent = label("Learning summary", "Tổng quan học tập");
+    el("targetsTitle").textContent = label("Progress by Learning Target", "Tiến độ theo mục tiêu học tập");
+    el("summaryNote").textContent = label("A task reaches mastery at 80% or higher. Mastery is calculated from scored tasks.",
+      "Một bài đạt yêu cầu khi điểm từ 80% trở lên. Tỷ lệ đạt yêu cầu được tính trên các bài đã có điểm.");
+    el("print").textContent = label("Print parent report", "In báo cáo phụ huynh");
+    el("viFeedbackLabel").hidden = !vietnamese;
     el("profile").hidden = false;
     el("profileName").textContent = data.student.display_name + " · " + data.student.student_id;
-    const scopeLabels = {course: "Course", level: "Level", lesson: "Lesson", start: "From", end: "To"};
-    el("profileScope").textContent = [...filters].map(([key, value]) => scopeLabels[key] + " " + value).join(" · ") || "Full learning history";
+    const scopeLabels = vietnamese
+      ? {course: "Khóa", level: "Cấp độ", lesson: "Bài học", start: "Từ", end: "Đến"}
+      : {course: "Course", level: "Level", lesson: "Lesson", start: "From", end: "To"};
+    el("profileScope").textContent = [...filters].map(([key, value]) => scopeLabels[key] + " " + (key === "start" || key === "end" ? displayDate(value) : value)).join(" · ") || label("Full learning history", "Toàn bộ lịch sử học tập");
     const summary = data.summary;
     const metric = (label, value, context, count, maximum) => {
       const card = node("div");
@@ -54,16 +81,12 @@
     const average = scored.length
       ? Math.round(scored.reduce((sum, row) => sum + row.score.percent, 0) / scored.length) : null;
     el("metrics").replaceChildren(
-      metric("Sessions", data.sessions.length, "Sessions in this report"),
-      metric("Submission rate", percent(summary.submitted, summary.assigned), summary.submitted + " of " + summary.assigned + " tasks submitted", summary.submitted, summary.assigned),
-      metric("Average score", average == null ? "—" : average + "%", summary.scored + " scored tasks", average, average == null ? 0 : 100),
-      metric("Mastery rate", percent(summary.mastered, summary.scored), summary.mastered + " of " + summary.scored + " scored tasks at 80% or higher", summary.mastered, summary.scored)
+      metric(label("Sessions", "Số buổi học"), data.sessions.length, label("Sessions in this report", "Số buổi trong kỳ báo cáo")),
+      metric(label("Submission rate", "Tỷ lệ nộp bài"), percent(summary.submitted, summary.assigned), label(summary.submitted + " of " + summary.assigned + " tasks submitted", summary.submitted + "/" + summary.assigned + " bài đã nộp"), summary.submitted, summary.assigned),
+      metric(label("Average score", "Điểm trung bình"), average == null ? "—" : average + "%", summary.scored + label(" scored tasks", " bài đã có điểm"), average, average == null ? 0 : 100),
+      metric(label("Mastery rate", "Tỷ lệ đạt yêu cầu"), percent(summary.mastered, summary.scored), label(summary.mastered + " of " + summary.scored + " scored tasks at 80% or higher", summary.mastered + "/" + summary.scored + " bài đạt từ 80%"), summary.mastered, summary.scored)
     );
-    const feedback = el("recentFeedback");
-    const recent = data.records.find(row => row.feedback);
-    feedback.hidden = !recent;
-    feedback.replaceChildren();
-    if (recent) feedback.append(node("h4", "Recent feedback"), node("small", recent.date + " · " + recent.lesson), node("p", recent.feedback));
+    renderFeedback(data);
     const signals = el("signals");
     signals.replaceChildren(node("h4", "Progress signals"));
     if (!data.signals.length) signals.append(node("p", "No signal detected. Signals need three scored attempts on the same prepared task in the same lesson version."));
@@ -85,20 +108,22 @@
     const targets = new Map();
     for (const row of data.records) {
       if (!row.target || !row.score) continue;
-      const key = row.target + " · " + row.kind.replaceAll("_", " ");
+      const kinds = {multiple_choice: "Trắc nghiệm", writing: "Viết", speaking: "Nói", cloze: "Điền khuyết", short_answer: "Trả lời ngắn", ordering_sentence: "Sắp xếp từ", ordering_paragraph: "Sắp xếp câu"};
+      const kind = vietnamese && kinds[row.kind] ? kinds[row.kind] : row.kind.replaceAll("_", " ");
+      const key = row.target + " · " + kind;
       if (!targets.has(key)) targets.set(key, []);
       targets.get(key).push(row);
     }
     const targetPanel = el("targets");
     targetPanel.replaceChildren();
-    if (!targets.size) targetPanel.append(node("p", "No scored tasks with a Learning Target in this view."));
+    if (!targets.size) targetPanel.append(node("p", label("No scored tasks with a Learning Target in this view.", "Chưa có bài đã chấm gắn với mục tiêu học tập trong kỳ này.")));
     for (const [label, rows] of targets) {
       const detail = node("details");
-      detail.append(node("summary", label + " · " + rows.length + " scored attempts"));
+      detail.append(node("summary", label + " · " + rows.length + label(" scored attempts", " lượt có điểm")));
       for (const row of [...rows].reverse()) {
         const point = node("div");
         point.className = "target-point";
-        const caption = node("span", row.date + " · " + row.lesson);
+        const caption = node("span", displayDate(row.date) + " · " + row.lesson);
         const link = visitLink(row.pin);
         link.classList.add("no-print");
         link.style.marginInlineStart = "0.5em";
@@ -106,7 +131,7 @@
         const bar = node("progress");
         bar.max = 100;
         bar.value = row.score.percent;
-        bar.setAttribute("aria-label", row.title + " score");
+        bar.setAttribute("aria-label", label("Score: ", "Điểm: ") + row.title);
         point.append(caption, bar, node("strong", row.score.percent + "%"));
         detail.append(point);
       }
@@ -161,6 +186,8 @@
       const result = await request("/learner-profiles/" + encodeURIComponent(el("student").value.trim()) + "?" + filters);
       if (requestId !== version) return;
       profile = result;
+      reportFilters = filters;
+      el("viFeedback").value = "";
       render(result, filters);
       status("");
     } catch (error) { if (requestId === version) status(error.message); }
@@ -262,6 +289,8 @@
   bind("enrollment", ({student_id, ended_on, ...data}) =>
     request("/learner-profiles/" + encodeURIComponent(student_id.trim()) + "/enrollment", "PUT", {...data, ended_on: ended_on || null}));
   bind("sessionClass", ({pin, class_code}) => request("/learner-sessions/" + encodeURIComponent(pin) + "/class", "PUT", {class_code}));
+  el("reportLanguage").onchange = () => { if (profile) render(profile, reportFilters); };
+  el("viFeedback").oninput = () => { if (profile) renderFeedback(profile); };
   el("print").onclick = () => {
     const closed = [...el("targets").querySelectorAll("details:not([open])")];
     closed.forEach(item => { item.open = true; });
