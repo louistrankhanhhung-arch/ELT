@@ -38,7 +38,18 @@ td small { display: block; }
 #recentFeedback { margin-top: 14px; padding-top: 10px; border-top: 1px solid #CCDCC8; }
 #recentFeedback h4, #recentFeedback p { margin: 5px 0; overflow-wrap: anywhere; }
 #recentFeedback p { white-space: pre-wrap; }
+.parent-report-footer { display: none; }
 @media print {
+  .parent-report-footer {
+    display: block;
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid #CCDCC8;
+    text-align: center;
+    font-size: .85rem;
+    break-inside: avoid;
+  }
+  .parent-report-footer a { color: #286340; text-decoration: none; }
   @page { margin: 14mm; }
   body { padding: 0; background: white; }
   .no-print { display: none !important; }
@@ -117,6 +128,7 @@ td small { display: block; }
 <section class="no-print"><h3>Enrollment history</h3><ul id="enrollments"></ul></section>
 <section><h3 id="targetsTitle">Progress by Learning Target</h3><div id="targets"></div></section>
 <section id="sessions" class="no-print"><h3>Learning history</h3><div id="visits"></div></section>
+<footer class="parent-report-footer"><a href="https://rootenglishhouse.com">rootenglishhouse.com</a></footer>
 </div>
 <script src="config.js"></script>
 <script src="learner-profiles.js?v=parent-vi-1"></script>
