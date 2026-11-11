@@ -2562,6 +2562,33 @@ def add_learner_class(payload: LearnerClassRequest):
     return {"class_code": code}
 
 
+class DeleteLearnerClassesRequest(BaseModel):
+    class_codes: List[str] = Field(min_length=1, max_length=50)
+
+
+@app.post("/api/learner-classes/delete", dependencies=[Depends(require_teacher)])
+def delete_learner_classes(payload: DeleteLearnerClassesRequest):
+    codes = sorted({code.strip().upper() for code in payload.class_codes})
+    if any(not code or len(code) > 60 for code in codes):
+        raise HTTPException(422, "Enter valid class codes")
+    placeholders = ", ".join("?" for _ in codes)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        if not USE_POSTGRES:
+            cur.execute("BEGIN IMMEDIATE")
+        lock = " FOR UPDATE" if USE_POSTGRES else ""
+        cur.execute(sql(f"SELECT class_code FROM reh_classes WHERE class_code IN ({placeholders}) ORDER BY class_code{lock}"), codes)
+        existing = [row["class_code"] for row in cur.fetchall()]
+        for table in ("reh_enrollments", "session_classes"):
+            cur.execute(sql(f"SELECT DISTINCT class_code FROM {table} WHERE class_code IN ({placeholders})"), codes)
+            linked = [row["class_code"] for row in cur.fetchall()]
+            if linked:
+                raise HTTPException(409, "Class codes still linked to learning history: " + ", ".join(linked))
+        cur.execute(sql(f"DELETE FROM reh_classes WHERE class_code IN ({placeholders})"), codes)
+        conn.commit()
+    return {"deleted": existing}
+
+
 @app.put("/api/learner-profiles/{student_id}/enrollment", dependencies=[Depends(require_teacher)])
 def save_learner_enrollment(student_id: str, payload: EnrollmentRequest):
     if payload.ended_on and payload.ended_on < payload.started_on:
