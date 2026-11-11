@@ -33,12 +33,37 @@
   function render(data, filters) {
     el("profile").hidden = false;
     el("profileName").textContent = data.student.display_name + " · " + data.student.student_id;
-    el("profileScope").textContent = [...filters].map(([key, value]) => key + " " + value).join(" · ") || "Full learning history";
+    const scopeLabels = {course: "Course", level: "Level", lesson: "Lesson", start: "From", end: "To"};
+    el("profileScope").textContent = [...filters].map(([key, value]) => scopeLabels[key] + " " + value).join(" · ") || "Full learning history";
     const summary = data.summary;
-    el("metrics").replaceChildren(...[
-      data.sessions.length + " sessions", summary.submitted + "/" + summary.assigned + " submitted",
-      summary.scored + " scored", summary.mastered + "/" + summary.scored + " reached mastery"
-    ].map(value => node("span", value)));
+    const metric = (label, value, context, count, maximum) => {
+      const card = node("div");
+      card.className = "summary-card";
+      card.append(node("h4", label), node("strong", value), node("p", context));
+      if (maximum > 0) {
+        const meter = node("progress");
+        meter.max = maximum;
+        meter.value = count;
+        meter.setAttribute("aria-label", label);
+        card.append(meter);
+      }
+      return card;
+    };
+    const percent = (count, total) => total ? Math.round(100 * count / total) + "%" : "—";
+    const scored = data.records.filter(row => row.score);
+    const average = scored.length
+      ? Math.round(scored.reduce((sum, row) => sum + row.score.percent, 0) / scored.length) : null;
+    el("metrics").replaceChildren(
+      metric("Sessions", data.sessions.length, "Sessions in this report"),
+      metric("Submission rate", percent(summary.submitted, summary.assigned), summary.submitted + " of " + summary.assigned + " tasks submitted", summary.submitted, summary.assigned),
+      metric("Average score", average == null ? "—" : average + "%", summary.scored + " scored tasks", average, average == null ? 0 : 100),
+      metric("Mastery rate", percent(summary.mastered, summary.scored), summary.mastered + " of " + summary.scored + " scored tasks at 80% or higher", summary.mastered, summary.scored)
+    );
+    const feedback = el("recentFeedback");
+    const recent = data.records.find(row => row.feedback);
+    feedback.hidden = !recent;
+    feedback.replaceChildren();
+    if (recent) feedback.append(node("h4", "Recent feedback"), node("small", recent.date + " · " + recent.lesson), node("p", recent.feedback));
     const signals = el("signals");
     signals.replaceChildren(node("h4", "Progress signals"));
     if (!data.signals.length) signals.append(node("p", "No signal detected. Signals need three scored attempts on the same prepared task in the same lesson version."));
@@ -73,8 +98,11 @@
       for (const row of [...rows].reverse()) {
         const point = node("div");
         point.className = "target-point";
-        const caption = node("span", row.date + " · " + row.lesson + " · ");
-        caption.append(visitLink(row.pin));
+        const caption = node("span", row.date + " · " + row.lesson);
+        const link = visitLink(row.pin);
+        link.classList.add("no-print");
+        link.style.marginInlineStart = "0.5em";
+        caption.append(link);
         const bar = node("progress");
         bar.max = 100;
         bar.value = row.score.percent;
@@ -235,7 +263,7 @@
     request("/learner-profiles/" + encodeURIComponent(student_id.trim()) + "/enrollment", "PUT", {...data, ended_on: ended_on || null}));
   bind("sessionClass", ({pin, class_code}) => request("/learner-sessions/" + encodeURIComponent(pin) + "/class", "PUT", {class_code}));
   el("print").onclick = () => {
-    const closed = [...el("profile").querySelectorAll("details:not([open])")];
+    const closed = [...el("targets").querySelectorAll("details:not([open])")];
     closed.forEach(item => { item.open = true; });
     window.print();
     closed.forEach(item => { item.open = false; });
