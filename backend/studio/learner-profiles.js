@@ -138,7 +138,7 @@
     } catch (error) { if (requestId === version) status(error.message); }
   }
   el("search").onsubmit = event => { event.preventDefault(); void loadProfile(); };
-  el("token").oninput = () => { version++; profile = null; el("profile").hidden = true; el("classCodes").replaceChildren(); };
+  el("token").oninput = () => { version++; profile = null; el("profile").hidden = true; el("classCodes").replaceChildren(); el("rosterResults").hidden = true; };
   async function loadClasses() {
     const result = await request("/learner-classes");
     el("classCodes").replaceChildren(...result.classes.map(item => new Option(item.course + " " + item.level, item.class_code)));
@@ -151,13 +151,61 @@
       const submit = form.querySelector("button");
       submit.disabled = true;
       try {
-        await save(Object.fromEntries(new FormData(form)));
+        const message = await save(Object.fromEntries(new FormData(form)));
         if (profile) await loadProfile();
-        status("Saved.");
+        status(typeof message === "string" ? message : "Saved.");
       } catch (error) { status(error.message); }
       finally { submit.disabled = false; }
     };
   }
+  async function readCsv(file) {
+    if (!file?.size || file.size > 500000) throw new Error("Choose a non-empty CSV file under 500 KB.");
+    return file.text();
+  }
+  let rosterOffset = 0;
+  async function loadRoster() {
+    const code = el("token").value.trim();
+    const result = await request("/catalogs/students?offset=" + rosterOffset);
+    if (code !== el("token").value.trim()) return;
+    const list = el("rosterList");
+    list.replaceChildren(...result.rows.map(row => {
+      const item = node("li");
+      const open = node("button", row.student_id + " · " + row.display_name);
+      open.type = "button";
+      open.onclick = () => { el("student").value = row.student_id; void loadProfile(); };
+      item.append(open, node("span", " · " + row.status));
+      return item;
+    }));
+    if (!result.rows.length) list.append(node("li", "No students found."));
+    el("rosterResults").hidden = false;
+    el("rosterPrevious").disabled = !rosterOffset;
+    el("rosterNext").disabled = !result.has_more;
+  }
+  function showRoster(offset) {
+    rosterOffset = offset;
+    loadRoster().catch(error => status(error.message));
+  }
+  el("loadRoster").onclick = () => showRoster(0);
+  el("rosterPrevious").onclick = () => showRoster(Math.max(0, rosterOffset - 500));
+  el("rosterNext").onclick = () => showRoster(rosterOffset + 500);
+  bind("rosterImport", async ({file}) => {
+    const result = await request("/catalogs/students/import", "POST", {csv_text: await readCsv(file)});
+    rosterOffset = 0;
+    await loadRoster();
+    return "Imported or updated " + result.imported + " Student IDs.";
+  });
+  const updateHeaders = () => {
+    el("classImportHeaders").textContent = el("classImportKind").value === "classes"
+      ? "Required headers: class_code,course,level"
+      : "Required headers: student_id,class_code,started_on,ended_on. Use YYYY-MM-DD; leave ended_on blank for active enrollment.";
+  };
+  el("classImportKind").onchange = updateHeaders;
+  updateHeaders();
+  bind("classImport", async ({kind, file}) => {
+    const result = await request("/learner-import/" + kind, "POST", {csv_text: await readCsv(file)});
+    await loadClasses();
+    return "Processed " + result.imported + " CSV rows.";
+  });
   bind("newClass", async data => { await request("/learner-classes", "POST", data); await loadClasses(); });
   bind("enrollment", ({student_id, ended_on, ...data}) =>
     request("/learner-profiles/" + encodeURIComponent(student_id.trim()) + "/enrollment", "PUT", {...data, ended_on: ended_on || null}));

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" class="reh-page">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Roster and Learning Targets | REH</title>
+<title>Learning Targets | REH</title>
 <style>
 body{max-width:960px;margin:auto;padding:20px;background:#F7FAF3;color:#18352A;font:16px system-ui}
 section{background:white;border:1px solid #CCDCC8;border-radius:10px;padding:16px;margin:12px 0}
@@ -11,18 +11,17 @@ button:disabled{opacity:.5}table{border-collapse:collapse;width:100%}td,th{text-
 #tableWrap{overflow:auto}code{overflow-wrap:anywhere}
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-1">
-<a href="teacher-home.html">Teacher home</a><h1>Roster and Learning Targets</h1>
+<a href="teacher-home.html">Teacher home</a><h1>Learning Targets</h1>
 <section>
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
-<label>Catalogue <select id="kind"><option value="students">Student Roster</option><option value="targets">Learning Targets</option></select></label>
 <p>Export the corresponding Google Sheet tab as CSV, then select the file or paste its contents. Existing IDs are updated; rows omitted from the CSV are kept.</p>
 <p>Required headers: <code id="columns"></code></p>
 <label>CSV file <input id="file" type="file" accept=".csv,text/csv"></label>
 <label>CSV contents <textarea id="csv"></textarea></label>
-<button id="import">Import CSV</button><button id="load">Load catalogue</button>
+<button id="import">Import CSV</button><button id="load">Load learning targets</button>
 <p id="status" role="status"></p>
 </section>
-<section id="results" hidden><h2>Catalogue entries</h2><div id="tableWrap"><table id="table"></table></div>
+<section id="results" hidden><h2>Learning target entries</h2><div id="tableWrap"><table id="table"></table></div>
 <button id="previous" disabled>Previous</button><button id="next" disabled>Next</button></section>
-<script src="config.js"></script><script src="catalogs.js"></script>
+<script src="config.js"></script><script src="catalogs.js?v=targets-2"></script>
 </html>

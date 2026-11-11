@@ -2890,6 +2890,74 @@ def parse_catalog_csv(kind, content):
     return rows
 
 
+@app.post("/api/learner-import/{kind}", dependencies=[Depends(require_teacher)])
+def import_learner_csv(kind: Literal["classes", "enrollments"], payload: CatalogImport):
+    columns = ("class_code", "course", "level") if kind == "classes" else (
+        "student_id", "class_code", "started_on", "ended_on")
+    reader = csv.DictReader(io.StringIO(payload.csv_text.lstrip("\ufeff")), strict=True)
+    rows = []
+    seen = set()
+    try:
+        headers = reader.fieldnames
+        if not headers or len(headers) != len(columns) or set(headers) != set(columns):
+            raise HTTPException(422, "CSV headers must be: " + ",".join(columns))
+        for row in reader:
+            line = reader.line_num
+            if len(rows) >= 5000 or None in row or any(row[key] is None for key in columns):
+                raise HTTPException(422, f"Row {line}: check the columns and the 5,000-row limit")
+            values = [row[key].strip() for key in columns]
+            if not any(values):
+                continue
+            if kind == "classes":
+                code, course, level = values
+                values = [code.upper(), course, level]
+                key = values[0]
+                valid = all(values) and all(len(value) <= limit for value, limit in zip(values, (60, 160, 80)))
+            else:
+                student, code, start, end = values
+                values = [student.upper(), code.upper(), start, end or None]
+                key = tuple(values[:3])
+                valid = bool(student and code and len(student) <= 120 and len(code) <= 60)
+                try:
+                    start_date = date.fromisoformat(start)
+                    end_date = date.fromisoformat(end) if end else None
+                    valid = valid and start_date.isoformat() == start and (
+                        not end_date or end_date.isoformat() == end and end_date >= start_date)
+                except ValueError:
+                    valid = False
+            if not valid or key in seen:
+                raise HTTPException(422, f"Row {line}: invalid or duplicate entry")
+            seen.add(key)
+            rows.append((line, values))
+    except csv.Error:
+        raise HTTPException(422, "Could not parse the CSV")
+    if not rows:
+        raise HTTPException(422, "Include at least one data row")
+
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        for line, values in rows:
+            if kind == "classes":
+                cur.execute(sql("INSERT INTO reh_classes VALUES (?, ?, ?) ON CONFLICT(class_code) DO NOTHING"), values)
+                if cur.rowcount == 0:
+                    cur.execute(sql("SELECT course, level FROM reh_classes WHERE class_code = ?"), (values[0],))
+                    existing = cur.fetchone()
+                    if (existing["course"], existing["level"]) != tuple(values[1:]):
+                        raise HTTPException(409, f"Row {line}: class {values[0]} already has a different course or level")
+            else:
+                cur.execute(sql("""
+                    SELECT 1 FROM reh_roster, reh_classes WHERE student_id = ? AND class_code = ?
+                """), values[:2])
+                if not cur.fetchone():
+                    raise HTTPException(422, f"Row {line}: import the Student ID and class code first")
+                cur.execute(sql("""
+                    INSERT INTO reh_enrollments VALUES (?, ?, ?, ?)
+                    ON CONFLICT(student_id, class_code, started_on) DO UPDATE SET ended_on = excluded.ended_on
+                """), values)
+        conn.commit()
+    return {"imported": len(rows)}
+
+
 @app.post("/api/catalogs/{kind}/import", dependencies=[Depends(require_teacher)])
 def import_catalog(kind: Literal["students", "targets"], payload: CatalogImport):
     rows = parse_catalog_csv(kind, payload.csv_text)

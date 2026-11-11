@@ -186,6 +186,13 @@
       </div>
     </header>
 
+    <nav class="reh-workspace" aria-label="Teacher workspace">
+      <a href="lesson-catalogue.html">Catalogue<small>Browse published lessons by course and level.</small></a>
+      <a href="author.html">Studio<small>Create or edit slides and tasks.</small></a>
+      <a href="session-results.html">Results<small>Review submissions and export evidence.</small></a>
+      <a href="learner-profiles.html">Learner Profiles<small>Manage Student IDs, classes and learning history.</small></a>
+      <a href="catalogs.html">Learning Targets<small>Manage the learning target catalogue.</small></a>
+    </nav>
     <section id="catalog"></section>
   </main>
 
@@ -223,38 +230,6 @@
     const TEACHER_PIN =
       window.ELT_CONFIG?.TEACHER_PIN ||
       "2468";
-
-    const authorLink = document.createElement("a");
-    authorLink.href = "author.html";
-    authorLink.textContent = "Studio";
-    const resultsLink = document.createElement("a");
-    resultsLink.href = "session-results.html";
-    resultsLink.textContent = "Results";
-    const learnerLink = document.createElement("a");
-    learnerLink.href = "learner-profiles.html";
-    learnerLink.textContent = "Learner Profiles";
-    const catalogsLink = document.createElement("a");
-    catalogsLink.href = "catalogs.html";
-    catalogsLink.textContent = "Roster and Learning targets";
-    const lessonsLink = document.createElement("a");
-    lessonsLink.href = "lesson-catalogue.html";
-    lessonsLink.textContent = "Catalogue";
-    const workspace = document.createElement("nav");
-    workspace.className = "reh-workspace";
-    workspace.setAttribute("aria-label", "Teacher workspace");
-    for (const [link, description] of [
-      [lessonsLink, "Browse published lessons by course and level."],
-      [authorLink, "Create or edit slides and tasks."],
-      [resultsLink, "Review submissions and export evidence."],
-      [catalogsLink, "Manage student IDs and learning targets."],
-      [learnerLink, "Review learning history, enrollment and progress."],
-    ]) {
-      const caption = document.createElement("small");
-      caption.textContent = description;
-      link.append(caption);
-      workspace.append(link);
-    }
-    catalogEl.before(workspace);
 
     function unlockTeacherApp() {
       const enteredPin = teacherPinInput.value.trim();

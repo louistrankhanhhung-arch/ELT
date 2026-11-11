@@ -44,7 +44,27 @@ td small { display: block; }
 <p id="status" role="status"></p>
 </section>
 <details class="settings no-print">
+<summary>Manage Student IDs</summary>
+<p>Import or update Student IDs using <code>student_id,display_name,status</code>. Use <code>active</code> or <code>inactive</code> for status.</p>
+<form id="rosterImport">
+<label>Student roster CSV <input name="file" type="file" accept=".csv,text/csv" required></label>
+<button>Import Student IDs</button>
+</form>
+<button type="button" id="loadRoster">Load student roster</button>
+<div id="rosterResults" hidden>
+<ul id="rosterList"></ul>
+<button type="button" id="rosterPrevious">Previous</button>
+<button type="button" id="rosterNext">Next</button>
+</div>
+</details>
+<details class="settings no-print">
 <summary>Manage classes and enrollment</summary>
+<form id="classImport">
+<label>Import type <select name="kind" id="classImportKind"><option value="classes">Classes</option><option value="enrollments">Enrollment history</option></select></label>
+<label>CSV file <input name="file" type="file" accept=".csv,text/csv" required></label>
+<button>Import CSV</button>
+</form>
+<p id="classImportHeaders"></p>
 <form id="newClass">
 <label>Class code <input name="class_code" required maxlength="60"></label>
 <label>Course <input name="course" required maxlength="160"></label>
@@ -76,6 +96,6 @@ td small { display: block; }
 <section id="sessions"><h3>Learning history</h3><div id="visits"></div></section>
 </div>
 <script src="config.js"></script>
-<script src="learner-profiles.js?v=1"></script>
+<script src="learner-profiles.js?v=2"></script>
 </body>
 </html>

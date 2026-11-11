@@ -1,9 +1,9 @@
 
 const el = id => document.getElementById(id);
-const columns = {students:["student_id","display_name","status"],targets:["learning_target_id","label","skill","level","status"]};
+const columns = ["learning_target_id","label","skill","level","status"];
 let offset = 0;
 function status(message) { el("status").textContent = message; }
-function refreshHeaders() { el("columns").textContent = columns[el("kind").value].join(","); }
+function refreshHeaders() { el("columns").textContent = columns.join(","); }
 async function request(path, payload) {
   const response = await fetch(window.ELT_CONFIG.API_BASE + path, {
     method: payload ? "POST" : "GET", cache: "no-store",
@@ -15,11 +15,9 @@ async function request(path, payload) {
   return result;
 }
 async function load() {
-  const kind = el("kind").value;
-  const result = await request("/catalogs/" + kind + "?offset=" + offset);
-  if (kind !== el("kind").value) return;
+  const result = await request("/catalogs/targets?offset=" + offset);
   const header = document.createElement("tr");
-  for (const column of columns[kind]) {
+  for (const column of columns) {
     const cell = document.createElement("th");
     cell.scope = "col";
     cell.textContent = column;
@@ -27,7 +25,7 @@ async function load() {
   }
   const body = result.rows.map(row => {
     const item = document.createElement("tr");
-    for (const column of columns[kind]) {
+    for (const column of columns) {
       const cell = document.createElement("td");
       cell.textContent = row[column];
       item.append(cell);
@@ -41,14 +39,6 @@ async function load() {
   status(result.rows.length ? "Catalogue loaded." : "No entries yet.");
 }
 function safeLoad() { return load().catch(error => status(error.message)); }
-el("kind").onchange = () => {
-  refreshHeaders();
-  offset = 0;
-  el("results").hidden = true;
-  el("file").value = "";
-  el("csv").value = "";
-  status("");
-};
 el("file").onchange = async () => {
   const file = el("file").files[0];
   if (!file) return;
@@ -56,12 +46,11 @@ el("file").onchange = async () => {
   try { el("csv").value = await file.text(); } catch { status("Could not read the CSV file."); }
 };
 el("import").onclick = async () => {
-  const kind = el("kind").value;
   el("import").disabled = true;
   try {
-    const result = await request("/catalogs/" + kind + "/import", {csv_text:el("csv").value});
+    const result = await request("/catalogs/targets/import", {csv_text:el("csv").value});
     offset = 0;
-    if (kind === el("kind").value) await load();
+    await load();
     status("Imported or updated " + result.imported + " entries.");
   } catch (error) { status(error.message); }
   finally { el("import").disabled = false; }
