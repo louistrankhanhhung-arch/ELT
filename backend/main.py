@@ -2638,6 +2638,134 @@ def profile_score(task, row):
             "mastered": score * 5 >= maximum * 4}
 
 
+@app.get("/api/class-reports/{class_code}", dependencies=[Depends(require_teacher)])
+def class_report(class_code: str, start: Optional[date] = None, end: Optional[date] = None,
+                 lesson: str = "", target: str = ""):
+    if start and end and start > end:
+        raise HTTPException(422, "The end date must be on or after the start date")
+    code = class_code.strip().upper()
+    local_zone = timezone(timedelta(hours=7))
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT * FROM reh_classes WHERE class_code = ?"), (code,))
+        class_row = cur.fetchone()
+        if not class_row:
+            raise HTTPException(404, "Class code was not found")
+        cur.execute(sql("""
+            SELECT r.student_id, r.display_name, e.started_on, e.ended_on
+            FROM reh_enrollments e JOIN reh_roster r ON r.student_id = e.student_id
+            WHERE e.class_code = ? ORDER BY r.display_name, r.student_id
+        """), (code,))
+        roster = {}
+        for row in cur.fetchall():
+            if (end and row["started_on"] > end.isoformat()) or (
+                start and row["ended_on"] and row["ended_on"] < start.isoformat()
+            ):
+                continue
+            roster[row["student_id"]] = row["display_name"]
+        cur.execute(sql("""
+            SELECT s.pin, s.created_at, s.lesson_id, s.lesson_path, r.manifest
+            FROM session_classes c JOIN sessions s ON s.pin = c.pin
+            LEFT JOIN lesson_revisions r ON s.lesson_path = 'imports/' || r.revision_id
+            WHERE c.class_code = ? ORDER BY s.created_at DESC, s.pin DESC
+        """), (code,))
+        sessions = [dict(row) for row in cur.fetchall()]
+        cur.execute(sql("""
+            SELECT s.pin, u.student_id, u.student_name, ids.roster_id
+            FROM session_classes c JOIN sessions s ON s.pin = c.pin
+            JOIN session_students u ON u.pin = s.pin
+            LEFT JOIN evidence_student_links link ON link.student_id = u.student_id
+            LEFT JOIN evidence_roster_ids ids ON ids.evidence_id = link.evidence_id
+            WHERE c.class_code = ?
+        """), (code,))
+        attendance = {}
+        for row in cur.fetchall():
+            attendance.setdefault(row["pin"], {})[row["student_id"]] = dict(row)
+
+    def counts():
+        return {"assigned": 0, "submitted": 0, "scored": 0, "mastered": 0}
+
+    def add_result(stats, submission, score):
+        stats["assigned"] += 1
+        stats["submitted"] += int(submission is not None)
+        stats["scored"] += int(score is not None)
+        stats["mastered"] += int(bool(score and score["mastered"]))
+
+    def learner_record(student_id, name):
+        return {"student_id": student_id, "name": name, **counts(), "latest": None}
+
+    totals = counts()
+    learners = {student: learner_record(student, name) for student, name in roster.items()}
+    targets = {}
+    visits = []
+    attempts = {}
+    for session in sessions:
+        day = parse_iso(session["created_at"]).astimezone(local_zone).date()
+        if (start and day < start) or (end and day > end):
+            continue
+        manifest = json.loads(session["manifest"]) if session["manifest"] else {}
+        title = manifest.get("title") or session["lesson_id"]
+        if lesson.strip().casefold() not in f"{title} {session['lesson_id']}".casefold():
+            continue
+        pin = session["pin"]
+        members = attendance.get(pin, {})
+        visit = {"pin": pin, "date": day.isoformat(), "lesson": title, **counts()}
+        evidence = session_evidence(pin, include_roster=True)
+        for task in reversed(evidence["tasks"]):
+            target_id = task.get("learning_target_id")
+            if target.strip() and (target_id or "").casefold() != target.strip().casefold():
+                continue
+            task_kind = task.get("type", "writing")
+            submissions = {row["student_id"]: row for row in task["submissions"]}
+            recipients = task.get("recipient_ids", members)
+            group = None
+            if target_id:
+                key = (target_id, task_kind)
+                group = targets.setdefault(key, {"target": target_id, "kind": task_kind, **counts(),
+                                                  "learners": set(), "sessions": {}})
+            for member in recipients:
+                identity = members.get(member)
+                if not identity:
+                    continue
+                student_id = identity["roster_id"]
+                student_id = student_id.upper() if student_id else None
+                learner = learners.setdefault(student_id or member,
+                    learner_record(student_id, roster.get(student_id, identity["student_name"])))
+                row = submissions.get(member)
+                score = profile_score(task, row)
+                for stats in (totals, visit, learner):
+                    add_result(stats, row, score)
+                if score and learner["latest"] is None:
+                    learner["latest"] = {"pin": pin, "date": visit["date"], "percent": score["percent"]}
+                if score and student_id and task.get("block_id"):
+                    key = (student_id, session["lesson_path"], task["block_id"], task_kind)
+                    attempts.setdefault(key, {})[pin] = score["percent"]
+                if group is not None:
+                    add_result(group, row, score)
+                    if score:
+                        group["learners"].add(student_id or member)
+                    group["sessions"][pin] = {"pin": pin, "date": visit["date"], "lesson": title}
+        if visit["assigned"] or not target.strip():
+            visits.append(visit)
+
+    for (student_id, _lesson_path, _block_id, _kind), by_session in attempts.items():
+        values = list(by_session.values())
+        if len(values) < 3:
+            continue
+        change = round(values[0] - (values[1] + values[2]) / 2, 1)
+        current = learners[student_id].get("signal")
+        if abs(change) >= 15 and (not current or abs(change) > abs(current["change"])):
+            learners[student_id]["signal"] = {"status": "Improving" if change > 0 else "Needs attention",
+                                               "change": change, "pins": list(by_session)[:3]}
+    for group in targets.values():
+        group["learner_count"] = len(group.pop("learners"))
+        group["sessions"] = list(group["sessions"].values())
+    ordered_targets = sorted(targets.values(), key=lambda row: (
+        row["mastered"] / row["scored"] if row["scored"] else 2, row["target"], row["kind"]))
+    return {"class": dict(class_row), "summary": totals, "sessions": visits,
+            "targets": ordered_targets, "learners": sorted(learners.values(), key=lambda row: (row["name"].casefold(), row["student_id"] or ""))}
+
+
 @app.get("/api/learner-profiles/{student_id}", dependencies=[Depends(require_teacher)])
 def learner_profile(student_id: str, course: str = "", level: str = "", lesson: str = "",
                     start: Optional[date] = None, end: Optional[date] = None):

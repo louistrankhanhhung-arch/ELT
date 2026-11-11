@@ -188,6 +188,10 @@
       status("");
     } catch (error) { if (requestId === version) status(error.message); }
   }
+  const initialFilters = new URLSearchParams(location.search);
+  for (const field of ["student", "course", "level", "lesson", "start", "end"]) {
+    if (initialFilters.has(field)) el(field).value = initialFilters.get(field);
+  }
   el("search").onsubmit = event => { event.preventDefault(); void loadProfile(); };
   el("token").oninput = () => { version++; profile = null; el("profile").hidden = true; el("classCodes").replaceChildren(); el("rosterResults").hidden = true; };
   async function loadClasses() {
