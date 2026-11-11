@@ -21,6 +21,9 @@ import json
 import os
 from contextlib import closing
 import re
+import secrets
+from threading import Lock
+from time import monotonic
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request as UrlRequest, urlopen
@@ -444,6 +447,13 @@ def init_db():
         CREATE TABLE IF NOT EXISTS homework (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
             title TEXT NOT NULL, due_on TEXT NOT NULL, items TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS homework_schedule (
+            pin TEXT PRIMARY KEY REFERENCES homework(pin) ON DELETE CASCADE,
+            join_pin TEXT NOT NULL UNIQUE, due_at TEXT NOT NULL,
+            ended INTEGER NOT NULL DEFAULT 0, signing_key TEXT NOT NULL
         )
     """)
     cur.execute("""
@@ -3344,7 +3354,7 @@ def edit_catalogue_metadata(catalogue_id: str, payload: CatalogueMetadata):
 class HomeworkRequest(BaseModel):
     catalogue_id: str
     class_code: str
-    due_on: date
+    due_at: datetime
     block_ids: List[str] = Field(min_length=1, max_length=100)
     student_ids: Optional[List[str]] = Field(default=None, max_length=500)
 
@@ -3355,8 +3365,59 @@ class HomeworkSubmission(BaseModel):
     audio_base64: Optional[str] = Field(default=None, max_length=6_990_508)
 
 
+HOMEWORK_TIMEZONE = timezone(timedelta(hours=7))
+homework_login_lock = Lock()
+homework_login_attempts = {}
+
+
+class HomeworkScheduleRequest(BaseModel):
+    action: Literal["end", "extend", "reopen"]
+    due_at: Optional[datetime] = None
+
+
+class HomeworkJoinRequest(BaseModel):
+    pin: str = Field(pattern=r"^[0-9]{8}$")
+    student_id: str = Field(min_length=1, max_length=120)
+
+
 def homework_today():
-    return datetime.now(timezone(timedelta(hours=7))).date()
+    return datetime.now(HOMEWORK_TIMEZONE).date()
+
+
+def homework_deadline(value):
+    if value is None or value.utcoffset() is None:
+        raise HTTPException(422, "Choose a date and time in Vietnam time")
+    if value <= datetime.now(timezone.utc):
+        raise HTTPException(422, "Choose a future deadline")
+    return value.astimezone(timezone.utc).isoformat()
+
+
+def homework_status(schedule):
+    if schedule["ended"]:
+        return "ended"
+    return "overdue" if parse_iso(schedule["due_at"]) <= datetime.now(timezone.utc) else "open"
+
+
+def ensure_homework_schedule(cur, pin, due_at):
+    for _ in range(10):
+        cur.execute(sql("""
+            INSERT INTO homework_schedule (pin, join_pin, due_at, signing_key)
+            VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING
+        """), (pin, f"{secrets.randbelow(100_000_000):08d}", due_at, secrets.token_hex(32)))
+        cur.execute(sql("SELECT * FROM homework_schedule WHERE pin = ?"), (pin,))
+        row = cur.fetchone()
+        if row:
+            return dict(row)
+    raise HTTPException(503, "Could not generate a Homework PIN. Try again.")
+
+
+def homework_schedule_view(schedule):
+    return {**{key: schedule[key] for key in ("join_pin", "due_at")}, "status": homework_status(schedule)}
+
+
+def homework_login_signature(token, signing_key):
+    return hmac.new(bytes.fromhex(signing_key), token.encode("ascii"), hashlib.sha256).hexdigest()
+
 
 
 def homework_class_roster(cur, code):
@@ -3379,8 +3440,8 @@ def get_homework_roster(class_code: str):
 
 @app.post("/api/homework", dependencies=[Depends(require_teacher)])
 def create_homework(payload: HomeworkRequest):
-    if payload.due_on < homework_today():
-        raise HTTPException(422, "Choose today or a future due date")
+    due_at = homework_deadline(payload.due_at)
+    due_on = parse_iso(due_at).astimezone(HOMEWORK_TIMEZONE).date().isoformat()
     entry = catalogue_entry(payload.catalogue_id)
     manifest = load_imported_lesson(entry["revision_id"])
     selected = set(payload.block_ids)
@@ -3410,7 +3471,8 @@ def create_homework(payload: HomeworkRequest):
             VALUES (?, ?, ?, ?, 0, 'homework', ?)
         """), (pin, manifest["lesson_id"], f"imports/{entry['revision_id']}", len(blocks), created))
         set_session_class(cur, pin, code)
-        cur.execute(sql("INSERT INTO homework VALUES (?, ?, ?, ?)"), (pin, entry["title"], payload.due_on.isoformat(), "[]"))
+        cur.execute(sql("INSERT INTO homework VALUES (?, ?, ?, ?)"), (pin, entry["title"], due_on, "[]"))
+        schedule = ensure_homework_schedule(cur, pin, due_at)
         for learner in roster:
             roster_id = learner["student_id"]
             member = uuid4().hex
@@ -3450,7 +3512,7 @@ def create_homework(payload: HomeworkRequest):
                 items.append({"task_id": task_id, "title": task.get("title") or block["title"]})
         cur.execute(sql("UPDATE homework SET items = ? WHERE pin = ?"), (json.dumps(items), pin))
         conn.commit()
-    return {"id": pin, "assigned": len(roster)}
+    return {"id": pin, "assigned": len(roster), **homework_schedule_view(schedule)}
 
 
 @app.get("/api/homework", dependencies=[Depends(require_teacher)])
@@ -3458,8 +3520,9 @@ def list_homework(offset: int = 0):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT h.pin, h.title, h.due_on, c.class_code, s.created_at
+            SELECT h.pin, h.title, h.due_on, c.class_code, s.created_at, hs.due_at
             FROM homework h JOIN session_classes c ON c.pin = h.pin JOIN sessions s ON s.pin = h.pin
+            LEFT JOIN homework_schedule hs ON hs.pin = h.pin
             ORDER BY s.created_at DESC, h.pin LIMIT 51 OFFSET ?
         """), (max(offset, 0),))
         rows = [dict(row) for row in cur.fetchall()]
@@ -3470,8 +3533,16 @@ def list_homework(offset: int = 0):
 def homework_report(pin: str):
     with closing(db()) as conn:
         cur = conn.cursor()
+        cur.execute(sql("SELECT due_on FROM homework WHERE pin = ?"), (pin,))
+        assignment = cur.fetchone()
+        if not assignment:
+            raise HTTPException(404, "Homework not found")
+        legacy_deadline = datetime.combine(date.fromisoformat(assignment["due_on"]) + timedelta(days=1),
+                                           datetime.min.time(), HOMEWORK_TIMEZONE)
+        schedule = ensure_homework_schedule(cur, pin, legacy_deadline.astimezone(timezone.utc).isoformat())
+        conn.commit()
         cur.execute(sql("""
-            SELECT u.student_id, u.student_name, ids.roster_id, a.token
+            SELECT u.student_id, u.student_name, ids.roster_id
             FROM homework_access a JOIN session_students u ON u.student_id = a.student_id
             JOIN evidence_student_links l ON l.student_id = u.student_id
             JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
@@ -3479,21 +3550,114 @@ def homework_report(pin: str):
         """), (pin,))
         recipients = [dict(row) for row in cur.fetchall()]
     result = session_task_results(pin)
-    return {"recipients": recipients, "tasks": [{"task_id": task["task_id"], "prompt": task["prompt"],
+    return {**homework_schedule_view(schedule), "recipients": recipients, "tasks": [{"task_id": task["task_id"], "prompt": task["prompt"],
              "submissions": [{key: row.get(key) for key in ("student_id", "score", "max_score")} for row in task["submissions"]]}
              for task in result["tasks"]]}
 
 
-def homework_access(cur, credentials):
-    if not credentials or not re.fullmatch(r"[a-f0-9]{64}", credentials.credentials):
-        raise HTTPException(401, "Use your personal homework link")
-    cur.execute(sql("""
-        SELECT h.*, a.student_id, s.lesson_path FROM homework_access a JOIN homework h ON h.pin = a.pin
-        JOIN sessions s ON s.pin = h.pin WHERE a.token = ?
-    """), (credentials.credentials,))
-    row = cur.fetchone()
+@app.post("/api/homework/{pin}/schedule", dependencies=[Depends(require_teacher)])
+def update_homework_schedule(pin: str, payload: HomeworkScheduleRequest):
+    due_at = homework_deadline(payload.due_at) if payload.action != "end" else None
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        # Serialize deadline changes and submissions for this assignment.
+        cur.execute(sql("UPDATE homework_schedule SET ended = ended WHERE pin = ?"), (pin,))
+        cur.execute(sql("SELECT * FROM homework_schedule WHERE pin = ?"), (pin,))
+        schedule = cur.fetchone()
+        if not schedule:
+            raise HTTPException(404, "Open the homework report first")
+        status = homework_status(schedule)
+        if payload.action == "extend" and (status != "open" or parse_iso(due_at) <= parse_iso(schedule["due_at"])):
+            raise HTTPException(409, "Choose a later deadline for an open assignment")
+        if payload.action == "reopen" and status == "open":
+            raise HTTPException(409, "This homework is already open")
+        if payload.action == "end":
+            cur.execute(sql("UPDATE homework_schedule SET ended = 1 WHERE pin = ?"), (pin,))
+        else:
+            cur.execute(sql("UPDATE homework_schedule SET due_at = ?, ended = 0 WHERE pin = ?"), (due_at, pin))
+            due_on = parse_iso(due_at).astimezone(HOMEWORK_TIMEZONE).date().isoformat()
+            cur.execute(sql("UPDATE homework SET due_on = ? WHERE pin = ?"), (due_on, pin))
+        cur.execute(sql("SELECT * FROM homework_schedule WHERE pin = ?"), (pin,))
+        schedule = dict(cur.fetchone())
+        conn.commit()
+    return homework_schedule_view(schedule)
+
+
+@app.get("/h/{pin}")
+def short_homework_link(pin: str):
+    if not re.fullmatch(r"[0-9]{8}", pin):
+        raise HTTPException(404, "Invalid Homework PIN")
+    return RedirectResponse(f"/studio/homework.html?join=1&pin={pin}", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/h/{pin}/qr.svg")
+def homework_join_qr(pin: str, request: Request):
+    if not re.fullmatch(r"[0-9]{8}", pin):
+        raise HTTPException(404, "Invalid Homework PIN")
+    url = request.url_for("short_homework_link", pin=pin)
+    if url.hostname not in ("localhost", "127.0.0.1", "::1"):
+        url = url.replace(scheme="https")
+    output = io.BytesIO()
+    qrcode.make(str(url), image_factory=SvgPathImage).save(output)
+    return Response(output.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "public, max-age=86400"})
+
+
+@app.post("/api/homework/join")
+def join_homework(payload: HomeworkJoinRequest, request: Request, response: Response):
+    source = request.client.host if request.client else ""
+    now = monotonic()
+    with homework_login_lock:
+        if len(homework_login_attempts) >= 4096:
+            for key, (started, _) in list(homework_login_attempts.items()):
+                if now - started >= 60:
+                    del homework_login_attempts[key]
+            if source not in homework_login_attempts and len(homework_login_attempts) >= 4096:
+                raise HTTPException(429, "Try again in a minute")
+        started, count = homework_login_attempts.get(source, (now, 0))
+        if now - started >= 60:
+            started, count = now, 0
+        if count >= 30:
+            raise HTTPException(429, "Too many attempts. Try again in a minute")
+        homework_login_attempts[source] = (started, count + 1)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT a.token, hs.signing_key
+            FROM homework_schedule hs JOIN homework_access a ON a.pin = hs.pin
+            JOIN evidence_student_links l ON l.student_id = a.student_id
+            JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
+            JOIN reh_roster r ON r.student_id = ids.roster_id
+            WHERE hs.join_pin = ? AND ids.roster_id = ? AND r.status = 'active'
+        """), (payload.pin, payload.student_id.strip().upper()))
+        row = cur.fetchone()
     if not row:
-        raise HTTPException(404, "Homework link not found")
+        raise HTTPException(401, "Check your Homework PIN and Student ID")
+    response.headers["Cache-Control"] = "private, no-store"
+    return {"access": row["token"] + "." + homework_login_signature(row["token"], row["signing_key"])}
+
+
+def homework_access(cur, credentials, lock=False):
+    supplied = credentials.credentials if credentials else ""
+    if not re.fullmatch(r"[a-f0-9]{64}\.[a-f0-9]{64}", supplied):
+        raise HTTPException(401, "Enter your Homework PIN and Student ID")
+    token, signature = supplied.split(".")
+    if lock:
+        cur.execute(sql("""
+            UPDATE homework_schedule SET ended = ended
+            WHERE pin = (SELECT pin FROM homework_access WHERE token = ?)
+        """), (token,))
+    cur.execute(sql("""
+        SELECT h.*, a.student_id, s.lesson_path, hs.due_at, hs.ended, hs.signing_key
+        FROM homework_access a JOIN homework h ON h.pin = a.pin
+        JOIN homework_schedule hs ON hs.pin = h.pin JOIN sessions s ON s.pin = h.pin
+        JOIN evidence_student_links l ON l.student_id = a.student_id
+        JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
+        JOIN reh_roster r ON r.student_id = ids.roster_id
+        WHERE a.token = ? AND r.status = 'active'
+    """), (token,))
+    row = cur.fetchone()
+    if not row or not hmac.compare_digest(signature, homework_login_signature(token, row["signing_key"])):
+        raise HTTPException(401, "Enter your Homework PIN and Student ID")
     return dict(row)
 
 
@@ -3544,8 +3708,8 @@ def read_homework(response: Response, credentials: Optional[HTTPAuthorizationCre
                     grade = json.loads(grade_row["definition"])
                     result = {key: grade[key] for key in ("score", "max_score", "feedback")}
             item.update(task=task_description(task.copy()), submitted=row is not None, result=result)
-    return {"title": assignment["title"], "due_on": assignment["due_on"],
-            "closed": homework_today().isoformat() > assignment["due_on"], "lesson_path": assignment["lesson_path"], "items": items}
+    return {"title": assignment["title"], "due_at": assignment["due_at"],
+            "status": homework_status(assignment), "lesson_path": assignment["lesson_path"], "items": items}
 
 
 @app.post("/api/homework/student/tasks/{task_id}")
@@ -3553,9 +3717,9 @@ def submit_homework(task_id: str, payload: HomeworkSubmission,
                     credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
     with closing(db()) as conn:
         cur = conn.cursor()
-        assignment = homework_access(cur, credentials)
-        if homework_today().isoformat() > assignment["due_on"]:
-            raise HTTPException(409, "The homework deadline has passed")
+        assignment = homework_access(cur, credentials, lock=True)
+        if homework_status(assignment) != "open":
+            raise HTTPException(409, "Homework is closed. Ask your teacher to reopen it.")
         task = homework_task(cur, assignment["pin"], task_id)
         if task["speaking_id"]:
             if not payload.audio_base64 or not payload.media_type:

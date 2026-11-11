@@ -1,7 +1,17 @@
 (() => {
   const el = id => document.getElementById(id);
   const api = window.ELT_CONFIG.API_BASE;
-  const access = new URLSearchParams(location.hash.slice(1)).get("access");
+  const params = new URLSearchParams(location.search);
+  const legacyLink = new URLSearchParams(location.hash.slice(1)).has("access");
+  const studentMode = params.get("join") === "1" || legacyLink;
+  let access = null;
+  const vietnamTime = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Asia/Ho_Chi_Minh", dateStyle: "short", timeStyle: "short"
+  });
+  const showDue = value => vietnamTime.format(new Date(value));
+  const toInput = value => showDue(value).replace(" ", "T");
+  const duePayload = id => el(id).value + ":00+07:00";
+  const screenUrl = pin => "join-screen.html?homework=1&pin=" + encodeURIComponent(pin);
   const state = {lessons: [], offset: 0};
   const node = (tag, text) => {
     const item = document.createElement(tag);
@@ -16,11 +26,10 @@
     return item;
   };
   async function request(path, payload) {
-    const code = access || el("token").value.trim();
-    if (!code) throw new Error("Enter the teacher access code.");
+    const code = studentMode ? access : el("token").value.trim();
     const response = await fetch(api + path, {
       method: payload === undefined ? "GET" : "POST", cache: "no-store",
-      headers: {Authorization: "Bearer " + code, ...(payload === undefined ? {} : {"Content-Type":"application/json"})},
+      headers: {...(code ? {Authorization: "Bearer " + code} : {}), ...(payload === undefined ? {} : {"Content-Type":"application/json"})},
       body: payload === undefined ? undefined : JSON.stringify(payload)
     });
     const result = await response.json();
@@ -65,27 +74,47 @@
     el("reportTitle").textContent = item.title;
     el("reportCount").textContent = report.recipients.length + " assigned · " + report.tasks.length + " tasks";
     el("evidence").href = "session-results.html?pin=" + encodeURIComponent(item.pin);
+    renderSchedule(item, report);
     el("links").replaceChildren(...report.recipients.map(learner => {
-      const row = node("p");
       const submitted = report.tasks.filter(task => task.submissions.some(answer => answer.student_id === learner.student_id)).length;
-      const url = new URL("homework.html", location.href);
-      url.hash = "access=" + learner.token;
-      const copy = button("Copy personal link", async () => {
-        try { await navigator.clipboard.writeText(url.href); copy.textContent = "Copied"; }
-        catch { status("Copy the personal link from the adjacent link."); }
-      });
-      const open = node("a", "Open");
-      open.href = url.href; open.target = "_blank"; open.rel = "noopener noreferrer";
-      row.append(learner.student_name + " · " + learner.roster_id + " · " + submitted + "/" + report.tasks.length + " submitted ", copy, " ", open);
-      return row;
+      return node("p", learner.student_name + " · " + learner.roster_id + " · " + submitted + "/" + report.tasks.length + " submitted");
     }));
+  }
+  function renderSchedule(item, schedule) {
+    const open = schedule.status === "open";
+    const label = {open: "Open", ended: "Ended early", overdue: "Deadline passed"}[schedule.status];
+    el("scheduleStatus").textContent = label + " · Due " + showDue(schedule.due_at) + " (Vietnam time)";
+    el("newDue").value = open ? toInput(schedule.due_at) : "";
+    el("homeworkScreen").onclick = () => window.open(screenUrl(schedule.join_pin), "_blank", "noopener");
+    el("endHomework").hidden = !open;
+    el("scheduleAction").textContent = open ? "Extend deadline" : "Reopen homework";
+    const update = async (action, due_at) => {
+      el("scheduleAction").disabled = el("endHomework").disabled = true;
+      try {
+        const next = await request("/homework/" + encodeURIComponent(item.pin) + "/schedule", {action, due_at});
+        renderSchedule(item, next);
+        status(action === "end" ? "Homework ended." : action === "extend" ? "Deadline extended." : "Homework reopened.");
+        await loadAssignments(true);
+      } finally {
+        el("scheduleAction").disabled = el("endHomework").disabled = false;
+      }
+    };
+    el("endHomework").onclick = () => {
+      if (window.confirm("End homework now? Students can still review submitted answers.")) {
+        void run(() => update("end"));
+      }
+    };
+    el("schedule").onsubmit = event => {
+      event.preventDefault();
+      void run(() => update(open ? "extend" : "reopen", duePayload("newDue")));
+    };
   }
   async function loadAssignments(reset = false) {
     if (reset) { state.offset = 0; el("assignments").replaceChildren(); }
     const result = await request("/homework?offset=" + state.offset);
     el("assignmentsPanel").hidden = false;
     for (const item of result.assignments) el("assignments").append(button(
-      item.class_code + " · " + item.title + " · due " + item.due_on,
+      item.class_code + " · " + item.title + " · due " + (item.due_at ? showDue(item.due_at) : item.due_on),
       () => showReport(item).catch(error => status(error.message))));
     el("older").hidden = !result.has_more;
     state.offset += result.assignments.length;
@@ -120,11 +149,17 @@
       const block_ids = checked("blocks");
       const student_ids = el("selectedOnly").checked ? checked("recipients") : null;
       if (!block_ids.length || (student_ids && !student_ids.length)) throw new Error("Choose blocks and at least one recipient.");
+      const screen = window.open("about:blank", "_blank");
+      if (screen) screen.opener = null;
       const result = await request("/homework", {catalogue_id: el("lesson").value, class_code: el("classCode").value,
-        due_on: el("due").value, block_ids, student_ids});
+        due_at: duePayload("due"), block_ids, student_ids}).catch(error => {
+        if (screen) screen.close();
+        throw error;
+      });
+      if (screen) screen.location.replace(screenUrl(result.join_pin));
       await loadAssignments(true);
       await showReport({pin: result.id, title: el("lesson").selectedOptions[0].text});
-      status("Assigned to " + result.assigned + " students. Share each personal link with its recipient.");
+      status("Assigned to " + result.assigned + " students. Show the Homework Screen or share the PIN.");
     }).finally(() => { submit.disabled = false; });
   };
 
@@ -201,7 +236,7 @@
       if (result) showFeedback(section, result);
     };
     if (item.submitted) { submitted(item.result); return section; }
-    if (closed) { section.append(node("p", "Deadline passed.")); return section; }
+    if (closed) { section.append(node("p", "Submissions are closed.")); return section; }
     const form = node("form");
     const task = item.task;
     let payload;
@@ -251,10 +286,12 @@
   async function loadStudent() {
     const data = await request("/homework/student");
     el("studentTitle").textContent = data.title;
-    el("deadline").textContent = "Due " + data.due_on + " (Vietnam time)" + (data.closed ? " · Closed" : "");
+    const closed = data.status !== "open";
+    el("deadline").textContent = "Due " + showDue(data.due_at) + " (Vietnam time)" + (closed ? " · Closed" : "");
+    el("items").replaceChildren();
     const lesson = await request("/" + data.lesson_path);
     for (const item of data.items) {
-      if (item.task) { el("items").append(renderTask(item, data.closed)); continue; }
+      if (item.task) { el("items").append(renderTask(item, closed)); continue; }
       const block = lesson.blocks.find(entry => entry.id === item.block_id);
       if (!block) continue;
       const section = node("section");
@@ -270,6 +307,29 @@
       el("items").append(section);
     }
   }
-  if (access) { el("student").hidden = false; void run(loadStudent); }
-  else el("teacher").hidden = false;
+  if (studentMode) {
+    const pin = params.get("pin") || "";
+    el("join").hidden = false;
+    if (/^[0-9]{8}$/.test(pin)) el("joinPin").value = pin;
+    if (legacyLink) {
+      history.replaceState(null, "", "?join=1");
+      status("Enter the Homework PIN from your teacher and your Student ID.");
+    }
+    el("joinForm").onsubmit = event => {
+      event.preventDefault();
+      const submit = event.currentTarget.querySelector("button");
+      submit.disabled = true;
+      status("");
+      void run(async () => {
+        const joined = await request("/homework/join", {pin: el("joinPin").value.trim(), student_id: el("studentId").value.trim()});
+        access = joined.access;
+        await loadStudent();
+        el("join").hidden = true;
+        el("student").hidden = false;
+      }).finally(() => { submit.disabled = false; });
+    };
+  } else {
+    el("teacher").hidden = false;
+    el("due").value = toInput(new Date(Date.now() + 86400000));
+  }
 })();

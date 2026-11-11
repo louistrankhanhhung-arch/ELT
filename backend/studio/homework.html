@@ -36,14 +36,15 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 <label>Class code <select id="classCode" required></select></label>
 <label><input id="selectedOnly" type="checkbox"> Choose individual students</label>
 <div id="recipients" hidden></div>
-<label>Due date <input id="due" type="date" required></label>
+<label>Deadline (Vietnam time) <input id="due" type="datetime-local" required></label>
 <button type="submit">Assign homework</button>
 </form>
 </section>
 <section id="assignmentsPanel" hidden><h2>Assignments</h2><div id="assignments" class="assignment-list"></div><button id="older" hidden>Older assignments</button></section>
-<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><a id="evidence">Open detailed results</a><div id="links"></div></section>
+<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><a id="evidence">Open detailed results</a><div id="links"></div></section>
 </main>
+<main id="join" hidden><h1>Join Homework</h1><form id="joinForm"><label>Homework PIN <input id="joinPin" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required></label><label>Student ID <input id="studentId" maxlength="120" required></label><button type="submit">Open homework</button></form></main>
 <main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><div id="items"></div></main>
 <p id="status" role="status"></p>
-<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="homework.js?v=1"></script>
+<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="homework.js?v=2"></script>
 </body></html>

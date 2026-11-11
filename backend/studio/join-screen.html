@@ -32,9 +32,16 @@
     </section>
   </main>
   <script>
-    const pin = new URLSearchParams(location.search).get("pin");
-    if (/^[0-9]{4}$/.test(pin)) {
-      const link = new URL("/j/" + pin, location.origin);
+    const params = new URLSearchParams(location.search);
+    const pin = params.get("pin");
+    const homework = params.get("homework") === "1";
+    if (homework) {
+      document.title = "Homework Screen | REH";
+      document.querySelector("h1").textContent = "Homework";
+      document.getElementById("qr").alt = "QR code for opening homework";
+    }
+    if ((homework ? /^[0-9]{8}$/ : /^[0-9]{4}$/).test(pin || "")) {
+      const link = new URL((homework ? "/h/" : "/j/") + pin, location.origin);
       const qrUrl = link.href + "/qr.svg";
       document.getElementById("pinValue").textContent = pin;
       document.getElementById("qr").src = qrUrl;
@@ -43,7 +50,7 @@
       shortLink.textContent = link.host + link.pathname;
       const download = document.getElementById("download");
       download.href = qrUrl;
-      download.download = "reh-join-" + pin + ".svg";
+      download.download = (homework ? "reh-homework-" : "reh-join-") + pin + ".svg";
       document.getElementById("details").hidden = false;
       document.getElementById("status").hidden = true;
     }
