@@ -239,6 +239,7 @@
     if (closed) { section.append(node("p", "Submissions are closed.")); return section; }
     const form = node("form");
     const task = item.task;
+    const attempt = window.createTaskAttemptTracker(task.questions?.length || 0, item.task_id + ":" + access.slice(-16));
     let payload;
     if (task.questions?.length) {
       const answers = task.questions.map((question, index) => questionInput(form, question, index, task.shuffle));
@@ -274,12 +275,15 @@
       event.preventDefault();
       submit.disabled = true;
       try {
-        const saved = await request("/homework/student/tasks/" + encodeURIComponent(item.task_id), await payload());
+        const attempt_signals = attempt.snapshot();
+        const saved = await request("/homework/student/tasks/" + encodeURIComponent(item.task_id), {...await payload(), attempt_signals});
+        attempt.complete();
         form.remove();
         submitted(saved.result);
       } catch (error) { note.textContent = error.message; submit.disabled = false; }
     };
     section.append(form);
+    attempt.mount(section, [...form.querySelectorAll("fieldset")]);
     return section;
   }
 
@@ -289,6 +293,7 @@
     const closed = data.status !== "open";
     el("deadline").textContent = "Due " + showDue(data.due_at) + " (Vietnam time)" + (closed ? " · Closed" : "");
     el("items").replaceChildren();
+    el("attemptNotice").hidden = closed;
     const lesson = await request("/" + data.lesson_path);
     for (const item of data.items) {
       if (item.task) { el("items").append(renderTask(item, closed)); continue; }

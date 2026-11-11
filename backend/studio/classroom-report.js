@@ -119,6 +119,7 @@
       } else {
         container.append(node("p", row.response));
       }
+      container.append(window.renderTaskAttemptSignals(doc, row.attempt_signals));
       if (row.ai_feedback) {
         const feedback = row.ai_feedback;
         container.append(node("p", feedback.feedback));

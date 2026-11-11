@@ -202,6 +202,7 @@ function renderSubmission(task, row, pin) {
     panel.append(text("pre", task.questions?.length ? row.selected_option : row.response));
     if (task.questions?.length) panel.append(text("p", "Score: " + row.score + "/" + row.max_score));
   }
+  panel.append(window.renderTaskAttemptSignals(document, row.attempt_signals));
   if (!task.questions?.length && task.task_id !== "legacy-writing") panel.append(reviewForm(task, row, pin));
   return panel;
 }

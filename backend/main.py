@@ -4,7 +4,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.responses import RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, conint
 from random import randint, shuffle
 from datetime import date, datetime, timezone, timedelta
 from statistics import median
@@ -295,6 +295,15 @@ def init_db():
             response TEXT NOT NULL,
             submitted_at TEXT NOT NULL,
             PRIMARY KEY (task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS task_attempt_signals (
+            task_id TEXT NOT NULL,
+            student_id TEXT NOT NULL,
+            definition TEXT NOT NULL,
+            PRIMARY KEY (task_id, student_id),
+            FOREIGN KEY (task_id, student_id) REFERENCES writing_task_responses(task_id, student_id) ON DELETE CASCADE
         )
     """)
     cur.execute("""
@@ -1127,7 +1136,50 @@ class WritingAssignmentRequest(BaseModel):
     prompt: str = Field(min_length=1, max_length=4000)
 
 
+AttemptMilliseconds = conint(strict=True, ge=0, le=86_400_000)
+
+
+class TaskAttemptSignals(BaseModel):
+    visible_ms: AttemptMilliseconds
+    hidden_ms: AttemptMilliseconds
+    hidden_count: conint(strict=True, ge=0, le=10_000)
+    question_ms: List[AttemptMilliseconds] = Field(default_factory=list, max_length=100)
+
+
+def task_device(headers):
+    agent = headers.get("user-agent", "")[:512].lower()
+    platform = headers.get("sec-ch-ua-platform", "").strip('"').lower()
+    if "ipad" in agent or ("android" in agent and "mobile" not in agent):
+        kind = "Tablet"
+    elif headers.get("sec-ch-ua-mobile") == "?1" or any(token in agent for token in ("mobile", "iphone", "ipod")):
+        kind = "Mobile"
+    elif agent or platform:
+        kind = "Desktop"
+    else:
+        kind = "Unknown"
+    systems = (("ChromeOS", "cros"), ("Android", "android"), ("iOS", "iphone"),
+               ("iPadOS", "ipad"), ("iOS", "ipod"), ("Windows", "windows"), ("macOS", "mac"),
+               ("Linux", "linux"))
+    system = next((label for label, token in systems if token in platform or token in agent), "Unknown")
+    browsers = (("Edge", ("edg/", "edga/", "edgios/")), ("Opera", ("opr/", "opios/")),
+                ("Samsung Internet", ("samsungbrowser/",)), ("Firefox", ("firefox/", "fxios/")),
+                ("Chrome", ("chrome/", "crios/")), ("Safari", ("safari/",)))
+    browser = next((label for label, tokens in browsers if any(token in agent for token in tokens)), "Unknown")
+    return {"type": kind, "os": system, "browser": browser}
+
+
+def save_task_attempt_signals(cur, task_id, student_id, signals, request):
+    if signals is None:
+        return
+    definition = {"device": task_device(request.headers), **signals.model_dump()}
+    cur.execute(sql("""
+        INSERT INTO task_attempt_signals (task_id, student_id, definition) VALUES (?, ?, ?)
+        ON CONFLICT(task_id, student_id) DO NOTHING
+    """), (task_id, student_id, json.dumps(definition)))
+
+
 class WritingSubmissionRequest(BaseModel):
+    attempt_signals: Optional[TaskAttemptSignals] = None
     student_id: str
     response: str = Field(min_length=1, max_length=20000)
 
@@ -1710,7 +1762,7 @@ def available_task(cur, session, task_id, student_id):
 
 
 @app.post("/api/sessions/{pin}/tasks/{task_id}/submissions")
-def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionRequest):
+def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionRequest, request: Request):
     session = require_active_session(pin)
     if not any(student["student_id"] == payload.student_id for student in session["students"]):
         raise HTTPException(403, "Join the session before submitting")
@@ -1737,6 +1789,8 @@ def submit_task_response(pin: str, task_id: str, payload: WritingSubmissionReque
                 INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
                 ON CONFLICT(task_id, student_id) DO NOTHING
             """), (task_id, payload.student_id, payload.response, now_iso()))
+            if cur.rowcount == 1:
+                save_task_attempt_signals(cur, task_id, payload.student_id, payload.attempt_signals, request)
             conn.commit()
             cur.execute(sql("SELECT response FROM writing_task_responses WHERE task_id = ? AND student_id = ?"), (task_id, payload.student_id))
             prior = cur.fetchone()
@@ -1768,12 +1822,14 @@ def session_task_results(pin: str, include_roster: bool = False):
             SELECT r.task_id, r.student_id, s.student_name, r.response, r.submitted_at,
                    v.score AS review_score, v.max_score AS review_max_score, v.feedback, v.reviewed_at,
                    a.media_type AS audio_type, LENGTH(a.audio) AS audio_bytes,
-                   g.state AS ai_state, g.definition AS ai_json, g.published AS ai_published
+                   g.state AS ai_state, g.definition AS ai_json, g.published AS ai_published,
+                   signal.definition AS signals_json
             FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
             JOIN session_students s ON s.student_id = r.student_id
             LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
             LEFT JOIN speaking_audio a ON a.task_id = r.task_id AND a.student_id = r.student_id
             LEFT JOIN writing_ai_grades g ON g.task_id = r.task_id AND g.student_id = r.student_id
+            LEFT JOIN task_attempt_signals signal ON signal.task_id = r.task_id AND signal.student_id = r.student_id
             WHERE t.pin = ? ORDER BY r.submitted_at, r.student_id
         """), (pin,))
         responses = [dict(row) for row in cur.fetchall()]
@@ -1801,6 +1857,9 @@ def session_task_results(pin: str, include_roster: bool = False):
         if include_roster and task["page_index"] is not None:
             task["recipient_ids"] = recipients.get(task["task_id"], [])
         for row in task["submissions"]:
+            signals = row.pop("signals_json")
+            if signals:
+                row["attempt_signals"] = json.loads(signals)
             grade = row.pop("ai_json")
             if grade:
                 row["ai_feedback"] = json.loads(grade)
@@ -2317,6 +2376,7 @@ def save_work_lesson(payload: SaveWorkLesson):
 
 
 class SpeakingSubmissionRequest(BaseModel):
+    attempt_signals: Optional[TaskAttemptSignals] = None
     student_id: str
     media_type: Literal["audio/webm", "audio/mp4", "audio/ogg"]
     audio_base64: str = Field(min_length=1, max_length=6_990_508)
@@ -2336,7 +2396,7 @@ def validate_speaking_audio(encoded, media_type):
 
 
 @app.post("/api/sessions/{pin}/tasks/{task_id}/speaking")
-def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest):
+def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest, request: Request):
     session = require_active_session(pin)
     if not any(student["student_id"] == payload.student_id for student in session["students"]):
         raise HTTPException(403, "Join the session before submitting")
@@ -2360,6 +2420,7 @@ def submit_speaking(pin: str, task_id: str, payload: SpeakingSubmissionRequest):
             if cur.rowcount == 1:
                 cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
                             (task_id, payload.student_id, payload.media_type, audio))
+                save_task_attempt_signals(cur, task_id, payload.student_id, payload.attempt_signals, request)
             conn.commit()
             cur.execute(sql("SELECT audio, media_type FROM speaking_audio WHERE task_id = ? AND student_id = ?"),
                         (task_id, payload.student_id))
@@ -2461,7 +2522,7 @@ def delete_sessions(payload: DeleteSessionsRequest):
         cur.execute(sql(f"DELETE FROM session_classes WHERE pin IN ({placeholders})"), pins)
 
         task_ids = f"SELECT task_id FROM writing_tasks WHERE pin IN ({placeholders})"
-        for table in ("speaking_audio", "task_reviews", "writing_ai_grades", "writing_task_responses", "task_evidence_context", "task_materials", "writing_ai_rubrics",
+        for table in ("speaking_audio", "task_reviews", "writing_ai_grades", "task_attempt_signals", "writing_task_responses", "task_evidence_context", "task_materials", "writing_ai_rubrics",
                       "published_quiz_scores", "speaking_tasks", "writing_task_quizzes"):
             cur.execute(sql(f"DELETE FROM {table} WHERE task_id IN ({task_ids})"), pins)
         cur.execute(sql(f"""
@@ -3360,6 +3421,7 @@ class HomeworkRequest(BaseModel):
 
 
 class HomeworkSubmission(BaseModel):
+    attempt_signals: Optional[TaskAttemptSignals] = None
     response: str = Field(default="", max_length=20000)
     media_type: Optional[Literal["audio/webm", "audio/mp4", "audio/ogg"]] = None
     audio_base64: Optional[str] = Field(default=None, max_length=6_990_508)
@@ -3713,7 +3775,7 @@ def read_homework(response: Response, credentials: Optional[HTTPAuthorizationCre
 
 
 @app.post("/api/homework/student/tasks/{task_id}")
-def submit_homework(task_id: str, payload: HomeworkSubmission,
+def submit_homework(task_id: str, payload: HomeworkSubmission, request: Request,
                     credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
     with closing(db()) as conn:
         cur = conn.cursor()
@@ -3739,6 +3801,7 @@ def submit_homework(task_id: str, payload: HomeworkSubmission,
         """), (task_id, student_id, response, now_iso()))
         if cur.rowcount != 1:
             raise HTTPException(409, "This task was already submitted. Reload to see the saved result.")
+        save_task_attempt_signals(cur, task_id, student_id, payload.attempt_signals, request)
         if audio is not None:
             cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
                         (task_id, student_id, payload.media_type, audio))

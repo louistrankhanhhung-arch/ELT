@@ -44,7 +44,7 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 <section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><a class="reh-nav-button" id="evidence">Open detailed results</a><div id="links"></div></section>
 </main>
 <main id="join" hidden><h1>Join Homework</h1><form id="joinForm"><label>Homework PIN <input id="joinPin" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required></label><label>Student ID <input id="studentId" maxlength="120" required></label><button type="submit">Open homework</button></form></main>
-<main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><div id="items"></div></main>
+<main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><p id="attemptNotice" hidden>While you work, REH records device type, page switches and approximate time on questions.</p><div id="items"></div></main>
 <p id="status" role="status"></p>
-<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="homework.js?v=2"></script>
+<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="task-attempt-signals.js?v=1"></script><script src="homework.js?v=attempt-1"></script>
 </body></html>
