@@ -79,6 +79,8 @@
     doc.body.replaceChildren(root);
 
     function renderResponse(task, row, container) {
+      if (row.attempt_signals) container.append(window.renderTaskAttemptSignals(doc, row.attempt_signals));
+      else container.append(node("p", "No attempt signals recorded for this submission."));
       if (task.type === "speaking") {
         const listen = control("Load recording", async () => {
           listen.disabled = true;
@@ -119,7 +121,6 @@
       } else {
         container.append(node("p", row.response));
       }
-      container.append(window.renderTaskAttemptSignals(doc, row.attempt_signals));
       if (row.ai_feedback) {
         const feedback = row.ai_feedback;
         container.append(node("p", feedback.feedback));
