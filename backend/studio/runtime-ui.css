@@ -10,6 +10,10 @@ body{font-family:system-ui,"Segoe UI",sans-serif;background:var(--surface);color
 .reh-page :is(button,.action,select,input:not([type=checkbox]):not([type=radio])){min-height:36px}
 .reh-page :is(#openCatalogue,#publishButton,#save,#unlockBtn,.action),.reh-join #joinBtn,.reh-classroom #startSessionBtn:not(:disabled){background:var(--accent);color:white}
 .reh-back{color:var(--accent);font-weight:650;text-underline-offset:.18em}
+.reh-nav-button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:40px;padding:6px 14px;border:1px solid var(--accent);border-radius:8px;background:white;color:var(--accent);text-decoration:none;font-weight:650;line-height:1.3}
+.reh-nav-button:hover{background:#E9F2E3}
+.reh-nav-button[aria-current="page"]{background:var(--accent);color:white}
+.reh-results-nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
 .reh-caption{color:var(--muted);margin:0;line-height:1.5}
 .reh-page .course-group{padding-top:20px}
 .reh-page .level-group{border-color:#83A875;padding-left:clamp(10px,2vw,20px)}

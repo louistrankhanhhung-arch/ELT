@@ -2,7 +2,7 @@
 <html lang="en" class="reh-page">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Homework | REH</title>
-<link rel="stylesheet" href="runtime-ui.css?v=reh-1"><link rel="stylesheet" href="task-materials.css?v=reh-1">
+<link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1"><link rel="stylesheet" href="task-materials.css?v=reh-1">
 <style>
 body { max-width: 1000px; margin: auto; padding: 18px; }
 section { background: white; border: 1px solid #CCDCC8; border-radius: 12px; padding: 14px; margin: 12px 0; }
@@ -22,8 +22,8 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 </style>
 </head><body>
 <main id="teacher" hidden>
-<a href="teacher-home.html">Teacher home</a><h1>Homework</h1>
-<nav aria-label="Results views"><a href="session-results.html">Session History</a> · <a href="class-reports.html">Class Reports</a> · <a href="homework.html" aria-current="page">Homework</a></nav>
+<a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Homework</h1>
+<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html">Session History</a> <a class="reh-nav-button" href="class-reports.html">Class Reports</a> <a class="reh-nav-button" href="homework.html" aria-current="page">Homework</a></nav>
 <section>
 <label>Teacher access code <input id="token" type="password" autocomplete="off"></label>
 <button type="button" id="load">Load homework workspace</button>
@@ -41,7 +41,7 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 </form>
 </section>
 <section id="assignmentsPanel" hidden><h2>Assignments</h2><div id="assignments" class="assignment-list"></div><button id="older" hidden>Older assignments</button></section>
-<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><a id="evidence">Open detailed results</a><div id="links"></div></section>
+<section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><a class="reh-nav-button" id="evidence">Open detailed results</a><div id="links"></div></section>
 </main>
 <main id="join" hidden><h1>Join Homework</h1><form id="joinForm"><label>Homework PIN <input id="joinPin" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required></label><label>Student ID <input id="studentId" maxlength="120" required></label><button type="submit">Open homework</button></form></main>
 <main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><div id="items"></div></main>

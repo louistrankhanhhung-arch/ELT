@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Class Reports | REH</title>
-<link rel="stylesheet" href="runtime-ui.css?v=reh-1">
+<link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
 <style>
 body { max-width: 1150px; margin: auto; padding: 18px; }
 section { margin: 14px 0; padding: 16px; border: 1px solid #CCDCC8; border-radius: 12px; background: white; }
@@ -21,17 +21,12 @@ th, td { text-align: left; padding: 8px; border-bottom: 1px solid #CCDCC8; verti
 progress { width: 7rem; accent-color: #286340; }
 details a { display: block; margin-top: 5px; }
 [hidden] { display: none !important; }
-.results-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-.results-nav a { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px; border: 1px solid #286340; border-radius: 8px; background: white; color: #286340; text-decoration: none; font-weight: 650; box-sizing: border-box; }
-.results-nav a:hover { background: #E9F2E3; }
-.results-nav a[aria-current="page"] { background: #286340; color: white; }
-.results-nav a:focus-visible { outline: 2px solid #286340; outline-offset: 3px; }
 </style>
 </head>
 <body>
-<a href="teacher-home.html">Teacher home</a>
+<a class="reh-nav-button" href="teacher-home.html">← Teacher home</a>
 <h1>Class Reports</h1>
-<nav class="results-nav" aria-label="Results views"><a href="session-results.html">Session History</a> <a href="class-reports.html" aria-current="page">Class Reports</a> <a href="homework.html">Homework</a></nav>
+<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html">Session History</a> <a class="reh-nav-button" href="class-reports.html" aria-current="page">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a></nav>
 <section>
 <form id="filters">
 <label>Teacher access code <input id="token" type="password" required autocomplete="off"></label>
