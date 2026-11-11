@@ -31,17 +31,12 @@
     return link;
   }
 
-  function renderFeedback(data) {
-    const vietnamese = el("reportLanguage").value === "vi";
-    const recent = data.records.find(row => row.feedback);
-    const value = vietnamese ? el("viFeedback").value.trim() : recent?.feedback;
-    const feedback = el("recentFeedback");
-    feedback.hidden = !value;
-    feedback.replaceChildren();
-    if (!value) return;
-    feedback.append(node("h4", vietnamese ? "Nhận xét của giáo viên" : "Recent feedback"));
-    if (!vietnamese && recent) feedback.append(node("small", recent.date + " · " + recent.lesson));
-    feedback.append(node("p", value));
+  function renderParentNote() {
+    const value = el("reportLanguage").value === "vi" ? el("viFeedback").value.trim() : "";
+    const note = el("parentNote");
+    note.hidden = !value;
+    note.replaceChildren();
+    if (value) note.append(node("h4", "Nhận xét của giáo viên"), node("p", value));
   }
 
   function render(data, filters) {
@@ -86,7 +81,7 @@
       metric(label("Average score", "Điểm trung bình"), average == null ? "—" : average + "%", summary.scored + label(" scored tasks", " bài đã có điểm"), average, average == null ? 0 : 100),
       metric(label("Mastery rate", "Tỷ lệ đạt yêu cầu"), percent(summary.mastered, summary.scored), label(summary.mastered + " of " + summary.scored + " scored tasks at 80% or higher", summary.mastered + "/" + summary.scored + " bài đạt từ 80%"), summary.mastered, summary.scored)
     );
-    renderFeedback(data);
+    renderParentNote();
     const signals = el("signals");
     signals.replaceChildren(node("h4", "Progress signals"));
     if (!data.signals.length) signals.append(node("p", "No signal detected. Signals need three scored attempts on the same prepared task in the same lesson version."));
@@ -290,7 +285,7 @@
     request("/learner-profiles/" + encodeURIComponent(student_id.trim()) + "/enrollment", "PUT", {...data, ended_on: ended_on || null}));
   bind("sessionClass", ({pin, class_code}) => request("/learner-sessions/" + encodeURIComponent(pin) + "/class", "PUT", {class_code}));
   el("reportLanguage").onchange = () => { if (profile) render(profile, reportFilters); };
-  el("viFeedback").oninput = () => { if (profile) renderFeedback(profile); };
+  el("viFeedback").oninput = () => { if (profile) renderParentNote(); };
   el("print").onclick = () => {
     const closed = [...el("targets").querySelectorAll("details:not([open])")];
     closed.forEach(item => { item.open = true; });
