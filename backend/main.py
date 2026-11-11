@@ -2890,10 +2890,37 @@ def parse_catalog_csv(kind, content):
     return rows
 
 
+LEARNER_CSV_COLUMNS = {
+    "classes": ("class_code", "course", "level"),
+    "enrollments": ("student_id", "class_code", "started_on", "ended_on"),
+}
+
+
+@app.get("/api/learner-export/{kind}", dependencies=[Depends(require_teacher)])
+def export_learner_csv(kind: Literal["classes", "enrollments"]):
+    queries = {
+        "classes": "SELECT class_code, course, level FROM reh_classes ORDER BY class_code",
+        "enrollments": """SELECT student_id, class_code, started_on, ended_on FROM reh_enrollments
+                          ORDER BY student_id, started_on, class_code""",
+    }
+    columns = LEARNER_CSV_COLUMNS[kind]
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(columns)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(queries[kind])
+        for row in cur:
+            values = [row[column] for column in columns]
+            writer.writerow(["'" + value if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@"))
+                             else value for value in values])
+    return Response(output.getvalue().encode("utf-8-sig"), media_type="text/csv",
+                    headers={"Content-Disposition": f'attachment; filename="{kind}.csv"', "Cache-Control": "no-store"})
+
+
 @app.post("/api/learner-import/{kind}", dependencies=[Depends(require_teacher)])
 def import_learner_csv(kind: Literal["classes", "enrollments"], payload: CatalogImport):
-    columns = ("class_code", "course", "level") if kind == "classes" else (
-        "student_id", "class_code", "started_on", "ended_on")
+    columns = LEARNER_CSV_COLUMNS[kind]
     reader = csv.DictReader(io.StringIO(payload.csv_text.lstrip("\ufeff")), strict=True)
     rows = []
     seen = set()

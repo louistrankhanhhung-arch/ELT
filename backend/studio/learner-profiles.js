@@ -201,6 +201,30 @@
   };
   el("classImportKind").onchange = updateHeaders;
   updateHeaders();
+  async function downloadLearnerCsv(kind, button) {
+    button.disabled = true;
+    try {
+      const code = el("token").value.trim();
+      if (!code) throw new Error("Enter the teacher access code.");
+      const response = await fetch(api + "/learner-export/" + kind, {
+        headers: {Authorization: "Bearer " + code}, cache: "no-store"
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(typeof result.detail === "string" ? result.detail : "Could not download the CSV.");
+      }
+      const link = node("a");
+      link.href = URL.createObjectURL(await response.blob());
+      link.download = kind + ".csv";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      status("Downloaded " + link.download + ".");
+    } catch (error) { status(error.message); }
+    finally { button.disabled = false; }
+  }
+  el("exportClasses").onclick = event => void downloadLearnerCsv("classes", event.currentTarget);
+  el("exportEnrollments").onclick = event => void downloadLearnerCsv("enrollments", event.currentTarget);
+
   bind("classImport", async ({kind, file}) => {
     const result = await request("/learner-import/" + kind, "POST", {csv_text: await readCsv(file)});
     await loadClasses();
