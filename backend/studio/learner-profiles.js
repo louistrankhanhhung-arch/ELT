@@ -118,7 +118,8 @@
       for (const row of [...rows].reverse()) {
         const point = node("div");
         point.className = "target-point";
-        const caption = node("span", displayDate(row.date) + " · " + row.lesson);
+        const lessonTitle = row.lesson.replace(/\s+[·–—-]\s+(?:page(?: and ai writing)?|ai writing) test\s*$/i, "");
+        const caption = node("span", displayDate(row.date) + " · " + lessonTitle);
         const link = visitLink(row.pin);
         link.classList.add("no-print");
         link.style.marginInlineStart = "0.5em";
