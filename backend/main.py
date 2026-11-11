@@ -6,7 +6,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from random import randint, shuffle
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
+from statistics import median
 from typing import List, Literal, Optional
 import base64
 import binascii
@@ -73,6 +74,7 @@ app.add_middleware(
 
 
 class StartSessionRequest(BaseModel):
+    class_code: Optional[str] = Field(default=None, max_length=60)
     lesson_id: str
     lesson_path: str
     total_blocks: int
@@ -310,6 +312,25 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS reh_classes (
+            class_code TEXT PRIMARY KEY, course TEXT NOT NULL, level TEXT NOT NULL
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS reh_enrollments (
+            student_id TEXT NOT NULL REFERENCES reh_roster(student_id),
+            class_code TEXT NOT NULL REFERENCES reh_classes(class_code),
+            started_on TEXT NOT NULL, ended_on TEXT,
+            PRIMARY KEY (student_id, class_code, started_on)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS session_classes (
+            pin TEXT PRIMARY KEY REFERENCES sessions(pin),
+            class_code TEXT NOT NULL REFERENCES reh_classes(class_code)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS learning_targets (
             learning_target_id TEXT PRIMARY KEY,
             label TEXT NOT NULL,
@@ -328,6 +349,9 @@ def init_db():
             student_id TEXT PRIMARY KEY REFERENCES session_students(student_id),
             evidence_id TEXT NOT NULL REFERENCES evidence_roster_ids(evidence_id)
         )
+    """)
+    cur.execute("""
+        CREATE INDEX IF NOT EXISTS evidence_student_links_evidence_idx ON evidence_student_links(evidence_id)
     """)
     cur.execute("""
         CREATE TABLE IF NOT EXISTS task_evidence_context (
@@ -620,29 +644,30 @@ def start_session(payload: StartSessionRequest):
     created_at = datetime.now(timezone.utc)
     expires_at = created_at + timedelta(hours=SESSION_TTL_HOURS)
 
-    conn = db()
-    cur = conn.cursor()
+    with closing(db()) as conn:
+        cur = conn.cursor()
 
-    cur.execute(sql("""
-        INSERT INTO sessions (
-            pin, lesson_id, lesson_path, total_blocks,
-            current_block_index, status, created_at, expires_at, ended_at
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """), (
-        pin,
-        payload.lesson_id,
-        payload.lesson_path,
-        payload.total_blocks,
-        payload.current_block_index,
-        "active",
-        created_at.isoformat(),
-        expires_at.isoformat(),
-        None,
-    ))
+        cur.execute(sql("""
+            INSERT INTO sessions (
+                pin, lesson_id, lesson_path, total_blocks,
+                current_block_index, status, created_at, expires_at, ended_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """), (
+            pin,
+            payload.lesson_id,
+            payload.lesson_path,
+            payload.total_blocks,
+            payload.current_block_index,
+            "active",
+            created_at.isoformat(),
+            expires_at.isoformat(),
+            None,
+        ))
 
-    conn.commit()
-    conn.close()
+        if payload.class_code:
+            set_session_class(cur, pin, payload.class_code)
+        conn.commit()
 
     return get_session(pin)
 
@@ -2397,6 +2422,15 @@ def delete_sessions(payload: DeleteSessionsRequest):
             if session["status"] == "active" and expires_at > datetime.now(timezone.utc):
                 raise HTTPException(409, "End active sessions before deleting them.")
 
+        cur.execute(sql(f"""
+            SELECT s.pin FROM session_students s
+            JOIN evidence_student_links l ON l.student_id = s.student_id
+            WHERE s.pin IN ({placeholders}) LIMIT 1
+        """), pins)
+        if cur.fetchone():
+            raise HTTPException(409, "A selected session belongs to a learner's history and must be retained.")
+        cur.execute(sql(f"DELETE FROM session_classes WHERE pin IN ({placeholders})"), pins)
+
         task_ids = f"SELECT task_id FROM writing_tasks WHERE pin IN ({placeholders})"
         for table in ("speaking_audio", "task_reviews", "writing_ai_grades", "writing_task_responses", "task_evidence_context", "task_materials", "writing_ai_rubrics",
                       "published_quiz_scores", "speaking_tasks", "writing_task_quizzes"):
@@ -2419,12 +2453,12 @@ def delete_sessions(payload: DeleteSessionsRequest):
     return {"deleted": len(pins)}
 
 
-def session_evidence(pin):
+def session_evidence(pin, include_roster=False):
     session = get_session(pin)
     if not session:
         raise HTTPException(404, "Session not found")
     session = apply_session_expiry(session)
-    results = session_task_results(pin)
+    results = session_task_results(pin, include_roster=include_roster)
     if session["writing_task"]:
         legacy = writing_results(pin)
         results["tasks"].insert(0, {"task_id": "legacy-writing", "block_id": None, **legacy["task"],
@@ -2477,6 +2511,208 @@ def session_evidence(pin):
             ("pin", "lesson_id", "lesson_path", "created_at", "ended_at", "status")},
             "lesson_title": title, "lesson_version": version, "lesson_objective": objective, **results,
             "audio_count": len(audio), "audio_bytes": sum(row["audio_bytes"] for row in audio)}
+
+
+class LearnerClassRequest(BaseModel):
+    class_code: str = Field(min_length=1, max_length=60)
+    course: str = Field(min_length=1, max_length=160)
+    level: str = Field(min_length=1, max_length=80)
+
+
+class EnrollmentRequest(BaseModel):
+    class_code: str = Field(min_length=1, max_length=60)
+    started_on: date
+    ended_on: Optional[date] = None
+
+
+class SessionClassRequest(BaseModel):
+    class_code: str = Field(min_length=1, max_length=60)
+
+
+def set_session_class(cur, pin, class_code):
+    code = class_code.strip().upper()
+    cur.execute(sql("SELECT class_code FROM reh_classes WHERE class_code = ?"), (code,))
+    if not cur.fetchone():
+        raise HTTPException(422, "Choose a registered class code")
+    cur.execute(sql("""
+        INSERT INTO session_classes (pin, class_code) VALUES (?, ?)
+        ON CONFLICT(pin) DO UPDATE SET class_code = excluded.class_code
+    """), (pin, code))
+
+
+@app.get("/api/learner-classes", dependencies=[Depends(require_teacher)])
+def learner_classes():
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM reh_classes ORDER BY course, level, class_code")
+        return {"classes": [dict(row) for row in cur.fetchall()]}
+
+
+@app.post("/api/learner-classes", dependencies=[Depends(require_teacher)])
+def add_learner_class(payload: LearnerClassRequest):
+    code, course, level = payload.class_code.strip().upper(), payload.course.strip(), payload.level.strip()
+    if not all((code, course, level)):
+        raise HTTPException(422, "Enter a class code, course and level")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("INSERT INTO reh_classes VALUES (?, ?, ?) ON CONFLICT(class_code) DO NOTHING"), (code, course, level))
+        if cur.rowcount != 1:
+            raise HTTPException(409, "This class code already exists")
+        conn.commit()
+    return {"class_code": code}
+
+
+@app.put("/api/learner-profiles/{student_id}/enrollment", dependencies=[Depends(require_teacher)])
+def save_learner_enrollment(student_id: str, payload: EnrollmentRequest):
+    if payload.ended_on and payload.ended_on < payload.started_on:
+        raise HTTPException(422, "The end date must be on or after the start date")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        code = payload.class_code.strip().upper()
+        cur.execute(sql("SELECT 1 FROM reh_roster WHERE student_id = ?"), (student_id.upper(),))
+        if not cur.fetchone():
+            raise HTTPException(404, "Student ID was not found in Roster")
+        cur.execute(sql("SELECT 1 FROM reh_classes WHERE class_code = ?"), (code,))
+        if not cur.fetchone():
+            raise HTTPException(422, "Choose a registered class code")
+        cur.execute(sql("""
+            INSERT INTO reh_enrollments VALUES (?, ?, ?, ?)
+            ON CONFLICT(student_id, class_code, started_on) DO UPDATE SET ended_on = excluded.ended_on
+        """), (student_id.upper(), code, payload.started_on.isoformat(),
+              payload.ended_on.isoformat() if payload.ended_on else None))
+        conn.commit()
+    return {"ok": True}
+
+
+@app.put("/api/learner-sessions/{pin}/class", dependencies=[Depends(require_teacher)])
+def set_learner_session_class(pin: str, payload: SessionClassRequest):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT 1 FROM sessions WHERE pin = ?"), (pin,))
+        if not cur.fetchone():
+            raise HTTPException(404, "Session not found")
+        set_session_class(cur, pin, payload.class_code)
+        conn.commit()
+    return {"ok": True}
+
+
+def profile_score(task, row):
+    if not row:
+        return None
+    if task.get("writing_rubric") and not row.get("ai_published"):
+        return None
+    score = row.get("score")
+    maximum = row.get("max_score")
+    if score is None and not task.get("writing_rubric"):
+        score, maximum = row.get("review_score"), row.get("review_max_score")
+    if score is None or not maximum:
+        return None
+    return {"points": score, "maximum": maximum, "percent": round(100 * score / maximum, 1),
+            "mastered": score * 5 >= maximum * 4}
+
+
+@app.get("/api/learner-profiles/{student_id}", dependencies=[Depends(require_teacher)])
+def learner_profile(student_id: str, course: str = "", level: str = "", lesson: str = "",
+                    start: Optional[date] = None, end: Optional[date] = None):
+    student_id = student_id.strip().upper()
+    if start and end and start > end:
+        raise HTTPException(422, "The end date must be on or after the start date")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT * FROM reh_roster WHERE student_id = ?"), (student_id,))
+        roster_row = cur.fetchone()
+        cur.execute(sql("""
+            SELECT e.class_code, c.course, c.level, e.started_on, e.ended_on
+            FROM reh_enrollments e JOIN reh_classes c ON c.class_code = e.class_code
+            WHERE e.student_id = ? ORDER BY e.started_on DESC, e.class_code
+        """), (student_id,))
+        enrollments = [dict(row) for row in cur.fetchall()]
+        cur.execute(sql("""
+            SELECT s.pin, s.created_at, s.lesson_id, s.lesson_path, u.student_id AS session_student_id,
+                   u.student_name, c.class_code, c.course, c.level, r.manifest
+            FROM evidence_roster_ids identity
+            JOIN evidence_student_links link ON link.evidence_id = identity.evidence_id
+            JOIN session_students u ON u.student_id = link.student_id
+            JOIN sessions s ON s.pin = u.pin
+            LEFT JOIN session_classes sc ON sc.pin = s.pin
+            LEFT JOIN reh_classes c ON c.class_code = sc.class_code
+            LEFT JOIN lesson_revisions r ON s.lesson_path = 'imports/' || r.revision_id
+            WHERE UPPER(identity.roster_id) = ?
+            ORDER BY s.created_at DESC, s.pin DESC
+        """), (student_id,))
+        sessions = [dict(row) for row in cur.fetchall()]
+        cur.execute("""
+            SELECT revision_id, course, level FROM lesson_catalogue
+            ORDER BY published_at DESC, catalogue_id
+        """)
+        catalogue = {}
+        for row in cur.fetchall():
+            catalogue.setdefault(row["revision_id"], dict(row))
+    if not roster_row and not sessions:
+        raise HTTPException(404, "Student ID was not found")
+    student = dict(roster_row) if roster_row else {"student_id": student_id, "display_name": sessions[0]["student_name"]}
+    records = []
+    visits = []
+    local_timezone = timezone(timedelta(hours=7))
+    for session in sessions:
+        day = parse_iso(session["created_at"]).astimezone(local_timezone).date()
+        if (start and day < start) or (end and day > end):
+            continue
+        manifest = json.loads(session["manifest"]) if session["manifest"] else {}
+        metadata = catalogue.get(session["lesson_path"].removeprefix("imports/"), {})
+        title = manifest.get("title") or session["lesson_id"]
+        course_value = str(session["course"] or manifest.get("course") or metadata.get("course") or "")
+        level_value = str(session["level"] or manifest.get("level") or metadata.get("level") or "")
+        if course.strip() and course_value.casefold() != course.strip().casefold():
+            continue
+        if level.strip() and level_value.casefold() != level.strip().casefold():
+            continue
+        if lesson.strip() and lesson.strip().casefold() not in f"{title} {session['lesson_id']}".casefold():
+            continue
+        pin = session["pin"]
+        evidence = session_evidence(pin, include_roster=True)
+        member = session["session_student_id"]
+        visit = {"pin": pin, "date": day.isoformat(), "lesson": title, "lesson_id": session["lesson_id"],
+                 "lesson_version": manifest.get("version"), "class_code": session["class_code"],
+                 "course": course_value, "level": level_value}
+        visits.append(visit)
+        for task in evidence["tasks"]:
+            if "recipient_ids" in task and member not in task["recipient_ids"]:
+                continue
+            own = next((row for row in task["submissions"] if row["student_id"] == member), None)
+            score = profile_score(task, own)
+            peers = [profile_score(task, row) for row in task["submissions"] if row["student_id"] != member]
+            peer_scores = [item["percent"] for item in peers if item]
+            feedback = (own.get("feedback") or (own.get("ai_feedback") or {}).get("feedback")
+                        if own and (not task.get("writing_rubric") or own.get("ai_published")) else None)
+            records.append({**visit, "task_id": task["task_id"], "block_id": task.get("block_id"),
+                            "title": task.get("page_task_title") or task.get("prompt", ""),
+                            "kind": task.get("type", "writing"), "target": task.get("learning_target_id"),
+                            "status": "Scored" if score else "Submitted" if own else "Awaiting submission",
+                            "score": score, "feedback": feedback,
+                            "class_median": round(median(peer_scores), 1) if session["class_code"] and peer_scores else None,
+                            "peer_count": len(peer_scores) if session["class_code"] else 0})
+    scored = [row for row in records if row["score"]]
+    series = {}
+    for row in scored:
+        if row["block_id"] and row["block_id"] != "legacy-writing":
+            key = (row["lesson_id"], row["block_id"], row["kind"])
+            series.setdefault(key, []).append(row)
+    signals = []
+    for rows in series.values():
+        unique = list({row["pin"]: row for row in rows}.values())
+        if len(unique) < 3:
+            continue
+        latest, first, second = unique[:3]
+        baseline = (first["score"]["percent"] + second["score"]["percent"]) / 2
+        change = round(latest["score"]["percent"] - baseline, 1)
+        if abs(change) >= 15:
+            signals.append({"status": "Improving" if change > 0 else "Needs attention",
+                            "change": change, "evidence": [latest, first, second]})
+    return {"student": student, "enrollments": enrollments, "sessions": visits, "records": records,
+            "signals": signals, "summary": {"assigned": len(records),
+              "submitted": sum(row["status"] != "Awaiting submission" for row in records),
+              "scored": len(scored), "mastered": sum(row["score"]["mastered"] for row in scored)}}
 
 
 @app.get("/api/session-history/{pin}", dependencies=[Depends(require_teacher)])

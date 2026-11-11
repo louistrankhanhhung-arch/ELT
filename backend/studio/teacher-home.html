@@ -230,6 +230,9 @@
     const resultsLink = document.createElement("a");
     resultsLink.href = "session-results.html";
     resultsLink.textContent = "Results";
+    const learnerLink = document.createElement("a");
+    learnerLink.href = "learner-profiles.html";
+    learnerLink.textContent = "Learner Profiles";
     const catalogsLink = document.createElement("a");
     catalogsLink.href = "catalogs.html";
     catalogsLink.textContent = "Roster and Learning targets";
@@ -244,6 +247,7 @@
       [authorLink, "Create or edit slides and tasks."],
       [resultsLink, "Review submissions and export evidence."],
       [catalogsLink, "Manage student IDs and learning targets."],
+      [learnerLink, "Review learning history, enrollment and progress."],
     ]) {
       const caption = document.createElement("small");
       caption.textContent = description;

@@ -439,6 +439,8 @@
     <details class="live-panel" open>
       <summary>Live Session</summary>
       <div id="sessionAccess"></div>
+      <label id="sessionClassLabel">Class code <input id="sessionClassCode" list="sessionClassCodes" maxlength="60" placeholder="Optional"></label>
+      <datalist id="sessionClassCodes"></datalist>
       <p id="sessionBanner" role="status">Start a session to invite students.</p>
       <div class="join-actions"><button type="button" id="showJoinSession" hidden>Join Screen</button>
       <button id="copyStudentBtn" hidden>Copy Join Link</button></div>
@@ -587,6 +589,22 @@
     teacherTokenInput.autocomplete = "off";
     teacherTokenInput.dataset.targetCatalogCode = "";
     document.getElementById("sessionAccess").append(teacherTokenInput);
+    const sessionClassCode = document.getElementById("sessionClassCode");
+    teacherTokenInput.addEventListener("change", async () => {
+      const code = teacherTokenInput.value.trim();
+      const options = document.getElementById("sessionClassCodes");
+      options.replaceChildren();
+      if (!code) return;
+      try {
+        const response = await fetch(API_BASE + "/learner-classes", {
+          headers: {Authorization: "Bearer " + code}, cache: "no-store"
+        });
+        if (!response.ok || code !== teacherTokenInput.value.trim()) return;
+        const result = await response.json();
+        if (code === teacherTokenInput.value.trim()) options.replaceChildren(...result.classes.map(item =>
+          new Option(item.course + " " + item.level, item.class_code)));
+      } catch (error) { console.error("Could not load class codes", error); }
+    });
     let teacherToken = "";
     function teacherHeaders() {
       return teacherToken ? { Authorization: "Bearer " + teacherToken } : {};
@@ -1332,6 +1350,7 @@
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            class_code: sessionClassCode.value.trim() || null,
             lesson_id: currentLesson.lesson_id,
             lesson_path: lessonPath,
             total_blocks: currentLesson.blocks.length,
@@ -1380,6 +1399,7 @@
         showJoinSession.dataset.destination = joinScreen.href;
         showJoinSession.hidden = false;
         teacherTokenInput.hidden = true;
+        document.getElementById("sessionClassLabel").hidden = true;
         void loadTeacherNotes();
         startMonitorPolling();
         
@@ -1457,6 +1477,7 @@
         showJoinSession.hidden = true;
         joinWindow?.close();
         teacherTokenInput.hidden = false;
+        document.getElementById("sessionClassLabel").hidden = false;
         startSessionBtn.disabled = false;
         startSessionBtn.textContent = "Start Session";
         endSessionBtn.disabled = true;

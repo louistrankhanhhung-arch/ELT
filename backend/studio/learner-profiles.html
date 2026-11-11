@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" class="reh-page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learner Profiles | REH</title>
+<link rel="stylesheet" href="runtime-ui.css?v=reh-1">
+<style>
+body { max-width: 1100px; margin: auto; padding: 18px; }
+section, details.settings { background: white; border: 1px solid #CCDCC8; border-radius: 12px; padding: 16px; margin: 12px 0; }
+form { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; margin-block: 8px; }
+label { display: grid; gap: 4px; }
+input, select, button { padding: 8px; font: inherit; }
+button { background: #286340; color: white; border: 0; border-radius: 7px; cursor: pointer; }
+button:disabled { opacity: .55; }
+summary { cursor: pointer; font-weight: 650; }
+.stats { display: flex; gap: 12px; flex-wrap: wrap; }
+.target-point { display: grid; grid-template-columns: minmax(120px, 2fr) minmax(80px, 1fr) auto; gap: 8px; align-items: center; margin: 8px 0; }
+.target-point progress { width: 100%; accent-color: #286340; }
+.stats span { background: #E9F2E3; padding: 8px 12px; border-radius: 8px; }
+.table { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px; border-bottom: 1px solid #CCDCC8; vertical-align: top; text-align: left; overflow-wrap: anywhere; }
+td small { display: block; }
+#status { min-height: 1.5em; }
+#sessions details, #targets details { padding: 8px 0; }
+@media print { .no-print { display: none !important; } }
+</style>
+</head>
+<body>
+<a class="no-print" href="teacher-home.html">Teacher home</a>
+<h1>Learner Profiles</h1>
+<section class="no-print">
+<label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
+<form id="search">
+<label>Student ID <input id="student" required maxlength="120"></label>
+<label>Course <input id="course" maxlength="160"></label>
+<label>Level <input id="level" maxlength="80"></label>
+<label>Lesson <input id="lesson" maxlength="160"></label>
+<label>From <input id="start" type="date"></label>
+<label>To <input id="end" type="date"></label>
+<button>Load profile</button>
+</form>
+<p id="status" role="status"></p>
+</section>
+<details class="settings no-print">
+<summary>Manage classes and enrollment</summary>
+<form id="newClass">
+<label>Class code <input name="class_code" required maxlength="60"></label>
+<label>Course <input name="course" required maxlength="160"></label>
+<label>Level <input name="level" required maxlength="80"></label>
+<button>Add class</button>
+</form>
+<form id="enrollment">
+<label>Student ID <input name="student_id" required maxlength="120"></label>
+<label>Class code <input name="class_code" list="classCodes" required maxlength="60"></label>
+<label>Start date <input name="started_on" type="date" required></label>
+<label>End date <input name="ended_on" type="date"></label>
+<button>Save enrollment</button>
+</form>
+<p>To close an enrollment, use its original start date and enter the end date.</p>
+<form id="sessionClass">
+<label>Session PIN <input name="pin" pattern="[0-9]{4}" required></label>
+<label>Class code <input name="class_code" list="classCodes" required maxlength="60"></label>
+<button>Assign session class</button>
+</form>
+<datalist id="classCodes"></datalist>
+</details>
+<div id="profile" hidden>
+<h2 id="profileName"></h2>
+<p id="profileScope"></p>
+<div class="no-print"><button id="export">Download CSV</button> <button id="print">Print summary</button></div>
+<section><h3>Learning summary</h3><div class="stats" id="metrics"></div><p>Mastery is 80% or higher on a scored task. The class median uses other scored submissions for the same task and session.</p><div id="signals"></div></section>
+<section><h3>Enrollment history</h3><ul id="enrollments"></ul></section>
+<section><h3>Progress by Learning Target</h3><div id="targets"></div></section>
+<section id="sessions"><h3>Learning history</h3><div id="visits"></div></section>
+</div>
+<script src="config.js"></script>
+<script src="learner-profiles.js?v=1"></script>
+</body>
+</html>
