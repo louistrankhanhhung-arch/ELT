@@ -117,9 +117,9 @@
     const targetPanel = el("targets");
     targetPanel.replaceChildren();
     if (!targets.size) targetPanel.append(node("p", label("No scored tasks with a Learning Target in this view.", "Chưa có bài đã chấm gắn với mục tiêu học tập trong kỳ này.")));
-    for (const [label, rows] of targets) {
+    for (const [targetLabel, rows] of targets) {
       const detail = node("details");
-      detail.append(node("summary", label + " · " + rows.length + label(" scored attempts", " lượt có điểm")));
+      detail.append(node("summary", targetLabel + " · " + rows.length + label(" scored attempts", " lượt có điểm")));
       for (const row of [...rows].reverse()) {
         const point = node("div");
         point.className = "target-point";
