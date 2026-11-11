@@ -23,6 +23,28 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 #detail summary { cursor: pointer; font-weight: 600; }
 #detail pre { font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
 #detail audio { max-width: 100%; }
+#detail header, #detail .hw-student-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+#detail h3, #detail h4 { margin: 0; }
+#detail #sessionSummary { color: #456052; }
+.hw-student-row small { display: block; color: #456052; }
+#detail .hw-student-row { padding: 8px 0; }
+#detail summary.hw-student-row strong::before { content: "▸ "; color: #286340; }
+#detail details[open] > summary.hw-student-row strong::before { content: "▾ "; }
+.hw-metrics, .hw-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr)); gap: 8px; }
+.hw-metrics > div, .hw-comparison > div { background: #F7FAF3; border: 1px solid #CCDCC8; border-radius: 9px; padding: 9px 12px; }
+.hw-metrics dt, .hw-comparison dt { color: #456052; font-size: .86rem; }
+.hw-metrics dd { margin: 3px 0; font-size: 1.35rem; font-weight: 750; }
+.hw-comparison dd { margin: 4px 0 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.hw-metrics small { color: #456052; }
+.hw-badge { border-radius: 20px; background: #EFF3EF; color: #18352A; font-size: .82rem; font-weight: 650; padding: 4px 9px; }
+.hw-badge.good { background: #E9F2E3; color: #214C32; }
+.hw-badge.wrong { background: #FBECE9; color: #8B3024; }
+.hw-badge.pending { background: #F7F0DF; color: #694D13; }
+#detail .hw-missed { padding: 10px 12px; background: #F7FAF3; }
+.hw-missed summary .hw-badge { display: inline-block; margin-inline-start: 6px; }
+.hw-answers { padding-inline-start: 1.6rem; }
+.hw-answers li { padding: 4px 0; }
+.hw-answers li + li { border-top: 1px solid #CCDCC8; }
 #detail .danger { background: #9e2c2c; border-color: #9e2c2c; }
 [hidden] { display: none !important; }
 </style>
@@ -49,7 +71,7 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 <section id="assignmentsPanel" hidden><h2>Assignments</h2><div id="assignments" class="assignment-list"></div><button id="older" hidden>Older assignments</button></section>
 <section id="report" hidden><h2 id="reportTitle"></h2><p id="reportCount"></p><p id="scheduleStatus"></p><button type="button" id="homeworkScreen">Homework Screen</button> <button type="button" id="endHomework">End now</button><form id="schedule"><label>New deadline (Vietnam time) <input type="datetime-local" id="newDue" required></label><button id="scheduleAction" type="submit">Extend deadline</button></form><button type="button" id="evidence" aria-controls="detail" aria-expanded="false">Open detailed results</button><div id="links"></div></section>
 <section id="detail" hidden>
-<h2 id="sessionTitle"></h2><p id="sessionSummary"></p>
+<h2 id="sessionTitle"></h2><p id="sessionSummary"></p><div id="homeworkOverview"></div>
 <label>Student <select id="studentFilter"><option value="">All students</option></select></label>
 <button id="archive">Download archive</button>
 <details id="deletePanel" hidden>
@@ -65,5 +87,5 @@ iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
 <main id="join" hidden><h1>Join Homework</h1><form id="joinForm"><label>Homework PIN <input id="joinPin" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required></label><label>Student ID <input id="studentId" maxlength="120" required></label><button type="submit">Open homework</button></form></main>
 <main id="student" hidden><h1 id="studentTitle">Homework</h1><p id="deadline"></p><p id="attemptNotice" hidden>While you work, REH records device type, page switches and approximate time on questions.</p><div id="items"></div></main>
 <p id="status" role="status"></p>
-<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="task-attempt-signals.js?v=1"></script><script src="evidence-detail.js?v=1"></script><script src="homework.js?v=inline-1"></script>
+<script src="config.js"></script><script src="task-materials.js?v=1"></script><script src="task-attempt-signals.js?v=1"></script><script src="evidence-detail.js?v=homework-report-1"></script><script src="homework.js?v=homework-report-1"></script>
 </body></html>

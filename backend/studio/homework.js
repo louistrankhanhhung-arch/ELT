@@ -45,6 +45,7 @@
   let reportVersion = 0;
   function closeEvidence() {
     evidence.clear();
+    el("links").hidden = false;
     el("evidence").textContent = "Open detailed results";
     el("evidence").setAttribute("aria-expanded", "false");
   }
@@ -98,7 +99,8 @@
       }
       control.disabled = true;
       void run(async () => {
-        if (!await evidence.open(item.pin)) return;
+        if (!await evidence.open(item.pin, report.recipients)) return;
+        el("links").hidden = true;
         control.textContent = "Hide detailed results";
         control.setAttribute("aria-expanded", "true");
         el("detail").scrollIntoView({block: "start"});
