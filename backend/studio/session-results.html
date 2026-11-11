@@ -16,11 +16,16 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 #historyFilters{padding:8px 0}#deleteSessionsDialog{max-width:min(480px,92vw);border:1px solid #CCDCC8;border-radius:12px;padding:20px}
 #deleteSessionsDialog::backdrop{background:#0B3D2599} [hidden]{display:none!important}
 #historyPages button[aria-current="page"]{background:#18352A;color:white;font-weight:700}
+.results-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.results-nav a { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px; border: 1px solid #286340; border-radius: 8px; background: white; color: #286340; text-decoration: none; font-weight: 650; box-sizing: border-box; }
+.results-nav a:hover { background: #E9F2E3; }
+.results-nav a[aria-current="page"] { background: #286340; color: white; }
+.results-nav a:focus-visible { outline: 2px solid #286340; outline-offset: 3px; }
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-1">
 <main>
 <a href="teacher-home.html">Teacher home</a><h1>Session Results</h1>
-<nav aria-label="Results views"><a href="session-results.html" aria-current="page">Session History</a> · <a href="class-reports.html">Class Reports</a></nav>
+<nav class="results-nav" aria-label="Results views"><a href="session-results.html" aria-current="page">Session History</a> <a href="class-reports.html">Class Reports</a></nav>
 <p>Reopen a classroom session to review and export saved evidence.</p>
 <section>
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
