@@ -2456,7 +2456,7 @@ def session_history(offset: int = 0, query: str = "", status: Literal["active", 
             (SELECT c.{key} FROM lesson_catalogue c WHERE c.revision_id = r.revision_id
              ORDER BY c.published_at DESC, c.catalogue_id LIMIT 1), '')"""
     search = query.strip().lower()[:160]
-    page_size = 20
+    page_size = 10
     offset = max(offset, 0)
     with closing(db()) as conn:
         cur = conn.cursor()
@@ -2962,7 +2962,7 @@ def learner_profile(student_id: str, course: str = "", level: str = "", lesson: 
 
 @app.get("/api/session-history/{pin}", dependencies=[Depends(require_teacher)])
 def get_session_evidence(pin: str):
-    return session_evidence(pin)
+    return session_evidence(pin, include_roster=True)
 
 
 class ManualReview(BaseModel):

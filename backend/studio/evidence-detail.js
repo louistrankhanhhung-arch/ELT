@@ -25,21 +25,21 @@ window.createEvidenceDetail = (root, request, status) => {
     const next = await (await request(apiPath(pin))).json();
     if (version !== generation) return false;
     current = next;
-    roster = recipients;
+    roster = recipients ?? next.students ?? [...new Map(next.tasks.flatMap(task => task.submissions).map(row => [row.student_id, row])).values()];
     root.hidden = false;
     el("sessionTitle").textContent = next.lesson_title;
     el("sessionSummary").textContent = [
       "PIN " + pin, readableDate(next.session.created_at), next.session.status,
       next.lesson_version ? "Lesson version " + next.lesson_version : "", next.joined + " joined"
     ].filter(Boolean).join(" · ");
-    const students = new Map((roster ?? next.tasks.flatMap(task => task.submissions)).map(row => [row.student_id, row.student_name]));
+    const students = new Map(roster.map(row => [row.student_id, row.student_name]));
     el("studentFilter").replaceChildren(new Option("All students", ""), ...[...students].map(([id,name]) => new Option(name,id)));
     el("deletePanel").hidden = next.session.status === "active" || !next.audio_count;
     el("deleteSummary").textContent = next.audio_count + " recordings · " + (next.audio_bytes / 1048576).toFixed(2) + " MiB. Text responses and reviews are kept.";
     el("verified").checked = false;
     el("confirmation").value = "";
     refreshDelete();
-    if (roster) renderHomeworkSummary();
+    renderSummary();
     renderTasks();
     return true;
   }
@@ -47,29 +47,16 @@ window.createEvidenceDetail = (root, request, status) => {
     for (const url of objectUrls) URL.revokeObjectURL(url);
     objectUrls.clear();
     const filter = el("studentFilter").value;
-    if (roster) {
-      el("tasks").replaceChildren(...current.tasks.map((task, index) => renderHomeworkTask(task, index, filter)));
-      return;
-    }
-    el("tasks").replaceChildren(...current.tasks.map((task,index) => {
-      const article = document.createElement("article");
-      article.append(text("h3", (task.page_task_title || "Task " + (index + 1)) + " · " + task.type.replace("_"," ") + (task.phase ? " · " + task.phase : "")));
-      article.append(text("pre", task.prompt));
-      if (task.page_index != null) article.append(text("p", "Submitted: " + task.submissions.length + "/" + task.recipient_count));
-      const rows = task.submissions.filter(row => !filter || row.student_id === filter);
-      article.append(text("p", rows.length + " submission(s)"));
-      for (const row of rows) article.append(renderSubmission(task, row, current.session.pin));
-      return article;
-    }));
+    el("tasks").replaceChildren(...current.tasks.map((task, index) => renderTask(task, index, filter)));
   }
   function badge(value, state) {
     const label = text("span", value);
-    label.className = "hw-badge " + state;
+    label.className = "report-badge " + state;
     return label;
   }
   function metrics(entries) {
     const grid = document.createElement("dl");
-    grid.className = "hw-metrics";
+    grid.className = "report-metrics";
     for (const [label, value, note] of entries) {
       const tile = document.createElement("div");
       tile.append(text("dt", label), text("dd", value));
@@ -78,19 +65,36 @@ window.createEvidenceDetail = (root, request, status) => {
     }
     return grid;
   }
-  function renderHomeworkSummary() {
-    const tasks = current.tasks;
-    const recipients = new Set(roster.map(row => row.student_id));
-    const submitted = tasks.map(task => new Set(task.submissions.filter(row => recipients.has(row.student_id)).map(row => row.student_id)));
-    const total = tasks.length * roster.length;
-    const completed = tasks.length ? roster.filter(student => submitted.every(ids => ids.has(student.student_id))).length : 0;
-    const count = submitted.reduce((sum, ids) => sum + ids.size, 0);
-    el("sessionSummary").textContent = current.lesson_version ? "Lesson version " + current.lesson_version : "";
-    el("homeworkOverview").replaceChildren(metrics([
-      ["Students assigned", roster.length],
-      ["Tasks", tasks.length],
-      ["All tasks submitted", tasks.length ? completed + "/" + roster.length : "—"],
-      ["Submissions", total ? count + "/" + total : "—"]
+  function audienceFor(task) {
+    if (!Array.isArray(task.recipient_ids)) return roster;
+    const allowed = new Set(task.recipient_ids);
+    return roster.filter(student => allowed.has(student.student_id));
+  }
+  function renderSummary() {
+    const counts = new Map();
+    let expected = 0;
+    let submitted = 0;
+    for (const task of current.tasks) {
+      const responses = new Set(task.submissions.map(row => row.student_id));
+      for (const student of audienceFor(task)) {
+        expected++;
+        const count = counts.get(student.student_id) || {expected: 0, submitted: 0};
+        count.expected++;
+        if (responses.has(student.student_id)) {
+          submitted++;
+          count.submitted++;
+        }
+        counts.set(student.student_id, count);
+      }
+    }
+    const completed = [...counts.values()].filter(count => count.expected === count.submitted).length;
+    const homework = current.session.status === "homework";
+    if (homework) el("sessionSummary").textContent = current.lesson_version ? "Lesson version " + current.lesson_version : "";
+    el("reportOverview").replaceChildren(metrics([
+      [homework ? "Students assigned" : "Students joined", roster.length],
+      ["Tasks", current.tasks.length],
+      ["All assigned tasks submitted", counts.size ? completed + "/" + counts.size : "—"],
+      ["Submissions", expected ? submitted + "/" + expected : "—"]
     ]));
   }
   function scoreFor(row) {
@@ -99,16 +103,17 @@ window.createEvidenceDetail = (root, request, status) => {
     return null;
   }
   function percent([score, maximum]) { return score * 100 / maximum; }
-  function renderHomeworkTask(task, index, filter) {
+  function renderTask(task, index, filter) {
     const article = document.createElement("article");
     const heading = document.createElement("header");
-    const type = task.type.replaceAll("_", " ");
-    heading.append(text("h3", task.page_task_title || "Task " + (index + 1)), badge(type, ""));
+    const type = (task.type || "writing").replaceAll("_", " ");
+    heading.append(text("h3", task.page_task_title || "Task " + (index + 1)), badge(task.phase ? type + " · " + task.phase : type, ""));
     article.append(heading, text("pre", task.prompt));
     const submissions = new Map(task.submissions.map(row => [row.student_id, row]));
-    const submitted = roster.map(student => submissions.get(student.student_id)).filter(Boolean);
+    const audience = audienceFor(task);
+    const submitted = audience.map(student => submissions.get(student.student_id)).filter(Boolean);
     const scored = submitted.map(scoreFor).filter(Boolean);
-    const summary = [["Submitted", submitted.length + "/" + roster.length]];
+    const summary = [["Submitted", submitted.length + "/" + audience.length]];
     if (scored.length) {
       const mastered = scored.filter(score => percent(score) >= 80).length;
       const average = Math.round(scored.reduce((sum, score) => sum + percent(score), 0) / scored.length);
@@ -126,7 +131,7 @@ window.createEvidenceDetail = (root, request, status) => {
         .sort((a, b) => b.names.length - a.names.length || a.number - b.number).slice(0, 3);
       if (missed.length) {
         const list = document.createElement("section");
-        list.className = "hw-missed";
+        list.className = "report-missed";
         list.append(text("h4", "Most missed questions"));
         for (const question of missed) {
           const item = document.createElement("details");
@@ -140,34 +145,34 @@ window.createEvidenceDetail = (root, request, status) => {
       }
     }
     article.append(text("h4", "Students"));
-    for (const student of roster) {
+    for (const student of audience) {
       if (filter && student.student_id !== filter) continue;
       const row = submissions.get(student.student_id);
-      if (row) article.append(renderSubmission(task, row, current.session.pin, true));
+      if (row) article.append(renderSubmission(task, row, current.session.pin));
       else {
         const pending = document.createElement("div");
-        pending.className = "hw-student-row";
+        pending.className = "report-student-row";
         pending.append(text("strong", student.student_name), badge("Awaiting submission", "pending"));
         article.append(pending);
       }
     }
     return article;
   }
-  function renderHomeworkAnswers(task, row, panel) {
+  function renderAnswers(task, row, panel) {
     if (!row.items?.length) {
       panel.append(text("pre", row.response));
       return;
     }
     const list = document.createElement("ol");
-    list.className = "hw-answers";
+    list.className = "report-answers";
     row.items.forEach((item, index) => {
       const question = document.createElement("li");
       const heading = document.createElement("div");
-      heading.className = "hw-student-row";
+      heading.className = "report-student-row";
       heading.append(text("strong", task.questions[index]?.prompt || "Question " + (index + 1)),
         badge(item.is_correct ? "Correct" : "Incorrect", item.is_correct ? "good" : "wrong"));
       const answers = document.createElement("dl");
-      answers.className = "hw-comparison";
+      answers.className = "report-comparison";
       for (const [label, value] of [["Student answer", item.selected_option], ["Expected answer", item.correct_option]]) {
         const cell = document.createElement("div");
         cell.append(text("dt", label), text("dd", value ?? "—"));
@@ -178,18 +183,18 @@ window.createEvidenceDetail = (root, request, status) => {
     });
     panel.append(list);
   }
-  function renderSubmission(task, row, pin, homework = false) {
+  function renderSubmission(task, row, pin) {
     const panel = document.createElement("details");
-    if (homework) {
+    {
       const heading = document.createElement("summary");
-      heading.className = "hw-student-row";
+      heading.className = "report-student-row";
       const identity = document.createElement("span");
       identity.append(text("strong", row.student_name), text("small", readableDate(row.submitted_at)));
       const score = scoreFor(row);
       heading.append(identity, badge(score ? score.join("/") : "Submitted", score && percent(score) < 80 ? "pending" : "good"));
       panel.append(heading);
-    } else panel.append(text("summary", row.student_name + " · " + readableDate(row.submitted_at)));
-    if (homework && row.attempt_signals) panel.append(window.renderTaskAttemptSignals(document, row.attempt_signals));
+    }
+    if (row.attempt_signals) panel.append(window.renderTaskAttemptSignals(document, row.attempt_signals));
     if (task.type === "speaking") {
       if (row.audio_bytes) {
         const play = button("Load recording", async () => {
@@ -206,22 +211,17 @@ window.createEvidenceDetail = (root, request, status) => {
         });
         panel.append(play);
       } else panel.append(text("p", "Audio archived"));
-    } else if (homework && task.questions?.length) {
-      renderHomeworkAnswers(task, row, panel);
+    } else if (task.questions?.length) {
+      renderAnswers(task, row, panel);
     } else {
-      panel.append(text("pre", task.questions?.length ? row.selected_option : row.response));
-      if (task.questions?.length) panel.append(text("p", "Score: " + row.score + "/" + row.max_score));
+      panel.append(text("pre", row.response));
     }
-    if (!homework && row.attempt_signals) panel.append(window.renderTaskAttemptSignals(document, row.attempt_signals));
     if (!row.attempt_signals) panel.append(text("p", "No attempt signals recorded for this submission."));
-    if (homework && row.ai_feedback?.feedback) panel.append(text("p", row.ai_feedback.feedback));
+    if (row.ai_feedback?.feedback) panel.append(text("p", row.ai_feedback.feedback));
     if (!task.questions?.length && task.task_id !== "legacy-writing") {
-      const review = reviewForm(task, row, pin);
-      if (homework) {
-        const editor = document.createElement("details");
-        editor.append(text("summary", "Review and feedback"), review);
-        panel.append(editor);
-      } else panel.append(review);
+      const editor = document.createElement("details");
+      editor.append(text("summary", "Review and feedback"), reviewForm(task, row, pin));
+      panel.append(editor);
     }
     return panel;
   }
@@ -282,7 +282,7 @@ window.createEvidenceDetail = (root, request, status) => {
     const pin = current.session.pin;
     try {
       const result = await (await request(apiPath(pin, "/delete-audio"), "POST", {confirmation: "DELETE AUDIO"})).json();
-      if (current?.session.pin === pin) await open(pin, roster);
+      if (current?.session.pin === pin) await open(pin, current.session.status === "homework" ? roster : null);
       status("Deleted " + result.deleted + " recordings (" + (result.audio_bytes / 1048576).toFixed(2) + " MiB).");
     } catch (error) { status(error.message); refreshDelete(); }
   };

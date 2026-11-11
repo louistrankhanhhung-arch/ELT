@@ -10,6 +10,9 @@ h1,h2,h3{margin:0 0 8px}button{border:0;border-radius:6px;background:#286340;col
 button:disabled{opacity:.5;cursor:default}button.danger{background:#9e2c2c}input,select,textarea{font:inherit;padding:6px;max-width:100%}
 label{display:inline-block;margin:4px 8px 4px 0}textarea{display:block;width:100%;min-height:60px}summary{cursor:pointer;font-weight:600}
 details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}audio{max-width:100%}
+#history{background:white;border:1px solid #CCDCC8;border-radius:10px;padding:12px 16px;margin:14px 0}
+#history > summary{font-size:1.15rem;font-weight:700}
+#history[open] > summary{margin-bottom:8px}
 #sessionList{list-style:none;padding:0}#sessionList li{display:flex;align-items:center;gap:8px;border-top:1px solid #CCDCC8;padding:4px 0}
 #sessionList button{text-align:left;flex:1;min-width:0;background:#F7FAF3;color:#18352A}
 #sessionList small{display:block;color:#456052}#historyTools{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
@@ -18,6 +21,7 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 #historyPages button[aria-current="page"]{background:#18352A;color:white;font-weight:700}
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
+<link rel="stylesheet" href="evidence-report.css?v=1">
 <main>
 <a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Session Results</h1>
 <nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html" aria-current="page">Session Results</a> <a class="reh-nav-button" href="class-reports.html">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a> <a class="reh-nav-button" href="learner-profiles.html">Learner Profile</a></nav>
@@ -26,8 +30,8 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
 <button id="load">Load session results</button><p id="status" role="status"></p>
 </section>
-<section id="history" hidden>
-<h2>Classroom sessions</h2>
+<details id="history" hidden>
+<summary>Classroom sessions</summary>
 <div id="historyTools">
 <button id="toggleFilters" type="button" aria-expanded="false" aria-controls="historyFilters">Filter</button>
 <label><input id="selectPage" type="checkbox"> Select page</label>
@@ -51,9 +55,9 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <form method="dialog"><button value="cancel" autofocus>Cancel</button><button class="danger" id="confirmDeleteSessions" value="delete">Delete permanently</button></form>
 </dialog>
 <nav aria-label="Session Results pages"><button id="previous" disabled>Previous</button><span id="historyPages"></span><button id="next" disabled>Next</button></nav>
-</section>
+</details>
 <section id="detail" hidden>
-<h2 id="sessionTitle"></h2><p id="sessionSummary"></p>
+<h2 id="sessionTitle" tabindex="-1"></h2><p id="sessionSummary"></p><div id="reportOverview"></div>
 <label>Student <select id="studentFilter"><option value="">All students</option></select></label>
 <button id="archive">Download archive</button>
 <details id="deletePanel" hidden>
@@ -68,6 +72,6 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 </main>
 <script src="config.js"></script>
 <script src="task-attempt-signals.js?v=1"></script>
-<script src="evidence-detail.js?v=1"></script>
-<script src="session-results.js?v=inline-1"></script>
+<script src="evidence-detail.js?v=shared-report-1"></script>
+<script src="session-results.js?v=shared-report-1"></script>
 </html>

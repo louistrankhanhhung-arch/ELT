@@ -2,7 +2,7 @@
 const el = id => document.getElementById(id);
 const base = window.ELT_CONFIG.API_BASE;
 let offset = 0;
-let pageSize = 20;
+let pageSize = 10;
 let pinFromLink = new URLSearchParams(location.search).get("pin");
 const status = message => { el("status").textContent = message; };
 async function request(path, method = "GET", payload) {
@@ -36,6 +36,8 @@ async function openSession(pin) {
   const url = new URL(location.href);
   url.searchParams.set("pin", pin);
   window.history.replaceState({}, "", url);
+  el("history").open = false;
+  el("sessionTitle").focus();
 }
 let historyRequest = 0;
 let filters = {};

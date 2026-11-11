@@ -1,0 +1,28 @@
+#detail article { border: 1px solid #CCDCC8; padding: 14px; margin: 12px 0; }
+#detail details { border-top: 1px solid #CCDCC8; padding: 8px 0; }
+#detail summary { cursor: pointer; font-weight: 600; }
+#detail pre { font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
+#detail audio { max-width: 100%; }
+#detail header, #detail .report-student-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+#detail h3, #detail h4 { margin: 0; }
+#detail #sessionSummary { color: #456052; }
+.report-student-row small { display: block; color: #456052; }
+#detail .report-student-row { padding: 8px 0; }
+#detail summary.report-student-row strong::before { content: "▸ "; color: #286340; }
+#detail details[open] > summary.report-student-row strong::before { content: "▾ "; }
+.report-metrics, .report-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr)); gap: 8px; }
+.report-metrics > div, .report-comparison > div { background: #F7FAF3; border: 1px solid #CCDCC8; border-radius: 9px; padding: 9px 12px; }
+.report-metrics dt, .report-comparison dt { color: #456052; font-size: .86rem; }
+.report-metrics dd { margin: 3px 0; font-size: 1.35rem; font-weight: 750; }
+.report-comparison dd { margin: 4px 0 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.report-metrics small { color: #456052; }
+.report-badge { border-radius: 20px; background: #EFF3EF; color: #18352A; font-size: .82rem; font-weight: 650; padding: 4px 9px; }
+.report-badge.good { background: #E9F2E3; color: #214C32; }
+.report-badge.wrong { background: #FBECE9; color: #8B3024; }
+.report-badge.pending { background: #F7F0DF; color: #694D13; }
+#detail .report-missed { padding: 10px 12px; background: #F7FAF3; }
+.report-missed summary .report-badge { display: inline-block; margin-inline-start: 6px; }
+.report-answers { padding-inline-start: 1.6rem; }
+.report-answers li { padding: 4px 0; }
+.report-answers li + li { border-top: 1px solid #CCDCC8; }
+#detail .danger { background: #9e2c2c; border-color: #9e2c2c; }
