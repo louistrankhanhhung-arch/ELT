@@ -1,0 +1,403 @@
+(() => {
+  const el = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const studentMode = params.get("join") === "1";
+  const screenPin = params.get("screen");
+  const validPin = pin => /^[0-9]{8}$/.test(pin || "");
+  const shortLink = pin => new URL("/t/" + pin, location.origin);
+  const api = window.ELT_CONFIG.API_BASE;
+  let access = "";
+  function node(tag, value) {
+    const element = document.createElement(tag);
+    if (value != null) element.textContent = value;
+    return element;
+  }
+  function button(label, action) {
+    const element = node("button", label);
+    element.type = "button";
+    element.onclick = action;
+    return element;
+  }
+  function status(value) { el("status").textContent = value; }
+  function run(action) { return action().catch(error => status(error.message)); }
+  async function request(path, method = "GET", payload) {
+    const code = studentMode ? access : el("teacherCode").value.trim();
+    const response = await fetch(api + path, {
+      method, cache: "no-store",
+      headers: {...(code ? {Authorization: "Bearer " + code} : {}), ...(payload ? {"Content-Type": "application/json"} : {})},
+      body: payload ? JSON.stringify(payload) : undefined
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw Object.assign(new Error(typeof error.detail === "string" ? error.detail : "Check the entered values."), {status: response.status});
+    }
+    return response;
+  }
+  async function json(...args) { return (await request(...args)).json(); }
+
+  if (screenPin !== null) {
+    if (!validPin(screenPin)) { status("Invalid Test PIN."); return; }
+    const link = shortLink(screenPin);
+    el("screen").hidden = false;
+    el("screenPin").textContent = screenPin;
+    el("shortLink").href = link.href;
+    el("shortLink").textContent = link.host + link.pathname;
+    el("qr").src = el("downloadQR").href = link.href + "/qr.svg";
+    el("downloadQR").download = "reh-test-" + screenPin + ".svg";
+    return;
+  }
+
+  if (!studentMode) {
+    el("teacher").hidden = false;
+    let taskChoices = [];
+    let selected = null;
+    let report = null;
+    let reportPending = false;
+    const detail = window.createEvidenceDetail(el("detail"), async (path, method, payload) => {
+      const response = await request(path, method, payload);
+      if (!report || path !== "/session-history/" + encodeURIComponent(selected) || method) return response;
+      const data = await response.json();
+      const byId = new Map(data.tasks.map(task => [task.task_id, task]));
+      data.tasks = report.sections.flatMap(section => section.tasks.map(item => ({
+        ...byId.get(item.task_id), page_task_title: section.name + " · " + item.title
+      }))).filter(task => task.task_id);
+      return {json: async () => data};
+    }, status);
+    function section(name = "") {
+      const card = node("fieldset");
+      card.append(node("legend", "Timed section"));
+      const title = node("input");
+      title.name = "sectionName"; title.required = true; title.maxLength = 80; title.value = name;
+      const minutes = node("input");
+      minutes.type = "number"; minutes.name = "minutes"; minutes.min = 1; minutes.max = 180; minutes.value = 10; minutes.required = true;
+      for (const [label, field] of [["Section name ", title], ["Minutes ", minutes]]) {
+        const control = node("label", label); control.append(field); card.append(control);
+      }
+      const tasks = node("div");
+      tasks.className = "section-tasks";
+      card.append(tasks, button("Remove section", () => card.remove()));
+      el("sections").append(card);
+      renderChoices(tasks);
+    }
+    function renderChoices(target) {
+      target.replaceChildren(...taskChoices.map(task => {
+        const label = node("label");
+        const input = node("input");
+        input.type = "checkbox"; input.value = task.id;
+        label.append(input, " " + task.title + " · " + task.type.replaceAll("_", " "));
+        return label;
+      }));
+      if (!taskChoices.length) target.append(node("p", "Choose a lesson with auto-scored tasks."));
+    }
+    async function loadChoices() {
+      const value = el("lesson").value;
+      taskChoices = [];
+      document.querySelectorAll(".section-tasks").forEach(renderChoices);
+      if (!value) return;
+      const result = await json("/tests/catalogue/" + encodeURIComponent(value));
+      if (el("lesson").value !== value) return;
+      taskChoices = result.tasks;
+      document.querySelectorAll(".section-tasks").forEach(renderChoices);
+    }
+    async function loadRecipients() {
+      const code = el("classCode").value;
+      el("recipients").replaceChildren();
+      if (!code) return;
+      const result = await json("/homework/roster/" + encodeURIComponent(code));
+      if (el("classCode").value !== code) return;
+      for (const student of result.students) {
+        const label = node("label");
+        const input = node("input");
+        input.type = "checkbox"; input.value = student.student_id;
+        label.append(input, " " + student.display_name + " · " + student.student_id);
+        el("recipients").append(label);
+      }
+    }
+    async function loadTests() {
+      const result = await json("/tests");
+      el("testList").hidden = false;
+      el("tests").replaceChildren(...result.tests.map(item => button(
+        item.class_code + " · " + item.title + (item.published_at ? " · Published" : ""),
+        () => { selected = item.pin; detail.clear(); void run(refreshReport); }
+      )));
+    }
+    async function refreshReport() {
+      if (!selected || reportPending) return;
+      reportPending = true;
+      const pin = selected;
+      try {
+        const next = await json("/tests/" + encodeURIComponent(pin) + "/report?include_tasks=false");
+        if (selected !== pin) return;
+        report = next;
+        const waiting = report.section_index == null;
+        const finished = report.section_index === report.sections.length;
+        el("monitor").hidden = false;
+        el("monitorTitle").textContent = report.title;
+        el("monitorStatus").textContent = waiting ? "Waiting to start" : finished
+          ? (report.published ? "Results published" : "Test ended")
+          : report.sections[report.section_index].name + " · ends at " +
+            new Date(report.ends_at).toLocaleTimeString("en-GB", {timeZone:"Asia/Ho_Chi_Minh"});
+        el("showScreen").href = "test.html?screen=" + report.join_pin;
+        el("start").hidden = !waiting;
+        el("publish").hidden = !finished || report.published;
+        el("details").hidden = waiting || report.section_index === 0;
+        el("testRoster").replaceChildren(...report.roster.map(student => node("li",
+          student.student_name + " · " + (!student.joined_at ? "Not joined" : waiting ? "Ready" : finished ? "Submitted" : "In progress")
+        )));
+      } finally { reportPending = false; }
+    }
+    async function loadWorkspace() {
+      const [classes] = await Promise.all([json("/learner-classes"), loadTests()]);
+      const lessons = [];
+      for (let offset = 0; ; offset += 50) {
+        const result = await json("/lesson-catalogue?offset=" + offset);
+        lessons.push(...result.entries);
+        if (!result.has_more) break;
+      }
+      el("lesson").replaceChildren(new Option("Choose a lesson", ""), ...lessons.map(item => new Option(item.title, item.catalogue_id)));
+      el("classCode").replaceChildren(new Option("Choose a class", ""), ...classes.classes.map(item => new Option(item.class_code + " · " + item.course + " " + item.level, item.class_code)));
+      if (!el("sections").children.length) section("Listening");
+      el("setup").hidden = false;
+      await Promise.all([loadChoices(), loadRecipients()]);
+      status("");
+    }
+    el("load").onclick = () => run(loadWorkspace);
+    el("lesson").onchange = () => run(loadChoices);
+    el("classCode").onchange = () => run(loadRecipients);
+    el("addSection").onclick = () => section();
+    el("create").onsubmit = event => {
+      event.preventDefault();
+      const submit = event.submitter;
+      submit.disabled = true;
+      void run(async () => {
+        const sections = [...el("sections").children].map(card => ({
+          name: card.querySelector('[name="sectionName"]').value.trim(),
+          minutes: Number(card.querySelector('[name="minutes"]').value),
+          task_ids: [...card.querySelectorAll("input:checked")].map(input => input.value)
+        }));
+        if (!sections.length || sections.some(item => !item.name || !item.task_ids.length)) throw new Error("Add at least one task to every section.");
+        const student_ids = [...el("recipients").querySelectorAll("input:checked")].map(input => input.value);
+        const result = await json("/tests", "POST", {catalogue_id: el("lesson").value, class_code: el("classCode").value, sections,
+          student_ids: student_ids.length ? student_ids : null});
+        selected = result.id;
+        detail.clear();
+        await Promise.all([loadTests(), refreshReport()]);
+        status("Test created. Open Test Screen to share the PIN.");
+      }).finally(() => { submit.disabled = false; });
+    };
+    for (const [id, action] of [["start", "start"], ["publish", "publish"]]) {
+      el(id).onclick = () => run(async () => {
+        if (!selected || !window.confirm(action === "start" ? "Start the shared test clock now?" : "Publish scores and answers to students?")) return;
+        el(id).disabled = true;
+        try {
+          await json("/tests/" + encodeURIComponent(selected) + "/" + action, "POST");
+          await refreshReport();
+        } finally { el(id).disabled = false; }
+      });
+    }
+    el("details").onclick = () => run(async () => {
+      const pin = selected;
+      if (!pin || !report) return;
+      if (await detail.open(pin, report.roster)) el("detail").scrollIntoView({block: "start"});
+    });
+    setInterval(() => { if (selected) void run(refreshReport); }, 5000);
+    return;
+  }
+
+  el("join").hidden = false;
+  if (validPin(params.get("pin"))) el("joinPin").value = params.get("pin");
+  let currentIndex = undefined;
+  let deadline = null;
+  let taskForms = [];
+  let pollPending = false;
+  let timer = null;
+  let published = false;
+  let polling = null;
+  let savingTick = null;
+  let authKey = "";
+  const storageKey = pin => "reh-test-access:" + pin;
+  const note = text => { el("studentState").textContent = text; };
+  function disposeForms() {
+    for (const form of taskForms) {
+      clearTimeout(form.pending);
+      form.attempt.complete();
+    }
+    taskForms = [];
+  }
+  function remaining() { return deadline === null ? Infinity : Math.max(0, deadline - performance.now()); }
+  function displayClock() {
+    if (deadline === null) return;
+    const seconds = Math.ceil(remaining() / 1000);
+    el("countdown").textContent = Math.floor(seconds / 60) + ":" + String(seconds % 60).padStart(2, "0");
+    if (seconds === 0 && !el("questions").inert) {
+      el("questions").inert = true;
+      note("Time is up. Opening the next section…");
+      void poll();
+    }
+  }
+  function scheduleSave(form) {
+    clearTimeout(form.pending);
+    form.pending = setTimeout(() => void save(form), 220);
+  }
+  async function save(form) {
+    if (form.saving || remaining() <= 0 || !taskForms.includes(form)) return;
+    form.saving = true;
+    try {
+      await json("/tests/student/drafts/" + encodeURIComponent(form.id), "PUT", {
+        answers: form.readers.map(read => read()), attempt_signals: form.attempt.snapshot()
+      });
+      if (taskForms.includes(form) && remaining() > 0) note("Answers saved automatically.");
+    } catch (error) {
+      if (!taskForms.includes(form)) return;
+      if (error.status === 409) void poll();
+      else if (remaining() > 0) note("Could not save. Reconnecting…");
+    } finally { form.saving = false; }
+  }
+  function renderQuestion(question, index, prior, changed, shuffle) {
+    const field = node("fieldset");
+    field.append(node("legend", (index + 1) + ". " + question.prompt));
+    window.renderTaskMaterials(field, question.materials);
+    let read;
+    if (question.options) {
+      const choices = question.options.map((label, value) => ({label, value}));
+      if (shuffle) for (let i = choices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [choices[i], choices[j]] = [choices[j], choices[i]];
+      }
+      for (const {label, value} of choices) {
+        const item = node("label");
+        const input = node("input");
+        input.type = "radio"; input.name = "q" + index; input.value = value; input.checked = prior === value;
+        input.onchange = changed;
+        item.append(input, " " + label); field.append(item);
+      }
+      read = () => {
+        const input = field.querySelector("input:checked");
+        return input ? Number(input.value) : null;
+      };
+    } else if (question.parts) {
+      const list = node("ol");
+      let touched = prior != null;
+      const order = prior || question.parts.map((_, i) => i);
+      for (const value of order) {
+        const row = node("li", question.parts[value]);
+        row.className = "order-row"; row.dataset.index = value;
+        row.append(button("Move up", () => {
+          if (row.previousElementSibling) row.previousElementSibling.before(row);
+          touched = true; changed();
+        }), button("Move down", () => {
+          if (row.nextElementSibling) row.nextElementSibling.after(row);
+          touched = true; changed();
+        }));
+        list.append(row);
+      }
+      field.append(list, button("Use this order", () => { touched = true; changed(); }));
+      read = () => touched ? [...list.children].map(row => Number(row.dataset.index)) : null;
+    } else {
+      const label = node("label", "Answer ");
+      const input = node("input"); input.maxLength = 500; input.value = prior || "";
+      input.oninput = changed;
+      label.append(input); field.append(label);
+      read = () => input.value.trim() || null;
+    }
+    return {field, read};
+  }
+  function renderSection(data) {
+    disposeForms();
+    el("questions").replaceChildren();
+    el("questions").inert = false;
+    if (data.finished) {
+      note(data.published ? "Results published." : "Submitted. Wait for your teacher to publish results.");
+      for (const section of data.results) {
+        const card = node("section");
+        card.append(node("h2", section.name));
+        for (const task of section.tasks) {
+          const list = node("ol");
+          card.append(node("h3", task.title + " · " + task.score + "/" + task.max_score), list);
+          for (const item of task.items) {
+            const row = node("li");
+            row.append(node("strong", item.prompt), node("p", (item.unanswered ? "Unanswered" : item.is_correct ? "Correct" : "Incorrect") +
+              (item.selected_option ? " · " + item.selected_option : "")));
+            if (!item.is_correct) row.append(node("p", "Expected answer: " + item.correct_option));
+            list.append(row);
+          }
+        }
+        el("questions").append(card);
+      }
+      return;
+    }
+    if (data.section_index === null) { note("Ready. Waiting for your teacher to start the test."); return; }
+    note("Answers save automatically. Device, page switches and approximate question time are recorded.");
+    el("sectionName").textContent = data.section_name + " · " + (data.section_index + 1) + "/" + data.section_count;
+    for (const item of data.tasks) {
+      const card = node("section");
+      card.append(node("h2", item.title), node("p", item.task.prompt));
+      window.renderTaskMaterials(card, item.task.materials);
+      const questions = item.task.questions || [];
+      const attempt = window.createTaskAttemptTracker(questions.length, item.task_id + ":" + access.slice(-16));
+      const form = {id: item.task_id, attempt, readers: [], pending: null, saving: false};
+      const group = node("form");
+      group.onsubmit = event => { event.preventDefault(); void save(form); };
+      const fields = [];
+      questions.forEach((question, index) => {
+        const {field, read} = renderQuestion(question, index, item.answers?.[index], () => scheduleSave(form), item.task.shuffle);
+        group.append(field); fields.push(field); form.readers.push(read);
+      });
+      card.append(group);
+      el("questions").append(card);
+      taskForms.push(form);
+      attempt.mount(card, fields);
+    }
+    window.scrollTo(0, 0);
+  }
+  function applyState(data) {
+    const active = data.ends_at != null;
+    deadline = active ? performance.now() + Math.max(0, Date.parse(data.ends_at) - Date.parse(data.server_now)) : null;
+    el("studentTitle").textContent = data.title;
+    el("clockBar").hidden = !active;
+    if (data.section_index !== currentIndex || data.published !== published) {
+      currentIndex = data.section_index;
+      published = data.published;
+      renderSection(data);
+    }
+    displayClock();
+  }
+  async function poll() {
+    if (!access || pollPending) return;
+    pollPending = true;
+    try { applyState(await json("/tests/student")); }
+    catch (error) { note(error.message); }
+    finally { pollPending = false; }
+  }
+  async function openStudent() {
+    const data = await json("/tests/student");
+    el("join").hidden = true;
+    el("student").hidden = false;
+    applyState(data);
+    if (!polling) {
+      polling = setInterval(() => void poll(), 2000);
+      timer = setInterval(displayClock, 200);
+      savingTick = setInterval(() => taskForms.forEach(form => void save(form)), 3000);
+    }
+    status("");
+  }
+  el("joinForm").onsubmit = event => {
+    event.preventDefault();
+    const submit = event.submitter;
+    submit.disabled = true;
+    void run(async () => {
+      const pin = el("joinPin").value.trim();
+      const result = await json("/tests/join", "POST", {pin, student_id: el("studentId").value.trim()});
+      access = result.access;
+      authKey = storageKey(pin);
+      await openStudent();
+      try { sessionStorage.setItem(authKey, access); } catch {}
+      if (params.get("pin") !== pin) history.replaceState(null, "", "?join=1&pin=" + encodeURIComponent(pin));
+    }).finally(() => { submit.disabled = false; });
+  };
+  if (validPin(params.get("pin"))) {
+    authKey = storageKey(params.get("pin"));
+    try { access = sessionStorage.getItem(authKey) || ""; } catch {}
+    if (access) void openStudent().catch(() => { access = ""; try { sessionStorage.removeItem(authKey); } catch {} });
+  }
+})();

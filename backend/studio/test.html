@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" class="reh-page">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test | REH</title>
+<link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
+<link rel="stylesheet" href="task-materials.css?v=1">
+<link rel="stylesheet" href="evidence-report.css?v=1">
+<style>
+body { max-width: 960px; margin: auto; }
+section, article { padding: 16px; margin-block: 12px; background: white; border: 1px solid #CCDCC8; }
+label { display: block; margin-block: 8px; }
+select, input, button { font: inherit; padding: 8px; }
+button { background: #286340; color: white; border: 1px solid #286340; border-radius: 8px; cursor: pointer; }
+button:disabled { opacity: .55; }
+fieldset { min-width: 0; margin-block: 12px; border: 1px solid #CCDCC8; border-radius: 8px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#clockBar { position: sticky; top: 0; z-index: 2; padding: 12px; background: #E9F2E3; border-radius: 9px; justify-content: space-between; }
+#countdown { font-variant-numeric: tabular-nums; }
+#screen { text-align: center; }
+#screenPin { font-size: clamp(2rem,10vw,5rem); letter-spacing: .12em; margin: 12px; }
+#qr { display: block; width: min(65vw,320px); height: auto; margin: 12px auto; }
+.order-row { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+</style>
+</head>
+<body>
+<main id="teacher" hidden>
+<a class="reh-nav-button" href="teacher-home.html">← Teacher home</a>
+<h1>Test</h1>
+<section><label>Teacher access code <input id="teacherCode" type="password" autocomplete="off"></label><button id="load" type="button">Load tests</button></section>
+<section id="setup" hidden>
+<h2>Create test</h2>
+<form id="create">
+<label>Published lesson <select id="lesson" required></select></label>
+<label>Class code <select id="classCode" required></select></label>
+<details><summary>Choose individual students</summary><div id="recipients"></div><p>Leave unchecked to assign to the whole class.</p></details>
+<div id="sections"></div>
+<div class="actions"><button id="addSection" type="button">Add section</button><button>Create test</button></div>
+</form>
+</section>
+<section id="testList" hidden><h2>Tests</h2><div id="tests" class="actions"></div></section>
+<section id="monitor" hidden>
+<h2 id="monitorTitle"></h2><p id="monitorStatus"></p>
+<div class="actions"><a class="reh-nav-button" id="showScreen" target="_blank" rel="noopener">Test Screen</a><button type="button" id="start">Start Test</button><button type="button" id="publish">Publish results</button><button type="button" id="details">Open detailed results</button></div>
+<ul id="testRoster"></ul>
+</section>
+<section id="detail" hidden>
+<h2 id="sessionTitle"></h2><p id="sessionSummary"></p><div id="reportOverview"></div>
+<label>Student <select id="studentFilter"></select></label><button type="button" id="archive">Download archive</button>
+<details id="deletePanel" hidden><summary>Delete archived audio</summary><p id="deleteSummary"></p><input id="verified" type="checkbox"><input id="confirmation"><button type="button" id="deleteAudio">Delete audio</button></details>
+<div id="tasks"></div>
+</section>
+</main>
+<main id="join" hidden>
+<h1>Join Test</h1>
+<form id="joinForm">
+<label>Test PIN <input id="joinPin" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required></label>
+<label>Student ID <input id="studentId" maxlength="120" required></label>
+<button>Open test</button>
+</form>
+</main>
+<main id="student" hidden>
+<h1 id="studentTitle">Test</h1>
+<div id="clockBar" class="actions" hidden><strong id="sectionName"></strong><span>Time remaining <strong id="countdown"></strong></span></div>
+<p id="studentState" role="status"></p><div id="questions"></div>
+</main>
+<main id="screen" hidden>
+<h1>Join Test</h1><p>Scan the QR code or open the link, then enter your Student ID.</p>
+<p id="screenPin"></p><img id="qr" alt="QR code for joining the test" width="320" height="320">
+<p><a id="shortLink"></a></p><a id="downloadQR" class="reh-nav-button">Download QR code</a>
+</main>
+<p id="status" role="status"></p>
+<script src="config.js"></script>
+<script src="task-materials.js?v=1"></script>
+<script src="task-attempt-signals.js?v=1"></script>
+<script src="evidence-detail.js?v=shared-report-1"></script>
+<script src="test.js?v=1"></script>
+</body></html>

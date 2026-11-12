@@ -466,6 +466,27 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_tests (
+            pin TEXT PRIMARY KEY REFERENCES homework(pin),
+            sections TEXT NOT NULL, started_at TEXT, published_at TEXT
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_test_members (
+            pin TEXT NOT NULL REFERENCES timed_tests(pin),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            joined_at TEXT NOT NULL, PRIMARY KEY (pin, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_test_drafts (
+            task_id TEXT NOT NULL REFERENCES writing_tasks(task_id),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            response TEXT NOT NULL, signals TEXT,
+            PRIMARY KEY (task_id, student_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS homework_access (
             token TEXT PRIMARY KEY, pin TEXT NOT NULL REFERENCES homework(pin),
             student_id TEXT NOT NULL REFERENCES session_students(student_id),
@@ -1427,7 +1448,27 @@ def quiz_answers(raw, questions):
     return answers
 
 
-def assessment_items(raw, questions):
+def assessment_items(raw, questions, allow_blank=False):
+    if allow_blank:
+        try:
+            answers = json.loads(raw)
+        except ValueError:
+            answers = None
+        if not isinstance(answers, list) or len(answers) != len(questions):
+            raise HTTPException(422, "Provide one answer slot per question")
+        items = []
+        for answer, question in zip(answers, questions):
+            if answer is not None:
+                items.extend(assessment_items(json.dumps([answer]), [question]))
+                continue
+            if "correct_order" in question:
+                expected = question["separator"].join(question["parts"][index] for index in question["correct_order"])
+            elif "accepted_answers" in question:
+                expected = " / ".join(question["accepted_answers"])
+            else:
+                expected = question["options"][question["correct_option"]]
+            items.append({"selected_option": "", "correct_option": expected, "is_correct": False, "unanswered": True})
+        return items
     if questions and "correct_order" in questions[0]:
         try:
             responses = json.loads(raw)
@@ -1468,7 +1509,7 @@ def assessment_items(raw, questions):
 
 
 def grade_quiz(raw, quiz, prompt):
-    items = assessment_items(raw, quiz_questions(quiz, prompt))
+    items = assessment_items(raw, quiz_questions(quiz, prompt), quiz.get("allow_blank", False))
     selected = [item["selected_option"] for item in items]
     return {"selected_option": selected[0] if len(selected) == 1 else json.dumps(selected, ensure_ascii=False),
             "score": sum(item["is_correct"] for item in items), "max_score": len(items)}
@@ -1874,7 +1915,7 @@ def session_task_results(pin: str, include_roster: bool = False):
                 if include_roster:
                     questions = task["questions"]
                     row["items"] = [{"prompt": question["prompt"], **item}
-                                    for question, item in zip(questions, assessment_items(row["response"], questions))]
+                                    for question, item in zip(questions, assessment_items(row["response"], questions, task.get("allow_blank", False)))]
     result = {"joined": len(session["students"]), "tasks": tasks}
     if include_roster:
         result["students"] = [{key: student[key] for key in ("student_id", "student_name")}
@@ -2468,7 +2509,7 @@ def session_history(offset: int = 0, query: str = "", status: Literal["active", 
                        CASE WHEN s.status = 'active' AND (s.expires_at <= ? OR (s.expires_at IS NULL AND s.created_at <= ?))
                             THEN 'expired' ELSE s.status END AS status
                 FROM sessions s LEFT JOIN lesson_revisions r ON r.revision_id = SUBSTR(s.lesson_path, 9)
-                WHERE s.status <> 'homework'
+                WHERE s.status NOT IN ('homework', 'test')
             )
             SELECT *, COUNT(*) OVER () AS total FROM history
             WHERE status = COALESCE(?, status)
@@ -2548,6 +2589,8 @@ def session_evidence(pin, include_roster=False):
     if not session:
         raise HTTPException(404, "Session not found")
     session = apply_session_expiry(session)
+    if session["status"] == "test":
+        finalize_test_evidence(pin)
     results = session_task_results(pin, include_roster=include_roster)
     if session["writing_task"]:
         legacy = writing_results(pin)
@@ -2595,7 +2638,7 @@ def session_evidence(pin, include_roster=False):
                     "question_id": question["question_id"],
                     "learning_target_id": question.get("learning_target_id") or task["learning_target_id"],
                     **item,
-                } for question, item in zip(questions, assessment_items(row["response"], questions))]
+                } for question, item in zip(questions, assessment_items(row["response"], questions, task.get("allow_blank", False)))]
     audio = [row for task in results["tasks"] for row in task["submissions"] if row.get("audio_bytes")]
     return {"schema_version": 1, "session": {key: session[key] for key in
             ("pin", "lesson_id", "lesson_path", "created_at", "ended_at", "status")},
@@ -2799,6 +2842,8 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
             continue
         pin = session["pin"]
         members = attendance.get(pin, {})
+        if pin.startswith("TEST-"):
+            title = "Test · " + title
         visit = {"pin": pin, "date": day.isoformat(), "lesson": title, **counts()}
         evidence = session_evidence(pin, include_roster=True)
         for task in reversed(evidence["tasks"]):
@@ -2917,6 +2962,8 @@ def learner_profile(student_id: str, course: str = "", level: str = "", lesson: 
         pin = session["pin"]
         evidence = session_evidence(pin, include_roster=True)
         member = session["session_student_id"]
+        if pin.startswith("TEST-"):
+            title = "Test · " + title
         visit = {"pin": pin, "date": day.isoformat(), "lesson": title, "lesson_id": session["lesson_id"],
                  "lesson_version": manifest.get("version"), "class_code": session["class_code"],
                  "course": course_value, "level": level_value}
@@ -3502,6 +3549,10 @@ def get_homework_roster(class_code: str):
 
 @app.post("/api/homework", dependencies=[Depends(require_teacher)])
 def create_homework(payload: HomeworkRequest):
+    return create_independent_assignment(payload)
+
+
+def create_independent_assignment(payload, test_sections=None):
     due_at = homework_deadline(payload.due_at)
     due_on = parse_iso(due_at).astimezone(HOMEWORK_TIMEZONE).date().isoformat()
     entry = catalogue_entry(payload.catalogue_id)
@@ -3514,7 +3565,8 @@ def create_homework(payload: HomeworkRequest):
     if not selected.issubset(valid):
         raise HTTPException(422, "Choose valid lesson blocks. Live dialogue cards require a classroom session.")
     code = payload.class_code.strip().upper()
-    pin = "HW-" + uuid4().hex
+    pin = ("TEST-" if test_sections else "HW-") + uuid4().hex
+    source = "test" if test_sections else "homework"
     created = now_iso()
     items = []
     with closing(db()) as conn:
@@ -3530,8 +3582,8 @@ def create_homework(payload: HomeworkRequest):
 
         cur.execute(sql("""
             INSERT INTO sessions (pin, lesson_id, lesson_path, total_blocks, current_block_index, status, created_at)
-            VALUES (?, ?, ?, ?, 0, 'homework', ?)
-        """), (pin, manifest["lesson_id"], f"imports/{entry['revision_id']}", len(blocks), created))
+            VALUES (?, ?, ?, ?, 0, ?, ?)
+        """), (pin, manifest["lesson_id"], f"imports/{entry['revision_id']}", len(blocks), source, created))
         set_session_class(cur, pin, code)
         cur.execute(sql("INSERT INTO homework VALUES (?, ?, ?, ?)"), (pin, entry["title"], due_on, "[]"))
         schedule = ensure_homework_schedule(cur, pin, due_at)
@@ -3556,6 +3608,8 @@ def create_homework(payload: HomeworkRequest):
             if not block.get("task") and block["id"] in selected:
                 items.append({"block_id": block["id"], "title": block["title"]})
             for task in tasks:
+                if test_sections and task["type"] not in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
+                    raise HTTPException(422, "Tests currently accept auto-scored tasks only")
                 task_id = uuid4().hex
                 task_key = block["id"] if block.get("task") else f"homework:{block['id']}:{task['id']}"
                 cur.execute(sql("INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)"),
@@ -3564,6 +3618,8 @@ def create_homework(payload: HomeworkRequest):
                     cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
                 elif task["type"] != "writing":
                     definition = {key: task[key] for key in ("kind", "questions", "shuffle", "options", "correct_option") if key in task}
+                    if test_sections:
+                        definition["allow_blank"] = True
                     cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(definition)))
                 if task.get("materials"):
                     cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
@@ -3571,7 +3627,17 @@ def create_homework(payload: HomeworkRequest):
                     cur.execute(sql("INSERT INTO writing_ai_rubrics VALUES (?, ?)"), (task_id, json.dumps(task["writing_rubric"])))
                 cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?)"),
                             (task_id, block.get("phase"), task.get("learning_target_id") or block.get("learning_target_id")))
-                items.append({"task_id": task_id, "title": task.get("title") or block["title"]})
+                item = {"task_id": task_id, "title": task.get("title") or block["title"]}
+                if test_sections:
+                    item["source_id"] = block["id"] if block.get("task") else f"{block['id']}:{task['id']}"
+                items.append(item)
+        if test_sections:
+            by_source = {item.pop("source_id"): item for item in items if "source_id" in item}
+            if set(by_source) != selected:
+                raise HTTPException(422, "Choose only auto-scored tasks in each test section")
+            sections = [{"name": section.name, "minutes": section.minutes,
+                         "tasks": [by_source[key] for key in section.task_ids]} for section in test_sections]
+            cur.execute(sql("INSERT INTO timed_tests (pin, sections) VALUES (?, ?)"), (pin, json.dumps(sections)))
         cur.execute(sql("UPDATE homework SET items = ? WHERE pin = ?"), (json.dumps(items), pin))
         conn.commit()
     return {"id": pin, "assigned": len(roster), **homework_schedule_view(schedule)}
@@ -3585,6 +3651,7 @@ def list_homework(offset: int = 0):
             SELECT h.pin, h.title, h.due_on, c.class_code, s.created_at, hs.due_at
             FROM homework h JOIN session_classes c ON c.pin = h.pin JOIN sessions s ON s.pin = h.pin
             LEFT JOIN homework_schedule hs ON hs.pin = h.pin
+            WHERE s.status = 'homework'
             ORDER BY s.created_at DESC, h.pin LIMIT 51 OFFSET ?
         """), (max(offset, 0),))
         rows = [dict(row) for row in cur.fetchall()]
@@ -3595,7 +3662,7 @@ def list_homework(offset: int = 0):
 def homework_report(pin: str):
     with closing(db()) as conn:
         cur = conn.cursor()
-        cur.execute(sql("SELECT due_on FROM homework WHERE pin = ?"), (pin,))
+        cur.execute(sql("SELECT h.due_on FROM homework h JOIN sessions s ON s.pin = h.pin WHERE h.pin = ? AND s.status = 'homework'"), (pin,))
         assignment = cur.fetchone()
         if not assignment:
             raise HTTPException(404, "Homework not found")
@@ -3623,7 +3690,9 @@ def update_homework_schedule(pin: str, payload: HomeworkScheduleRequest):
     with closing(db()) as conn:
         cur = conn.cursor()
         # Serialize deadline changes and submissions for this assignment.
-        cur.execute(sql("UPDATE homework_schedule SET ended = ended WHERE pin = ?"), (pin,))
+        cur.execute(sql("UPDATE homework_schedule SET ended = ended WHERE pin = ? AND EXISTS (SELECT 1 FROM sessions s WHERE s.pin = homework_schedule.pin AND s.status = 'homework')"), (pin,))
+        if not cur.rowcount:
+            raise HTTPException(404, "Homework not found")
         cur.execute(sql("SELECT * FROM homework_schedule WHERE pin = ?"), (pin,))
         schedule = cur.fetchone()
         if not schedule:
@@ -3666,6 +3735,10 @@ def homework_join_qr(pin: str, request: Request):
 
 @app.post("/api/homework/join")
 def join_homework(payload: HomeworkJoinRequest, request: Request, response: Response):
+    return join_independent_assignment(payload, request, response, "homework")
+
+
+def join_independent_assignment(payload, request, response, assignment_type):
     source = request.client.host if request.client else ""
     now = monotonic()
     with homework_login_lock:
@@ -3686,19 +3759,20 @@ def join_homework(payload: HomeworkJoinRequest, request: Request, response: Resp
         cur.execute(sql("""
             SELECT a.token, hs.signing_key
             FROM homework_schedule hs JOIN homework_access a ON a.pin = hs.pin
+            JOIN sessions s ON s.pin = hs.pin
             JOIN evidence_student_links l ON l.student_id = a.student_id
             JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
             JOIN reh_roster r ON r.student_id = ids.roster_id
-            WHERE hs.join_pin = ? AND ids.roster_id = ? AND r.status = 'active'
-        """), (payload.pin, payload.student_id.strip().upper()))
+            WHERE hs.join_pin = ? AND ids.roster_id = ? AND r.status = 'active' AND s.status = ?
+        """), (payload.pin, payload.student_id.strip().upper(), assignment_type))
         row = cur.fetchone()
     if not row:
-        raise HTTPException(401, "Check your Homework PIN and Student ID")
+        raise HTTPException(401, "Check your PIN and Student ID")
     response.headers["Cache-Control"] = "private, no-store"
     return {"access": row["token"] + "." + homework_login_signature(row["token"], row["signing_key"])}
 
 
-def homework_access(cur, credentials, lock=False):
+def homework_access(cur, credentials, lock=False, assignment_type="homework"):
     supplied = credentials.credentials if credentials else ""
     if not re.fullmatch(r"[a-f0-9]{64}\.[a-f0-9]{64}", supplied):
         raise HTTPException(401, "Enter your Homework PIN and Student ID")
@@ -3715,8 +3789,8 @@ def homework_access(cur, credentials, lock=False):
         JOIN evidence_student_links l ON l.student_id = a.student_id
         JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
         JOIN reh_roster r ON r.student_id = ids.roster_id
-        WHERE a.token = ? AND r.status = 'active'
-    """), (token,))
+        WHERE a.token = ? AND r.status = 'active' AND s.status = ?
+    """), (token, assignment_type))
     row = cur.fetchone()
     if not row or not hmac.compare_digest(signature, homework_login_signature(token, row["signing_key"])):
         raise HTTPException(401, "Enter your Homework PIN and Student ID")
@@ -3741,7 +3815,7 @@ def homework_feedback(task, response):
         return None
     quiz = json.loads(task["definition"])
     questions = quiz_questions(quiz, task["prompt"])
-    items = assessment_items(response, questions)
+    items = assessment_items(response, questions, quiz.get("allow_blank", False))
     return {"score": sum(item["is_correct"] for item in items), "max_score": len(items),
             "items": [{"prompt": question["prompt"], **item} for question, item in zip(questions, items)]}
 
@@ -3811,3 +3885,294 @@ def submit_homework(task_id: str, payload: HomeworkSubmission, request: Request,
     return {"submitted": True, "result": result}
 
 
+
+
+class TimedTestSection(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    minutes: int = Field(ge=1, le=180)
+    task_ids: List[str] = Field(min_length=1, max_length=50)
+
+
+class TimedTestRequest(BaseModel):
+    catalogue_id: str
+    class_code: str
+    student_ids: Optional[List[str]] = Field(default=None, max_length=500)
+    sections: List[TimedTestSection] = Field(min_length=1, max_length=12)
+
+
+class TimedTestDraft(BaseModel):
+    answers: List[int | str | List[int] | None] = Field(max_length=100)
+    attempt_signals: Optional[TaskAttemptSignals] = None
+
+
+@app.post("/api/tests", dependencies=[Depends(require_teacher)])
+def create_timed_test(payload: TimedTestRequest):
+    task_ids = [key for section in payload.sections for key in section.task_ids]
+    if len(task_ids) > 100 or len(set(task_ids)) != len(task_ids):
+        raise HTTPException(422, "Choose up to 100 distinct tasks across the test")
+    if any(not section.name.strip() for section in payload.sections) or sum(s.minutes for s in payload.sections) > 360:
+        raise HTTPException(422, "Name each section and limit the test to six hours")
+    assignment = HomeworkRequest(catalogue_id=payload.catalogue_id, class_code=payload.class_code,
+                                 student_ids=payload.student_ids, block_ids=task_ids,
+                                 due_at=datetime.now(timezone.utc) + timedelta(days=1))
+    return create_independent_assignment(assignment, payload.sections)
+
+
+def timed_test_row(cur, pin, lock=False):
+    if lock:
+        cur.execute(sql("UPDATE timed_tests SET started_at = started_at WHERE pin = ?"), (pin,))
+    cur.execute(sql("""
+        SELECT t.*, h.title, hs.join_pin
+        FROM timed_tests t JOIN homework h ON h.pin = t.pin
+        JOIN homework_schedule hs ON hs.pin = t.pin WHERE t.pin = ?
+    """), (pin,))
+    row = cur.fetchone()
+    if not row:
+        raise HTTPException(404, "Test not found")
+    return dict(row)
+
+
+def timed_test_clock(test, sections, now):
+    if not test["started_at"]:
+        return None, None, []
+    ends = []
+    end = parse_iso(test["started_at"])
+    for section in sections:
+        end += timedelta(minutes=section["minutes"])
+        ends.append(end)
+    index = next((i for i, deadline in enumerate(ends) if now < deadline), len(sections))
+    return index, ends[index] if index < len(ends) else None, ends
+
+
+def seal_timed_test(cur, test, sections, count, ends, student_ids):
+    if not student_ids:
+        return
+    for index, section in enumerate(sections[:count]):
+        for item in section["tasks"]:
+            task_id = item["task_id"]
+            task = homework_task(cur, test["pin"], task_id)
+            questions = quiz_questions(json.loads(task["definition"]), task["prompt"])
+            empty = json.dumps([None] * len(questions))
+            for student_id in student_ids:
+                cur.execute(sql("""
+                    INSERT INTO writing_task_responses (task_id, student_id, response, submitted_at)
+                    VALUES (?, ?, COALESCE((SELECT response FROM timed_test_drafts WHERE task_id = ? AND student_id = ?), ?), ?)
+                    ON CONFLICT(task_id, student_id) DO NOTHING
+                """), (task_id, student_id, task_id, student_id, empty, ends[index].isoformat()))
+                if cur.rowcount:
+                    cur.execute(sql("""
+                        INSERT INTO task_attempt_signals (task_id, student_id, definition)
+                        SELECT task_id, student_id, signals FROM timed_test_drafts
+                        WHERE task_id = ? AND student_id = ? AND signals IS NOT NULL
+                        ON CONFLICT(task_id, student_id) DO NOTHING
+                    """), (task_id, student_id))
+                    cur.execute(sql("DELETE FROM timed_test_drafts WHERE task_id = ? AND student_id = ?"),
+                                (task_id, student_id))
+
+
+@app.get("/api/tests", dependencies=[Depends(require_teacher)])
+def list_timed_tests():
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT t.pin, t.started_at, t.published_at, h.title, c.class_code
+            FROM timed_tests t JOIN homework h ON h.pin = t.pin
+            JOIN session_classes c ON c.pin = t.pin JOIN sessions s ON s.pin = t.pin
+            ORDER BY s.created_at DESC, t.pin LIMIT 100
+        """))
+        return {"tests": [dict(row) for row in cur.fetchall()]}
+
+
+@app.post("/api/tests/{pin}/start", dependencies=[Depends(require_teacher)])
+def start_timed_test(pin: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        timed_test_row(cur, pin, lock=True)
+        started = now_iso()
+        cur.execute(sql("UPDATE timed_tests SET started_at = ? WHERE pin = ? AND started_at IS NULL"), (started, pin))
+        if not cur.rowcount:
+            raise HTTPException(409, "This test has already started")
+        conn.commit()
+    return {"started_at": started}
+
+
+def timed_test_roster(cur, pin):
+    cur.execute(sql("""
+        SELECT a.student_id, s.student_name, m.joined_at
+        FROM homework_access a JOIN session_students s ON s.student_id = a.student_id
+        LEFT JOIN timed_test_members m ON m.pin = a.pin AND m.student_id = a.student_id
+        WHERE a.pin = ? ORDER BY s.student_name, a.student_id
+    """), (pin,))
+    return [dict(row) for row in cur.fetchall()]
+
+
+def finalize_test_evidence(pin):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        test = timed_test_row(cur, pin, lock=True)
+        sections = json.loads(test["sections"])
+        index, _, ends = timed_test_clock(test, sections, datetime.now(timezone.utc))
+        if index:
+            roster = timed_test_roster(cur, pin)
+            seal_timed_test(cur, test, sections, index, ends, [row["student_id"] for row in roster if row["joined_at"]])
+        conn.commit()
+
+
+@app.get("/api/tests/{pin}/report", dependencies=[Depends(require_teacher)])
+def timed_test_report(pin: str, include_tasks: bool = True):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        test = timed_test_row(cur, pin, lock=include_tasks)
+        sections = json.loads(test["sections"])
+        now = datetime.now(timezone.utc)
+        index, deadline, ends = timed_test_clock(test, sections, now)
+        roster = timed_test_roster(cur, pin)
+        if index and include_tasks:
+            seal_timed_test(cur, test, sections, index, ends, [row["student_id"] for row in roster if row["joined_at"]])
+        conn.commit()
+    return {"title": test["title"], "join_pin": test["join_pin"], "sections": sections, "section_index": index,
+            "ends_at": deadline, "published": bool(test["published_at"]), "roster": roster,
+            "tasks": session_task_results(pin, include_roster=True)["tasks"] if include_tasks else []}
+
+
+@app.post("/api/tests/{pin}/publish", dependencies=[Depends(require_teacher)])
+def publish_timed_test(pin: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        test = timed_test_row(cur, pin, lock=True)
+        sections = json.loads(test["sections"])
+        now = datetime.now(timezone.utc)
+        index, _, ends = timed_test_clock(test, sections, now)
+        if index != len(sections):
+            raise HTTPException(409, "Results can be published after the test ends")
+        roster = timed_test_roster(cur, pin)
+        seal_timed_test(cur, test, sections, index, ends, [row["student_id"] for row in roster if row["joined_at"]])
+        cur.execute(sql("UPDATE timed_tests SET published_at = COALESCE(published_at, ?) WHERE pin = ?"), (now.isoformat(), pin))
+        conn.commit()
+    return {"published": True}
+
+
+@app.post("/api/tests/join")
+def join_timed_test(payload: HomeworkJoinRequest, request: Request, response: Response):
+    return join_independent_assignment(payload, request, response, "test")
+
+
+@app.get("/api/tests/student")
+def timed_test_student(response: Response, credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    response.headers["Cache-Control"] = "private, no-store"
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        assignment = homework_access(cur, credentials, assignment_type="test")
+        pin, student_id = assignment["pin"], assignment["student_id"]
+        test = timed_test_row(cur, pin)
+        sections = json.loads(test["sections"])
+        now = datetime.now(timezone.utc)
+        index, deadline, ends = timed_test_clock(test, sections, now)
+        cur.execute(sql("SELECT 1 FROM timed_test_members WHERE pin = ? AND student_id = ?"), (pin, student_id))
+        member = cur.fetchone()
+        if not member and index == len(sections):
+            raise HTTPException(409, "The test has ended")
+        if not member:
+            test = timed_test_row(cur, pin, lock=True)
+            now = datetime.now(timezone.utc)
+            index, deadline, ends = timed_test_clock(test, sections, now)
+            if index == len(sections):
+                raise HTTPException(409, "The test has ended")
+            cur.execute(sql("""
+                INSERT INTO timed_test_members VALUES (?, ?, ?) ON CONFLICT(pin, student_id) DO NOTHING
+            """), (pin, student_id, now.isoformat()))
+        if index:
+            cur.execute(sql("""
+                SELECT COUNT(*) AS count FROM writing_task_responses r
+                JOIN writing_tasks t ON t.task_id = r.task_id WHERE t.pin = ? AND r.student_id = ?
+            """), (pin, student_id))
+            if cur.fetchone()["count"] < sum(len(s["tasks"]) for s in sections[:index]):
+                timed_test_row(cur, pin, lock=True)
+                seal_timed_test(cur, test, sections, index, ends, [student_id])
+        tasks = []
+        if deadline:
+            for item in sections[index]["tasks"]:
+                task = homework_task(cur, pin, item["task_id"])
+                cur.execute(sql("SELECT response FROM timed_test_drafts WHERE task_id = ? AND student_id = ?"),
+                            (item["task_id"], student_id))
+                draft = cur.fetchone()
+                tasks.append({**item, "task": task_description(task), "answers": json.loads(draft["response"]) if draft else None})
+        results = []
+        if index == len(sections) and test["published_at"]:
+            for section in sections:
+                graded = []
+                for item in section["tasks"]:
+                    task = homework_task(cur, pin, item["task_id"])
+                    cur.execute(sql("SELECT response FROM writing_task_responses WHERE task_id = ? AND student_id = ?"),
+                                (item["task_id"], student_id))
+                    graded.append({"title": item["title"], **homework_feedback(task, cur.fetchone()["response"])})
+                results.append({"name": section["name"], "tasks": graded})
+        conn.commit()
+    return {"title": test["title"], "section_count": len(sections), "section_index": index,
+            "section_name": sections[index]["name"] if deadline else None, "ends_at": deadline,
+            "server_now": now, "finished": index == len(sections), "published": bool(test["published_at"]),
+            "tasks": tasks, "results": results}
+
+
+@app.put("/api/tests/student/drafts/{task_id}")
+def save_timed_test_draft(task_id: str, payload: TimedTestDraft, request: Request,
+                          credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        assignment = homework_access(cur, credentials, assignment_type="test")
+        pin, student_id = assignment["pin"], assignment["student_id"]
+        test = timed_test_row(cur, pin, lock=True)
+        sections = json.loads(test["sections"])
+        index, deadline, _ = timed_test_clock(test, sections, datetime.now(timezone.utc))
+        if not deadline or not any(item["task_id"] == task_id for item in sections[index]["tasks"]):
+            raise HTTPException(409, "This section is closed")
+        cur.execute(sql("SELECT 1 FROM timed_test_members WHERE pin = ? AND student_id = ?"), (pin, student_id))
+        if not cur.fetchone():
+            raise HTTPException(403, "Open the test before saving")
+        task = homework_task(cur, pin, task_id)
+        quiz = json.loads(task["definition"])
+        encoded = json.dumps(payload.answers, ensure_ascii=False)
+        if len(encoded) > 20_000:
+            raise HTTPException(422, "This draft is too long")
+        assessment_items(encoded, quiz_questions(quiz, task["prompt"]), allow_blank=True)
+        signals = json.dumps({"device": task_device(request.headers), **payload.attempt_signals.model_dump()}) if payload.attempt_signals else None
+        cur.execute(sql("""
+            INSERT INTO timed_test_drafts VALUES (?, ?, ?, ?)
+            ON CONFLICT(task_id, student_id) DO UPDATE SET response = excluded.response, signals = excluded.signals
+        """), (task_id, student_id, encoded, signals))
+        conn.commit()
+    return {"saved": True}
+
+
+@app.get("/t/{pin}")
+def short_test_link(pin: str):
+    if not re.fullmatch(r"[0-9]{8}", pin):
+        raise HTTPException(404, "Invalid Test PIN")
+    return RedirectResponse(f"/studio/test.html?join=1&pin={pin}", headers={"Cache-Control": "no-store"})
+
+
+@app.get("/t/{pin}/qr.svg")
+def test_join_qr(pin: str, request: Request):
+    if not re.fullmatch(r"[0-9]{8}", pin):
+        raise HTTPException(404, "Invalid Test PIN")
+    url = request.url_for("short_test_link", pin=pin)
+    if url.hostname not in ("localhost", "127.0.0.1", "::1"):
+        url = url.replace(scheme="https")
+    output = io.BytesIO()
+    qrcode.make(str(url), image_factory=SvgPathImage).save(output)
+    return Response(output.getvalue(), media_type="image/svg+xml", headers={"Cache-Control": "public, max-age=86400"})
+
+
+@app.get("/api/tests/catalogue/{catalogue_id}", dependencies=[Depends(require_teacher)])
+def timed_test_catalogue_tasks(catalogue_id: str):
+    entry = catalogue_entry(catalogue_id)
+    lesson = load_imported_lesson(entry["revision_id"])
+    choices = []
+    for block in lesson["blocks"]:
+        prepared = block.get("task")
+        if prepared and prepared["type"] not in ("writing", "speaking", "dialogue"):
+            choices.append({"id": block["id"], "title": block["title"], "type": prepared["type"]})
+        for task in block.get("page_tasks", []):
+            if task["type"] not in ("writing", "speaking", "dialogue"):
+                choices.append({"id": f"{block['id']}:{task['id']}", "title": task["title"], "type": task["type"]})
+    return {"tasks": choices}
