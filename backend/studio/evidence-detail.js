@@ -160,7 +160,7 @@ window.createEvidenceDetail = (root, request, status) => {
   }
   function renderAnswers(task, row, panel) {
     if (!row.items?.length) {
-      panel.append(text("pre", row.response));
+      panel.append(blankWriting ? text("p", "No Writing response was saved before time expired.") : text("pre", row.response));
       return;
     }
     const list = document.createElement("ol");
@@ -185,13 +185,15 @@ window.createEvidenceDetail = (root, request, status) => {
   }
   function renderSubmission(task, row, pin) {
     const panel = document.createElement("details");
+    const testWriting = pin.startsWith("TEST-") && task.type === "writing";
+    const blankWriting = testWriting && !row.response.trim();
     {
       const heading = document.createElement("summary");
       heading.className = "report-student-row";
       const identity = document.createElement("span");
       identity.append(text("strong", row.student_name), text("small", readableDate(row.submitted_at)));
       const score = scoreFor(row);
-      heading.append(identity, badge(score ? score.join("/") : "Submitted", score && percent(score) < 80 ? "pending" : "good"));
+      heading.append(identity, badge(score ? score.join("/") : blankWriting ? "No response" : "Submitted", score && percent(score) < 80 ? "pending" : "good"));
       panel.append(heading);
     }
     if (row.attempt_signals) panel.append(window.renderTaskAttemptSignals(document, row.attempt_signals));
@@ -218,7 +220,7 @@ window.createEvidenceDetail = (root, request, status) => {
     }
     if (!row.attempt_signals) panel.append(text("p", "No attempt signals recorded for this submission."));
     if (row.ai_feedback?.feedback) panel.append(text("p", row.ai_feedback.feedback));
-    if (!task.questions?.length && task.task_id !== "legacy-writing") {
+    if (!task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting) {
       const editor = document.createElement("details");
       editor.append(text("summary", "Review and feedback"), reviewForm(task, row, pin));
       panel.append(editor);
@@ -230,6 +232,25 @@ window.createEvidenceDetail = (root, request, status) => {
     form.innerHTML = '<label>Score <input name="score" type="number" min="0" max="100"></label>' +
       '<label>Maximum <input name="maximum" type="number" min="1" max="100"></label>' +
       '<label>Feedback <textarea name="feedback" maxlength="4000"></textarea></label><button>Save review</button><span role="status"></span>';
+    const criteria = pin.startsWith("TEST-") ? task.writing_rubric?.criteria || [] : [];
+    const rubricInputs = new Map();
+    if (criteria.length) {
+      form.elements.score.closest("label").hidden = true;
+      form.elements.maximum.closest("label").hidden = true;
+      const rubric = document.createElement("fieldset");
+      rubric.append(text("legend", "Writing rubric"));
+      for (const criterion of criteria) {
+        const label = text("label", criterion.label + " (0–" + criterion.max_score + ")");
+        const input = document.createElement("input");
+        input.type = "number"; input.min = 0; input.max = criterion.max_score; input.required = true;
+        input.value = row.rubric_scores?.find(item => item.id === criterion.id)?.score ?? "";
+        label.append(input);
+        if (criterion.description) label.append(text("small", criterion.description));
+        rubric.append(label);
+        rubricInputs.set(criterion.id, input);
+      }
+      form.prepend(rubric);
+    }
     const fields = form.elements;
     fields.score.value = row.review_score ?? "";
     fields.maximum.value = row.review_max_score ?? "";
@@ -242,7 +263,16 @@ window.createEvidenceDetail = (root, request, status) => {
       try {
         const review = {score: fields.score.value === "" ? null : Number(fields.score.value),
           max_score: fields.maximum.value === "" ? null : Number(fields.maximum.value), feedback: fields.feedback.value};
+        if (criteria.length) {
+          review.score = review.max_score = null;
+          review.criteria_scores = Object.fromEntries([...rubricInputs].map(([id, input]) => [id, Number(input.value)]));
+        }
         await request(apiPath(pin, "/tasks/" + task.task_id + "/reviews/" + row.student_id), "PUT", review);
+        if (criteria.length) {
+          row.rubric_scores = criteria.map(item => ({...item, score: review.criteria_scores[item.id]}));
+          review.score = row.rubric_scores.reduce((sum, item) => sum + item.score, 0);
+          review.max_score = row.rubric_scores.reduce((sum, item) => sum + item.max_score, 0);
+        }
         Object.assign(row, {review_score: review.score, review_max_score: review.max_score, feedback: review.feedback});
         feedback.textContent = "Review saved.";
       } catch (error) { feedback.textContent = error.message; }

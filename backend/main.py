@@ -472,6 +472,15 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_test_rubric_scores (
+            task_id TEXT NOT NULL,
+            student_id TEXT NOT NULL,
+            definition TEXT NOT NULL,
+            PRIMARY KEY (task_id, student_id),
+            FOREIGN KEY (task_id, student_id) REFERENCES writing_task_responses(task_id, student_id) ON DELETE CASCADE
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS timed_test_members (
             pin TEXT NOT NULL REFERENCES timed_tests(pin),
             student_id TEXT NOT NULL REFERENCES session_students(student_id),
@@ -1864,13 +1873,14 @@ def session_task_results(pin: str, include_roster: bool = False):
                    v.score AS review_score, v.max_score AS review_max_score, v.feedback, v.reviewed_at,
                    a.media_type AS audio_type, LENGTH(a.audio) AS audio_bytes,
                    g.state AS ai_state, g.definition AS ai_json, g.published AS ai_published,
-                   signal.definition AS signals_json
+                   signal.definition AS signals_json, rubric_scores.definition AS rubric_scores_json
             FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
             JOIN session_students s ON s.student_id = r.student_id
             LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
             LEFT JOIN speaking_audio a ON a.task_id = r.task_id AND a.student_id = r.student_id
             LEFT JOIN writing_ai_grades g ON g.task_id = r.task_id AND g.student_id = r.student_id
             LEFT JOIN task_attempt_signals signal ON signal.task_id = r.task_id AND signal.student_id = r.student_id
+            LEFT JOIN timed_test_rubric_scores rubric_scores ON rubric_scores.task_id = r.task_id AND rubric_scores.student_id = r.student_id
             WHERE t.pin = ? ORDER BY r.submitted_at, r.student_id
         """), (pin,))
         responses = [dict(row) for row in cur.fetchall()]
@@ -1898,6 +1908,9 @@ def session_task_results(pin: str, include_roster: bool = False):
         if include_roster and task["page_index"] is not None:
             task["recipient_ids"] = recipients.get(task["task_id"], [])
         for row in task["submissions"]:
+            rubric_scores = row.pop("rubric_scores_json")
+            if rubric_scores:
+                row["rubric_scores"] = json.loads(rubric_scores)
             signals = row.pop("signals_json")
             if signals:
                 row["attempt_signals"] = json.loads(signals)
@@ -2563,7 +2576,7 @@ def delete_sessions(payload: DeleteSessionsRequest):
         cur.execute(sql(f"DELETE FROM session_classes WHERE pin IN ({placeholders})"), pins)
 
         task_ids = f"SELECT task_id FROM writing_tasks WHERE pin IN ({placeholders})"
-        for table in ("speaking_audio", "task_reviews", "writing_ai_grades", "task_attempt_signals", "writing_task_responses", "task_evidence_context", "task_materials", "writing_ai_rubrics",
+        for table in ("speaking_audio", "task_reviews", "writing_ai_grades", "task_attempt_signals", "timed_test_rubric_scores", "writing_task_responses", "task_evidence_context", "task_materials", "writing_ai_rubrics",
                       "published_quiz_scores", "speaking_tasks", "writing_task_quizzes"):
             cur.execute(sql(f"DELETE FROM {table} WHERE task_id IN ({task_ids})"), pins)
         cur.execute(sql(f"""
@@ -2759,11 +2772,12 @@ def set_learner_session_class(pin: str, payload: SessionClassRequest):
 def profile_score(task, row):
     if not row:
         return None
-    if task.get("writing_rubric") and not row.get("ai_published"):
+    manual_rubric = bool(row.get("rubric_scores"))
+    if task.get("writing_rubric") and not (row.get("ai_published") or manual_rubric):
         return None
     score = row.get("score")
     maximum = row.get("max_score")
-    if score is None and not task.get("writing_rubric"):
+    if manual_rubric or (score is None and not task.get("writing_rubric")):
         score, maximum = row.get("review_score"), row.get("review_max_score")
     if score is None or not maximum:
         return None
@@ -3013,6 +3027,7 @@ def get_session_evidence(pin: str):
 
 
 class ManualReview(BaseModel):
+    criteria_scores: Optional[dict[str, int]] = None
     score: Optional[int] = Field(default=None, ge=0, le=100)
     max_score: Optional[int] = Field(default=None, ge=1, le=100)
     feedback: str = Field(default="", max_length=4000)
@@ -3026,18 +3041,45 @@ def save_review(pin: str, task_id: str, student_id: str, payload: ManualReview):
         raise HTTPException(422, "Enter a score and maximum, with score no higher than maximum")
     with closing(db()) as conn:
         cur = conn.cursor()
+        is_test = pin.startswith("TEST-")
+        if is_test and timed_test_row(cur, pin, lock=True)["published_at"]:
+            raise HTTPException(409, "Published Test reviews are locked")
         cur.execute(sql("""
-            SELECT 1 FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+            SELECT r.response, rubric.definition FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+            LEFT JOIN writing_ai_rubrics rubric ON rubric.task_id = t.task_id
             LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
             WHERE t.pin = ? AND r.task_id = ? AND r.student_id = ? AND q.task_id IS NULL
         """), (pin, task_id, student_id))
-        if not cur.fetchone():
+        row = cur.fetchone()
+        if not row:
             raise HTTPException(404, "Writing or Speaking submission not found")
+        score, maximum = payload.score, payload.max_score
+        if is_test:
+            if not row["response"].strip():
+                raise HTTPException(422, "There is no Writing response to review")
+            if row["definition"]:
+                rubric = json.loads(row["definition"])["criteria"]
+                scores = payload.criteria_scores or {}
+                if set(scores) != {criterion["id"] for criterion in rubric} or any(
+                    not 0 <= scores[criterion["id"]] <= criterion["max_score"] for criterion in rubric
+                ):
+                    raise HTTPException(422, "Enter a score within the limit for each rubric criterion")
+                breakdown = [{"id": criterion["id"], "label": criterion["label"],
+                              "max_score": criterion["max_score"], "score": scores[criterion["id"]]}
+                             for criterion in rubric]
+                score = sum(item["score"] for item in breakdown)
+                maximum = sum(item["max_score"] for item in breakdown)
+                cur.execute(sql("""
+                    INSERT INTO timed_test_rubric_scores VALUES (?, ?, ?)
+                    ON CONFLICT(task_id, student_id) DO UPDATE SET definition = excluded.definition
+                """), (task_id, student_id, json.dumps(breakdown)))
+            elif score is None:
+                raise HTTPException(422, "Enter a score and maximum before saving")
         cur.execute(sql("""
             INSERT INTO task_reviews VALUES (?, ?, ?, ?, ?, ?)
             ON CONFLICT(task_id, student_id) DO UPDATE SET score = excluded.score, max_score = excluded.max_score,
             feedback = excluded.feedback, reviewed_at = excluded.reviewed_at
-        """), (task_id, student_id, payload.score, payload.max_score, payload.feedback, now_iso()))
+        """), (task_id, student_id, score, maximum, payload.feedback, now_iso()))
         conn.commit()
     return {"ok": True}
 
@@ -3608,8 +3650,8 @@ def create_independent_assignment(payload, test_sections=None):
             if not block.get("task") and block["id"] in selected:
                 items.append({"block_id": block["id"], "title": block["title"]})
             for task in tasks:
-                if test_sections and task["type"] not in ("multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
-                    raise HTTPException(422, "Tests currently accept auto-scored tasks only")
+                if test_sections and task["type"] not in ("writing", "multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
+                    raise HTTPException(422, "Tests currently accept Writing and auto-scored tasks")
                 task_id = uuid4().hex
                 task_key = block["id"] if block.get("task") else f"homework:{block['id']}:{task['id']}"
                 cur.execute(sql("INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)"),
@@ -3634,7 +3676,7 @@ def create_independent_assignment(payload, test_sections=None):
         if test_sections:
             by_source = {item.pop("source_id"): item for item in items if "source_id" in item}
             if set(by_source) != selected:
-                raise HTTPException(422, "Choose only auto-scored tasks in each test section")
+                raise HTTPException(422, "Choose Writing or auto-scored tasks in each test section")
             sections = [{"name": section.name, "minutes": section.minutes,
                          "tasks": [by_source[key] for key in section.task_ids]} for section in test_sections]
             cur.execute(sql("INSERT INTO timed_tests (pin, sections) VALUES (?, ?)"), (pin, json.dumps(sections)))
@@ -3901,7 +3943,8 @@ class TimedTestRequest(BaseModel):
 
 
 class TimedTestDraft(BaseModel):
-    answers: List[int | str | List[int] | None] = Field(max_length=100)
+    answers: Optional[List[int | str | List[int] | None]] = Field(default=None, max_length=100)
+    writing: Optional[str] = Field(default=None, max_length=20_000)
     attempt_signals: Optional[TaskAttemptSignals] = None
 
 
@@ -3951,8 +3994,10 @@ def seal_timed_test(cur, test, sections, count, ends, student_ids):
         for item in section["tasks"]:
             task_id = item["task_id"]
             task = homework_task(cur, test["pin"], task_id)
-            questions = quiz_questions(json.loads(task["definition"]), task["prompt"])
-            empty = json.dumps([None] * len(questions))
+            empty = ""
+            if task["definition"]:
+                questions = quiz_questions(json.loads(task["definition"]), task["prompt"])
+                empty = json.dumps([None] * len(questions))
             for student_id in student_ids:
                 cur.execute(sql("""
                     INSERT INTO writing_task_responses (task_id, student_id, response, submitted_at)
@@ -4047,6 +4092,16 @@ def publish_timed_test(pin: str):
             raise HTTPException(409, "Results can be published after the test ends")
         roster = timed_test_roster(cur, pin)
         seal_timed_test(cur, test, sections, index, ends, [row["student_id"] for row in roster if row["joined_at"]])
+        cur.execute(sql("""
+            SELECT 1 FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+            LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
+            WHERE t.pin = ? AND q.task_id IS NULL AND TRIM(r.response) <> ''
+              AND (v.score IS NULL OR v.max_score IS NULL)
+            LIMIT 1
+        """), (pin,))
+        if cur.fetchone():
+            raise HTTPException(409, "Review all submitted Writing responses before publishing results")
         cur.execute(sql("UPDATE timed_tests SET published_at = COALESCE(published_at, ?) WHERE pin = ?"), (now.isoformat(), pin))
         conn.commit()
     return {"published": True}
@@ -4096,16 +4151,31 @@ def timed_test_student(response: Response, credentials: Optional[HTTPAuthorizati
                 cur.execute(sql("SELECT response FROM timed_test_drafts WHERE task_id = ? AND student_id = ?"),
                             (item["task_id"], student_id))
                 draft = cur.fetchone()
-                tasks.append({**item, "task": task_description(task), "answers": json.loads(draft["response"]) if draft else None})
+                description = task_description(task)
+                saved = draft["response"] if draft else None
+                tasks.append({**item, "task": description, **(
+                    {"writing": saved or ""} if description["type"] == "writing" else
+                    {"answers": json.loads(saved) if saved else None}
+                )})
         results = []
         if index == len(sections) and test["published_at"]:
             for section in sections:
                 graded = []
                 for item in section["tasks"]:
                     task = homework_task(cur, pin, item["task_id"])
-                    cur.execute(sql("SELECT response FROM writing_task_responses WHERE task_id = ? AND student_id = ?"),
-                                (item["task_id"], student_id))
-                    graded.append({"title": item["title"], **homework_feedback(task, cur.fetchone()["response"])})
+                    cur.execute(sql("""
+                        SELECT r.response, v.score, v.max_score, v.feedback, criteria.definition AS rubric_scores
+                        FROM writing_task_responses r
+                        LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
+                        LEFT JOIN timed_test_rubric_scores criteria ON criteria.task_id = r.task_id AND criteria.student_id = r.student_id
+                        WHERE r.task_id = ? AND r.student_id = ?
+                    """), (item["task_id"], student_id))
+                    row = dict(cur.fetchone())
+                    if task["definition"]:
+                        graded.append({"title": item["title"], **homework_feedback(task, row["response"])})
+                    else:
+                        row["rubric_scores"] = json.loads(row["rubric_scores"]) if row["rubric_scores"] else []
+                        graded.append({"title": item["title"], "type": "writing", **row})
                 results.append({"name": section["name"], "tasks": graded})
         conn.commit()
     return {"title": test["title"], "section_count": len(sections), "section_index": index,
@@ -4130,11 +4200,18 @@ def save_timed_test_draft(task_id: str, payload: TimedTestDraft, request: Reques
         if not cur.fetchone():
             raise HTTPException(403, "Open the test before saving")
         task = homework_task(cur, pin, task_id)
-        quiz = json.loads(task["definition"])
-        encoded = json.dumps(payload.answers, ensure_ascii=False)
-        if len(encoded) > 20_000:
-            raise HTTPException(422, "This draft is too long")
-        assessment_items(encoded, quiz_questions(quiz, task["prompt"]), allow_blank=True)
+        if task["definition"]:
+            if payload.answers is None or payload.writing is not None:
+                raise HTTPException(422, "Provide quiz answers for this task")
+            quiz = json.loads(task["definition"])
+            encoded = json.dumps(payload.answers, ensure_ascii=False)
+            if len(encoded) > 20_000:
+                raise HTTPException(422, "This draft is too long")
+            assessment_items(encoded, quiz_questions(quiz, task["prompt"]), allow_blank=True)
+        else:
+            if payload.writing is None or payload.answers is not None:
+                raise HTTPException(422, "Provide a Writing draft for this task")
+            encoded = payload.writing if payload.writing.strip() else ""
         signals = json.dumps({"device": task_device(request.headers), **payload.attempt_signals.model_dump()}) if payload.attempt_signals else None
         cur.execute(sql("""
             INSERT INTO timed_test_drafts VALUES (?, ?, ?, ?)
@@ -4170,9 +4247,9 @@ def timed_test_catalogue_tasks(catalogue_id: str):
     choices = []
     for block in lesson["blocks"]:
         prepared = block.get("task")
-        if prepared and prepared["type"] not in ("writing", "speaking", "dialogue"):
+        if prepared and prepared["type"] not in ("speaking", "dialogue"):
             choices.append({"id": block["id"], "title": block["title"], "type": prepared["type"]})
         for task in block.get("page_tasks", []):
-            if task["type"] not in ("writing", "speaking", "dialogue"):
+            if task["type"] not in ("speaking", "dialogue"):
                 choices.append({"id": f"{block['id']}:{task['id']}", "title": task["title"], "type": task["type"]})
     return {"tasks": choices}

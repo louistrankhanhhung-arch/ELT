@@ -87,7 +87,7 @@
         label.append(input, " " + task.title + " · " + task.type.replaceAll("_", " "));
         return label;
       }));
-      if (!taskChoices.length) target.append(node("p", "Choose a lesson with auto-scored tasks."));
+      if (!taskChoices.length) target.append(node("p", "Choose a lesson with Writing or auto-scored tasks."));
     }
     async function loadChoices() {
       const value = el("lesson").value;
@@ -240,18 +240,22 @@
     form.pending = setTimeout(() => void save(form), 220);
   }
   async function save(form) {
-    if (form.saving || remaining() <= 0 || !taskForms.includes(form)) return;
+    if (remaining() <= 0 || !taskForms.includes(form)) return;
+    if (form.saving) { form.queued = true; return; }
     form.saving = true;
     try {
       await json("/tests/student/drafts/" + encodeURIComponent(form.id), "PUT", {
-        answers: form.readers.map(read => read()), attempt_signals: form.attempt.snapshot()
+        ...form.draft(), attempt_signals: form.attempt.snapshot()
       });
       if (taskForms.includes(form) && remaining() > 0) note("Answers saved automatically.");
     } catch (error) {
       if (!taskForms.includes(form)) return;
       if (error.status === 409) void poll();
       else if (remaining() > 0) note("Could not save. Reconnecting…");
-    } finally { form.saving = false; }
+    } finally {
+      form.saving = false;
+      if (form.queued) { form.queued = false; void save(form); }
+    }
   }
   function renderQuestion(question, index, prior, changed, shuffle) {
     const field = node("fieldset");
@@ -312,6 +316,18 @@
         const card = node("section");
         card.append(node("h2", section.name));
         for (const task of section.tasks) {
+          if (task.type === "writing") {
+            card.append(node("h3", task.title + (task.max_score ? " · " + task.score + "/" + task.max_score : "")));
+            if (!task.response) { card.append(node("p", "No response submitted.")); continue; }
+            card.append(node("h4", "Your response"), node("pre", task.response));
+            if (task.rubric_scores.length) {
+              const rubric = node("ul");
+              task.rubric_scores.forEach(item => rubric.append(node("li", item.label + " · " + item.score + "/" + item.max_score)));
+              card.append(rubric);
+            }
+            if (task.feedback) card.append(node("h4", "Teacher feedback"), node("p", task.feedback));
+            continue;
+          }
           const list = node("ol");
           card.append(node("h3", task.title + " · " + task.score + "/" + task.max_score), list);
           for (const item of task.items) {
@@ -335,14 +351,29 @@
       window.renderTaskMaterials(card, item.task.materials);
       const questions = item.task.questions || [];
       const attempt = window.createTaskAttemptTracker(questions.length, item.task_id + ":" + access.slice(-16));
-      const form = {id: item.task_id, attempt, readers: [], pending: null, saving: false};
+      const form = {id: item.task_id, attempt, pending: null, saving: false, queued: false};
       const group = node("form");
       group.onsubmit = event => { event.preventDefault(); void save(form); };
       const fields = [];
-      questions.forEach((question, index) => {
-        const {field, read} = renderQuestion(question, index, item.answers?.[index], () => scheduleSave(form), item.task.shuffle);
-        group.append(field); fields.push(field); form.readers.push(read);
-      });
+      if (item.task.type === "writing") {
+        const label = node("label", "Your response");
+        const answer = node("textarea");
+        answer.rows = 10;
+        answer.maxLength = 20000;
+        answer.value = item.writing || "";
+        answer.oninput = () => scheduleSave(form);
+        answer.onblur = () => void save(form);
+        label.append(answer);
+        group.append(label);
+        form.draft = () => ({writing: answer.value});
+      } else {
+        const readers = [];
+        questions.forEach((question, index) => {
+          const {field, read} = renderQuestion(question, index, item.answers?.[index], () => scheduleSave(form), item.task.shuffle);
+          group.append(field); fields.push(field); readers.push(read);
+        });
+        form.draft = () => ({answers: readers.map(read => read())});
+      }
       card.append(group);
       el("questions").append(card);
       taskForms.push(form);
