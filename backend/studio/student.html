@@ -272,6 +272,7 @@
   <section id="publishedScores" hidden aria-label="Task results"></section>
   <section id="writingPanel" hidden>
     <h2 id="taskHeading">Writing</h2>
+    <p id="raceTeam" hidden><strong></strong></p>
     <p id="writingPrompt" style="white-space:pre-wrap"></p>
     <div id="writingMaterials"></div>
     <small>While you work, REH records device type, page switches and approximate time on questions.</small>
@@ -544,6 +545,9 @@
       const pageTask = tasks.find(task => task.task_id === pageTaskSelect.value);
       const task = pageTask || (block && active && (!active.block_id || active.block_id === block.id) ? active : null);
       syncWriting(task, Boolean(pageTask));
+      const raceTeam = document.getElementById("raceTeam");
+      raceTeam.hidden = !session.race_team || task?.task_id !== active?.task_id;
+      raceTeam.firstElementChild.textContent = raceTeam.hidden ? "" : "Mountain Climb · Team " + session.race_team;
       void syncScores(task?.task_id, session.published_score_ids);
     }
 

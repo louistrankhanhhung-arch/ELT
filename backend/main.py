@@ -298,6 +298,15 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS classroom_races (
+            race_id TEXT PRIMARY KEY,
+            pin TEXT NOT NULL REFERENCES sessions(pin),
+            task_id TEXT NOT NULL UNIQUE REFERENCES writing_tasks(task_id),
+            mode TEXT NOT NULL, teams TEXT NOT NULL, started_at TEXT NOT NULL,
+            ended_at TEXT, final_result TEXT
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS task_attempt_signals (
             task_id TEXT NOT NULL,
             student_id TEXT NOT NULL,
@@ -790,6 +799,13 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
             """), (pin, session["current_block_index"], student_id))
             session["page_tasks"] = [task_description(dict(row)) for row in cur.fetchall()]
             cur.execute(sql("""
+                SELECT teams FROM classroom_races WHERE pin = ? AND task_id = ? AND ended_at IS NULL
+            """), (pin, (session["active_writing_task"] or {}).get("task_id")))
+            race = cur.fetchone()
+            if race:
+                session["race_team"] = next((team["name"] for team in json.loads(race["teams"])
+                                             if student_id in team["members"]), None)
+            cur.execute(sql("""
                 SELECT g.task_id FROM writing_ai_grades g JOIN writing_tasks t ON t.task_id = g.task_id
                 WHERE t.pin = ? AND g.student_id = ? AND g.published = 1
             """), (pin, student_id))
@@ -819,6 +835,11 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
         card["shared_materials"] = dialogue.get("shared_materials", [])
         card["materials"] = dialogue.get(card["role"].lower() + "_materials", [])
     if "students" in session:
+        with closing(db()) as conn:
+            cur = conn.cursor()
+            cur.execute(sql("SELECT race_id FROM classroom_races WHERE pin = ? ORDER BY started_at DESC LIMIT 1"), (pin,))
+            race = cur.fetchone()
+            session["race_id"] = race["race_id"] if race else None
         if session["lesson_path"].startswith("imports/"):
             try:
                 block = load_imported_lesson(session["lesson_path"].split("/")[1])["blocks"][session["current_block_index"]]
@@ -1616,6 +1637,10 @@ class SessionWritingRequest(BaseModel):
 
 @app.post("/api/sessions/{pin}/tasks/writing", dependencies=[Depends(require_teacher)])
 def assign_session_writing(pin: str, payload: SessionWritingRequest):
+    return assign_classroom_task(pin, payload)
+
+
+def assign_classroom_task(pin, payload, race=None):
     session = require_active_session(pin)
     prompt = (payload.prompt or "").strip()
     quiz = payload.quiz.normalized(prompt) if payload.quiz else None
@@ -1645,9 +1670,14 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
         raise HTTPException(422, "Enter a writing prompt")
     if speaking and quiz:
         raise HTTPException(422, "Choose one task type")
+    if race and (not payload.block_id or not quiz or quiz.get("kind", "multiple_choice") != "multiple_choice"):
+        raise HTTPException(422, "Open a prepared multiple-choice task to start a race")
     task_id = uuid4().hex
+    race_id = None
     with closing(db()) as conn:
         cur = conn.cursor()
+        if race:
+            lock_classroom_race(cur, pin, session["current_block_index"])
         cur.execute(sql("""
             INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)
             ON CONFLICT(pin, block_id) DO NOTHING
@@ -1673,8 +1703,13 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
             INSERT INTO session_display_modes (pin, mode) VALUES (?, 'interact')
             ON CONFLICT(pin) DO UPDATE SET mode = excluded.mode
         """), (pin,))
+        if race:
+            race_id = create_classroom_race(cur, pin, task_id, race)
         conn.commit()
-    return {"task_id": task_id, "display_mode": "interact"}
+    result = {"task_id": task_id, "display_mode": "interact"}
+    if race_id:
+        result["race_id"] = race_id
+    return result
 
 
 class DialogueAssignment(BaseModel):
@@ -2599,6 +2634,7 @@ def delete_sessions(payload: DeleteSessionsRequest):
             raise HTTPException(409, "A selected session belongs to a learner's history and must be retained.")
         cur.execute(sql(f"DELETE FROM session_classes WHERE pin IN ({placeholders})"), pins)
 
+        cur.execute(sql(f"DELETE FROM classroom_races WHERE pin IN ({placeholders})"), pins)
         task_ids = f"SELECT task_id FROM writing_tasks WHERE pin IN ({placeholders})"
         for table in ("speaking_audio", "task_reviews", "writing_ai_grades", "task_attempt_signals", "timed_test_rubric_scores", "writing_task_responses", "task_evidence_context", "task_materials", "writing_ai_rubrics",
                       "published_quiz_scores", "speaking_tasks", "writing_task_quizzes"):
@@ -4458,3 +4494,143 @@ def seal_test_recording(cur, task_id, student_id, end):
     cur.execute(sql("UPDATE timed_test_recordings SET sealed_status = ? WHERE task_id = ? AND student_id = ?"),
                 (status, task_id, student_id))
     cur.execute(sql("DELETE FROM timed_test_audio_chunks WHERE task_id = ? AND student_id = ?"), (task_id, student_id))
+
+
+class ClassroomRaceRequest(BaseModel):
+    block_id: str = Field(min_length=1, max_length=120)
+    teams: int = Field(ge=2, le=4)
+    mode: Literal["finish_together", "accuracy"] = "finish_together"
+
+
+def lock_classroom_race(cur, pin, block_index=None):
+    cur.execute(sql("UPDATE sessions SET status = status WHERE pin = ?"), (pin,))
+    cur.execute(sql("SELECT status, current_block_index, created_at, expires_at, ended_at FROM sessions WHERE pin = ?"), (pin,))
+    session = cur.fetchone()
+    if not session:
+        raise HTTPException(404, "Session not found")
+    if block_index is not None:
+        if session["status"] != "active" or session["current_block_index"] != block_index or race_session_cutoff(session):
+            raise HTTPException(409, "The task or live session changed. Open the task and try again")
+        cur.execute(sql("SELECT 1 FROM classroom_races WHERE pin = ? AND ended_at IS NULL"), (pin,))
+        if cur.fetchone():
+            raise HTTPException(409, "End the current race before starting another")
+    return session
+
+
+def race_session_cutoff(session):
+    expiry = parse_iso(session["expires_at"]) or parse_iso(session["created_at"]) + timedelta(hours=SESSION_TTL_HOURS)
+    if session["ended_at"]:
+        return min(parse_iso(session["ended_at"]), expiry)
+    return expiry if session["status"] != "active" or datetime.now(timezone.utc) >= expiry else None
+
+
+def create_classroom_race(cur, pin, task_id, payload):
+    cur.execute(sql("SELECT 1 FROM classroom_races WHERE task_id = ?"), (task_id,))
+    if cur.fetchone():
+        raise HTTPException(409, "This task has already been used in a race. Choose a different task")
+    cur.execute(sql("SELECT 1 FROM writing_task_responses WHERE task_id = ? LIMIT 1"), (task_id,))
+    if cur.fetchone():
+        raise HTTPException(409, "Choose a task that students have not submitted yet")
+    cur.execute(sql("SELECT student_id FROM session_students WHERE pin = ?"), (pin,))
+    students = [row["student_id"] for row in cur.fetchall()]
+    if len(students) < payload.teams:
+        raise HTTPException(422, "At least one student must join per team")
+    shuffle(students)
+    names = ("Tigers", "Otters", "Falcons", "Bears")
+    teams = [{"name": names[index], "members": students[index::payload.teams]} for index in range(payload.teams)]
+    race_id = uuid4().hex
+    cur.execute(sql("""
+        INSERT INTO classroom_races (race_id, pin, task_id, mode, teams, started_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """), (race_id, pin, task_id, payload.mode, json.dumps(teams), now_iso()))
+    return race_id
+
+
+def race_result(cur, race, cutoff=None):
+    cur.execute(sql("""
+        SELECT r.student_id, r.response, r.submitted_at, q.definition, t.prompt
+        FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
+        JOIN writing_task_quizzes q ON q.task_id = t.task_id
+        WHERE r.task_id = ? AND r.submitted_at >= ? AND r.submitted_at <= ?
+    """),
+                (race["task_id"], race["started_at"], cutoff.isoformat() if cutoff else now_iso()))
+    responses = {row["student_id"]: row for row in cur.fetchall()}
+    teams = []
+    finish_times = {}
+    accuracy_points = {}
+    for team in json.loads(race["teams"]):
+        name, members = team["name"], team["members"]
+        submitted = [responses[member] for member in members if member in responses]
+        teams.append({"name": name, "submitted": len(submitted), "total": len(members)})
+        if len(submitted) == len(members):
+            finish_times[name] = max(row["submitted_at"] for row in submitted)
+        if cutoff and race["mode"] == "accuracy":
+            scored = [grade_quiz(row["response"], json.loads(row["definition"]), row["prompt"]) for row in submitted]
+            earned = sum(row["score"] for row in scored)
+            maximum = len(members) * scored[0]["max_score"] if scored else 0
+            accuracy_points[name] = (earned, maximum or 1)
+            teams[-1]["accuracy"] = round(100 * earned / maximum, 1) if maximum else 0
+    leaders = []
+    if cutoff:
+        if race["mode"] == "accuracy" and any(team["submitted"] for team in teams):
+            best = max(earned / maximum for earned, maximum in accuracy_points.values())
+            leaders = [name for name, (earned, maximum) in accuracy_points.items() if earned / maximum == best]
+        elif race["mode"] == "finish_together" and finish_times:
+            first = min(finish_times.values())
+            leaders = [name for name, finished in finish_times.items() if finished == first]
+    return {"race_id": race["race_id"], "mode": race["mode"], "status": "ended" if cutoff else "live",
+            "teams": teams, "leaders": leaders}
+
+
+@app.post("/api/sessions/{pin}/race/start", dependencies=[Depends(require_teacher)])
+def start_classroom_race(pin: str, payload: ClassroomRaceRequest):
+    return assign_classroom_task(pin, SessionWritingRequest(block_id=payload.block_id), race=payload)
+
+
+@app.get("/api/sessions/{pin}/race", dependencies=[Depends(require_teacher)])
+def latest_classroom_race(pin: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("SELECT race_id FROM classroom_races WHERE pin = ? ORDER BY started_at DESC LIMIT 1"), (pin,))
+        row = cur.fetchone()
+    return {"race_id": row["race_id"] if row else None}
+
+
+@app.post("/api/sessions/{pin}/race/{race_id}/end", dependencies=[Depends(require_teacher)])
+def end_classroom_race(pin: str, race_id: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        session = lock_classroom_race(cur, pin)
+        cur.execute(sql("SELECT * FROM classroom_races WHERE race_id = ? AND pin = ?"), (race_id, pin))
+        race = cur.fetchone()
+        if not race:
+            raise HTTPException(404, "Race not found")
+        if race["final_result"]:
+            return json.loads(race["final_result"])
+        cutoff = race_session_cutoff(session) or datetime.now(timezone.utc)
+        result = race_result(cur, race, cutoff)
+        cur.execute(sql("UPDATE classroom_races SET ended_at = ?, final_result = ? WHERE race_id = ?"),
+                    (cutoff.isoformat(), json.dumps(result), race_id))
+        conn.commit()
+    return result
+
+
+@app.get("/api/races/{race_id}")
+def classroom_race_state(race_id: str, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    if not re.fullmatch(r"[a-f0-9]{32}", race_id):
+        raise HTTPException(404, "Race not found")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            SELECT r.*, s.status, s.created_at, s.expires_at, s.ended_at AS session_ended_at
+            FROM classroom_races r JOIN sessions s ON s.pin = r.pin WHERE r.race_id = ?
+        """), (race_id,))
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(404, "Race not found")
+        race = dict(row)
+        if race["final_result"]:
+            return json.loads(race["final_result"])
+        session = {**race, "ended_at": race["session_ended_at"]}
+        return race_result(cur, race, race_session_cutoff(session))

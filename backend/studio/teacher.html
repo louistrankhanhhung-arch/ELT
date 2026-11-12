@@ -444,6 +444,18 @@
       <p id="sessionBanner" role="status">Start a session to invite students.</p>
       <div class="join-actions"><button type="button" id="showJoinSession" hidden>Join Screen</button>
       <button id="copyStudentBtn" hidden>Copy Join Link</button></div>
+      <details id="raceControls" hidden>
+        <summary>Mountain Climb</summary>
+        <label>Teams <select id="raceTeamCount"><option>2</option><option>3</option><option>4</option></select></label>
+        <label>Mode <select id="raceMode"><option value="finish_together">Finish Together</option><option value="accuracy">Accuracy Race</option></select></label>
+        <div class="join-actions">
+          <button id="startRace" type="button">Start Race</button>
+          <button id="openRaceScreen" type="button" hidden>Race Screen</button>
+          <button id="endRace" type="button" hidden>End Race</button>
+        </div>
+        <p id="raceStatus" role="status"></p>
+        <ul id="raceProgress"></ul>
+      </details>
       <details id="dialogueControls" hidden>
         <summary>Dialogue Card A/B</summary>
         <button type="button" id="pairDialogue">Pair students</button>
@@ -969,9 +981,98 @@
       return { ...context, prompt: prompt || "Multiple-choice quiz", quiz: { questions, shuffle: writingAssignForm.elements.shuffle.checked } };
     }
 
+    const raceControls = document.getElementById("raceControls");
+    const startRace = document.getElementById("startRace");
+    const endRace = document.getElementById("endRace");
+    const openRaceScreen = document.getElementById("openRaceScreen");
+    const raceStatus = document.getElementById("raceStatus");
+    const raceProgress = document.getElementById("raceProgress");
+    let raceId = null;
+    let raceState = null;
+    let raceBusy = false;
+
+    function syncRaceControls(live, prepared) {
+      raceControls.hidden = !live;
+      if (!live) { raceId = null; raceState = null; raceProgress.replaceChildren(); }
+      startRace.disabled = raceBusy || !live || prepared?.type !== "multiple_choice" || raceState?.status === "live";
+      openRaceScreen.hidden = !raceId;
+      endRace.hidden = raceState?.status !== "live";
+      endRace.disabled = raceBusy;
+      if (live && !raceId && !raceBusy) raceStatus.textContent = prepared?.type === "multiple_choice"
+        ? "Teams are balanced from students who have joined."
+        : "Open a prepared multiple-choice task to start.";
+    }
+    function showRace(data) {
+      raceState = data;
+      raceStatus.textContent = data.status === "live" ? "Race in progress" : data.leaders.length
+        ? "Race ended · " + data.leaders.join(" / ") : "Race ended";
+      raceProgress.replaceChildren(...data.teams.map(team => {
+        const item = document.createElement("li");
+        item.textContent = team.name + " · " + team.submitted + "/" + team.total + " submitted" +
+          (team.accuracy == null ? "" : " · " + team.accuracy + "%");
+        return item;
+      }));
+      syncRaceControls(Boolean(sessionPin) && !endSessionBtn.disabled, currentLesson?.blocks[blockIndex]?.task);
+    }
+    async function updateRace(pin, id) {
+      if (pin !== sessionPin || raceBusy || id === raceId && (!raceControls.open || raceState?.status === "ended")) return;
+      if (id !== raceId) {
+        raceId = id;
+        raceState = null;
+        raceProgress.replaceChildren();
+        syncRaceControls(true, currentLesson?.blocks[blockIndex]?.task);
+      }
+      if (!id) return;
+      const response = await fetch(API_BASE + "/races/" + encodeURIComponent(id), {cache: "no-store"});
+      if (response.ok && pin === sessionPin && id === raceId && !raceBusy) showRace(await response.json());
+    }
+    openRaceScreen.onclick = () => {
+      if (raceId) window.open("race.html?id=" + encodeURIComponent(raceId), "_blank", "noopener");
+    };
+    startRace.onclick = async () => {
+      const pin = sessionPin;
+      const block = currentLesson?.blocks[blockIndex];
+      if (!pin || !block || raceBusy) return;
+      raceBusy = true;
+      let failure = "";
+      syncRaceControls(true, block.task);
+      try {
+        const result = await writingRequest("/sessions/" + pin + "/race/start", {
+          block_id: block.id, teams: Number(document.getElementById("raceTeamCount").value),
+          mode: document.getElementById("raceMode").value
+        });
+        if (pin !== sessionPin) return;
+        savedDisplayMode = displayMode.value = "interact";
+        raceId = result.race_id;
+        raceState = {status: "live"};
+        raceStatus.textContent = "Race in progress. Open Race Screen to project.";
+        await updateWritingResults(pin);
+      } catch (error) { failure = error.message; }
+      finally {
+        raceBusy = false;
+        syncRaceControls(Boolean(sessionPin) && !endSessionBtn.disabled, currentLesson?.blocks[blockIndex]?.task);
+        if (failure) raceStatus.textContent = failure;
+      }
+    };
+    endRace.onclick = async () => {
+      const pin = sessionPin;
+      if (!pin || !raceId || raceBusy) return;
+      raceBusy = true;
+      syncRaceControls(true, currentLesson?.blocks[blockIndex]?.task);
+      try {
+        const result = await writingRequest("/sessions/" + pin + "/race/" + raceId + "/end", {});
+        if (pin === sessionPin) showRace(result);
+      } catch (error) { raceStatus.textContent = error.message; }
+      finally {
+        raceBusy = false;
+        syncRaceControls(Boolean(sessionPin) && !endSessionBtn.disabled, currentLesson?.blocks[blockIndex]?.task);
+      }
+    };
+
     function syncWritingControls() {
       const live = Boolean(sessionPin) && !endSessionBtn.disabled;
       const prepared = currentLesson?.blocks[blockIndex]?.task;
+      syncRaceControls(live, prepared);
       prepareWriting.hidden = live || currentLesson?.origin === "work";
       copyLessonLink.hidden = live;
       assignQuick.hidden = !live;
@@ -1652,6 +1753,7 @@
         if (session.active_writing_task || currentLesson?.blocks[blockIndex]?.page_tasks?.length) await updateWritingResults(pin);
         if (pin !== sessionPin || endSessionBtn.disabled) return;
 
+        void updateRace(pin, session.race_id || null).catch(() => {});
         const students = session.students || [];
         document.getElementById("studentCount").textContent = `(${students.length})`;
         pageRoster = students;
