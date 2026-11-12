@@ -488,6 +488,28 @@ def init_db():
         )
     """)
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_test_mic_checks (
+            pin TEXT NOT NULL REFERENCES timed_tests(pin),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            checked_at TEXT NOT NULL, PRIMARY KEY (pin, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_test_recordings (
+            task_id TEXT NOT NULL REFERENCES writing_tasks(task_id),
+            student_id TEXT NOT NULL REFERENCES session_students(student_id),
+            media_type TEXT NOT NULL, completed INTEGER NOT NULL DEFAULT 0,
+            sealed_status TEXT, signals TEXT, PRIMARY KEY (task_id, student_id)
+        )
+    """)
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS timed_test_audio_chunks (
+            task_id TEXT NOT NULL, student_id TEXT NOT NULL, sequence INTEGER NOT NULL,
+            audio BYTEA NOT NULL, PRIMARY KEY (task_id, student_id, sequence),
+            FOREIGN KEY (task_id, student_id) REFERENCES timed_test_recordings(task_id, student_id)
+        )
+    """)
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS timed_test_drafts (
             task_id TEXT NOT NULL REFERENCES writing_tasks(task_id),
             student_id TEXT NOT NULL REFERENCES session_students(student_id),
@@ -1873,7 +1895,8 @@ def session_task_results(pin: str, include_roster: bool = False):
                    v.score AS review_score, v.max_score AS review_max_score, v.feedback, v.reviewed_at,
                    a.media_type AS audio_type, LENGTH(a.audio) AS audio_bytes,
                    g.state AS ai_state, g.definition AS ai_json, g.published AS ai_published,
-                   signal.definition AS signals_json, rubric_scores.definition AS rubric_scores_json
+                   signal.definition AS signals_json, rubric_scores.definition AS rubric_scores_json,
+                   test_audio.sealed_status AS recording_status
             FROM writing_task_responses r JOIN writing_tasks t ON t.task_id = r.task_id
             JOIN session_students s ON s.student_id = r.student_id
             LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
@@ -1881,6 +1904,7 @@ def session_task_results(pin: str, include_roster: bool = False):
             LEFT JOIN writing_ai_grades g ON g.task_id = r.task_id AND g.student_id = r.student_id
             LEFT JOIN task_attempt_signals signal ON signal.task_id = r.task_id AND signal.student_id = r.student_id
             LEFT JOIN timed_test_rubric_scores rubric_scores ON rubric_scores.task_id = r.task_id AND rubric_scores.student_id = r.student_id
+            LEFT JOIN timed_test_recordings test_audio ON test_audio.task_id = r.task_id AND test_audio.student_id = r.student_id
             WHERE t.pin = ? ORDER BY r.submitted_at, r.student_id
         """), (pin,))
         responses = [dict(row) for row in cur.fetchall()]
@@ -3650,8 +3674,8 @@ def create_independent_assignment(payload, test_sections=None):
             if not block.get("task") and block["id"] in selected:
                 items.append({"block_id": block["id"], "title": block["title"]})
             for task in tasks:
-                if test_sections and task["type"] not in ("writing", "multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
-                    raise HTTPException(422, "Tests currently accept Writing and auto-scored tasks")
+                if test_sections and task["type"] not in ("writing", "speaking", "multiple_choice", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"):
+                    raise HTTPException(422, "Unsupported Test task")
                 task_id = uuid4().hex
                 task_key = block["id"] if block.get("task") else f"homework:{block['id']}:{task['id']}"
                 cur.execute(sql("INSERT INTO writing_tasks VALUES (?, ?, ?, ?, ?)"),
@@ -3672,13 +3696,22 @@ def create_independent_assignment(payload, test_sections=None):
                 item = {"task_id": task_id, "title": task.get("title") or block["title"]}
                 if test_sections:
                     item["source_id"] = block["id"] if block.get("task") else f"{block['id']}:{task['id']}"
+                    item["type"] = task["type"]
                 items.append(item)
         if test_sections:
             by_source = {item.pop("source_id"): item for item in items if "source_id" in item}
             if set(by_source) != selected:
-                raise HTTPException(422, "Choose Writing or auto-scored tasks in each test section")
-            sections = [{"name": section.name, "minutes": section.minutes,
-                         "tasks": [by_source[key] for key in section.task_ids]} for section in test_sections]
+                raise HTTPException(422, "Choose supported tasks in each Test section")
+            sections = []
+            for section in test_sections:
+                tasks = [by_source[key] for key in section.task_ids]
+                speaking = any(task["type"] == "speaking" for task in tasks)
+                if speaking and (len(tasks) != 1 or section.minutes > 10 or section.prep_seconds >= section.minutes * 60):
+                    raise HTTPException(422, "Use one Speaking task, at most 10 minutes total, with preparation shorter than the section")
+                if not speaking and section.prep_seconds:
+                    raise HTTPException(422, "Preparation seconds apply to Speaking sections only")
+                sections.append({"name": section.name, "minutes": section.minutes,
+                                 "prep_seconds": section.prep_seconds, "tasks": tasks})
             cur.execute(sql("INSERT INTO timed_tests (pin, sections) VALUES (?, ?)"), (pin, json.dumps(sections)))
         cur.execute(sql("UPDATE homework SET items = ? WHERE pin = ?"), (json.dumps(items), pin))
         conn.commit()
@@ -3930,6 +3963,7 @@ def submit_homework(task_id: str, payload: HomeworkSubmission, request: Request,
 
 
 class TimedTestSection(BaseModel):
+    prep_seconds: int = Field(default=0, ge=0, le=300)
     name: str = Field(min_length=1, max_length=80)
     minutes: int = Field(ge=1, le=180)
     task_ids: List[str] = Field(min_length=1, max_length=50)
@@ -3946,6 +3980,20 @@ class TimedTestDraft(BaseModel):
     answers: Optional[List[int | str | List[int] | None]] = Field(default=None, max_length=100)
     writing: Optional[str] = Field(default=None, max_length=20_000)
     attempt_signals: Optional[TaskAttemptSignals] = None
+
+
+class TimedTestRecordingStart(BaseModel):
+    media_type: Literal["audio/webm", "audio/mp4", "audio/ogg"]
+
+
+class TimedTestAudioChunk(BaseModel):
+    sequence: int = Field(ge=0, le=900)
+    data: str = Field(default="", max_length=1_400_000)
+    final: bool = False
+    attempt_signals: Optional[TaskAttemptSignals] = None
+
+
+TEST_AUDIO_GRACE = timedelta(seconds=12)
 
 
 @app.post("/api/tests", dependencies=[Depends(require_teacher)])
@@ -3999,6 +4047,9 @@ def seal_timed_test(cur, test, sections, count, ends, student_ids):
                 questions = quiz_questions(json.loads(task["definition"]), task["prompt"])
                 empty = json.dumps([None] * len(questions))
             for student_id in student_ids:
+                if task["speaking_id"]:
+                    seal_test_recording(cur, task_id, student_id, ends[index])
+                    continue
                 cur.execute(sql("""
                     INSERT INTO writing_task_responses (task_id, student_id, response, submitted_at)
                     VALUES (?, ?, COALESCE((SELECT response FROM timed_test_drafts WHERE task_id = ? AND student_id = ?), ?), ?)
@@ -4043,9 +4094,10 @@ def start_timed_test(pin: str):
 
 def timed_test_roster(cur, pin):
     cur.execute(sql("""
-        SELECT a.student_id, s.student_name, m.joined_at
+        SELECT a.student_id, s.student_name, m.joined_at, mic.checked_at AS mic_checked_at
         FROM homework_access a JOIN session_students s ON s.student_id = a.student_id
         LEFT JOIN timed_test_members m ON m.pin = a.pin AND m.student_id = a.student_id
+        LEFT JOIN timed_test_mic_checks mic ON mic.pin = a.pin AND mic.student_id = a.student_id
         WHERE a.pin = ? ORDER BY s.student_name, a.student_id
     """), (pin,))
     return [dict(row) for row in cur.fetchall()]
@@ -4101,7 +4153,9 @@ def publish_timed_test(pin: str):
             LIMIT 1
         """), (pin,))
         if cur.fetchone():
-            raise HTTPException(409, "Review all submitted Writing responses before publishing results")
+            raise HTTPException(409, "Review all submitted Writing and Speaking responses before publishing results")
+        if any(item.get("type") == "speaking" for section in sections for item in section["tasks"]) and now < ends[-1] + TEST_AUDIO_GRACE:
+            raise HTTPException(409, "Wait a few seconds for final recordings to arrive")
         cur.execute(sql("UPDATE timed_tests SET published_at = COALESCE(published_at, ?) WHERE pin = ?"), (now.isoformat(), pin))
         conn.commit()
     return {"published": True}
@@ -4153,10 +4207,17 @@ def timed_test_student(response: Response, credentials: Optional[HTTPAuthorizati
                 draft = cur.fetchone()
                 description = task_description(task)
                 saved = draft["response"] if draft else None
-                tasks.append({**item, "task": description, **(
-                    {"writing": saved or ""} if description["type"] == "writing" else
-                    {"answers": json.loads(saved) if saved else None}
-                )})
+                if description["type"] == "speaking":
+                    cur.execute(sql("SELECT completed FROM timed_test_recordings WHERE task_id = ? AND student_id = ?"),
+                                (item["task_id"], student_id))
+                    recording = cur.fetchone()
+                    tasks.append({**item, "task": description, "recording_started": bool(recording),
+                                  "recording_complete": bool(recording and recording["completed"])})
+                else:
+                    tasks.append({**item, "task": description, **(
+                        {"writing": saved or ""} if description["type"] == "writing" else
+                        {"answers": json.loads(saved) if saved else None}
+                    )})
         results = []
         if index == len(sections) and test["published_at"]:
             for section in sections:
@@ -4164,10 +4225,12 @@ def timed_test_student(response: Response, credentials: Optional[HTTPAuthorizati
                 for item in section["tasks"]:
                     task = homework_task(cur, pin, item["task_id"])
                     cur.execute(sql("""
-                        SELECT r.response, v.score, v.max_score, v.feedback, criteria.definition AS rubric_scores
+                        SELECT r.response, v.score, v.max_score, v.feedback, criteria.definition AS rubric_scores,
+                               recording.sealed_status AS recording_status
                         FROM writing_task_responses r
                         LEFT JOIN task_reviews v ON v.task_id = r.task_id AND v.student_id = r.student_id
                         LEFT JOIN timed_test_rubric_scores criteria ON criteria.task_id = r.task_id AND criteria.student_id = r.student_id
+                        LEFT JOIN timed_test_recordings recording ON recording.task_id = r.task_id AND recording.student_id = r.student_id
                         WHERE r.task_id = ? AND r.student_id = ?
                     """), (item["task_id"], student_id))
                     row = dict(cur.fetchone())
@@ -4175,12 +4238,14 @@ def timed_test_student(response: Response, credentials: Optional[HTTPAuthorizati
                         graded.append({"title": item["title"], **homework_feedback(task, row["response"])})
                     else:
                         row["rubric_scores"] = json.loads(row["rubric_scores"]) if row["rubric_scores"] else []
-                        graded.append({"title": item["title"], "type": "writing", **row})
+                        graded.append({"title": item["title"], "type": "speaking" if task["speaking_id"] else "writing", **row})
                 results.append({"name": section["name"], "tasks": graded})
         conn.commit()
     return {"title": test["title"], "section_count": len(sections), "section_index": index,
             "section_name": sections[index]["name"] if deadline else None, "ends_at": deadline,
+            "prepare_ends_at": deadline - timedelta(minutes=sections[index]["minutes"]) + timedelta(seconds=sections[index].get("prep_seconds", 0)) if deadline else None,
             "server_now": now, "finished": index == len(sections), "published": bool(test["published_at"]),
+            "has_speaking": any(item.get("type") == "speaking" for section in sections for item in section["tasks"]),
             "tasks": tasks, "results": results}
 
 
@@ -4200,6 +4265,8 @@ def save_timed_test_draft(task_id: str, payload: TimedTestDraft, request: Reques
         if not cur.fetchone():
             raise HTTPException(403, "Open the test before saving")
         task = homework_task(cur, pin, task_id)
+        if task["speaking_id"]:
+            raise HTTPException(422, "Use the recording controls for Speaking")
         if task["definition"]:
             if payload.answers is None or payload.writing is not None:
                 raise HTTPException(422, "Provide quiz answers for this task")
@@ -4247,9 +4314,147 @@ def timed_test_catalogue_tasks(catalogue_id: str):
     choices = []
     for block in lesson["blocks"]:
         prepared = block.get("task")
-        if prepared and prepared["type"] not in ("speaking", "dialogue"):
+        if prepared and prepared["type"] != "dialogue":
             choices.append({"id": block["id"], "title": block["title"], "type": prepared["type"]})
         for task in block.get("page_tasks", []):
-            if task["type"] not in ("speaking", "dialogue"):
+            if task["type"] != "dialogue":
                 choices.append({"id": f"{block['id']}:{task['id']}", "title": task["title"], "type": task["type"]})
     return {"tasks": choices}
+
+
+def test_recording_context(cur, task_id, credentials):
+    assignment = homework_access(cur, credentials, assignment_type="test")
+    pin, student_id = assignment["pin"], assignment["student_id"]
+    test = timed_test_row(cur, pin, lock=True)
+    task = homework_task(cur, pin, task_id)
+    if not task["speaking_id"] or not test["started_at"]:
+        raise HTTPException(409, "Speaking is not open")
+    cur.execute(sql("SELECT 1 FROM timed_test_members WHERE pin = ? AND student_id = ?"), (pin, student_id))
+    if not cur.fetchone():
+        raise HTTPException(403, "Open the test first")
+    sections = json.loads(test["sections"])
+    now = datetime.now(timezone.utc)
+    _, _, ends = timed_test_clock(test, sections, now)
+    for index, section in enumerate(sections):
+        if any(item["task_id"] == task_id for item in section["tasks"]):
+            end = ends[index]
+            prepare = end - timedelta(minutes=section["minutes"]) + timedelta(seconds=section.get("prep_seconds", 0))
+            return student_id, now, prepare, end
+    raise HTTPException(404, "Speaking task not found")
+
+
+@app.post("/api/tests/student/mic-check")
+def timed_test_mic_check(credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        assignment = homework_access(cur, credentials, assignment_type="test")
+        cur.execute(sql("""
+            INSERT INTO timed_test_mic_checks VALUES (?, ?, ?)
+            ON CONFLICT(pin, student_id) DO UPDATE SET checked_at = excluded.checked_at
+        """), (assignment["pin"], assignment["student_id"], now_iso()))
+        conn.commit()
+    return {"ok": True}
+
+
+@app.post("/api/tests/student/recordings/{task_id}/start")
+def start_test_recording(task_id: str, payload: TimedTestRecordingStart,
+                         credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        student_id, now, prepare, end = test_recording_context(cur, task_id, credentials)
+        if not prepare <= now < end:
+            raise HTTPException(409, "Recording is outside the response window")
+        cur.execute(sql("""
+            INSERT INTO timed_test_recordings (task_id, student_id, media_type) VALUES (?, ?, ?)
+            ON CONFLICT(task_id, student_id) DO NOTHING
+        """), (task_id, student_id, payload.media_type))
+        if not cur.rowcount:
+            raise HTTPException(409, "A recording was already started for this task")
+        conn.commit()
+    return {"ok": True}
+
+
+@app.put("/api/tests/student/recordings/{task_id}/chunks")
+def save_test_audio_chunk(task_id: str, payload: TimedTestAudioChunk, request: Request,
+                          credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    try:
+        audio = base64.b64decode(payload.data, validate=True)
+    except (ValueError, binascii.Error):
+        raise HTTPException(422, "Invalid recording segment")
+    if len(audio) > 1024 * 1024 or (not audio and not payload.final):
+        raise HTTPException(422, "Invalid recording segment size")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        student_id, now, prepare, end = test_recording_context(cur, task_id, credentials)
+        if not prepare <= now < end + TEST_AUDIO_GRACE:
+            raise HTTPException(409, "The recording upload window is closed")
+        cur.execute(sql("SELECT completed, sealed_status FROM timed_test_recordings WHERE task_id = ? AND student_id = ?"),
+                    (task_id, student_id))
+        recording = cur.fetchone()
+        if not recording or recording["sealed_status"]:
+            raise HTTPException(409, "This recording cannot be updated")
+        if recording["completed"]:
+            if payload.final and not audio:
+                return {"saved": True}
+            raise HTTPException(409, "This recording is already complete")
+        cur.execute(sql("""
+            SELECT COUNT(*) AS next_sequence, COALESCE(SUM(LENGTH(audio)), 0) AS bytes
+            FROM timed_test_audio_chunks WHERE task_id = ? AND student_id = ?
+        """), (task_id, student_id))
+        progress = cur.fetchone()
+        if payload.sequence < progress["next_sequence"] and audio and not payload.final:
+            cur.execute(sql("SELECT audio FROM timed_test_audio_chunks WHERE task_id = ? AND student_id = ? AND sequence = ?"),
+                        (task_id, student_id, payload.sequence))
+            prior = cur.fetchone()
+            if prior and bytes(prior["audio"]) == audio:
+                return {"saved": True}
+        if payload.sequence != progress["next_sequence"] or progress["bytes"] + len(audio) > 5 * 1024 * 1024:
+            raise HTTPException(422, "Recording exceeds the size limit or a segment is missing")
+        if audio:
+            cur.execute(sql("INSERT INTO timed_test_audio_chunks VALUES (?, ?, ?, ?)"),
+                        (task_id, student_id, payload.sequence, audio))
+        signals = json.dumps({"device": task_device(request.headers), **payload.attempt_signals.model_dump()}) if payload.attempt_signals else None
+        cur.execute(sql("""
+            UPDATE timed_test_recordings SET completed = ?, signals = COALESCE(?, signals)
+            WHERE task_id = ? AND student_id = ?
+        """), (int(payload.final), signals, task_id, student_id))
+        conn.commit()
+    return {"saved": True}
+
+
+def seal_test_recording(cur, task_id, student_id, end):
+    cur.execute(sql("SELECT * FROM timed_test_recordings WHERE task_id = ? AND student_id = ?"), (task_id, student_id))
+    recording = cur.fetchone()
+    if recording and recording["sealed_status"]:
+        return
+    if recording and not recording["completed"] and datetime.now(timezone.utc) < end + TEST_AUDIO_GRACE:
+        return
+    audio = b""
+    status = "no_recording"
+    if recording:
+        cur.execute(sql("SELECT audio FROM timed_test_audio_chunks WHERE task_id = ? AND student_id = ? ORDER BY sequence"),
+                    (task_id, student_id))
+        audio = b"".join(bytes(row["audio"]) for row in cur.fetchall())
+        if audio:
+            try:
+                validate_speaking_audio(base64.b64encode(audio).decode(), recording["media_type"])
+            except HTTPException:
+                audio = b""
+                status = "incomplete"
+            else:
+                status = "submitted" if recording["completed"] else "incomplete"
+    cur.execute(sql("""
+        INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
+        ON CONFLICT(task_id, student_id) DO NOTHING
+    """), (task_id, student_id, "[Audio recording]" if audio else "", end.isoformat()))
+    if not cur.rowcount or not recording:
+        return
+    if audio:
+        cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
+                    (task_id, student_id, recording["media_type"], audio))
+    if recording["signals"]:
+        cur.execute(sql("INSERT INTO task_attempt_signals VALUES (?, ?, ?)"),
+                    (task_id, student_id, recording["signals"]))
+    cur.execute(sql("UPDATE timed_test_recordings SET sealed_status = ? WHERE task_id = ? AND student_id = ?"),
+                (status, task_id, student_id))
+    cur.execute(sql("DELETE FROM timed_test_audio_chunks WHERE task_id = ? AND student_id = ?"), (task_id, student_id))

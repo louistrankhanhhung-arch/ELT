@@ -187,17 +187,20 @@ window.createEvidenceDetail = (root, request, status) => {
     const panel = document.createElement("details");
     const testWriting = pin.startsWith("TEST-") && task.type === "writing";
     const blankWriting = testWriting && !row.response.trim();
+    const testSpeaking = pin.startsWith("TEST-") && task.type === "speaking";
+    const recordingState = row.recording_status === "incomplete" ? "Recording incomplete" : row.audio_bytes ? "Recording submitted" : "No recording";
     {
       const heading = document.createElement("summary");
       heading.className = "report-student-row";
       const identity = document.createElement("span");
       identity.append(text("strong", row.student_name), text("small", readableDate(row.submitted_at)));
       const score = scoreFor(row);
-      heading.append(identity, badge(score ? score.join("/") : blankWriting ? "No response" : "Submitted", score && percent(score) < 80 ? "pending" : "good"));
+      heading.append(identity, badge(score ? score.join("/") : blankWriting ? "No response" : testSpeaking ? recordingState : "Submitted", score && percent(score) < 80 ? "pending" : "good"));
       panel.append(heading);
     }
     if (row.attempt_signals) panel.append(window.renderTaskAttemptSignals(document, row.attempt_signals));
     if (task.type === "speaking") {
+      if (testSpeaking) panel.append(text("p", recordingState));
       if (row.audio_bytes) {
         const play = button("Load recording", async () => {
           play.disabled = true;
@@ -212,7 +215,7 @@ window.createEvidenceDetail = (root, request, status) => {
           } catch (error) { status(error.message); play.disabled = false; }
         });
         panel.append(play);
-      } else panel.append(text("p", "Audio archived"));
+      } else if (!testSpeaking) panel.append(text("p", "Audio archived"));
     } else if (task.questions?.length) {
       renderAnswers(task, row, panel);
     } else {
@@ -220,7 +223,7 @@ window.createEvidenceDetail = (root, request, status) => {
     }
     if (!row.attempt_signals) panel.append(text("p", "No attempt signals recorded for this submission."));
     if (row.ai_feedback?.feedback) panel.append(text("p", row.ai_feedback.feedback));
-    if (!task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting) {
+    if (!task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting && (!testSpeaking || row.audio_bytes)) {
       const editor = document.createElement("details");
       editor.append(text("summary", "Review and feedback"), reviewForm(task, row, pin));
       panel.append(editor);
