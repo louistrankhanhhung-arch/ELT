@@ -212,8 +212,7 @@
     return;
   }
 
-  el("join").hidden = false;
-  if (validPin(params.get("pin"))) el("joinPin").value = params.get("pin");
+
   let currentIndex = undefined;
   let deadline = null;
   let prepareDeadline = null;
@@ -226,7 +225,6 @@
   let published = false;
   let polling = null;
   let savingTick = null;
-  let authKey = "";
   const storageKey = pin => "reh-test-access:" + pin;
   const note = text => { el("studentState").textContent = text; };
   function disposeForms() {
@@ -574,7 +572,6 @@
   }
   async function openStudent() {
     const data = await json("/tests/student");
-    el("join").hidden = true;
     el("student").hidden = false;
     applyState(data);
     if (!polling) {
@@ -584,23 +581,15 @@
     }
     status("");
   }
-  el("joinForm").onsubmit = event => {
-    event.preventDefault();
-    const submit = event.submitter;
-    submit.disabled = true;
-    void run(async () => {
-      const pin = el("joinPin").value.trim();
-      const result = await json("/tests/join", "POST", {pin, student_id: el("studentId").value.trim()});
-      access = result.access;
-      authKey = storageKey(pin);
-      await openStudent();
-      try { sessionStorage.setItem(authKey, access); } catch {}
-      if (params.get("pin") !== pin) history.replaceState(null, "", "?join=1&pin=" + encodeURIComponent(pin));
-    }).finally(() => { submit.disabled = false; });
-  };
-  if (validPin(params.get("pin"))) {
-    authKey = storageKey(params.get("pin"));
-    try { access = sessionStorage.getItem(authKey) || ""; } catch {}
-    if (access) void openStudent().catch(() => { access = ""; try { sessionStorage.removeItem(authKey); } catch {} });
-  }
+  const pin = params.get("pin");
+  const key = storageKey(pin);
+  const joinUrl = "join.html" + (validPin(pin) ? "?pin=" + encodeURIComponent(pin) : "");
+  try { if (validPin(pin)) access = sessionStorage.getItem(key) || ""; } catch {}
+  if (!access) location.replace(joinUrl);
+  else void openStudent().catch(error => {
+    if (error.status === 401 || error.status === 403) {
+      try { sessionStorage.removeItem(key); } catch {}
+      location.replace(joinUrl);
+    } else status(error.message);
+  });
 })();

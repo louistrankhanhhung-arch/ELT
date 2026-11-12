@@ -899,6 +899,19 @@ def join_session(pin: str, payload: JoinSessionRequest):
     conn = db()
     cur = conn.cursor()
 
+    if roster_id is not None:
+        cur.execute(sql("SELECT class_code FROM session_classes WHERE pin = ?"), (pin,))
+        assigned_class = cur.fetchone()
+        if assigned_class:
+            today = homework_today().isoformat()
+            cur.execute(sql("""
+                SELECT 1 FROM reh_enrollments WHERE class_code = ? AND student_id = ?
+                    AND started_on <= ? AND (ended_on IS NULL OR ended_on >= ?)
+            """), (assigned_class["class_code"], roster_id, today, today))
+            if not cur.fetchone():
+                conn.close()
+                raise HTTPException(403, "Your Student ID is not enrolled in this class")
+
     student = {
         "student_id": student_id,
         "pin": pin,
@@ -3829,7 +3842,7 @@ def update_homework_schedule(pin: str, payload: HomeworkScheduleRequest):
 def short_homework_link(pin: str):
     if not re.fullmatch(r"[0-9]{8}", pin):
         raise HTTPException(404, "Invalid Homework PIN")
-    return RedirectResponse(f"/studio/homework.html?join=1&pin={pin}", headers={"Cache-Control": "no-store"})
+    return RedirectResponse(f"/studio/join.html?pin={pin}", headers={"Cache-Control": "no-store"})
 
 
 @app.get("/h/{pin}/qr.svg")
@@ -3849,8 +3862,8 @@ def join_homework(payload: HomeworkJoinRequest, request: Request, response: Resp
     return join_independent_assignment(payload, request, response, "homework")
 
 
-def join_independent_assignment(payload, request, response, assignment_type):
-    source = request.client.host if request.client else ""
+def limit_student_join(request, namespace, limit):
+    source = (namespace, request.client.host if request.client else "")
     now = monotonic()
     with homework_login_lock:
         if len(homework_login_attempts) >= 4096:
@@ -3862,25 +3875,30 @@ def join_independent_assignment(payload, request, response, assignment_type):
         started, count = homework_login_attempts.get(source, (now, 0))
         if now - started >= 60:
             started, count = now, 0
-        if count >= 30:
+        if count >= limit:
             raise HTTPException(429, "Too many attempts. Try again in a minute")
         homework_login_attempts[source] = (started, count + 1)
+
+
+def join_independent_assignment(payload, request, response, assignment_type=None):
+    limit_student_join(request, "assignments", 30)
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT a.token, hs.signing_key
+            SELECT a.token, hs.signing_key, s.status AS kind
             FROM homework_schedule hs JOIN homework_access a ON a.pin = hs.pin
             JOIN sessions s ON s.pin = hs.pin
             JOIN evidence_student_links l ON l.student_id = a.student_id
             JOIN evidence_roster_ids ids ON ids.evidence_id = l.evidence_id
             JOIN reh_roster r ON r.student_id = ids.roster_id
-            WHERE hs.join_pin = ? AND ids.roster_id = ? AND r.status = 'active' AND s.status = ?
+            WHERE hs.join_pin = ? AND ids.roster_id = ? AND r.status = 'active'
+              AND s.status IN ('homework', 'test') AND s.status = COALESCE(?, s.status)
         """), (payload.pin, payload.student_id.strip().upper(), assignment_type))
         row = cur.fetchone()
     if not row:
         raise HTTPException(401, "Check your PIN and Student ID")
     response.headers["Cache-Control"] = "private, no-store"
-    return {"access": row["token"] + "." + homework_login_signature(row["token"], row["signing_key"])}
+    return {"kind": row["kind"], "access": row["token"] + "." + homework_login_signature(row["token"], row["signing_key"])}
 
 
 def homework_access(cur, credentials, lock=False, assignment_type="homework"):
@@ -4328,7 +4346,7 @@ def save_timed_test_draft(task_id: str, payload: TimedTestDraft, request: Reques
 def short_test_link(pin: str):
     if not re.fullmatch(r"[0-9]{8}", pin):
         raise HTTPException(404, "Invalid Test PIN")
-    return RedirectResponse(f"/studio/test.html?join=1&pin={pin}", headers={"Cache-Control": "no-store"})
+    return RedirectResponse(f"/studio/join.html?pin={pin}", headers={"Cache-Control": "no-store"})
 
 
 @app.get("/t/{pin}/qr.svg")
@@ -4634,3 +4652,20 @@ def classroom_race_state(race_id: str, response: Response):
             return json.loads(race["final_result"])
         session = {**race, "ended_at": race["session_ended_at"]}
         return race_result(cur, race, race_session_cutoff(session))
+
+
+class JoinScreenRequest(BaseModel):
+    pin: str = Field(pattern=r"^(?:[0-9]{4}|[0-9]{8})$")
+    student_id: str = Field(min_length=1, max_length=120)
+
+
+@app.post("/api/join")
+def join_from_screen(payload: JoinScreenRequest, request: Request, response: Response):
+    response.headers["Cache-Control"] = "private, no-store"
+    if not payload.student_id.strip():
+        raise HTTPException(422, "Enter your Student ID")
+    if len(payload.pin) == 8:
+        return join_independent_assignment(payload, request, response)
+    limit_student_join(request, "classroom", 120)
+    result = join_session(payload.pin, JoinSessionRequest(reh_student_id=payload.student_id, student_name=payload.student_id))
+    return {"kind": "classroom", "student_id": result["student"]["student_id"]}

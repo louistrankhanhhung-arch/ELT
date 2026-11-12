@@ -34,7 +34,7 @@
     });
     if (!response.ok) {
       const result = await response.json().catch(() => ({}));
-      throw new Error(typeof result.detail === "string" ? result.detail : "Request failed (" + response.status + ").");
+      throw Object.assign(new Error(typeof result.detail === "string" ? result.detail : "Request failed (" + response.status + ")."), {status: response.status});
     }
     return response;
   }
@@ -346,25 +346,19 @@
   }
   if (studentMode) {
     const pin = params.get("pin") || "";
-    el("join").hidden = false;
-    if (/^[0-9]{8}$/.test(pin)) el("joinPin").value = pin;
-    if (legacyLink) {
-      history.replaceState(null, "", "?join=1");
-      status("Enter the Homework PIN from your teacher and your Student ID.");
+    const valid = /^[0-9]{8}$/.test(pin);
+    const key = "reh-homework-access:" + pin;
+    const joinUrl = "join.html" + (valid ? "?pin=" + encodeURIComponent(pin) : "");
+    try { if (valid) access = sessionStorage.getItem(key); } catch {}
+    if (!access) location.replace(joinUrl);
+    else {
+      void loadStudent().then(() => { el("student").hidden = false; }).catch(error => {
+        if (error.status === 401 || error.status === 403) {
+          try { sessionStorage.removeItem(key); } catch {}
+          location.replace(joinUrl);
+        } else status(error.message);
+      });
     }
-    el("joinForm").onsubmit = event => {
-      event.preventDefault();
-      const submit = event.currentTarget.querySelector("button");
-      submit.disabled = true;
-      status("");
-      void run(async () => {
-        const joined = await request("/homework/join", {pin: el("joinPin").value.trim(), student_id: el("studentId").value.trim()});
-        access = joined.access;
-        await loadStudent();
-        el("join").hidden = true;
-        el("student").hidden = false;
-      }).finally(() => { submit.disabled = false; });
-    };
   } else {
     el("teacher").hidden = false;
     el("due").value = toInput(new Date(Date.now() + 86400000));

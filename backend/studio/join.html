@@ -97,150 +97,62 @@
 <link rel="stylesheet" href="runtime-ui.css?v=reh-1">
 </head>
 <body>
-  <div class="card">
-    <h1>Join Class</h1>
-
-    <p>
-      Enter your Student ID and class PIN to join.
-    </p>
-
-    <div class="field">
-      <label for="studentName">Student ID</label>
-      <input
-        id="studentName"
-        type="text"
-        placeholder="Enter your Student ID"
-      />
-    </div>
-
-    <div class="field">
-      <label for="sessionPin">Class PIN</label>
-      <input
-        id="sessionPin"
-        type="text"
-        inputmode="numeric"
-        placeholder="1234"
-      />
-    </div>
-
-    <button id="joinBtn">
-      Join Session
-    </button>
-
-    <div id="message"></div>
-    <p><a href="homework.html?join=1">Join Homework</a> · <a href="test.html?join=1">Join Test</a></p>
-  </div>
-
+  <main class="card">
+    <h1>Join Screen</h1>
+    <p>Enter your Student ID and PIN.</p>
+    <form id="joinForm">
+      <div class="field">
+        <label for="studentId">Student ID</label>
+        <input id="studentId" name="student_id" maxlength="120" placeholder="Enter your Student ID" required>
+      </div>
+      <div class="field">
+        <label for="pin">PIN</label>
+        <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]{4}([0-9]{4})?" maxlength="8" required>
+      </div>
+      <button id="joinBtn" type="submit">Join</button>
+    </form>
+    <div id="message" class="error" role="status"></div>
+  </main>
   <script src="./config.js?v=2"></script>
   <script>
-    const API_BASE =
-      window.ELT_CONFIG?.API_BASE ||
-      "https://elt-production.up.railway.app/api";
-  
-    const BASE_URL =
-      window.ELT_CONFIG?.BASE_URL ||
-      "https://rootenglishhouse.com/";
-    
-    const studentNameInput =
-      document.getElementById("studentName");
+    const form = document.getElementById("joinForm");
+    const pin = document.getElementById("pin");
+    const button = document.getElementById("joinBtn");
+    const message = document.getElementById("message");
+    const api = window.ELT_CONFIG.API_BASE;
+    const base = window.ELT_CONFIG.BASE_URL;
+    const linked = new URLSearchParams(location.search).get("pin");
+    if (/^(?:[0-9]{4}|[0-9]{8})$/.test(linked || "")) pin.value = linked;
 
-    const sessionPinInput =
-      document.getElementById("sessionPin");
-
-    const joinBtn =
-      document.getElementById("joinBtn");
-
-    const message =
-      document.getElementById("message");
-
-    const linkPin = new URLSearchParams(location.search).get("pin");
-    if (/^[0-9]{4}$/.test(linkPin || "")) sessionPinInput.value = linkPin;
-
-    async function joinSession() {
-      const studentName =
-        studentNameInput.value.trim();
-
-      const pin =
-        sessionPinInput.value.trim();
-
-      if (!studentName) {
-        showError("Enter your Student ID.");
-        return;
-      }
-
-      if (!pin) {
-        showError("Please enter classroom PIN.");
-        return;
-      }
-
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      button.disabled = true;
+      button.textContent = "Joining…";
+      message.textContent = "";
+      const data = Object.fromEntries(new FormData(form));
       try {
-        joinBtn.disabled = true;
-        joinBtn.textContent = "Joining...";
-
-        const res = await fetch(
-          `${API_BASE}/sessions/${pin}/join`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              reh_student_id: studentName,
-            }),
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Session not found, ended, or expired.");
-        }
-
-        const data = await res.json();
-
-        showSuccess(
-          `Joined as ${data.student.student_name}`
-        );
-
-        setTimeout(() => {
-          window.location.href =
-            `${BASE_URL}student.html?pin=${pin}&student_id=${data.student.student_id}`;
-        }, 700);
-
-      } catch (err) {
-        console.error(err);
-        showError(err.message);
-      } finally {
-        joinBtn.disabled = false;
-        joinBtn.textContent = "Join Session";
-      }
-    }
-
-    function showError(text) {
-      message.className = "error";
-      message.textContent = text;
-    }
-
-    function showSuccess(text) {
-      message.className = "success";
-      message.textContent = text;
-    }
-
-    joinBtn.addEventListener("click", () => {
-      joinSession();
-    });
-
-    sessionPinInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        joinSession();
-      }
-    });
-
-    studentNameInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        joinSession();
+        const response = await fetch(api + "/join", {
+          method: "POST", cache: "no-store", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({pin: data.pin.trim(), student_id: data.student_id.trim()})
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "Check your PIN and Student ID.");
+        if (result.kind === "classroom") {
+          const target = new URL("student.html", base);
+          target.search = new URLSearchParams({pin: data.pin, student_id: result.student_id});
+          location.assign(target);
+        } else if (result.kind === "homework" || result.kind === "test") {
+          sessionStorage.setItem("reh-" + result.kind + "-access:" + data.pin, result.access);
+          const target = new URL(result.kind + ".html", base);
+          target.search = new URLSearchParams({join: "1", pin: data.pin});
+          location.assign(target);
+        } else throw new Error("The PIN could not be routed.");
+      } catch (error) {
+        message.textContent = error.message || "Could not join. Try again.";
+        button.disabled = false;
+        button.textContent = "Join";
       }
     });
   </script>
 </body>
 </html>
-
-
