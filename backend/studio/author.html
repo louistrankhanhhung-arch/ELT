@@ -11,6 +11,8 @@ section,aside { background:white; border:1px solid #CCDCC8; border-radius:10px; 
 .grid > * { min-width:0 } .grid > aside { max-height:75vh; overflow:auto }
 label { display:block; margin:8px 0 } input:not([type=checkbox]),select,textarea { display:block; width:100%; padding:8px; font:inherit; border:1px solid #A5BDA0; border-radius:5px }
 button,.action { display:inline-block; background:#286340; color:white; border:0; border-radius:6px; padding:8px 12px; font:inherit; text-decoration:none; cursor:pointer; margin:4px 4px 4px 0 }
+.studio-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:12px 0 }
+.studio-actions > * { margin:0 }
 [hidden] { display:none!important } button:disabled { opacity:.5; cursor:default } .block { width:100%; text-align:left; background:#E9F2E3; color:#18352A }
 .block[aria-current=true] { background:#286340; color:white } pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit }
 fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
@@ -58,20 +60,21 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 .slide-table th { background:#E9F2E3; font-weight:700 }
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
-<header><a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Lesson Studio</h1><p>Import Google Slides or a GPT Work lesson, then edit and save a version for class.</p></header>
+<header><a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Lesson Studio</h1></header>
 <main>
 <section>
   <label>Staging teacher access code <input id="token" data-target-catalog-code type="password" autocomplete="off"></label>
-  <details id="publishedLessons">
-    <summary>Find a published lesson</summary>
+  <nav class="studio-actions" aria-label="Lesson actions">
+    <button id="findPublished" type="button" aria-expanded="false" aria-controls="publishedLessons">Find a published lesson</button>
+    <button id="sample" type="button">New Work</button>
+    <a class="action" href="work-lesson-sample.json" download>Sample JSON</a>
+  </nav>
+  <div id="publishedLessons" hidden>
     <label>Search published lessons <input type="search" id="publishedQuery" placeholder="Title, course, level or unit"></label>
     <button type="button" id="searchPublished">Search</button>
     <p id="publishedStatus" role="status"></p>
     <ul id="publishedResults"></ul>
-  </details>
-  <button id="loadRevision" hidden>Load saved version</button>
-  <button id="sample">Load REH Work Sample</button>
-  <a href="/api/work-lessons/schema">JSON schema</a> · <a href="work-lesson-sample.json" download>Download REH sample JSON</a>
+  </div>
   <details><summary>Import Google Slides</summary>
     <form id="googleSlidesImport">
       <label>Google Slides link <input name="url" type="url" required></label>
@@ -120,6 +123,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=1"></script>
-<script src="author.js?v=published-search-1"></script>
+<script src="author.js?v=navigation-2"></script>
 <script src="catalog-options.js" defer></script>
 </html>
