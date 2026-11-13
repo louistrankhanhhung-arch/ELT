@@ -75,9 +75,7 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   input.value = value ?? "";
   input.addEventListener("input", () => {
     changed(input.value);
-    byId("classroom").hidden = true;
-    byId("editLink").hidden = true;
-  byId("catalogueLink").hidden = true;
+    dirty();
     renderPreview();
   });
   label.append(input);
@@ -110,6 +108,8 @@ function drawElement(element, thumbnail = false) {
     image.draggable = false;
     if (thumbnail) image.loading = "lazy";
     item.append(image);
+  } else if (element.kind === "text") {
+    REHSlideStyle.text(item, element);
   } else item.textContent = element.kind === "audio" ? REHSlideStyle.audioLabel(element) : element.text || "";
   return item;
 }
@@ -840,6 +840,27 @@ function renderInspector() {
     numericStyle(panel, element, "font_size", "Font size (12–120 px at 1280px)", 12, 120, null);
     field(panel, "Text color", element.text_color || (element.kind === "audio" ? "#ffffff" : "#172338"),
       value => { element.text_color = value; }, null, false, false, "color");
+  }
+  if (element.kind === "text") {
+    for (const [key, title] of [["bold", "Bold"], ["italic", "Italic"], ["underline", "Underline"]]) {
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = Boolean(element[key]);
+      checkbox.onchange = () => {
+        element[key] = checkbox.checked || null;
+        dirty();
+        renderPreview();
+      };
+      label.append(checkbox, " " + title);
+      panel.append(label);
+    }
+    field(panel, "Text alignment", element.text_align || "center", value => {
+      element.text_align = value;
+    }, ["left", "center", "right"]);
+    field(panel, "List (one item per line)", element.list_style || "", value => {
+      element.list_style = value || null;
+    }, ["", "bullet", "numbered"]);
   }
   if (element.kind === "shape") {
     field(panel, "Shape", element.shape || "rectangle", value => {
