@@ -23,6 +23,12 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
 .slide-table { width:100%; height:100%; border-collapse:collapse; table-layout:fixed; font:inherit; color:inherit; background:#fff }
 .slide-table td,.slide-table th { border:1px solid #A5BDA0; padding:.2em; overflow-wrap:anywhere; text-align:center }
 .slide-table th { background:#E9F2E3; font-weight:700 }
+#slideZoom { position:fixed; top:6px; right:6px; z-index:2; min-height:44px; padding:0 12px; border:1px solid #A5BDA0; border-radius:8px; background:#F7FAF3; color:#18352A; font:600 16px system-ui }
+@media (max-width:600px) {
+  body:has(.slide-canvas) { display:block; }
+  .slide-canvas { margin:56px auto 0; }
+  .slide-canvas.is-zoomed { width:max(100vw, 560px); margin-inline:0; }
+}
 </style>
 <main><h1></h1><p></p><div id="media"></div></main>
 <script src="config.js"></script>
@@ -110,6 +116,21 @@ function showElements(elements) {
     return [element, node];
   });
   document.querySelector("main").replaceWith(canvas);
+  const phone = matchMedia("(max-width: 600px)");
+  const zoom = document.createElement("button");
+  zoom.id = "slideZoom";
+  zoom.type = "button";
+  zoom.textContent = "Zoom slide";
+  zoom.setAttribute("aria-pressed", "false");
+  zoom.hidden = !phone.matches;
+  zoom.onclick = () => {
+    const enlarged = canvas.classList.toggle("is-zoomed");
+    zoom.textContent = enlarged ? "Fit slide" : "Zoom slide";
+    zoom.setAttribute("aria-pressed", String(enlarged));
+    if (!enlarged) window.scrollTo(0, 0);
+  };
+  phone.addEventListener("change", () => { zoom.hidden = !phone.matches; });
+  document.body.append(zoom);
   applyStep();
   parent.postMessage({ type:"reh-slide-ready" }, location.origin);
 }
