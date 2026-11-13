@@ -58,10 +58,17 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 .slide-table th { background:#E9F2E3; font-weight:700 }
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
-<header><a class="reh-nav-button" href="teacher-home.html">← Teacher home</a> <a class="action" href="lesson-catalogue.html" target="_blank" rel="noopener">Open Lesson Catalogue</a><h1>Lesson Studio</h1><p>Import Google Slides or a GPT Work lesson, then edit and save a version for class.</p></header>
+<header><a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Lesson Studio</h1><p>Import Google Slides or a GPT Work lesson, then edit and save a version for class.</p></header>
 <main>
 <section>
   <label>Staging teacher access code <input id="token" data-target-catalog-code type="password" autocomplete="off"></label>
+  <details id="publishedLessons">
+    <summary>Find a published lesson</summary>
+    <label>Search published lessons <input type="search" id="publishedQuery" placeholder="Title, course, level or unit"></label>
+    <button type="button" id="searchPublished">Search</button>
+    <p id="publishedStatus" role="status"></p>
+    <ul id="publishedResults"></ul>
+  </details>
   <button id="loadRevision" hidden>Load saved version</button>
   <button id="sample">Load REH Work Sample</button>
   <a href="/api/work-lessons/schema">JSON schema</a> · <a href="work-lesson-sample.json" download>Download REH sample JSON</a>
@@ -113,6 +120,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=1"></script>
-<script src="author.js?v=writing-rubric-1"></script>
+<script src="author.js?v=published-search-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>
