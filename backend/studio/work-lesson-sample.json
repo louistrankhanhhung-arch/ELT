@@ -35,22 +35,24 @@
           "text": "ROOT ENGLISH HOUSE",
           "x": 3,
           "y": 1,
-          "width": 27,
+          "width": 36,
           "height": 8,
-          "font_size": 26,
+          "font_size": 34,
           "text_color": "#FFFFFF",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "LESSON START",
-          "x": 70,
+          "x": 61,
           "y": 1,
-          "width": 27,
+          "width": 36,
           "height": 8,
-          "font_size": 25,
+          "font_size": 34,
           "text_color": "#FFFFFF",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "shape",
@@ -85,21 +87,22 @@
           "kind": "text",
           "text": "Describe a classmate",
           "x": 6,
-          "y": 26,
+          "y": 16,
           "width": 65,
-          "height": 18,
-          "font_size": 60,
+          "height": 29,
+          "font_size": 72,
           "text_color": "#0B3D25",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "Use an adjective and give an example.",
           "x": 7,
-          "y": 47,
+          "y": 43,
           "width": 63,
-          "height": 12,
-          "font_size": 32,
+          "height": 21,
+          "font_size": 46,
           "text_color": "#18352A",
           "font_family": "system-ui"
         },
@@ -109,7 +112,7 @@
           "x": 7,
           "y": 66,
           "width": 62,
-          "height": 12,
+          "height": 20,
           "fill_color": "#E9F2E3",
           "border_opacity": 0
         },
@@ -119,8 +122,8 @@
           "x": 8,
           "y": 66,
           "width": 60,
-          "height": 12,
-          "font_size": 29,
+          "height": 20,
+          "font_size": 46,
           "text_color": "#0B3D25",
           "font_family": "system-ui"
         }
@@ -166,22 +169,24 @@
           "text": "ROOT ENGLISH HOUSE",
           "x": 3,
           "y": 1,
-          "width": 27,
+          "width": 36,
           "height": 8,
-          "font_size": 26,
+          "font_size": 34,
           "text_color": "#FFFFFF",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "LEARN",
-          "x": 70,
+          "x": 61,
           "y": 1,
-          "width": 27,
+          "width": 36,
           "height": 8,
-          "font_size": 25,
+          "font_size": 34,
           "text_color": "#FFFFFF",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "shape",
@@ -197,21 +202,22 @@
           "kind": "text",
           "text": "Character and evidence",
           "x": 6,
-          "y": 14,
+          "y": 11,
           "width": 88,
-          "height": 14,
-          "font_size": 54,
+          "height": 17,
+          "font_size": 72,
           "text_color": "#0B3D25",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "Name the quality. Then show it with an example.",
           "x": 7,
-          "y": 28,
+          "y": 27,
           "width": 86,
-          "height": 11,
-          "font_size": 32,
+          "height": 16,
+          "font_size": 46,
           "text_color": "#18352A",
           "font_family": "system-ui"
         },
@@ -232,20 +238,22 @@
           "y": 45,
           "width": 22,
           "height": 8,
-          "font_size": 26,
+          "font_size": 35,
           "text_color": "#4D8627",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "helpful",
           "x": 9,
           "y": 53,
-          "width": 22,
+          "width": 24,
           "height": 17,
-          "font_size": 44,
+          "font_size": 48,
           "text_color": "#0B3D25",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "shape",
@@ -264,18 +272,19 @@
           "y": 45,
           "width": 53,
           "height": 8,
-          "font_size": 26,
+          "font_size": 35,
           "text_color": "#4D8627",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "Maya explains difficult words to her classmates.",
           "x": 39,
-          "y": 54,
+          "y": 53,
           "width": 51,
-          "height": 15,
-          "font_size": 31,
+          "height": 19,
+          "font_size": 42,
           "text_color": "#18352A",
           "font_family": "system-ui"
         },
@@ -283,10 +292,10 @@
           "kind": "text",
           "text": "Maya is helpful because she explains difficult words.",
           "x": 7,
-          "y": 76,
+          "y": 73,
           "width": 86,
-          "height": 11,
-          "font_size": 31,
+          "height": 19,
+          "font_size": 43,
           "text_color": "#0B3D25",
           "font_family": "system-ui"
         }
@@ -367,22 +376,24 @@
           "text": "ROOT ENGLISH HOUSE",
           "x": 3,
           "y": 1,
-          "width": 27,
+          "width": 36,
           "height": 8,
-          "font_size": 26,
+          "font_size": 34,
           "text_color": "#FFFFFF",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "text",
           "text": "CHECK YOUR WORK",
-          "x": 70,
+          "x": 61,
           "y": 1,
-          "width": 27,
+          "width": 36,
           "height": 8,
-          "font_size": 25,
+          "font_size": 34,
           "text_color": "#FFFFFF",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "shape",
@@ -401,9 +412,10 @@
           "y": 15,
           "width": 86,
           "height": 15,
-          "font_size": 57,
+          "font_size": 72,
           "text_color": "#0B3D25",
-          "font_family": "system-ui"
+          "font_family": "system-ui",
+          "bold": true
         },
         {
           "kind": "shape",
@@ -422,7 +434,7 @@
           "y": 35,
           "width": 74,
           "height": 12,
-          "font_size": 34,
+          "font_size": 46,
           "text_color": "#0B3D25",
           "font_family": "system-ui"
         },
@@ -443,7 +455,7 @@
           "y": 51,
           "width": 74,
           "height": 12,
-          "font_size": 34,
+          "font_size": 46,
           "text_color": "#0B3D25",
           "font_family": "system-ui"
         },
@@ -464,7 +476,7 @@
           "y": 67,
           "width": 74,
           "height": 12,
-          "font_size": 34,
+          "font_size": 46,
           "text_color": "#0B3D25",
           "font_family": "system-ui"
         }
