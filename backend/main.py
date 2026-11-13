@@ -2297,6 +2297,11 @@ class SlideElement(BaseModel):
     shape: Literal["rectangle", "circle", "arrow", "line"] = "rectangle"
     font_family: Optional[Literal["Arial", "Verdana", "Georgia", "Trebuchet MS", "Courier New", "system-ui"]] = None
     font_size: Optional[int] = Field(default=None, ge=12, le=120)
+    bold: Optional[bool] = None
+    italic: Optional[bool] = None
+    underline: Optional[bool] = None
+    text_align: Optional[Literal["left", "center", "right"]] = None
+    list_style: Optional[Literal["bullet", "numbered"]] = None
     text_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
     fill_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
     border_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
