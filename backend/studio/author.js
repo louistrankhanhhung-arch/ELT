@@ -602,10 +602,13 @@ byId("import").onclick = () => {
   catch (error) { status(error.message); }
 };
 byId("sample").onclick = async () => {
+  if (hasUnsavedChanges && !window.confirm("Replace the unsaved changes in this draft?")) return;
   try {
     const response = await fetch("work-lesson-sample.json");
     loadDraft(await response.json());
-    status("Work sample loaded. Review and save a version.");
+    catalogueId = null;
+    history.replaceState(null, "", location.pathname);
+    status("New Work started from the sample. Edit it and save a version.");
   } catch (error) { status(error.message); }
 };
 const publishedQuery = byId("publishedQuery");
@@ -693,8 +696,7 @@ async function openPublishedLesson(item) {
     url.searchParams.set("revision", revision);
     url.searchParams.set("catalogue", catalogueId);
     history.replaceState(null, "", url);
-    byId("loadRevision").hidden = true;
-    byId("publishedLessons").open = false;
+    setPublishedSearchOpen(false);
     status("Published version " + result.version + " loaded for editing.");
     byId("title").focus();
   } catch (error) {
@@ -704,14 +706,43 @@ async function openPublishedLesson(item) {
   }
 }
 
-byId("loadRevision").hidden = !revision;
-byId("loadRevision").onclick = async () => {
+function setPublishedSearchOpen(open) {
+  byId("publishedLessons").hidden = !open;
+  byId("findPublished").setAttribute("aria-expanded", String(open));
+  if (open) publishedQuery.focus();
+}
+byId("findPublished").onclick = () => setPublishedSearchOpen(byId("publishedLessons").hidden);
+
+const linkedRevision = authorParams.get("revision");
+let loadingLinkedRevision = false;
+async function loadLinkedRevision() {
+  const token = byId("token").value.trim();
+  if (!linkedRevision || lesson || !token || loadingLinkedRevision) return;
+  loadingLinkedRevision = true;
   try {
-    const result = await request("/work-lessons/" + encodeURIComponent(revision));
-    loadDraft(result.lesson, revision);
+    const result = await request("/work-lessons/" + encodeURIComponent(linkedRevision));
+    if (lesson || token !== byId("token").value.trim()) return;
+    loadDraft(result.lesson, linkedRevision);
     status("Version " + result.version + " loaded.");
-  } catch (error) { status(error.message); }
-};
+  } catch (error) {
+    if (!lesson && token === byId("token").value.trim()) status(error.message);
+  } finally {
+    loadingLinkedRevision = false;
+    if (token !== byId("token").value.trim()) void loadLinkedRevision();
+  }
+}
+if (linkedRevision) {
+  status("Enter the staging teacher access code to open this version.");
+  let loadTimer;
+  byId("token").addEventListener("input", () => {
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(loadLinkedRevision, 500);
+  });
+  byId("token").addEventListener("keydown", event => {
+    if (event.key === "Enter") void loadLinkedRevision();
+  });
+  void loadLinkedRevision();
+}
 byId("save").onclick = async () => {
   byId("save").disabled = true;
   try {
