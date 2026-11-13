@@ -9,6 +9,7 @@ let revealPreview = -1;
 const authorParams = new URLSearchParams(location.search);
 let revision = authorParams.get("revision");
 let catalogueId = authorParams.get("catalogue");
+let hasUnsavedChanges = false;
 
 function status(message) { byId("status").textContent = message; }
 
@@ -48,6 +49,7 @@ function loadDraft(value, parent = null) {
   }
   lesson = value;
   revision = parent;
+  hasUnsavedChanges = !parent;
   selected = 0;
   selectedElement = null;
   revealPreview = -1;
@@ -519,6 +521,7 @@ function renderQuiz(fields, block) {
 }
 
 function dirty() {
+  hasUnsavedChanges = true;
   byId("classroom").hidden = true;
   byId("editLink").hidden = true;
   byId("catalogueLink").hidden = true;
@@ -605,6 +608,102 @@ byId("sample").onclick = async () => {
     status("Work sample loaded. Review and save a version.");
   } catch (error) { status(error.message); }
 };
+const publishedQuery = byId("publishedQuery");
+const publishedResults = byId("publishedResults");
+const publishedStatus = byId("publishedStatus");
+const searchPublished = byId("searchPublished");
+let publishedEntries = [];
+
+function renderPublishedLessons() {
+  const terms = publishedQuery.value.toLowerCase().trim().split(/\s+/);
+  const matches = publishedEntries.filter(item => {
+    const label = [item.title, item.course, item.level, item.cluster].join(" ").toLowerCase();
+    return terms.every(term => label.includes(term));
+  });
+  publishedResults.replaceChildren();
+  for (const item of matches.slice(0, 30)) {
+    const row = document.createElement("li");
+    const open = document.createElement("button");
+    open.type = "button";
+    open.textContent = "Edit " + item.title;
+    open.onclick = () => openPublishedLesson(item);
+    row.append(open, [item.course, item.level && "Level " + item.level, item.cluster].filter(Boolean).join(" · "));
+    publishedResults.append(row);
+  }
+  publishedStatus.textContent = matches.length > 30
+    ? "Showing 30 of " + matches.length + " lessons. Refine your search."
+    : matches.length ? matches.length + " published lesson(s)." : "No editable published lessons found.";
+}
+
+searchPublished.onclick = async () => {
+  if (!byId("token").value.trim()) {
+    publishedStatus.textContent = "Enter the staging teacher access code first.";
+    byId("token").focus();
+    return;
+  }
+  searchPublished.disabled = true;
+  publishedStatus.textContent = "Loading published lessons…";
+  publishedResults.replaceChildren();
+  publishedEntries = [];
+  const token = byId("token").value.trim();
+  try {
+    const entries = new Map();
+    for (let offset = 0; ; offset += 50) {
+      const result = await request("/lesson-catalogue?offset=" + offset);
+      if (token !== byId("token").value.trim()) return;
+      for (const item of result.entries) {
+        if (item.origin === "work") entries.set(item.catalogue_id, item);
+      }
+      if (!result.has_more) break;
+    }
+    publishedEntries = [...entries.values()];
+    renderPublishedLessons();
+  } catch (error) {
+    publishedStatus.textContent = error.message;
+  } finally {
+    searchPublished.disabled = false;
+  }
+};
+
+publishedQuery.oninput = () => {
+  if (publishedEntries.length) renderPublishedLessons();
+};
+publishedQuery.onkeydown = event => {
+  if (event.key === "Enter") searchPublished.click();
+};
+byId("token").addEventListener("input", () => {
+  publishedEntries = [];
+  publishedResults.replaceChildren();
+  publishedStatus.textContent = "";
+});
+
+let openingPublishedLesson = false;
+async function openPublishedLesson(item) {
+  if (openingPublishedLesson || byId("save").disabled) return;
+  openingPublishedLesson = true;
+  const token = byId("token").value.trim();
+  try {
+    const current = await request("/lesson-catalogue/" + encodeURIComponent(item.catalogue_id));
+    const result = await request("/work-lessons/" + encodeURIComponent(current.revision_id));
+    if (token !== byId("token").value.trim() || byId("save").disabled) return;
+    if (hasUnsavedChanges && !window.confirm("Replace the unsaved changes in this draft?")) return;
+    loadDraft(result.lesson, current.revision_id);
+    catalogueId = item.catalogue_id;
+    const url = new URL(location.href);
+    url.searchParams.set("revision", revision);
+    url.searchParams.set("catalogue", catalogueId);
+    history.replaceState(null, "", url);
+    byId("loadRevision").hidden = true;
+    byId("publishedLessons").open = false;
+    status("Published version " + result.version + " loaded for editing.");
+    byId("title").focus();
+  } catch (error) {
+    publishedStatus.textContent = error.message;
+  } finally {
+    openingPublishedLesson = false;
+  }
+}
+
 byId("loadRevision").hidden = !revision;
 byId("loadRevision").onclick = async () => {
   try {
@@ -637,6 +736,7 @@ byId("save").onclick = async () => {
     });
     const saved = await request("/work-lessons", { lesson: { ...lesson, blocks }, parent_revision: revision });
     revision = saved.revision;
+    hasUnsavedChanges = false;
     const catalogue = catalogueId ? "&catalogue=" + encodeURIComponent(catalogueId) : "";
     byId("classroom").href = "teacher.html?lesson=" + encodeURIComponent(saved.lesson_path) + catalogue;
     byId("editLink").href = "author.html?revision=" + encodeURIComponent(revision) + catalogue;
