@@ -873,8 +873,12 @@ if (linkedRevision) {
   });
   void loadLinkedRevision();
 }
-byId("save").onclick = async () => {
+byId("save").onclick = () => saveVersion(false);
+byId("publishCopy").onclick = () => saveVersion(true);
+
+async function saveVersion(publishCopy) {
   byId("save").disabled = true;
+  byId("publishCopy").disabled = true;
   try {
     let titleSlide = lesson.blocks.find(isTitleSlide);
     if (!titleSlide) {
@@ -911,21 +915,36 @@ byId("save").onclick = async () => {
       }
       return copy;
     });
-    const saved = await request("/work-lessons", { lesson: { ...lesson, blocks }, parent_revision: revision });
+    const saved = await request("/work-lessons", {
+      lesson: { ...lesson, blocks }, parent_revision: revision, overwrite: !publishCopy
+    });
+    if (publishCopy) {
+      const source = catalogueId ? "&source=" + encodeURIComponent(catalogueId) : "";
+      location.href = "lesson-catalogue.html?revision=" + encodeURIComponent(saved.revision) + source;
+      return;
+    }
     revision = saved.revision;
+    const savedUrl = new URL(location.href);
+    savedUrl.searchParams.set("revision", revision);
+    if (catalogueId) savedUrl.searchParams.set("catalogue", catalogueId);
+    else savedUrl.searchParams.delete("catalogue");
+    history.replaceState(null, "", savedUrl);
     hasUnsavedChanges = false;
     const catalogue = catalogueId ? "&catalogue=" + encodeURIComponent(catalogueId) : "";
     byId("classroom").href = "teacher.html?lesson=" + encodeURIComponent(saved.lesson_path) + catalogue;
     byId("editLink").href = "author.html?revision=" + encodeURIComponent(revision) + catalogue;
     byId("catalogueLink").href = "lesson-catalogue.html?revision=" + encodeURIComponent(revision) + catalogue;
     byId("catalogueLink").textContent = catalogueId ? "Publish new version" : "Save to Catalogue";
-    byId("catalogueLink").hidden = false;
+    byId("catalogueLink").hidden = Boolean(catalogueId);
     byId("classroom").hidden = false;
     byId("editLink").hidden = false;
     status("Version " + saved.version + " saved. Open Classroom to teach.");
   } catch (error) { status(error.message); }
-  finally { byId("save").disabled = false; }
-};
+  finally {
+    byId("save").disabled = false;
+    byId("publishCopy").disabled = false;
+  }
+}
 
 
 
