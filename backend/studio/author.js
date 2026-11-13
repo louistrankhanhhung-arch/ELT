@@ -3,6 +3,7 @@ const byId = id => document.getElementById(id);
 const api = window.ELT_CONFIG.API_BASE;
 const phases = ["diagnosis", "teach", "practice", "retrieve", "production", "verify"];
 let lesson = null;
+let newWorkFrame = null;
 let selected = 0;
 let selectedElement = null;
 let revealPreview = -1;
@@ -48,6 +49,7 @@ function loadDraft(value, parent = null) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
   }
   lesson = value;
+  newWorkFrame = null;
   revision = parent;
   hasUnsavedChanges = !parent;
   selected = 0;
@@ -538,6 +540,7 @@ function move(offset) {
 function add(kind) {
   lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind, title: kind === "slide" ? "New slide" : kind === "page" ? "New Page" : "New task" });
   selected = lesson.blocks.length - 1;
+  if (kind === "slide" && newWorkFrame) lesson.blocks[selected].elements = structuredClone(newWorkFrame);
   selectedElement = null;
   revealPreview = -1;
   dirty();
@@ -707,7 +710,11 @@ byId("sample").onclick = async () => {
   if (hasUnsavedChanges && !window.confirm("Replace the unsaved changes in this draft?")) return;
   try {
     const response = await fetch("work-lesson-sample.json");
-    loadDraft(await response.json());
+    const sample = await response.json();
+    loadDraft(sample);
+    newWorkFrame = sample.blocks[0].elements.filter(element =>
+      element.kind === "shape" && (element.y === 0 || element.y === 92)
+      || element.kind === "text" && element.text === "ROOT ENGLISH HOUSE");
     catalogueId = null;
     history.replaceState(null, "", location.pathname);
     status("New Work started from the sample. Edit it and save a version.");
@@ -892,6 +899,9 @@ function addCanvasElement(kind) {
   if (elements.length >= 60) return status("A slide can contain up to 60 elements.");
   const text = {text:"New text", image:"Image", audio:"", shape:"", icon:"★", table:""}[kind];
   selectedElement = {kind,text,x:10,y:10,width:30,height:16,appear:0};
+  if (kind === "text") {
+    Object.assign(selectedElement, {width: 72, height: 20, font_family: "system-ui", font_size: 46, text_color: "#18352A"});
+  }
   if (kind === "table") {
     selectedElement.width = 45;
     selectedElement.height = 30;
