@@ -6,6 +6,28 @@
     if (element.font_size) node.style.fontSize = (element.font_size / 12.8) + "cqw";
     if (element.text_color) node.style.color = element.text_color;
   }
+  function text(node, element) {
+    if (element.bold) node.style.fontWeight = "bold";
+    if (element.italic) node.style.fontStyle = "italic";
+    if (element.underline) node.style.textDecoration = "underline";
+    if (element.text_align) node.style.textAlign = element.text_align;
+    if (!element.list_style) {
+      const content = document.createElement("span");
+      content.style.width = "100%";
+      content.textContent = element.text || "";
+      node.append(content);
+      return;
+    }
+    const list = document.createElement(element.list_style === "numbered" ? "ol" : "ul");
+    Object.assign(list.style, { width: "100%", margin: "0", paddingInlineStart: "1.7em" });
+    for (const line of (element.text || "").split(/\r?\n/)) {
+      if (!line.trim()) continue;
+      const item = document.createElement("li");
+      item.textContent = line;
+      list.append(item);
+    }
+    node.append(list);
+  }
   function shape(element) {
     const svg = document.createElementNS(NS,"svg");
     svg.setAttribute("viewBox","0 0 100 100");
@@ -49,5 +71,5 @@
     const label = (element.text || "").trim();
     return label ? "▶ " + label : "🔊";
   }
-  window.REHSlideStyle = {apply,shape,table,audioLabel};
+  window.REHSlideStyle = {apply,text,shape,table,audioLabel};
 })();
