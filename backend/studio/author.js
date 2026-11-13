@@ -3,6 +3,7 @@ const byId = id => document.getElementById(id);
 const api = window.ELT_CONFIG.API_BASE;
 const phases = ["diagnosis", "teach", "practice", "retrieve", "production", "verify"];
 let lesson = null;
+const titleSlideId = "reh-opening";
 let newWorkFrame = null;
 let selected = 0;
 let selectedElement = null;
@@ -311,9 +312,9 @@ function render() {
   if (isTextAssessment(block.kind)) renderTextQuestions(fields, block);
   if (isOrdering(block.kind)) renderOrderingQuestions(fields, block);
   if (block.kind === "page") renderPageTasks(fields, block);
-  byId("up").disabled = selected === 0;
-  byId("down").disabled = selected === lesson.blocks.length - 1;
-  byId("remove").disabled = lesson.blocks.length === 1;
+  byId("up").disabled = selected === 0 || (selected === 1 && lesson.blocks[0].id === titleSlideId);
+  byId("down").disabled = selected === lesson.blocks.length - 1 || (selected === 0 && lesson.blocks[0].id === titleSlideId);
+  byId("remove").disabled = (lesson.blocks.length === 1) || block.id === titleSlideId;
   renderPreview();
 }
 
@@ -532,6 +533,7 @@ function dirty() {
 function move(offset) {
   const next = selected + offset;
   if (next < 0 || next >= lesson.blocks.length) return;
+  if (lesson.blocks[0].id === titleSlideId && Math.min(next, selected) === 0) return;
   [lesson.blocks[selected], lesson.blocks[next]] = [lesson.blocks[next], lesson.blocks[selected]];
   selected = next;
   dirty();
@@ -651,7 +653,7 @@ byId("pasteFormat").onclick = () => {
 byId("up").onclick = () => move(-1);
 byId("down").onclick = () => move(1);
 byId("remove").onclick = () => {
-  if (lesson.blocks.length < 2) return;
+  if (lesson.blocks.length < 2 || lesson.blocks[selected].id === titleSlideId) return;
   lesson.blocks.splice(selected, 1);
   selectedElement = null;
   revealPreview = -1;
@@ -855,6 +857,10 @@ if (linkedRevision) {
 byId("save").onclick = async () => {
   byId("save").disabled = true;
   try {
+    const titleSlide = lesson.blocks.find(block => block.id === titleSlideId);
+    if (titleSlide && (lesson.blocks[0] !== titleSlide || titleSlide.kind !== "slide" || !titleSlide.elements?.some(element => element.kind === "text" && element.text?.trim()))) {
+      throw new Error("Keep the REH Title Slide first and include the lesson title.");
+    }
     lesson.course = byId("course").value || null;
     lesson.level = Number(byId("level").value) || null;
     lesson.title = byId("title").value.trim();
