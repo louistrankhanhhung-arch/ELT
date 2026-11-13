@@ -833,7 +833,7 @@ function renderInspector() {
   const element = selectedElement;
   if (!elements.includes(element)) return;
   field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
-    element.text, value => { element.text = value; });
+    element.text, value => { element.text = value; }, null, element.kind === "text");
   if (element.kind !== "image") {
     field(panel, "Font", element.font_family || "", value => { element.font_family = value || null; },
       ["","system-ui","Arial","Verdana","Georgia","Trebuchet MS","Courier New"]);
