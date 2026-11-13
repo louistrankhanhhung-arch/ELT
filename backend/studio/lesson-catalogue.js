@@ -3,6 +3,7 @@ const el = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const revision = params.get("revision");
 let catalogueId = params.get("catalogue");
+const sourceCatalogueId = params.get("source");
 let entry = null;
 let entries = [];
 let generation = 0;
@@ -144,13 +145,15 @@ async function loadList() {
 
 let savedMetadata;
 async function loadPublishForm() {
-  if (!revision || !catalogueId || entry) return;
-  const loaded = await request("/lesson-catalogue/" + encodeURIComponent(catalogueId));
+  const source = catalogueId || sourceCatalogueId;
+  if (!revision || !source || entry) return;
+  const loaded = await request("/lesson-catalogue/" + encodeURIComponent(source));
   entry = loaded;
   const lesson = await savedMetadata;
   for (const [key] of metadataFields) {
     const fallback = key === "course" && loaded.course === "Unassigned course" ? "" : loaded[key];
-    el("publishForm").elements[key].value = (key === "course" || key === "level") ? lesson?.[key] ?? fallback : fallback;
+    el("publishForm").elements[key].value = ["course", "level"].includes(key) || (sourceCatalogueId && key === "title" && lesson?.title_changed_from_parent)
+      ? lesson?.[key] ?? fallback : fallback;
   }
 }
 
@@ -176,9 +179,10 @@ if (/^[a-f0-9]{32}$/.test(revision || "")) {
     .then(response => response.ok ? response.json() : null).catch(() => null);
   el("publishPanel").hidden = false;
   el("revisionInfo").textContent = "This action publishes the selected saved version.";
-  if (catalogueId) {
+  if (catalogueId || sourceCatalogueId) {
     el("publishTitle").textContent = "Publish new version";
     el("publishButton").textContent = "Publish new version";
+    if (sourceCatalogueId) el("revisionInfo").textContent = "This publishes a separate lesson and keeps the current catalogue entry.";
 
   } else {
     savedMetadata.then(lesson => {
