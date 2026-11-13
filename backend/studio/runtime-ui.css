@@ -47,3 +47,14 @@ body{font-family:system-ui,"Segoe UI",sans-serif;background:var(--surface);color
 .reh-brand-heading span { color:var(--reh-accent,var(--accent)); font-size:.75rem; font-weight:750; letter-spacing:.09em; text-transform:uppercase; }
 .reh-brand-heading h1 { margin:0; }
 .reh-brand-heading { border-bottom:2px solid #A68832; padding-bottom:10px; }
+
+@media (max-width: 600px) {
+  .reh-classroom #writingPanel, main#student {
+    font: 1.125rem/1.5 system-ui, sans-serif;
+    overflow-wrap: anywhere;
+  }
+  :is(.reh-classroom #writingPanel, main#student) :is(button, textarea, select, input:not([type=radio]):not([type=checkbox])) {
+    font: inherit;
+    min-height: 44px;
+  }
+}
