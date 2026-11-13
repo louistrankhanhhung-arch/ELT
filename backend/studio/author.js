@@ -212,6 +212,7 @@ function fillThumbnail(thumb, block) {
 }
 
 function renderPreview() {
+  updateClipboardActions();
   const block = lesson.blocks[selected];
   const canvas = byId("elementPreview");
   const isSlide = ["slide", "page"].includes(block.kind);
@@ -542,6 +543,107 @@ function add(kind) {
   dirty();
   render();
 }
+
+let copiedBlock = null;
+let copiedContent = null;
+let copiedElement = null;
+const textFormatKeys = ["font_family", "font_size", "text_color", "bold", "italic", "underline", "text_align", "list_style"];
+
+function updateClipboardActions() {
+  const block = lesson.blocks[selected];
+  const element = (block.elements || []).includes(selectedElement) ? selectedElement : null;
+  byId("pasteBlock").disabled = !copiedBlock || lesson.blocks.length >= 100;
+  byId("pasteContent").disabled = copiedContent?.kind !== block.kind;
+  byId("copyElement").disabled = !element;
+  byId("pasteElement").disabled = !copiedElement || (block.elements || []).length >= 60;
+  byId("pasteFormat").disabled = copiedElement?.kind !== "text" || element?.kind !== "text";
+}
+
+function clipboardStatus(message) {
+  byId("clipboardStatus").textContent = message;
+  updateClipboardActions();
+}
+
+function renewTaskIds(task) {
+  task.id = crypto.randomUUID();
+  for (const questions of [task.quiz?.questions, task.text_questions, task.ordering_questions]) {
+    for (const question of questions || []) question.question_id = crypto.randomUUID();
+  }
+  for (const child of task.tasks || []) renewTaskIds(child);
+}
+
+function finishPaste(message, element = null) {
+  selectedElement = element;
+  revealPreview = -1;
+  dirty();
+  render();
+  clipboardStatus(message);
+}
+
+byId("copyBlock").onclick = () => {
+  copiedBlock = structuredClone(lesson.blocks[selected]);
+  clipboardStatus("Block copied. Paste inserts a copy after the selected block.");
+};
+
+byId("pasteBlock").onclick = () => {
+  if (!copiedBlock || lesson.blocks.length >= 100) return;
+  const block = structuredClone(copiedBlock);
+  renewTaskIds(block);
+  lesson.blocks.splice(++selected, 0, block);
+  finishPaste("Block pasted.");
+};
+
+function blockContent(block) {
+  const { id, kind, title, phase, notes, learning_target_id, ...content } = block;
+  return { kind, content };
+}
+
+byId("copyContent").onclick = () => {
+  copiedContent = structuredClone(blockContent(lesson.blocks[selected]));
+  clipboardStatus("Content copied. Select a block of the same type to paste it.");
+};
+
+byId("pasteContent").onclick = () => {
+  const block = lesson.blocks[selected];
+  if (copiedContent?.kind !== block.kind) return;
+  if (Object.keys(blockContent(block).content).length
+      && !window.confirm("Replace the content of this block?")) return;
+  const content = structuredClone(copiedContent.content);
+  renewTaskIds(content);
+  delete content.id;
+  for (const key of Object.keys(blockContent(block).content)) delete block[key];
+  Object.assign(block, content);
+  finishPaste("Content pasted. Block title, phase, notes and learning target were kept.");
+};
+
+byId("copyElement").onclick = () => {
+  if (!selectedElement) return;
+  copiedElement = structuredClone(selectedElement);
+  clipboardStatus("Element copied. Use Paste format to apply only its text styling.");
+};
+
+byId("pasteElement").onclick = () => {
+  const block = lesson.blocks[selected];
+  if (!copiedElement || !["slide", "page"].includes(block.kind)) return;
+  const elements = block.elements ||= [];
+  if (elements.length >= 60) return;
+  const element = structuredClone(copiedElement);
+  if (elements.some(item => item.x === element.x && item.y === element.y)) {
+    element.x = Math.min(100 - element.width, element.x + 2);
+    element.y = Math.min(100 - element.height, element.y + 2);
+  }
+  elements.push(element);
+  finishPaste("Element pasted.", element);
+};
+
+byId("pasteFormat").onclick = () => {
+  if (copiedElement?.kind !== "text" || selectedElement?.kind !== "text") return;
+  for (const key of textFormatKeys) {
+    if (copiedElement[key] == null) delete selectedElement[key];
+    else selectedElement[key] = copiedElement[key];
+  }
+  finishPaste("Text format pasted.", selectedElement);
+};
 
 byId("up").onclick = () => move(-1);
 byId("down").onclick = () => move(1);
