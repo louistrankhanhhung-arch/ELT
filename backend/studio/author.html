@@ -31,6 +31,11 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 .thumbnail .preview-element { font-size:3cqw }
 .thumbnail .preview-element.icon { font-size:6cqw }
 #canvasTools { display:flex; flex-wrap:wrap; align-items:end; gap:4px }
+.clipboard-actions { display:flex; flex-wrap:wrap; gap:4px }
+.clipboard-actions button { margin:0; font-size:.85rem }
+#canvasTools .clipboard-actions { width:100% }
+#clipboardStatus:empty { display:none }
+#clipboardStatus { margin:8px 0 }
 #canvasTools button { padding:5px 8px; font-size:.85rem }
 #canvasTools label { margin:4px 0 4px auto; font-size:.85rem }
 #canvasTools select { padding:4px }
@@ -95,6 +100,12 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
   <label>Learning objective <input id="objective" maxlength="1000"></label>
   <div class="grid">
     <aside><h2>Lesson blocks</h2><div id="blocks"></div>
+      <div class="clipboard-actions" aria-label="Block clipboard">
+        <button type="button" id="copyBlock">Copy block</button>
+        <button type="button" id="pasteBlock" disabled>Paste block</button>
+        <button type="button" id="copyContent">Copy content</button>
+        <button type="button" id="pasteContent" disabled>Paste content</button>
+      </div>
       <button id="addSlide">Add slide</button><button id="addPage">Add Page</button><button id="addTask">Add task</button>
     </aside>
     <section>
@@ -107,7 +118,13 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
         <button type="button" data-add-element="icon">+ Icon</button>
         <button type="button" data-add-element="table">+ Table</button>
         <label>Preview reveal <select id="previewReveal"></select></label>
+        <div class="clipboard-actions" aria-label="Slide element clipboard">
+          <button type="button" id="copyElement" disabled>Copy element</button>
+          <button type="button" id="pasteElement" disabled>Paste element</button>
+          <button type="button" id="pasteFormat" disabled>Paste format</button>
+        </div>
       </div>
+      <div id="clipboardStatus" role="status"></div>
       <div id="elementPreview" aria-label="Editable slide canvas" hidden></div>
       <pre id="preview"></pre>
     </section>
@@ -123,6 +140,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=text-2"></script>
-<script src="author.js?v=text-3"></script>
+<script src="author.js?v=clipboard-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>
