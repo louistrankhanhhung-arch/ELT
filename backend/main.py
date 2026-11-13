@@ -2410,6 +2410,7 @@ class WorkLesson(BaseModel):
 class SaveWorkLesson(BaseModel):
     lesson: WorkLesson
     parent_revision: Optional[str] = None
+    overwrite: bool = False
 
 
 @app.get("/api/work-lessons/schema")
@@ -2432,12 +2433,14 @@ def save_work_lesson(payload: SaveWorkLesson):
     if not lesson.title.strip() or len({block.id for block in lesson.blocks}) != len(lesson.blocks):
         raise HTTPException(422, "Enter a lesson title and use unique block IDs")
     version = 1
+    parent = None
     if payload.parent_revision:
         parent = load_imported_lesson(payload.parent_revision)
         if "work_source" not in parent:
             raise HTTPException(422, "This revision is not a Work lesson")
-        version = int(parent["version"]) + 1
-    revision = uuid4().hex
+        version = int(parent["version"]) + (0 if payload.overwrite else 1)
+    overwrite = payload.overwrite and parent is not None
+    revision = payload.parent_revision if overwrite else uuid4().hex
     blocks = []
     for block in lesson.blocks:
         title = block.title.strip()
@@ -2494,14 +2497,21 @@ def save_work_lesson(payload: SaveWorkLesson):
         blocks.append(entry)
     manifest = {"lesson_id": f"work-{revision}", "title": lesson.title.strip(), "version": str(version),
                 "origin": "work", "objective": lesson.objective, "blocks": blocks,
-                "parent_revision": payload.parent_revision,
+                "parent_revision": parent.get("parent_revision") if overwrite else payload.parent_revision,
                 "work_source": lesson.model_dump(exclude_none=True)}
+    if parent is not None and not overwrite:
+        manifest["title_changed_from_parent"] = lesson.title.strip() != parent["title"]
     if lesson.course is not None:
         manifest["course"] = lesson.course
     if lesson.level is not None:
         manifest["level"] = lesson.level
     with closing(db()) as conn:
-        conn.cursor().execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
+        cur = conn.cursor()
+        if overwrite:
+            cur.execute(sql("UPDATE lesson_revisions SET manifest = ? WHERE revision_id = ?"),
+                        (json.dumps(manifest), revision))
+        else:
+            cur.execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
         conn.commit()
     return {"revision": revision, "version": version, "lesson_path": f"imports/{revision}"}
 
@@ -3496,6 +3506,24 @@ def create_catalogue_entry(payload: CatalogueEntryRequest):
     catalogue_id = uuid4().hex
     with closing(db()) as conn:
         cur = conn.cursor()
+        if USE_POSTGRES:
+            cur.execute("LOCK TABLE lesson_catalogue IN SHARE ROW EXCLUSIVE MODE")
+        else:
+            cur.execute("BEGIN IMMEDIATE")
+        cur.execute(sql("""
+            SELECT title FROM lesson_catalogue
+            WHERE LOWER(course) = LOWER(?) AND LOWER(level) = LOWER(?) AND LOWER(cluster) = LOWER(?)
+        """), (course, level, cluster))
+        existing = {row["title"].casefold() for row in cur.fetchall()}
+        if title.casefold() in existing:
+            base = re.sub(r" \(\d+\)$", "", title)
+            number = 1
+            while True:
+                suffix = f" ({number})"
+                title = base[:160 - len(suffix)].rstrip() + suffix
+                if title.casefold() not in existing:
+                    break
+                number += 1
         cur.execute(sql("""
             INSERT INTO lesson_catalogue (catalogue_id, revision_id, title, level, cluster, version, origin, published_at, course)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
