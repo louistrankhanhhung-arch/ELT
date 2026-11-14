@@ -30,6 +30,10 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
   border-radius:4px; background:#F7FAF3; color:#18352A; container-type:inline-size; text-align:center; font-size:8px }
 .thumbnail .preview-element { font-size:3cqw }
 .thumbnail .preview-element.icon { font-size:6cqw }
+#blockTools { display:flex; flex-wrap:wrap; gap:6px 14px; padding:8px; margin:0 0 10px; border:1px solid #CCDCC8; border-radius:10px; background:#F7FAF3 }
+#blockTools > div { display:flex; flex-wrap:wrap; gap:6px }
+#blockTools button { margin:0; font-size:.85rem }
+#blockTools #remove { background:#8c3434 }
 #canvasTools { display:flex; flex-wrap:wrap; align-items:end; gap:4px }
 .clipboard-actions { display:flex; flex-wrap:wrap; gap:4px }
 .clipboard-actions button { margin:0; font-size:.85rem }
@@ -111,10 +115,13 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
   </div>
   <div class="grid">
     <aside><h2>Lesson blocks</h2><div id="blocks"></div>
-      <button id="addSlide">Add slide</button><button id="addPage">Add Page</button><button id="addTask">Add task</button>
     </aside>
     <section>
       <h2>Slide canvas</h2>
+      <div id="blockTools" role="group" aria-label="Block tools">
+        <div role="group" aria-label="Add block"><button id="addSlide">Add slide</button><button id="addPage">Add page</button><button id="addTask">Add task</button></div>
+        <div role="group" aria-label="Manage selected block"><button id="up">Move block up</button><button id="down">Move block down</button><button id="remove">Remove block</button></div>
+      </div>
       <div id="canvasTools" hidden>
         <button type="button" data-add-element="text">+ Text</button>
         <button type="button" data-add-element="image">+ Image</button>
@@ -129,7 +136,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
       <pre id="preview"></pre>
     </section>
     <section id="inspector"><h2>Properties</h2><div id="elementInspector"></div><div id="fields"></div>
-      <button id="up">Move block up</button><button id="down">Move block down</button><button id="remove">Remove block</button>
     </section>
   </div>
   <button id="save">Save version</button>
