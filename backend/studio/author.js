@@ -1205,11 +1205,46 @@ function renderGroupFormatting(panel, elements) {
     number("border_opacity", "Border / line opacity (%)", 0, 100, 100);
     number("border_width", "Border / line width (px)", 1, 20, 2);
   }
-  if (panel.lastChild === title) {
-    const hint = document.createElement("p");
-    hint.textContent = "Select elements with shared formatting options.";
-    panel.append(hint);
+  const reveal = document.createElement("fieldset");
+  const legend = document.createElement("legend");
+  legend.textContent = "Reveal";
+  reveal.append(legend);
+
+  const steps = Array.from({length: 31}, (_, index) => String(index));
+  function revealField(key, title, choices, fallback) {
+    const label = document.createElement("label");
+    label.textContent = title;
+    const input = document.createElement("select");
+    const values = elements.map(element => element[key] ?? fallback);
+    const current = values[0] === null ? "Never" : values[0];
+    input.add(new Option(values.every(value => value === values[0]) ? "Keep current · " + current : "Mixed values · keep current", ""));
+    for (const step of choices) input.add(new Option(step === "none" ? "Never" : step === "0" ? "0 · Initially visible" : step, step));
+    label.append(input);
+    reveal.append(label);
+    return input;
   }
+  const appear = revealField("appear", "Appear on reveal", steps, 0);
+  const disappear = revealField("disappear", "Disappear on reveal", ["none", ...steps.slice(1)], null);
+  const feedback = document.createElement("p");
+  feedback.setAttribute("role", "status");
+  button(reveal, "Apply reveal", () => {
+    if (!appear.value && !disappear.value) return;
+    const updated = elements.map(element => ({
+      appear: appear.value ? Number(appear.value) : element.appear ?? 0,
+      disappear: disappear.value === "none" ? null : disappear.value ? Number(disappear.value) : element.disappear ?? null
+    }));
+    if (updated.some(item => item.disappear !== null && item.disappear <= item.appear)) {
+      feedback.textContent = "Disappear must be after Appear for every selected element.";
+      return;
+    }
+    elements.forEach((element, index) => Object.assign(element, updated[index]));
+    dirty();
+    renderPreview();
+    refreshThumbnail();
+    feedback.textContent = "Reveal updated for " + elements.length + " elements.";
+  });
+  reveal.append(feedback);
+  panel.append(reveal);
 }
 
 function numericStyle(panel, element, key, label, min, max, fallback) {
