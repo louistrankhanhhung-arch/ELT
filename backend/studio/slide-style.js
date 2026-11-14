@@ -9,6 +9,25 @@
     if (element.font_size) node.style.fontSize = (element.font_size / 12.8) + "cqw";
     if (element.text_color) node.style.color = element.text_color;
   }
+  function appendText(node, element, start, end) {
+    const value = element.text || "";
+    let cursor = start;
+    for (const run of element.text_runs || []) {
+      const from = Math.max(cursor, run.start);
+      const to = Math.min(end, run.end);
+      if (!(from < to)) continue;
+      node.append(value.slice(cursor, from));
+      const span = document.createElement("span");
+      span.textContent = value.slice(from, to);
+      if (run.bold) span.style.fontWeight = "bold";
+      if (run.italic) span.style.fontStyle = "italic";
+      if (run.underline) span.style.textDecoration = "underline";
+      if (run.text_color) span.style.color = run.text_color;
+      node.append(span);
+      cursor = to;
+    }
+    node.append(value.slice(cursor, end));
+  }
   function text(node, element) {
     if (element.bold) node.style.fontWeight = "bold";
     if (element.italic) node.style.fontStyle = "italic";
@@ -17,16 +36,17 @@
     if (!element.list_style) {
       const content = document.createElement("span");
       content.style.width = "100%";
-      content.textContent = element.text || "";
+      appendText(content, element, 0, (element.text || "").length);
       node.append(content);
       return;
     }
     const list = document.createElement(element.list_style === "numbered" ? "ol" : "ul");
     Object.assign(list.style, { width: "100%", margin: "0", paddingInlineStart: "1.7em" });
-    for (const line of (element.text || "").split(/\r?\n/)) {
-      if (!line.trim()) continue;
+    const value = element.text || "";
+    for (const match of value.matchAll(/[^\r\n]+/g)) {
+      if (!match[0].trim()) continue;
       const item = document.createElement("li");
-      item.textContent = line;
+      appendText(item, element, match.index, match.index + match[0].length);
       list.append(item);
     }
     node.append(list);
