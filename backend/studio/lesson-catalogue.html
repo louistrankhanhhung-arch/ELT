@@ -13,6 +13,11 @@ button:disabled{opacity:.5}[hidden]{display:none!important}
 .level-group article{padding:12px;margin:8px 0;background:#F7FAF3}
 .level-group h4,.level-group h5{margin:0 0 6px;font-size:1rem} .level-group p{margin:6px 0}
 .level-group details{margin-top:8px}summary{cursor:pointer}
+.lesson-select{display:flex;align-items:center;gap:10px;margin:0;font-weight:700}
+.lesson-select input{width:auto;accent-color:#286340}
+#deleteSelected,#confirmRemoval{background:#982c2c}
+#removeDialog{width:min(90vw,500px);border:1px solid #CCDCC8;border-radius:12px}
+#removeTitles{max-height:40vh;overflow:auto}
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
 <header>
@@ -36,7 +41,13 @@ button:disabled{opacity:.5}[hidden]{display:none!important}
 <button id="publishButton">Save to Catalogue</button>
 </form>
 </section>
-<section id="results" hidden><h2>Published lessons</h2><div id="entries"></div></section>
+<section id="results" hidden><h2>Published lessons</h2><button id="deleteSelected" type="button" disabled>Delete selected</button><div id="entries"></div></section>
+<dialog id="removeDialog" aria-labelledby="removeTitle">
+<h2 id="removeTitle">Remove selected lessons?</h2>
+<p>These lessons will be removed from the Catalogue. Saved versions and existing sessions, assignments and results are kept.</p>
+<ul id="removeTitles"></ul>
+<form method="dialog"><button value="cancel" autofocus>Cancel</button><button id="confirmRemoval" value="remove">Delete selected</button></form>
+</dialog>
 <datalist id="courseNames"></datalist>
-<script src="config.js"></script><script src="lesson-catalogue.js?v=save-publish-1"></script>
+<script src="config.js"></script><script src="lesson-catalogue.js?v=bulk-remove-1"></script>
 </html>

@@ -245,10 +245,14 @@ def init_db():
         )
     """)
     if USE_POSTGRES:
+        cur.execute("ALTER TABLE lesson_catalogue ADD COLUMN IF NOT EXISTS removed_at TEXT")
         cur.execute("ALTER TABLE lesson_catalogue ADD COLUMN IF NOT EXISTS course TEXT NOT NULL DEFAULT 'Unassigned course'")
     else:
         cur.execute("PRAGMA table_info(lesson_catalogue)")
-        if not any(row["name"] == "course" for row in cur.fetchall()):
+        columns = {row["name"] for row in cur.fetchall()}
+        if "removed_at" not in columns:
+            cur.execute("ALTER TABLE lesson_catalogue ADD COLUMN removed_at TEXT")
+        if "course" not in columns:
             cur.execute("ALTER TABLE lesson_catalogue ADD COLUMN course TEXT NOT NULL DEFAULT 'Unassigned course'")
     cur.execute("""
         CREATE TABLE IF NOT EXISTS lesson_revisions (
@@ -3480,8 +3484,8 @@ def list_catalogue(search: str = "", offset: int = 0):
         cur = conn.cursor()
         cur.execute(sql("""
             SELECT * FROM lesson_catalogue
-            WHERE LOWER(title) LIKE ? ESCAPE '!' OR LOWER(level) LIKE ? ESCAPE '!'
-               OR LOWER(cluster) LIKE ? ESCAPE '!' OR LOWER(course) LIKE ? ESCAPE '!'
+            WHERE removed_at IS NULL AND (LOWER(title) LIKE ? ESCAPE '!' OR LOWER(level) LIKE ? ESCAPE '!'
+               OR LOWER(cluster) LIKE ? ESCAPE '!' OR LOWER(course) LIKE ? ESCAPE '!')
             ORDER BY LOWER(course), LOWER(level), LOWER(title), catalogue_id LIMIT 51 OFFSET ?
         """), (pattern, pattern, pattern, pattern, max(0, offset)))
         entries = [dict(row) for row in cur.fetchall()]
@@ -3492,7 +3496,7 @@ def list_catalogue(search: str = "", offset: int = 0):
 def catalogue_entry(catalogue_id: str):
     with closing(db()) as conn:
         cur = conn.cursor()
-        cur.execute(sql("SELECT * FROM lesson_catalogue WHERE catalogue_id = ?"), (catalogue_id,))
+        cur.execute(sql("SELECT * FROM lesson_catalogue WHERE catalogue_id = ? AND removed_at IS NULL"), (catalogue_id,))
         entry = cur.fetchone()
     if not entry:
         raise HTTPException(404, "Catalogue entry not found")
@@ -3512,7 +3516,7 @@ def create_catalogue_entry(payload: CatalogueEntryRequest):
             cur.execute("BEGIN IMMEDIATE")
         cur.execute(sql("""
             SELECT title FROM lesson_catalogue
-            WHERE LOWER(course) = LOWER(?) AND LOWER(level) = LOWER(?) AND LOWER(cluster) = LOWER(?)
+            WHERE removed_at IS NULL AND LOWER(course) = LOWER(?) AND LOWER(level) = LOWER(?) AND LOWER(cluster) = LOWER(?)
         """), (course, level, cluster))
         existing = {row["title"].casefold() for row in cur.fetchall()}
         if title.casefold() in existing:
@@ -3524,10 +3528,16 @@ def create_catalogue_entry(payload: CatalogueEntryRequest):
                 if title.casefold() not in existing:
                     break
                 number += 1
+        cur.execute(sql("SELECT catalogue_id FROM lesson_catalogue WHERE revision_id = ? AND removed_at IS NOT NULL"), (payload.revision_id,))
+        removed = cur.fetchone()
+        if removed:
+            catalogue_id = removed["catalogue_id"]
         cur.execute(sql("""
             INSERT INTO lesson_catalogue (catalogue_id, revision_id, title, level, cluster, version, origin, published_at, course)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(revision_id) DO NOTHING
+            ON CONFLICT(revision_id) DO UPDATE SET title = excluded.title, level = excluded.level,
+                cluster = excluded.cluster, course = excluded.course, published_at = excluded.published_at, removed_at = NULL
+            WHERE lesson_catalogue.removed_at IS NOT NULL
         """), (catalogue_id, payload.revision_id, title, level, cluster, manifest["version"],
                manifest.get("origin", "google_slides"), now_iso(), course))
         if cur.rowcount != 1:
@@ -3555,7 +3565,7 @@ def publish_catalogue_version(catalogue_id: str, payload: PublishCatalogueReques
             raise HTTPException(409, "This lesson version is already in the catalogue")
         cur.execute(sql("""
             UPDATE lesson_catalogue SET revision_id = ?, title = ?, level = ?, cluster = ?, course = ?, version = ?, published_at = ?
-            WHERE catalogue_id = ? AND revision_id = ?
+            WHERE catalogue_id = ? AND revision_id = ? AND removed_at IS NULL
         """), (payload.revision_id, title, level, cluster, course, manifest["version"], now_iso(),
                catalogue_id, payload.expected_revision))
         if cur.rowcount != 1:
@@ -3601,7 +3611,7 @@ def edit_catalogue_metadata(catalogue_id: str, payload: CatalogueMetadata):
     title, level, cluster, course = catalogue_metadata(payload, entry["course"])
     with closing(db()) as conn:
         conn.cursor().execute(sql("""
-            UPDATE lesson_catalogue SET title = ?, level = ?, cluster = ?, course = ? WHERE catalogue_id = ?
+            UPDATE lesson_catalogue SET title = ?, level = ?, cluster = ?, course = ? WHERE catalogue_id = ? AND removed_at IS NULL
         """), (title, level, cluster, course, catalogue_id))
         conn.commit()
     return catalogue_entry(catalogue_id)
@@ -4702,3 +4712,26 @@ def join_from_screen(payload: JoinScreenRequest, request: Request, response: Res
     limit_student_join(request, "classroom", 120)
     result = join_session(payload.pin, JoinSessionRequest(reh_student_id=payload.student_id, student_name=payload.student_id))
     return {"kind": "classroom", "student_id": result["student"]["student_id"]}
+
+
+class CatalogueRemoval(BaseModel):
+    entries: dict[str, str] = Field(min_length=1, max_length=500)
+
+
+@app.post("/api/lesson-catalogue/remove", dependencies=[Depends(require_teacher)])
+def remove_catalogue_entries(payload: CatalogueRemoval):
+    if any(not re.fullmatch(r"[a-f0-9]{32}", value)
+           for pair in payload.entries.items() for value in pair):
+        raise HTTPException(422, "Invalid catalogue entry or version")
+    stamp = now_iso()
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        for catalogue_id, revision in sorted(payload.entries.items()):
+            cur.execute(sql("""
+                UPDATE lesson_catalogue SET removed_at = ?
+                WHERE catalogue_id = ? AND revision_id = ? AND removed_at IS NULL
+            """), (stamp, catalogue_id, revision))
+            if cur.rowcount != 1:
+                raise HTTPException(409, "A selected lesson changed or was already removed. Reload the catalogue.")
+        conn.commit()
+    return {"deleted": len(payload.entries)}

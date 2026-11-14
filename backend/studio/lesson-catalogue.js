@@ -6,6 +6,9 @@ let catalogueId = params.get("catalogue");
 const sourceCatalogueId = params.get("source");
 let entry = null;
 let entries = [];
+const selected = new Set();
+let removing = false;
+let pending = [];
 let generation = 0;
 let unlockTimer = null;
 const api = window.ELT_CONFIG.API_BASE;
@@ -77,6 +80,11 @@ function updateCourses() {
   el("courseNames").replaceChildren(...courses.map(course => new Option(course)));
 }
 
+function updateSelection() {
+  el("deleteSelected").disabled = removing || !selected.size;
+  el("deleteSelected").textContent = selected.size ? "Delete selected (" + selected.size + ")" : "Delete selected";
+}
+
 function renderList() {
   const search = el("query").value.trim().toLocaleLowerCase();
   const matching = entries.filter(item => [item.title,item.course,item.level,item.cluster]
@@ -102,7 +110,21 @@ function renderList() {
       subgroup.append(node("h4",level));
       for (const item of lessons.sort((a,b) => a.title.localeCompare(b.title, undefined, {numeric:true}))) {
         const row = document.createElement("article");
-        row.append(node("h5",item.title), node("p",[item.cluster,"Version " + item.version].join(" · ")));
+        const title = document.createElement("h5");
+        const label = node("label", item.title);
+        label.className = "lesson-select";
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        check.checked = selected.has(item.catalogue_id);
+        check.disabled = removing;
+        check.onchange = () => {
+          if (check.checked) selected.add(item.catalogue_id);
+          else selected.delete(item.catalogue_id);
+          updateSelection();
+        };
+        label.prepend(check);
+        title.append(label);
+        row.append(title, node("p",[item.cluster,"Version " + item.version].join(" · ")));
         row.append(lessonLink("Assign homework", "homework.html", {catalogue:item.catalogue_id}));
         row.append(lessonLink("Open Classroom", "teacher.html", {lesson:"imports/" + item.revision_id, catalogue:item.catalogue_id}));
         if (item.origin === "work") row.append(lessonLink("Edit in Studio", "author.html",
@@ -114,8 +136,38 @@ function renderList() {
     }
     output.append(group);
   }
+  updateSelection();
   if (!matching.length) output.append(node("p", entries.length ? "No matching lessons." : "No published lessons yet."));
 }
+
+el("deleteSelected").onclick = () => {
+  pending = entries.filter(item => selected.has(item.catalogue_id));
+  if (!pending.length) return;
+  el("removeTitles").replaceChildren(...pending.map(item => node("li", item.title + " · " + item.course + " " + item.level)));
+  el("removeDialog").returnValue = "";
+  el("removeDialog").showModal();
+};
+el("removeDialog").onclose = async () => {
+  if (el("removeDialog").returnValue !== "remove" || removing || !pending.length) return;
+  const current = generation;
+  const batch = Object.fromEntries(pending.map(item => [item.catalogue_id, item.revision_id]));
+  removing = true;
+  renderList();
+  try {
+    const result = await request("/lesson-catalogue/remove", "POST", {entries: batch});
+    if (current !== generation) return;
+    entries = entries.filter(item => !Object.hasOwn(batch, item.catalogue_id));
+    selected.clear();
+    updateCourses();
+    status("Removed " + result.deleted + " lesson(s) from the Catalogue.");
+  } catch (error) {
+    if (current === generation) status(error.message);
+  } finally {
+    removing = false;
+    pending = [];
+    if (!el("results").hidden) renderList();
+  }
+};
 
 async function loadList() {
   clearTimeout(unlockTimer);
@@ -132,6 +184,7 @@ async function loadList() {
       if (!result.has_more) break;
     }
     entries = [...found.values()];
+    selected.clear();
     updateCourses();
     renderList();
     el("results").hidden = false;
@@ -166,6 +219,7 @@ el("token").addEventListener("input", () => {
   clearTimeout(unlockTimer);
   generation++;
   entries = [];
+  selected.clear();
   entry = null;
   el("results").hidden = true;
   el("filterLabel").hidden = true;
