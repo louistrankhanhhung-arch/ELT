@@ -2379,7 +2379,28 @@ class WorkPageTask(BaseModel):
     quiz: Optional[QuizDefinition] = None
 
 
+class VocabCard(BaseModel):
+    term: str = Field(min_length=1, max_length=240)
+    meaning: str = Field(default="", max_length=500)
+    example: str = Field(default="", max_length=1000)
+    image_url: Optional[str] = Field(default=None, max_length=2000)
+    audio_url: Optional[str] = Field(default=None, max_length=2000)
+    example_audio_url: Optional[str] = Field(default=None, max_length=2000)
+
+    def checked(self):
+        if not self.term.strip():
+            raise HTTPException(422, "Enter a term for every Vocab card")
+        card = self.model_dump(exclude_none=True)
+        for key, kind in (("image_url", "image"), ("audio_url", "audio"), ("example_audio_url", "audio")):
+            if card.get(key, "").strip():
+                card[key] = TaskMaterial(kind=kind, url=card[key]).normalized()["url"]
+            else:
+                card.pop(key, None)
+        return card
+
+
 class WorkBlock(BaseModel):
+    vocab: List[VocabCard] = Field(default_factory=list, max_length=16)
     writing_rubric: Optional[WritingRubric] = None
     role_a_materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
     role_b_materials: List[TaskMaterial] = Field(default_factory=list, max_length=12)
@@ -2393,7 +2414,7 @@ class WorkBlock(BaseModel):
     id: str = Field(min_length=1, max_length=80, pattern=r"^[a-zA-Z0-9_-]+$")
     phase: EvidencePhase
     learning_target_id: Optional[str] = Field(default=None, max_length=120)
-    kind: Literal["slide", "page", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]
+    kind: Literal["slide", "page", "vocab", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]
     title: str = Field(min_length=1, max_length=160)
     body: str = Field(default="", max_length=4000)
     notes: str = Field(default="", max_length=4000)
@@ -2454,7 +2475,12 @@ def save_work_lesson(payload: SaveWorkLesson):
         entry = {"id": block.id, "title": title, "type": "activity", "phase": block.phase,
                  "learning_target_id": (block.learning_target_id or "").strip() or None,
                  "completion": {"mode": "teacher_next"}}
-        if block.kind in ("slide", "page", "dialogue"):
+        if block.kind == "vocab":
+            if not block.vocab:
+                raise HTTPException(422, f"Block {block.id}: add at least one Vocab card")
+            entry.update(activity_kind="native-slide", native_revision=revision,
+                         vocab=[card.checked() for card in block.vocab])
+        elif block.kind in ("slide", "page", "dialogue"):
             media = block.media_url
             if bool(media) != bool(block.media_type):
                 raise HTTPException(422, f"Block {block.id}: enter both a media type and URL")
@@ -3590,7 +3616,9 @@ def update_slide_step(pin: str, payload: SlideStepRequest):
         raise HTTPException(422, "Invalid block")
     elements = blocks[payload.block_index].get("elements", [])
     steps = {0, *(step for element in elements for step in (element.get("appear"), element.get("disappear")) if step is not None)}
-    if not elements or payload.step not in steps:
+    if blocks[payload.block_index].get("vocab"):
+        steps = {0, 1, 2, 3}
+    if payload.step not in steps or (not elements and not blocks[payload.block_index].get("vocab")):
         raise HTTPException(422, "Invalid slide step")
     with closing(db()) as conn:
         cur = conn.cursor()

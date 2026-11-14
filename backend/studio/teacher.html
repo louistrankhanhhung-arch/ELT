@@ -732,6 +732,7 @@
     const revealStatus = document.getElementById("revealStatus");
 
     function revealSteps() {
+      if (currentLesson?.blocks[blockIndex]?.vocab) return [0, 1, 2, 3];
       const elements = currentLesson?.blocks[blockIndex]?.elements || [];
       return [...new Set([0, ...elements.flatMap(element => [element.appear, element.disappear])
         .filter(step => Number.isInteger(step))])].sort((a, b) => a - b);
@@ -853,7 +854,10 @@
       const index = steps.indexOf(slideStep);
       previousReveal.disabled = revealPending || index <= 0;
       nextReveal.disabled = revealPending || index >= steps.length - 1;
-      revealStatus.textContent = steps.length > 1 ? "Reveal " + (index + 1) + "/" + steps.length : "";
+      const modes = currentLesson?.blocks[blockIndex]?.vocab ? ["Show", "Listen", "Recall", "Answers"] : null;
+      previousReveal.textContent = modes && index > 0 ? modes[index - 1] : "Previous reveal";
+      nextReveal.textContent = modes && index < steps.length - 1 ? modes[index + 1] : "Next reveal";
+      revealStatus.textContent = modes ? modes[index] : steps.length > 1 ? "Reveal " + (index + 1) + "/" + steps.length : "";
       const message = { type: "reh-slide-step", block: currentLesson?.blocks[blockIndex]?.id,
         step: slideStep, interactive: true };
       previewFrame.contentWindow?.postMessage(message, location.origin);

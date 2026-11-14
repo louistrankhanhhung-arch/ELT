@@ -6,6 +6,8 @@
 <title>REH slide</title>
 <style>
 body { margin:0; min-height:100vh; display:grid; place-items:center; background:#0B3D25; color:#fff; font:clamp(16px,3vw,34px) system-ui }
+body:has(.vocab-deck) { display:block; font:clamp(15px,2vw,24px) system-ui; }
+body:has(.vocab-deck) main { margin:auto; }
 main { width:min(90%,960px); padding:24px 0 } h1 { font-size:1.45em; margin:0 0 12px }
 p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height:55vh } audio { max-width:100% }
 .youtube { display:block; width:min(100%,800px); aspect-ratio:16/9; border:0 }
@@ -30,8 +32,10 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
   .slide-canvas.is-zoomed { width:max(100vw, 560px); margin-inline:0; }
 }
 </style>
+<link rel="stylesheet" href="vocab.css?v=1">
 <main><h1></h1><p></p><div id="media"></div></main>
 <script src="config.js"></script>
+<script src="vocab.js?v=1"></script>
 <script src="slide-style.js?v=rotation-1"></script>
 <script>
 const params = new URLSearchParams(location.search);
@@ -50,6 +54,7 @@ function youtubeVideoId(source) {
 }
 
 let step = 0;
+let vocabBlock = null;
 let interactive = params.get("role") === "teacher";
 let currentAudio = null;
 let items = [];
@@ -64,8 +69,13 @@ function applyStep() {
 window.addEventListener("message", event => {
   if (event.source !== parent || event.origin !== location.origin
       || event.data?.type !== "reh-slide-step" || event.data.block !== params.get("block")) return;
+  if (step === event.data.step && interactive === event.data.interactive) return;
   step = event.data.step;
   interactive = event.data.interactive;
+  if (vocabBlock) {
+    window.renderVocab(document.querySelector("main"), vocabBlock.vocab, vocabBlock.title, step, interactive);
+    return;
+  }
   applyStep();
 });
 function showElements(elements) {
@@ -142,6 +152,12 @@ async function showSlide() {
   const lesson = await response.json();
   const block = lesson.blocks.find(block => block.id === params.get("block") && block.activity_kind === "native-slide");
   if (!block) throw new Error("Slide not found");
+  if (block.vocab) {
+    vocabBlock = block;
+    window.renderVocab(document.querySelector("main"), block.vocab, block.title, step, interactive);
+    parent.postMessage({type: "reh-slide-ready"}, location.origin);
+    return;
+  }
   if (block.elements?.length) { showElements(block.elements); return; }
   document.querySelector("h1").textContent = block.title;
   document.querySelector("p").textContent = block.body;

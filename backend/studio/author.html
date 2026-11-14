@@ -81,6 +81,7 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 .palette-custom { display:flex; gap:6px; align-items:center; flex-wrap:wrap }
 .palette-custom input { width:100px }
 </style>
+<link rel="stylesheet" href="vocab.css?v=1">
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
 <header><a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Lesson Studio</h1></header>
 <main>
@@ -140,6 +141,7 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
       <div id="clipboardStatus" role="status"></div>
       <p id="multiFormatHint" hidden>Shift-click or Ctrl/⌘-click to select multiple elements. Use arrow keys to move, Delete to remove, and Ctrl/⌘+C or V to copy or paste.</p>
       <div id="elementPreview" aria-label="Editable slide canvas" hidden></div>
+      <div id="vocabPreview" hidden></div>
       <pre id="preview"></pre>
     </section>
     <section id="inspector"><h2>Properties</h2><div id="elementInspector"></div><div id="fields"></div>
@@ -154,6 +156,7 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=rotation-1"></script>
-<script src="author.js?v=reh-palette-1"></script>
+<script src="vocab.js?v=1"></script>
+<script src="author.js?v=vocab-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>

@@ -64,7 +64,7 @@ function loadDraft(value, parent = null) {
   if (!value || value.schema_version !== 1 || typeof value.title !== "string"
       || !Array.isArray(value.blocks) || !value.blocks.length
       || value.blocks.some(block => !block || !phases.includes(block.phase)
-        || !["slide", "page", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"].includes(block.kind)
+        || !["slide", "page", "vocab", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"].includes(block.kind)
         || (block.elements != null && (!Array.isArray(block.elements) || !block.elements.every(validTable)))
         || (block.quiz?.questions != null && (!Array.isArray(block.quiz.questions) || block.quiz.questions.some(question => !question || !Array.isArray(question.options)))))) {
     throw new Error("Use a version 1 lesson with a title and valid slide or task blocks.");
@@ -326,6 +326,12 @@ function renderPreview() {
     ...(block.quiz?.questions || []).map((q, index) => (index + 1) + ". " + q.prompt + "\n" + q.options.join(" · "))
   ].filter(Boolean).join("\n\n");
   canvas.replaceChildren();
+  const vocab = byId("vocabPreview");
+  vocab.hidden = block.kind !== "vocab";
+  if (!vocab.hidden) {
+    byId("preview").hidden = true;
+    window.renderVocab(vocab, block.vocab || [], block.title, 1, true);
+  } else vocab.replaceChildren();
   if (isSlide) {
     const reveal = byId("previewReveal");
     const steps = [...new Set([0, ...elements.flatMap(element => [element.appear, element.disappear])
@@ -395,6 +401,25 @@ function render() {
     field(fields, "Media URL (direct HTTPS or YouTube for video)", block.media_url, value => { block.media_url = value.trim() || null; });
     renderElements(fields, block);
     renderInspector();
+  } else if (block.kind === "vocab") {
+    byId("elementInspector").replaceChildren();
+    const cards = block.vocab ||= [];
+    cards.forEach((card, index) => {
+      const group = document.createElement("fieldset");
+      const legend = document.createElement("legend");
+      legend.textContent = "Vocab card " + (index + 1);
+      group.append(legend);
+      for (const [key, label] of [["term", "Word or chunk"], ["meaning", "Meaning"],
+        ["image_url", "Image URL (HTTPS)"], ["audio_url", "Pronunciation audio URL (HTTPS)"],
+        ["example", "Example sentence"], ["example_audio_url", "Example audio URL (HTTPS)"]]) {
+        field(group, label, card[key], value => { card[key] = value; });
+      }
+      button(group, "Remove card", () => { cards.splice(index, 1); dirty(); render(); });
+      fields.append(group);
+    });
+    if (cards.length < 16) button(fields, "Add vocab card", () => {
+      cards.push({term: ""}); dirty(); render();
+    });
   } else if (block.kind === "dialogue") {
     byId("elementInspector").replaceChildren();
     field(fields, "Shared instructions", block.body, value => { block.body = value; }, null, true);
@@ -1097,6 +1122,7 @@ async function saveVersion(publishCopy) {
       if (!isTextAssessment(copy.kind)) delete copy.text_questions;
       if (!isOrdering(copy.kind)) delete copy.ordering_questions;
       if (copy.kind !== "page") delete copy.tasks;
+      if (copy.kind !== "vocab") delete copy.vocab;
       if (copy.kind !== "dialogue") {
         delete copy.role_a;
         delete copy.role_b;
