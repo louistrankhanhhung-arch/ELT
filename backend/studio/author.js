@@ -323,6 +323,7 @@ function renderPreview() {
   byId("preview").hidden = isSlide && Boolean(elements.length);
   byId("preview").textContent = [
     block.title, isSlide || block.kind === "dialogue" ? block.body : block.prompt, block.media_url || "",
+    ...(block.tasks || []).map((task, index) => (index + 1) + ". " + task.title),
     ...(block.quiz?.questions || []).map((q, index) => (index + 1) + ". " + q.prompt + "\n" + q.options.join(" · "))
   ].filter(Boolean).join("\n\n");
   canvas.replaceChildren();
@@ -433,6 +434,7 @@ function render() {
     field(fields, "Task prompt", block.prompt, value => { block.prompt = value; }, null, true);
     renderMaterialEditor(fields, block, 12);
     if (block.kind === "writing") renderWritingRubric(fields, block);
+    button(fields, "Add more tasks to this block", () => startTaskSequence(block));
   }
   if (block.kind === "multiple_choice") renderQuiz(fields, block);
   if (isTextAssessment(block.kind)) renderTextQuestions(fields, block);
@@ -442,6 +444,19 @@ function render() {
   byId("down").disabled = selected === lesson.blocks.length - 1 || (selected === 0 && isTitleSlide(lesson.blocks[0]));
   byId("remove").disabled = (lesson.blocks.length === 1) || isTitleSlide(block);
   renderPreview();
+}
+
+function startTaskSequence(block) {
+  const {kind, title, prompt, learning_target_id, materials, writing_rubric,
+         quiz, text_questions, ordering_questions} = block;
+  block.tasks = [{id: crypto.randomUUID(), kind, title, prompt, learning_target_id,
+    materials, writing_rubric, quiz, text_questions, ordering_questions}];
+  for (const key of ["prompt", "materials", "writing_rubric", "quiz", "text_questions", "ordering_questions"]) {
+    delete block[key];
+  }
+  block.kind = "page";
+  dirty();
+  render();
 }
 
 function renderPageTasks(fields, block) {
@@ -464,10 +479,18 @@ function renderPageTasks(fields, block) {
     if (task.kind === "multiple_choice") renderQuiz(group, task);
     if (isTextAssessment(task.kind)) renderTextQuestions(group, task);
     if (isOrdering(task.kind)) renderOrderingQuestions(group, task);
+    const move = offset => {
+      const other = index + offset;
+      [tasks[index], tasks[other]] = [tasks[other], tasks[index]];
+      dirty();
+      render();
+    };
+    if (index > 0) button(group, "Move task up", () => move(-1));
+    if (index < tasks.length - 1) button(group, "Move task down", () => move(1));
     button(group, "Remove task", () => { tasks.splice(index, 1); dirty(); render(); });
     fields.append(group);
   });
-  if (tasks.length < 20) button(fields, "Add task to Page", () => {
+  if (tasks.length < 20) button(fields, "Add task to block", () => {
     tasks.push({id: crypto.randomUUID(), title: "New task", kind: "writing", prompt: ""});
     dirty();
     render();
