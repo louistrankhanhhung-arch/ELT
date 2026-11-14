@@ -173,6 +173,107 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   });
   label.append(input);
   parent.append(label);
+  return input;
+}
+
+function editSlideText(element, value) {
+  const original = element.text || "";
+  if (original === value) return;
+  const before = Array.from(original);
+  const after = Array.from(value);
+  let first = 0;
+  let start = 0;
+  while (first < Math.min(before.length, after.length) && before[first] === after[first]) {
+    start += before[first++].length;
+  }
+  let oldEnd = original.length;
+  let newEnd = value.length;
+  let oldIndex = before.length - 1;
+  let newIndex = after.length - 1;
+  while (oldIndex >= first && newIndex >= first && before[oldIndex] === after[newIndex]) {
+    oldEnd -= before[oldIndex--].length;
+    newEnd -= after[newIndex--].length;
+  }
+  const delta = newEnd - oldEnd;
+  element.text_runs = (element.text_runs || []).flatMap(run => {
+    if (run.end <= start) return [run];
+    if (run.start >= oldEnd) return [{...run, start: run.start + delta, end: run.end + delta}];
+    const remaining = [];
+    if (run.start < start) remaining.push({...run, end: start});
+    if (run.end > oldEnd) remaining.push({...run, start: newEnd, end: run.end + delta});
+    return remaining;
+  });
+  element.text = value;
+}
+
+function selectedTextTools(parent, input, element) {
+  input.maxLength = 500;
+  const toolbar = document.createElement("fieldset");
+  const legend = document.createElement("legend");
+  legend.textContent = "Format selected text";
+  const hint = document.createElement("small");
+  hint.textContent = "Select text in the box, then choose a style.";
+  const status = document.createElement("small");
+  status.setAttribute("role", "status");
+  toolbar.append(legend, hint);
+
+  function update(key, value) {
+    const {selectionStart: start, selectionEnd: end} = input;
+    if (start === end) {
+      status.textContent = "Select text first.";
+      input.focus();
+      return;
+    }
+    const styles = Array.from({length: input.value.length}, () => ({}));
+    for (const {start: from, end: to, ...style} of element.text_runs || []) {
+      const normalized = Object.fromEntries(Object.entries(style).filter(([,setting]) => setting != null));
+      for (let i = from; i < Math.min(to, styles.length); i++) styles[i] = normalized;
+    }
+    const remove = value === true && styles.slice(start, end).every(style => style[key] === true);
+    for (let i = start; i < end; i++) {
+      if (!key) styles[i] = {};
+      else if (remove) {
+        const copy = {...styles[i]};
+        delete copy[key];
+        styles[i] = copy;
+      } else styles[i] = {...styles[i], [key]: value};
+    }
+    const runs = [];
+    let previous = "";
+    styles.forEach((style, index) => {
+      const signature = JSON.stringify([style.bold, style.italic, style.underline, style.text_color]);
+      if (Object.keys(style).length) {
+        if (signature === previous) runs.at(-1).end = index + 1;
+        else runs.push({...style, start: index, end: index + 1});
+      }
+      previous = signature;
+    });
+    element.text_runs = runs;
+    dirty();
+    renderPreview();
+    status.textContent = "Selected text updated.";
+    input.focus();
+    input.setSelectionRange(start, end);
+  }
+  for (const [key, label] of [["bold", "Bold selection"], ["italic", "Italicize selection"],
+    ["underline", "Underline selection"], ["", "Clear selection formatting"]]) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = label;
+    button.onclick = () => update(key, true);
+    toolbar.append(button);
+  }
+  const label = document.createElement("label");
+  const color = document.createElement("input");
+  color.type = "color";
+  color.value = element.text_color || "#172338";
+  label.append("Selection color", color);
+  const apply = document.createElement("button");
+  apply.type = "button";
+  apply.textContent = "Apply selection color";
+  apply.onclick = () => update("text_color", color.value);
+  toolbar.append(label, apply, status);
+  parent.append(toolbar);
 }
 
 function positionElement(item, element) {
@@ -1261,8 +1362,12 @@ function renderInspector() {
   }
   const element = selectedElement;
   if (!elements.includes(element)) return;
-  field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
-    element.text, value => { element.text = value; }, null, element.kind === "text");
+  const textInput = field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
+    element.text, value => {
+      if (element.kind === "text") editSlideText(element, value);
+      else element.text = value;
+    }, null, element.kind === "text");
+  if (element.kind === "text") selectedTextTools(panel, textInput, element);
   if (element.kind !== "image") {
     field(panel, "Font", element.font_family || "", value => { element.font_family = value || null; },
       ["","system-ui","Arial","Verdana","Georgia","Trebuchet MS","Courier New"]);

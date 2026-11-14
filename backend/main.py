@@ -2294,7 +2294,17 @@ def student_scores(pin: str, payload: StudentScoresRequest):
     return {"scores": scores}
 
 
+class SlideTextRun(BaseModel):
+    start: int = Field(ge=0, lt=1000)
+    end: int = Field(gt=0, le=1000)
+    bold: Optional[bool] = None
+    italic: Optional[bool] = None
+    underline: Optional[bool] = None
+    text_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+
+
 class SlideElement(BaseModel):
+    text_runs: Optional[List[SlideTextRun]] = Field(default=None, max_length=500)
     kind: Literal["text", "image", "audio", "shape", "icon", "table"]
     text: str = Field(default="", max_length=500)
     url: Optional[str] = Field(default=None, max_length=2000)
@@ -2323,6 +2333,19 @@ class SlideElement(BaseModel):
     disappear: Optional[int] = Field(default=None, ge=1, le=30)
 
     def checked(self, block_id):
+        if self.text_runs:
+            # Textarea selection offsets use UTF-16 code units.
+            boundaries = {0}
+            offset = 0
+            for character in self.text:
+                offset += 2 if ord(character) > 0xFFFF else 1
+                boundaries.add(offset)
+            previous_end = 0
+            for run in self.text_runs:
+                if (self.kind != "text" or not previous_end <= run.start < run.end
+                        or run.start not in boundaries or run.end not in boundaries):
+                    raise HTTPException(422, f"Block {block_id}: invalid text formatting range")
+                previous_end = run.end
         if self.x + self.width > 100 or self.y + self.height > 100:
             raise HTTPException(422, f"Block {block_id}: slide element must fit within the canvas")
         if self.disappear is not None and self.disappear <= self.appear:
