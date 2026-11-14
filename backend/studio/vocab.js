@@ -37,10 +37,7 @@
       if (step !== 0) for (const [label, source] of clips) {
         const url = mediaUrl(source);
         if (!url) continue;
-        const iconOnly = label === "Hear word";
-        const play = node("button", iconOnly ? REHSlideStyle.audioLabel({}) : label);
-        play.className = "reh-audio-button";
-        play.title = label;
+        const play = node("button", label);
         play.type = "button";
         play.disabled = !interactive;
         play.setAttribute("aria-label", label + (recall ? " " + (index + 1) : ": " + card.term));
@@ -48,17 +45,8 @@
           playing.get(root)?.pause();
           const audio = new Audio(url);
           playing.set(root, audio);
-          play.setAttribute("aria-pressed", "false");
-          audio.addEventListener("playing", () => play.setAttribute("aria-pressed", "true"));
-          for (const event of ["pause", "ended"]) {
-            audio.addEventListener(event, () => play.setAttribute("aria-pressed", "false"));
-          }
           audio.play().catch(error => {
-            if (error.name !== "AbortError" && playing.get(root) === audio) {
-              play.title = "Audio unavailable";
-              play.setAttribute("aria-label", label + " (audio unavailable)");
-              if (!iconOnly) play.textContent = "Audio unavailable";
-            }
+            if (error.name !== "AbortError" && playing.get(root) === audio) play.textContent = "Audio unavailable";
           });
         };
         item.append(play);
