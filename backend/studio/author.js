@@ -219,19 +219,6 @@ function bindCanvasPointer(item, element, canvas) {
       highlightElements(canvas);
       return;
     }
-    const delta = {ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[event.key];
-    if (!delta) return;
-    event.preventDefault();
-    selectElement(element);
-    const [dx,dy] = delta;
-    updateGeometry(element, event.shiftKey
-      ? {...element,width:element.width+dx,height:element.height+dy}
-      : {...element,x:Math.min(100-element.width,element.x+dx),y:Math.min(100-element.height,element.y+dy)});
-    positionElement(item, element);
-    highlightElements(canvas);
-    dirty();
-    renderInspector();
-    refreshThumbnail();
   });
 }
 
@@ -716,7 +703,7 @@ for (const id of ["elementPreview", "preview"]) {
     renderPreview();
   });
   panel.addEventListener("focusin", event => {
-    if (event.target === panel) setClipboardScope("content");
+    if (event.target === panel && !selectedElement) setClipboardScope("content");
   });
 }
 
@@ -731,6 +718,90 @@ byId("remove").onclick = () => {
   dirty();
   render();
 };
+function focusStudioSelection(scope) {
+  if (scope === "block") {
+    byId("blocks").children[selected]?.focus({preventScroll: true});
+    return;
+  }
+  const canvas = byId("elementPreview");
+  const index = lesson.blocks[selected].elements?.indexOf(selectedElement);
+  const item = canvas.querySelector('[data-element-index="' + index + '"]');
+  const destination = item || (canvas.hidden ? byId("preview") : canvas);
+  destination.focus({preventScroll: true});
+}
+
+function removeSelectedElements() {
+  const block = lesson.blocks[selected];
+  block.elements = block.elements.filter(element => element !== selectedElement && !extraElements.has(element));
+  selectedElement = null;
+  extraElements.clear();
+  clipboardScope = "content";
+  dirty();
+  render();
+}
+
+function nudgeElements(dx, dy, resize) {
+  const block = lesson.blocks[selected];
+  const elements = block.elements.filter(element => element === selectedElement || extraElements.has(element));
+  if (resize && elements.length === 1) {
+    const element = elements[0];
+    updateGeometry(element, {...element, width: element.width + dx, height: element.height + dy});
+  } else {
+    dx = Math.max(-Math.min(...elements.map(element => element.x)),
+      Math.min(dx, Math.min(...elements.map(element => 100 - element.x - element.width))));
+    dy = Math.max(-Math.min(...elements.map(element => element.y)),
+      Math.min(dy, Math.min(...elements.map(element => 100 - element.y - element.height))));
+    for (const element of elements) updateGeometry(element, {...element, x: element.x + dx, y: element.y + dy});
+  }
+  dirty();
+  renderInspector();
+  renderPreview();
+  refreshThumbnail();
+  focusStudioSelection("element");
+}
+
+document.addEventListener("keydown", event => {
+  if (!lesson || byId("editor").hidden || event.defaultPrevented || event.isComposing ||
+      event.target.closest("input, textarea, select, [contenteditable], dialog") ||
+      document.querySelector("dialog[open]")) return;
+  const target = clipboardTarget();
+  if (!target.block || event.altKey) return;
+  const key = event.key.toLowerCase();
+  if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {
+    if (key !== "c" && key !== "v") return;
+    if (key === "c" && window.getSelection()?.toString()) return;
+    const control = byId(key === "c" ? "copySelection" : "pasteSelection");
+    if (control.disabled) return;
+    event.preventDefault();
+    control.click();
+    if (key === "v" && !document.activeElement.closest("#editor")) focusStudioSelection(clipboardTarget().scope);
+    return;
+  }
+  if (event.ctrlKey || event.metaKey) return;
+  if (key === "delete") {
+    if (event.repeat || (target.scope !== "block" && (target.scope !== "element" || !target.element))) return;
+    event.preventDefault();
+    if (target.scope === "block") byId("remove").click();
+    else if (target.scope === "element") removeSelectedElements();
+    focusStudioSelection(clipboardTarget().scope);
+    return;
+  }
+  const delta = {arrowleft: [-1, 0], arrowright: [1, 0], arrowup: [0, -1], arrowdown: [0, 1]}[key];
+  if (!delta || !event.target.closest("#blocks, #elementPreview, #preview")) return;
+  if (target.scope === "block" && delta[1]) {
+    event.preventDefault();
+    move(delta[1]);
+    focusStudioSelection("block");
+  } else {
+    if (event.target.matches("[data-element-index]") && !target.element) {
+      selectElement(target.block.elements[Number(event.target.dataset.elementIndex)]);
+    }
+    if (clipboardTarget().scope !== "element" || !selectedElement) return;
+    event.preventDefault();
+    nudgeElements(...delta, event.shiftKey);
+  }
+});
+
 byId("addBlock").onclick = addBlock;
 byId("course").onchange = dirty;
 byId("level").onchange = dirty;
@@ -1124,7 +1195,7 @@ function renderInspector() {
   panel.lastChild.disabled = index === 0;
   button(panel,"Bring forward",() => moveLayer(1));
   panel.lastChild.disabled = index === elements.length - 1;
-  button(panel,"Remove element",() => { elements.splice(index,1); selectedElement = null; extraElements.clear(); dirty(); render(); });
+  button(panel, "Remove element", removeSelectedElements);
 }
 
 function renderGroupFormatting(panel, elements) {
