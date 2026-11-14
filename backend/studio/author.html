@@ -33,7 +33,13 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 #canvasTools { display:flex; flex-wrap:wrap; align-items:end; gap:4px }
 .clipboard-actions { display:flex; flex-wrap:wrap; gap:4px }
 .clipboard-actions button { margin:0; font-size:.85rem }
-#canvasTools .clipboard-actions { width:100% }
+.clipboard-actions { align-items:center; margin:12px 0 }
+.clipboard-actions button { display:grid; place-items:center; width:38px; height:36px; padding:0 }
+.clipboard-actions button span { position:relative; display:block; width:13px; height:15px; border:2px solid currentColor; border-radius:2px }
+.copy-icon::before,.paste-icon::before { content:""; position:absolute }
+.copy-icon::before { inset:2px auto auto 2px; width:100%; height:100%; border:2px solid currentColor; border-radius:2px; background:#286340 }
+.paste-icon::before { left:1px; right:1px; top:-4px; height:4px; background:currentColor; border-radius:2px }
+#clipboardScope { color:#456052; padding-inline:6px }
 #clipboardStatus:empty { display:none }
 #clipboardStatus { margin:8px 0 }
 #canvasTools button { padding:5px 8px; font-size:.85rem }
@@ -98,14 +104,13 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
   <label>Level <select id="level"><option value="">Select level</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></label>
   <label>Lesson title <input id="title" maxlength="160"></label>
   <label>Learning objective <input id="objective" maxlength="1000"></label>
+  <div class="clipboard-actions" role="group" aria-label="Studio clipboard">
+    <button type="button" id="copySelection" aria-label="Copy block" title="Copy block"><span class="copy-icon" aria-hidden="true"></span></button>
+    <button type="button" id="pasteSelection" aria-label="Paste" title="Paste" disabled><span class="paste-icon" aria-hidden="true"></span></button>
+    <span id="clipboardScope">Block</span>
+  </div>
   <div class="grid">
     <aside><h2>Lesson blocks</h2><div id="blocks"></div>
-      <div class="clipboard-actions" aria-label="Block clipboard">
-        <button type="button" id="copyBlock">Copy block</button>
-        <button type="button" id="pasteBlock" disabled>Paste block</button>
-        <button type="button" id="copyContent">Copy content</button>
-        <button type="button" id="pasteContent" disabled>Paste content</button>
-      </div>
       <button id="addSlide">Add slide</button><button id="addPage">Add Page</button><button id="addTask">Add task</button>
     </aside>
     <section>
@@ -118,11 +123,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
         <button type="button" data-add-element="icon">+ Icon</button>
         <button type="button" data-add-element="table">+ Table</button>
         <label>Preview reveal <select id="previewReveal"></select></label>
-        <div class="clipboard-actions" aria-label="Slide element clipboard">
-          <button type="button" id="copyElement" disabled>Copy element</button>
-          <button type="button" id="pasteElement" disabled>Paste element</button>
-          <button type="button" id="pasteFormat" disabled>Paste format</button>
-        </div>
       </div>
       <div id="clipboardStatus" role="status"></div>
       <div id="elementPreview" aria-label="Editable slide canvas" hidden></div>
@@ -141,6 +141,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=text-2"></script>
-<script src="author.js?v=save-publish-1"></script>
+<script src="author.js?v=context-clipboard-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>

@@ -73,6 +73,7 @@ function loadDraft(value, parent = null) {
   revision = parent;
   hasUnsavedChanges = !parent;
   selected = 0;
+  clipboardScope = "block";
   selectedElement = null;
   revealPreview = -1;
   byId("course").value = lesson.course || "";
@@ -150,6 +151,7 @@ function bindCanvasPointer(item, element, canvas) {
     event.preventDefault();
     item.focus({preventScroll:true});
     selectedElement = element;
+    setClipboardScope("element");
     for (const other of canvas.children) {
       other.classList.toggle("is-selected", other === item);
       other.setAttribute("aria-pressed", String(other === item));
@@ -187,6 +189,7 @@ function bindCanvasPointer(item, element, canvas) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       selectedElement = element;
+      setClipboardScope("element");
       renderInspector();
       for (const other of canvas.children) {
         other.classList.toggle("is-selected", other === item);
@@ -198,6 +201,7 @@ function bindCanvasPointer(item, element, canvas) {
     if (!delta) return;
     event.preventDefault();
     selectedElement = element;
+    setClipboardScope("element");
     const [dx,dy] = delta;
     updateGeometry(element, event.shiftKey
       ? {...element,width:element.width+dx,height:element.height+dy}
@@ -286,7 +290,7 @@ function render() {
   const list = byId("blocks");
   list.replaceChildren();
   lesson.blocks.forEach((block, index) => {
-    button(list, "", () => { selected = index; selectedElement = null; revealPreview = -1; render(); });
+    button(list, "", () => { selected = index; clipboardScope = "block"; selectedElement = null; revealPreview = -1; render(); });
     const item = list.lastChild;
     item.className = "block";
     item.setAttribute("aria-current", String(index === selected));
@@ -561,6 +565,7 @@ function move(offset) {
 function add(kind) {
   lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind, title: kind === "slide" ? "New slide" : kind === "page" ? "New Page" : "New task" });
   selected = lesson.blocks.length - 1;
+  clipboardScope = "block";
   if (kind === "slide" && newWorkFrame) lesson.blocks[selected].elements = structuredClone(newWorkFrame);
   selectedElement = null;
   revealPreview = -1;
@@ -568,19 +573,41 @@ function add(kind) {
   render();
 }
 
-let copiedBlock = null;
-let copiedContent = null;
-let copiedElement = null;
-const textFormatKeys = ["font_family", "font_size", "text_color", "bold", "italic", "underline", "text_align", "list_style"];
+let clipboard = null;
+let clipboardScope = "block";
+
+function clipboardTarget() {
+  const block = lesson?.blocks[selected];
+  const canvas = ["slide", "page"].includes(block?.kind);
+  const element = canvas && block.elements?.includes(selectedElement) ? selectedElement : null;
+  return {block, canvas, element, scope: clipboardScope === "element" && !element ? "content" : clipboardScope};
+}
+
+function canPaste({block, canvas, scope}) {
+  if (!clipboard || !block) return false;
+  if (clipboard.type === "element") return canvas && scope !== "block" && (block.elements?.length || 0) < 60;
+  if (clipboard.type === "content") return scope === "content" && clipboard.kind === block.kind;
+  return scope === "block" && lesson.blocks.length < 100;
+}
 
 function updateClipboardActions() {
-  const block = lesson.blocks[selected];
-  const element = (block.elements || []).includes(selectedElement) ? selectedElement : null;
-  byId("pasteBlock").disabled = !copiedBlock || lesson.blocks.length >= 100;
-  byId("pasteContent").disabled = copiedContent?.kind !== block.kind;
-  byId("copyElement").disabled = !element;
-  byId("pasteElement").disabled = !copiedElement || (block.elements || []).length >= 60;
-  byId("pasteFormat").disabled = copiedElement?.kind !== "text" || element?.kind !== "text";
+  const target = clipboardTarget();
+  const {block, scope} = target;
+  const copy = byId("copySelection");
+  const paste = byId("pasteSelection");
+  copy.disabled = !block;
+  paste.disabled = !canPaste(target);
+  const labels = [[copy, "Copy " + scope], [paste, clipboard ? "Paste " + clipboard.type : "Paste"]];
+  for (const [button, name] of labels) {
+    button.title = name;
+    button.setAttribute("aria-label", name);
+  }
+  byId("clipboardScope").textContent = scope[0].toUpperCase() + scope.slice(1);
+}
+
+function setClipboardScope(scope) {
+  clipboardScope = scope;
+  updateClipboardActions();
 }
 
 function clipboardStatus(message) {
@@ -604,70 +631,71 @@ function finishPaste(message, element = null) {
   clipboardStatus(message);
 }
 
-byId("copyBlock").onclick = () => {
-  copiedBlock = structuredClone(lesson.blocks[selected]);
-  clipboardStatus("Block copied. Paste inserts a copy after the selected block.");
-};
-
-byId("pasteBlock").onclick = () => {
-  if (!copiedBlock || lesson.blocks.length >= 100) return;
-  const block = structuredClone(copiedBlock);
-  renewTaskIds(block);
-  lesson.blocks.splice(++selected, 0, block);
-  finishPaste("Block pasted.");
-};
-
 function blockContent(block) {
-  const { id, kind, title, phase, notes, learning_target_id, ...content } = block;
-  return { kind, content };
+  const {id, kind, title, phase, notes, learning_target_id, ...content} = block;
+  return content;
 }
 
-byId("copyContent").onclick = () => {
-  copiedContent = structuredClone(blockContent(lesson.blocks[selected]));
-  clipboardStatus("Content copied. Select a block of the same type to paste it.");
+byId("copySelection").onclick = () => {
+  const {block, element, scope} = clipboardTarget();
+  if (!block) return;
+  const value = scope === "block" ? block : scope === "content" ? blockContent(block) : element;
+  clipboard = {type: scope, kind: block.kind, value: structuredClone(value)};
+  clipboardStatus({
+    block: "Block copied. Select a block in the list to paste after it.",
+    content: "Content copied. Select the canvas or block properties of a block of the same type.",
+    element: "Element copied. Select a slide or Page canvas to paste."
+  }[scope]);
 };
 
-byId("pasteContent").onclick = () => {
-  const block = lesson.blocks[selected];
-  if (copiedContent?.kind !== block.kind) return;
-  if (Object.keys(blockContent(block).content).length
-      && !window.confirm("Replace the content of this block?")) return;
-  const content = structuredClone(copiedContent.content);
-  renewTaskIds(content);
-  delete content.id;
-  for (const key of Object.keys(blockContent(block).content)) delete block[key];
-  Object.assign(block, content);
-  finishPaste("Content pasted. Block title, phase, notes and learning target were kept.");
-};
-
-byId("copyElement").onclick = () => {
-  if (!selectedElement) return;
-  copiedElement = structuredClone(selectedElement);
-  clipboardStatus("Element copied. Use Paste format to apply only its text styling.");
-};
-
-byId("pasteElement").onclick = () => {
-  const block = lesson.blocks[selected];
-  if (!copiedElement || !["slide", "page"].includes(block.kind)) return;
-  const elements = block.elements ||= [];
-  if (elements.length >= 60) return;
-  const element = structuredClone(copiedElement);
-  if (elements.some(item => item.x === element.x && item.y === element.y)) {
-    element.x = Math.min(100 - element.width, element.x + 2);
-    element.y = Math.min(100 - element.height, element.y + 2);
+byId("pasteSelection").onclick = () => {
+  const target = clipboardTarget();
+  if (!canPaste(target)) return;
+  const {block} = target;
+  const value = structuredClone(clipboard.value);
+  if (clipboard.type === "block") {
+    renewTaskIds(value);
+    lesson.blocks.splice(++selected, 0, value);
+    finishPaste("Block pasted.");
+  } else if (clipboard.type === "content") {
+    const keys = Object.keys(blockContent(block));
+    if (keys.length && !window.confirm("Replace the content of this block?")) return;
+    renewTaskIds(value);
+    delete value.id;
+    for (const key of keys) delete block[key];
+    Object.assign(block, value);
+    finishPaste("Content pasted.");
+  } else {
+    const elements = block.elements ||= [];
+    if (elements.some(item => item.x === value.x && item.y === value.y)) {
+      value.x = Math.min(100 - value.width, value.x + 2);
+      value.y = Math.min(100 - value.height, value.y + 2);
+    }
+    elements.push(value);
+    clipboardScope = "element";
+    finishPaste("Element pasted.", value);
   }
-  elements.push(element);
-  finishPaste("Element pasted.", element);
 };
 
-byId("pasteFormat").onclick = () => {
-  if (copiedElement?.kind !== "text" || selectedElement?.kind !== "text") return;
-  for (const key of textFormatKeys) {
-    if (copiedElement[key] == null) delete selectedElement[key];
-    else selectedElement[key] = copiedElement[key];
-  }
-  finishPaste("Text format pasted.", selectedElement);
-};
+for (const eventName of ["pointerdown", "focusin"]) {
+  byId("blocks").addEventListener(eventName, () => setClipboardScope("block"));
+  byId("fields").addEventListener(eventName, () => setClipboardScope("content"));
+  byId("elementInspector").addEventListener(eventName, () => setClipboardScope("element"));
+}
+for (const id of ["elementPreview", "preview"]) {
+  const panel = byId(id);
+  panel.tabIndex = 0;
+  panel.addEventListener("pointerdown", event => {
+    if (event.target !== panel) return;
+    selectedElement = null;
+    setClipboardScope("content");
+    if (clipboardTarget().canvas) renderInspector();
+    renderPreview();
+  });
+  panel.addEventListener("focusin", event => {
+    if (event.target === panel) setClipboardScope("content");
+  });
+}
 
 byId("up").onclick = () => move(-1);
 byId("down").onclick = () => move(1);
@@ -888,6 +916,7 @@ async function saveVersion(publishCopy) {
       titleSlide = await makeTitleSlide(title);
       lesson.blocks.unshift(titleSlide);
       selected = 0;
+      clipboardScope = "block";
       selectedElement = null;
       revealPreview = -1;
       dirty();
@@ -993,6 +1022,7 @@ function renderInspector() {
   layer.value = elements.includes(selectedElement) ? String(elements.indexOf(selectedElement)) : "";
   layer.onchange = () => {
     selectedElement = layer.value === "" ? null : elements[Number(layer.value)];
+    setClipboardScope(selectedElement ? "element" : "content");
     revealPreview = -1;
     renderInspector();
     renderPreview();
