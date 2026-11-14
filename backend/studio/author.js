@@ -1092,6 +1092,7 @@ function renderInspector() {
       element.shape = value;
       renderInspector();
     }, ["rectangle","circle","arrow","line"]);
+    numericStyle(panel, element, "rotation", "Rotation (°)", 0, 360, 0);
     if (element.shape !== "line") {
       field(panel, "Fill color", element.fill_color || "#d5e6ff",
         value => { element.fill_color = value; }, null, false, false, "color");
@@ -1197,6 +1198,7 @@ function renderGroupFormatting(panel, elements) {
     choice("list_style", "List (one item per line)", ["","bullet","numbered"]);
   }
   if (elements.every(element => element.kind === "shape")) {
+    number("rotation", "Rotation (°)", 0, 360, 0);
     if (elements.every(element => element.shape !== "line")) {
       color("fill_color", "Fill color", "#d5e6ff");
       number("fill_opacity", "Fill opacity (%)", 0, 100, 100);

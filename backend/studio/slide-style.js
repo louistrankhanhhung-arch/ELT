@@ -2,6 +2,9 @@
 (() => {
   const NS = "http://www.w3.org/2000/svg";
   function apply(node, element) {
+    if (element.kind === "shape" && Number.isInteger(element.rotation) && element.rotation >= 0 && element.rotation <= 360) {
+      node.style.rotate = element.rotation + "deg";
+    }
     if (element.font_family) node.style.fontFamily = element.font_family;
     if (element.font_size) node.style.fontSize = (element.font_size / 12.8) + "cqw";
     if (element.text_color) node.style.color = element.text_color;

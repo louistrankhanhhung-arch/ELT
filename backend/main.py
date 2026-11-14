@@ -2299,6 +2299,7 @@ class SlideElement(BaseModel):
     text: str = Field(default="", max_length=500)
     url: Optional[str] = Field(default=None, max_length=2000)
     shape: Literal["rectangle", "circle", "arrow", "line"] = "rectangle"
+    rotation: int = Field(default=0, ge=0, le=360)
     font_family: Optional[Literal["Arial", "Verdana", "Georgia", "Trebuchet MS", "Courier New", "system-ui"]] = None
     font_size: Optional[int] = Field(default=None, ge=12, le=120)
     bold: Optional[bool] = None
