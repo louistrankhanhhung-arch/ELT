@@ -162,7 +162,7 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   label.textContent = title;
   const input = document.createElement(choices ? "select" : multiline ? "textarea" : "input");
   if (!choices && !multiline) input.type = inputType;
-  if (choices) for (const choice of choices) input.add(new Option(({ordering_sentence: "Ordering Sentence", ordering_paragraph: "Ordering Paragraph", dialogue: "Dialogue Card A/B"})[choice] || choice || "None", choice));
+  if (choices) for (const choice of choices) input.add(new Option(({vocab: "Vocab", ordering_sentence: "Ordering Sentence", ordering_paragraph: "Ordering Paragraph", dialogue: "Dialogue Card A/B"})[choice] || choice || "None", choice));
   if (multiline) input.rows = 3;
   if (catalog) input.setAttribute("list", "learningTargets");
   input.value = value ?? "";
@@ -393,7 +393,7 @@ function render() {
   field(fields, "Block title", block.title, value => { block.title = value; });
   field(fields, "Phase", block.phase, value => { block.phase = value; }, phases);
   field(fields, "Learning target ID (optional)", block.learning_target_id, value => { block.learning_target_id = value.trim() || null; }, null, false, true);
-  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]);
+  field(fields, "Block type", block.kind, value => { block.kind = value; render(); }, ["slide", "page", "vocab", "dialogue", "writing", "multiple_choice", "speaking", "cloze", "short_answer", "ordering_sentence", "ordering_paragraph"]);
   field(fields, "Teacher notes", block.notes, value => { block.notes = value; }, null, true);
   if (["slide", "page"].includes(block.kind)) {
     field(fields, "Slide text", block.body, value => { block.body = value; }, null, true);
