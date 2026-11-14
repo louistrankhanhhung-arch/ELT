@@ -2467,6 +2467,31 @@ def save_work_lesson(payload: SaveWorkLesson):
         version = int(parent["version"]) + (0 if payload.overwrite else 1)
     overwrite = payload.overwrite and parent is not None
     revision = payload.parent_revision if overwrite else uuid4().hex
+    manifest = compile_work_lesson(lesson, revision, version)
+    manifest["parent_revision"] = parent.get("parent_revision") if overwrite else payload.parent_revision
+    if parent is not None and not overwrite:
+        manifest["title_changed_from_parent"] = lesson.title.strip() != parent["title"]
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        if overwrite:
+            cur.execute(sql("UPDATE lesson_revisions SET manifest = ? WHERE revision_id = ?"),
+                        (json.dumps(manifest), revision))
+        else:
+            cur.execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
+        conn.commit()
+    return {"revision": revision, "version": version, "lesson_path": f"imports/{revision}"}
+
+
+@app.post("/api/work-lesson-preview", dependencies=[Depends(require_teacher)])
+def preview_work_lesson(lesson: WorkLesson):
+    manifest = compile_work_lesson(lesson, uuid4().hex, 1)
+    manifest.pop("work_source")
+    return manifest
+
+
+def compile_work_lesson(lesson: WorkLesson, revision: str, version: int):
+    if not lesson.title.strip() or len({block.id for block in lesson.blocks}) != len(lesson.blocks):
+        raise HTTPException(422, "Enter a lesson title and use unique block IDs")
     blocks = []
     for block in lesson.blocks:
         title = block.title.strip()
@@ -2528,23 +2553,12 @@ def save_work_lesson(payload: SaveWorkLesson):
         blocks.append(entry)
     manifest = {"lesson_id": f"work-{revision}", "title": lesson.title.strip(), "version": str(version),
                 "origin": "work", "objective": lesson.objective, "blocks": blocks,
-                "parent_revision": parent.get("parent_revision") if overwrite else payload.parent_revision,
                 "work_source": lesson.model_dump(exclude_none=True)}
-    if parent is not None and not overwrite:
-        manifest["title_changed_from_parent"] = lesson.title.strip() != parent["title"]
     if lesson.course is not None:
         manifest["course"] = lesson.course
     if lesson.level is not None:
         manifest["level"] = lesson.level
-    with closing(db()) as conn:
-        cur = conn.cursor()
-        if overwrite:
-            cur.execute(sql("UPDATE lesson_revisions SET manifest = ? WHERE revision_id = ?"),
-                        (json.dumps(manifest), revision))
-        else:
-            cur.execute(sql("INSERT INTO lesson_revisions VALUES (?, ?)"), (revision, json.dumps(manifest)))
-        conn.commit()
-    return {"revision": revision, "version": version, "lesson_path": f"imports/{revision}"}
+    return manifest
 
 
 class SpeakingSubmissionRequest(BaseModel):

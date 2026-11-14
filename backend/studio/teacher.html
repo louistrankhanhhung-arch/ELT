@@ -369,6 +369,11 @@
     .live-submission-status li { padding: 4px 0; }
     .live-submission-status li[data-submitted="true"] { color: #286340; }
     body.presentation-mode #writingPanel { display: none; }
+    body.studio-preview .app { grid-template-columns: minmax(0, 1fr); }
+    body.studio-preview :is(#blockList, .live-panel, #writingPanel, #homeBtn, #openQuickTask,
+      #startSessionBtn, #endSessionBtn, .controls label, .reh-tools, #assignOnStage, #taskStageStatus) {
+      display: none !important;
+    }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-1">
   <link rel="stylesheet" href="classroom-ui.css?v=reh-1">
@@ -673,7 +678,13 @@
       notesTimer = setTimeout(loadTeacherNotes, 400);
     });
 
-    const lessonUrl = window.runtimeLessonUrl(lessonPath);
+    const previewSource = new URLSearchParams(location.hash.slice(1)).get("preview");
+    const studioPreview = previewSource?.startsWith("blob:" + location.origin + "/");
+    const lessonUrl = studioPreview ? previewSource : window.runtimeLessonUrl(lessonPath);
+    if (studioPreview) {
+      document.body.classList.add("studio-preview");
+      document.title = "Lesson Preview";
+    }
 
     const lessonTitle = document.getElementById("lessonTitle");
     const lessonMeta = document.getElementById("lessonMeta");
@@ -1308,7 +1319,7 @@
 
     async function loadLesson() {
       try {
-        const res = await fetch(lessonUrl);
+        const res = await fetch(lessonUrl, { cache: "no-store" });
 
         if (!res.ok) {
           throw new Error("Cannot load lesson JSON: " + lessonUrl);
@@ -1330,7 +1341,7 @@
         lessonTitle.textContent =
           currentLesson.title || currentLesson.lesson_id || "Lesson";
 
-        lessonMeta.textContent =
+        lessonMeta.textContent = studioPreview ? "Studio Preview" :
           [currentLesson.level, currentLesson.version && `Version ${currentLesson.version}`].filter(Boolean).join(" · ");
 
         renderBlockList(currentLesson.blocks || []);
@@ -1391,7 +1402,13 @@
       currentBlock.textContent =
         `Current block: ${blockIndex + 1}/${blocks.length} · ${block.title || block.id} · ${block.activity_kind || block.type}`;
 
-      previewFrame.src = block.task ? "about:blank" : window.runtimePlayerUrl(block, "teacher");
+      if (block.task) {
+        previewFrame.src = "about:blank";
+      } else {
+        const player = new URL(window.runtimePlayerUrl(block, "teacher"));
+        if (studioPreview) player.hash = location.hash;
+        previewFrame.src = player.href;
+      }
       renderTaskPreview(block);
       syncProjection();
       syncWritingControls();
@@ -1401,7 +1418,7 @@
       prevBtn.disabled = blockIndex <= 0;
       nextBtn.disabled = blockIndex >= blocks.length - 1;
 
-      if (updateUrl) {
+      if (updateUrl && !studioPreview) {
         const url = new URL(window.location.href);
         url.searchParams.set("lesson", lessonPath);
         url.searchParams.set("block", blockIndex);
@@ -1440,7 +1457,7 @@
     });
 
     async function startSession() {
-      if (!currentLesson || startSessionBtn.disabled) return;
+      if (studioPreview || !currentLesson || startSessionBtn.disabled) return;
       const joinScreen = new URL("join-screen.html", BASE_URL);
       openJoinScreen(joinScreen.href);
 
@@ -2282,6 +2299,7 @@
     );
 
     document.addEventListener("keydown", (e) => {
+      if (!currentLesson) return;
       if (
         e.target.tagName === "INPUT" ||
         e.target.tagName === "TEXTAREA" ||
@@ -2342,7 +2360,7 @@
       }
       
       // HOME
-      if (e.key === "h" || e.key === "H") {
+      if (!studioPreview && (e.key === "h" || e.key === "H")) {
         window.location.href = "./teacher-home.html";
         return;
       }

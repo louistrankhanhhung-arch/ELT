@@ -147,7 +147,10 @@ function showElements(elements) {
 
 async function showSlide() {
   if (!/^[a-f0-9]{32}$/.test(revision || "")) throw new Error("Invalid slide");
-  const response = await fetch(window.runtimeLessonUrl("imports/" + revision));
+  const preview = new URLSearchParams(location.hash.slice(1)).get("preview");
+  const source = preview?.startsWith("blob:" + location.origin + "/")
+    ? preview : window.runtimeLessonUrl("imports/" + revision);
+  const response = await fetch(source);
   if (!response.ok) throw new Error("Slide unavailable");
   const lesson = await response.json();
   const block = lesson.blocks.find(block => block.id === params.get("block") && block.activity_kind === "native-slide");

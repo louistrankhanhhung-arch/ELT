@@ -1090,6 +1090,60 @@ if (linkedRevision) {
 byId("save").onclick = () => saveVersion(false);
 byId("publishCopy").onclick = () => saveVersion(true);
 
+function lessonSnapshot(draft) {
+  const blocks = draft.blocks.map(block => {
+    const copy = { ...block };
+    if (copy.kind !== "multiple_choice") delete copy.quiz;
+    if (copy.kind !== "writing") delete copy.writing_rubric;
+    if (!isTextAssessment(copy.kind)) delete copy.text_questions;
+    if (!isOrdering(copy.kind)) delete copy.ordering_questions;
+    if (copy.kind !== "page") delete copy.tasks;
+    if (copy.kind !== "vocab") delete copy.vocab;
+    if (copy.kind !== "dialogue") {
+      delete copy.role_a;
+      delete copy.role_b;
+      delete copy.role_a_materials;
+      delete copy.role_b_materials;
+    }
+    return copy;
+  });
+  return { ...draft, blocks };
+}
+
+let previewUrl;
+byId("previewLesson").onclick = async () => {
+  const popup = window.open("", "rehStudioPreview", "popup,width=1200,height=820");
+  if (!popup) return status("Allow pop-ups for Studio and try Preview again.");
+  popup.document.title = "Lesson Preview";
+  popup.document.body.textContent = "Loading lesson preview…";
+  popup.focus();
+  const button = byId("previewLesson");
+  button.disabled = true;
+  try {
+    const draft = lessonSnapshot({
+      ...lesson,
+      title: byId("title").value.trim(),
+      objective: byId("objective").value.trim(),
+      course: byId("course").value || null,
+      level: Number(byId("level").value) || null
+    });
+    const block = selected;
+    const manifest = await request("/work-lesson-preview", draft);
+    if (popup.closed) return;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/json" }));
+    const target = new URL("teacher.html", location.href);
+    target.searchParams.set("block", block);
+    target.hash = new URLSearchParams({ preview: previewUrl }).toString();
+    popup.location.replace(target.href);
+  } catch (error) {
+    if (!popup.closed) popup.document.body.textContent = error.message;
+    status(error.message);
+  } finally {
+    button.disabled = false;
+  }
+};
+
 async function saveVersion(publishCopy) {
   byId("save").disabled = true;
   byId("publishCopy").disabled = true;
@@ -1115,24 +1169,8 @@ async function saveVersion(publishCopy) {
     lesson.level = Number(byId("level").value) || null;
     lesson.title = byId("title").value.trim();
     lesson.objective = byId("objective").value.trim();
-    const blocks = lesson.blocks.map(block => {
-      const copy = { ...block };
-      if (copy.kind !== "multiple_choice") delete copy.quiz;
-      if (copy.kind !== "writing") delete copy.writing_rubric;
-      if (!isTextAssessment(copy.kind)) delete copy.text_questions;
-      if (!isOrdering(copy.kind)) delete copy.ordering_questions;
-      if (copy.kind !== "page") delete copy.tasks;
-      if (copy.kind !== "vocab") delete copy.vocab;
-      if (copy.kind !== "dialogue") {
-        delete copy.role_a;
-        delete copy.role_b;
-        delete copy.role_a_materials;
-        delete copy.role_b_materials;
-      }
-      return copy;
-    });
     const saved = await request("/work-lessons", {
-      lesson: { ...lesson, blocks }, parent_revision: revision, overwrite: !publishCopy
+      lesson: lessonSnapshot(lesson), parent_revision: revision, overwrite: !publishCopy
     });
     if (publishCopy) {
       const source = catalogueId ? "&source=" + encodeURIComponent(catalogueId) : "";
