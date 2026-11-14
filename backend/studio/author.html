@@ -30,8 +30,7 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
   border-radius:4px; background:#F7FAF3; color:#18352A; container-type:inline-size; text-align:center; font-size:8px }
 .thumbnail .preview-element { font-size:3cqw }
 .thumbnail .preview-element.icon { font-size:6cqw }
-#blockTools { display:flex; flex-wrap:wrap; gap:6px 14px; padding:8px; margin:0 0 10px; border:1px solid #CCDCC8; border-radius:10px; background:#F7FAF3 }
-#blockTools > div { display:flex; flex-wrap:wrap; gap:6px }
+#blockTools { display:flex; flex-wrap:wrap; gap:6px; padding:8px; margin:0 0 10px; border:1px solid #CCDCC8; border-radius:10px; background:#F7FAF3 }
 #blockTools button { margin:0; font-size:.85rem }
 #blockTools #remove { background:#8c3434 }
 #canvasTools { display:flex; flex-wrap:wrap; align-items:end; gap:4px }
@@ -119,8 +118,7 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
     <section>
       <h2>Slide canvas</h2>
       <div id="blockTools" role="group" aria-label="Block tools">
-        <div role="group" aria-label="Add block"><button id="addSlide">Add slide</button><button id="addPage">Add page</button><button id="addTask">Add task</button></div>
-        <div role="group" aria-label="Manage selected block"><button id="up">Move block up</button><button id="down">Move block down</button><button id="remove">Remove block</button></div>
+        <button type="button" id="addBlock">Add block</button><button id="up">Move block up</button><button id="down">Move block down</button><button id="remove">Remove block</button>
       </div>
       <div id="canvasTools" hidden>
         <button type="button" data-add-element="text">+ Text</button>
@@ -147,6 +145,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=text-2"></script>
-<script src="author.js?v=context-clipboard-1"></script>
+<script src="author.js?v=add-block-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>

@@ -562,11 +562,11 @@ function move(offset) {
   dirty();
   render();
 }
-function add(kind) {
-  lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind, title: kind === "slide" ? "New slide" : kind === "page" ? "New Page" : "New task" });
+function addBlock() {
+  lesson.blocks.push({ id: crypto.randomUUID(), phase: "teach", kind: "slide", title: "New slide" });
   selected = lesson.blocks.length - 1;
   clipboardScope = "block";
-  if (kind === "slide" && newWorkFrame) lesson.blocks[selected].elements = structuredClone(newWorkFrame);
+  if (newWorkFrame) lesson.blocks[selected].elements = structuredClone(newWorkFrame);
   selectedElement = null;
   revealPreview = -1;
   dirty();
@@ -708,9 +708,7 @@ byId("remove").onclick = () => {
   dirty();
   render();
 };
-byId("addSlide").onclick = () => add("slide");
-byId("addPage").onclick = () => add("page");
-byId("addTask").onclick = () => add("writing");
+byId("addBlock").onclick = addBlock;
 byId("course").onchange = dirty;
 byId("level").onchange = dirty;
 byId("title").oninput = dirty;
