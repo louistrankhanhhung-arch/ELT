@@ -469,11 +469,11 @@
         <ul id="dialogueGroups"></ul>
       </details>
       <details id="pageControls" hidden>
-        <summary>Assign Page</summary>
-        <ul id="pageAudience"></ul>
-        <button type="button" id="assignPage">Assign Page</button>
+        <summary>Tasks in this block</summary>
+        <ol id="pageAudience"></ol>
+        <button type="button" id="assignPage">Assign tasks</button>
         <p id="pageFeedback" role="status"></p>
-        <details class="label-tools"><summary>Manage audience labels</summary>
+        <details id="pageLabelTools" class="label-tools"><summary>Manage audience labels</summary>
         <form id="labelForm">
           <label>Label <input id="pageLabel" maxlength="60" list="pageLabels" required></label>
           <datalist id="pageLabels"></datalist>
@@ -1695,8 +1695,11 @@
 
     function renderPageControls() {
       const tasks = currentLesson?.blocks[blockIndex]?.page_tasks;
-      pageControls.hidden = !sessionPin || endSessionBtn.disabled || !tasks?.length;
+      pageControls.hidden = !tasks?.length;
       if (pageControls.hidden) return;
+      const live = Boolean(sessionPin) && !endSessionBtn.disabled;
+      document.getElementById("pageLabelTools").hidden = !live;
+      const assignmentReady = live && pageAudience.length > 0;
       const selected = new Set([...pageStudents.querySelectorAll("input:checked")].map(input => input.value));
       const signature = JSON.stringify([sessionPin, pageRoster.map(student => [student.student_id, student.student_name, student.labels])]);
       if (pageStudents.dataset.signature !== signature) {
@@ -1715,17 +1718,21 @@
       }
       document.getElementById("pageLabels").replaceChildren(...[...new Set(pageAudience.map(task => task.audience_label).filter(Boolean))]
         .map(label => new Option(label)));
-      document.getElementById("pageAudience").replaceChildren(...pageAudience.map(task => {
+      const audienceById = new Map(pageAudience.map(task => [task.id, task]));
+      document.getElementById("pageAudience").replaceChildren(...tasks.map(item => {
+        const task = audienceById.get(item.id) || item;
         const count = pageRoster.filter(student => !task.audience_label || student.labels?.includes(task.audience_label)).length;
         const row = document.createElement("li");
         const title = document.createElement("strong");
         title.textContent = task.title;
         const audience = document.createElement("small");
         audience.textContent = (task.audience_label || "Everyone") + " · " + count + " recipient(s)";
-        row.append(title, audience);
+        row.append(title);
+        if (assignmentReady) row.append(audience);
         return row;
       }));
-      document.getElementById("assignPage").disabled = pageBusy || !pageRoster.length || !pageAudience.length;
+      document.getElementById("assignPage").disabled = pageBusy || !pageRoster.length || !assignmentReady;
+      if (!live) pageFeedback.textContent = "Start a session to assign these tasks.";
     }
 
     async function runPageAction(path, payload, describe) {
@@ -1759,7 +1766,7 @@
       void runPageAction("assign-page", { block_id },
         result => {
           const added = result.tasks.reduce((total, task) => total + task.added, 0);
-          return added ? "Page assigned · " + added + " new task delivery(s)." : "No new recipients.";
+          return added ? "Tasks assigned · " + added + " new task delivery(s)." : "No new recipients.";
         });
     });
 

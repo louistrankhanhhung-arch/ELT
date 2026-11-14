@@ -267,7 +267,10 @@
       <div class="status" id="statusText">Student runtime</div>
     </div>
   </header>
-  <label id="pageTaskPicker" hidden style="padding:8px 12px">Your tasks <select id="pageTaskSelect" style="max-width:100%"></select></label>
+  <div id="pageTaskPicker" hidden style="padding:8px 12px">
+    <label>Your tasks <select id="pageTaskSelect" style="max-width:100%"></select></label>
+    <button id="nextPageTask" type="button" hidden>Next task</button>
+  </div>
   <section id="dialogueCard" hidden aria-label="Dialogue card"></section>
   <section id="publishedScores" hidden aria-label="Task results"></section>
   <section id="writingPanel" hidden>
@@ -523,7 +526,17 @@
 
     const pageTaskPicker = document.getElementById("pageTaskPicker");
     const pageTaskSelect = document.getElementById("pageTaskSelect");
+    const nextPageTask = document.getElementById("nextPageTask");
     let pageTaskState;
+    nextPageTask.addEventListener("click", () => {
+      const tasks = pageTaskState?.page_tasks || [];
+      const next = tasks[pageTaskSelect.selectedIndex + 1];
+      if (next) {
+        pageTaskSelect.value = next.task_id;
+        syncBlockTask(pageTaskState);
+        pageTaskSelect.focus();
+      }
+    });
     pageTaskSelect.addEventListener("change", () => { if (pageTaskState) syncBlockTask(pageTaskState); });
 
     function syncBlockTask(session) {
@@ -532,7 +545,8 @@
       const tasks = session.page_tasks || [];
       for (const task of tasks) if (task.submitted) submittedTasks.add(task.task_id);
       const selected = pageTaskSelect.value;
-      const options = tasks.map(task => [task.task_id, task.title + (submittedTasks.has(task.task_id) ? " · Submitted" : "")]);
+      const options = tasks.map((task, index) => [task.task_id,
+        (index + 1) + ". " + task.title + (submittedTasks.has(task.task_id) ? " · Submitted" : "")]);
       if (JSON.stringify(options) !== pageTaskSelect.dataset.options) {
         pageTaskSelect.replaceChildren(...options.map(([id, label]) => new Option(label, id)));
         pageTaskSelect.dataset.options = JSON.stringify(options);
@@ -540,6 +554,8 @@
           : tasks.find(task => !submittedTasks.has(task.task_id))?.task_id || tasks[0]?.task_id || "";
       }
       pageTaskPicker.hidden = !tasks.length;
+      nextPageTask.hidden = tasks.length < 2;
+      nextPageTask.disabled = pageTaskSelect.selectedIndex < 0 || pageTaskSelect.selectedIndex >= tasks.length - 1;
       const block = currentLesson?.blocks[blockIndex];
       const active = session.active_writing_task;
       const pageTask = tasks.find(task => task.task_id === pageTaskSelect.value);
