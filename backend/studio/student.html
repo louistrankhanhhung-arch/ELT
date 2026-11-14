@@ -270,6 +270,7 @@
   <div id="pageTaskPicker" hidden style="padding:8px 12px">
     <label>Your tasks <select id="pageTaskSelect" style="max-width:100%"></select></label>
     <button id="nextPageTask" type="button" hidden>Next task</button>
+    <span id="pageTaskPosition" role="status" aria-atomic="true"></span>
   </div>
   <section id="dialogueCard" hidden aria-label="Dialogue card"></section>
   <section id="publishedScores" hidden aria-label="Task results"></section>
@@ -527,6 +528,7 @@
     const pageTaskPicker = document.getElementById("pageTaskPicker");
     const pageTaskSelect = document.getElementById("pageTaskSelect");
     const nextPageTask = document.getElementById("nextPageTask");
+    const pageTaskPosition = document.getElementById("pageTaskPosition");
     let pageTaskState;
     nextPageTask.addEventListener("click", () => {
       const tasks = pageTaskState?.page_tasks || [];
@@ -555,7 +557,10 @@
       }
       pageTaskPicker.hidden = !tasks.length;
       nextPageTask.hidden = tasks.length < 2;
-      nextPageTask.disabled = pageTaskSelect.selectedIndex < 0 || pageTaskSelect.selectedIndex >= tasks.length - 1;
+      const currentIndex = pageTaskSelect.selectedIndex;
+      nextPageTask.disabled = currentIndex < 0 || currentIndex >= tasks.length - 1;
+      const position = currentIndex < 0 ? "" : `${currentIndex + 1}/${tasks.length}`;
+      if (pageTaskPosition.textContent !== position) pageTaskPosition.textContent = position;
       const block = currentLesson?.blocks[blockIndex];
       const active = session.active_writing_task;
       const pageTask = tasks.find(task => task.task_id === pageTaskSelect.value);
