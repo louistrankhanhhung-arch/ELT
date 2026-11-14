@@ -88,7 +88,76 @@ function loadDraft(value, parent = null) {
   render();
 }
 
+const templateColors = ["#0B3D25", "#4D8627", "#18352A", "#A68832", "#E9F2E3", "#F7FAF3", "#FFFFFF"];
+const additionalColors = ["#000000", "#475569", "#CBD5E1", "#DC2626", "#EA580C", "#FACC15", "#2563EB", "#7C3AED"];
+
+function colorGrid(parent, title, value, changed) {
+  const group = document.createElement("fieldset");
+  group.className = "studio-palette";
+  const heading = document.createElement("legend");
+  heading.textContent = title;
+  group.append(heading);
+  const buttons = [];
+  const custom = document.createElement("input");
+  custom.type = "text";
+  custom.maxLength = 7;
+  custom.placeholder = "#RRGGBB";
+  custom.setAttribute("aria-label", title + " hex");
+  custom.spellcheck = false;
+  function reflect(hex) {
+    custom.value = hex;
+    for (const [button, color] of buttons) button.setAttribute("aria-pressed", String(hex === color));
+  }
+  function choose(hex) {
+    changed(hex);
+    reflect(hex);
+    dirty();
+    renderPreview();
+    refreshThumbnail();
+  }
+  for (const [name, colors] of [["REH template", templateColors], ["More colors", additionalColors]]) {
+    const caption = document.createElement("small");
+    caption.textContent = name;
+    const grid = document.createElement("div");
+    grid.className = "palette-grid";
+    for (const color of colors) {
+      const swatch = document.createElement("button");
+      swatch.type = "button";
+      swatch.style.backgroundColor = color;
+      swatch.title = color;
+      swatch.setAttribute("aria-label", title + " " + color);
+      swatch.onclick = () => choose(color);
+      grid.append(swatch);
+      buttons.push([swatch, color]);
+    }
+    group.append(caption, grid);
+  }
+  const controls = document.createElement("div");
+  controls.className = "palette-custom";
+  const apply = document.createElement("button");
+  apply.type = "button";
+  apply.textContent = "Apply";
+  apply.setAttribute("aria-label", "Apply custom " + title.toLowerCase());
+  apply.onclick = () => {
+    const hex = custom.value.trim();
+    custom.setCustomValidity(/^#[0-9A-Fa-f]{6}$/.test(hex) ? "" : "Enter a hex color such as #0B3D25.");
+    if (custom.reportValidity()) choose(hex.toUpperCase());
+  };
+  custom.oninput = () => custom.setCustomValidity("");
+  custom.onkeydown = event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      apply.click();
+    }
+  };
+  controls.append(custom, apply);
+  group.append(controls);
+  reflect((value || "").toUpperCase());
+  parent.append(group);
+}
+
 function field(parent, title, value, changed, choices, multiline = false, catalog = false, inputType = "text") {
+  if (inputType === "color") return colorGrid(parent, title, value, changed);
   const label = document.createElement("label");
   label.textContent = title;
   const input = document.createElement(choices ? "select" : multiline ? "textarea" : "input");
@@ -1230,19 +1299,7 @@ function renderGroupFormatting(panel, elements) {
   };
   const color = (key, label, fallback) => {
     const values = elements.map(element => element[key] || (typeof fallback === "function" ? fallback(element) : fallback));
-    const labelNode = document.createElement("label");
-    const input = document.createElement("input");
-    input.type = "color";
-    input.value = values[0];
-    const mixed = !common(values);
-    labelNode.append(label + (mixed ? " (mixed)" : ""), input);
-    button(labelNode, "Apply color", () => {
-      apply(key, input.value);
-      dirty();
-      renderPreview();
-      refreshThumbnail();
-    });
-    panel.append(labelNode);
+    colorGrid(panel, label, common(values), value => apply(key, value));
   };
   if (elements.every(element => element.kind !== "image")) {
     choice("font_family", "Font", ["","system-ui","Arial","Verdana","Georgia","Trebuchet MS","Courier New"]);

@@ -72,6 +72,14 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 .slide-table { width:100%; height:100%; border-collapse:collapse; table-layout:fixed; font:inherit; color:inherit; background:#fff }
 .slide-table td,.slide-table th { border:1px solid #A5BDA0; padding:.2em; overflow-wrap:anywhere; text-align:center }
 .slide-table th { background:#E9F2E3; font-weight:700 }
+.studio-palette { min-width:0; border:1px solid #CCDCC8; border-radius:8px; margin:10px 0; padding:8px }
+.studio-palette small { display:block; color:#456052; margin:4px 0 }
+.palette-grid { display:grid; grid-template-columns:repeat(auto-fit, 28px); gap:5px; margin-bottom:8px }
+.palette-grid button { width:28px; min-height:28px; height:28px; padding:0; margin:0; border:1px solid #8a9c90; border-radius:5px }
+.palette-grid button[aria-pressed="true"] { outline:2px solid #18352A; outline-offset:1px }
+.palette-grid button:focus-visible { outline:2px dashed #18352A; outline-offset:2px }
+.palette-custom { display:flex; gap:6px; align-items:center; flex-wrap:wrap }
+.palette-custom input { width:100px }
 </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
 <header><a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Lesson Studio</h1></header>
@@ -146,6 +154,6 @@ fieldset { margin:8px 0; border:1px solid #CCDCC8; border-radius:6px }
 </main>
 <script src="config.js"></script>
 <script src="slide-style.js?v=rotation-1"></script>
-<script src="author.js?v=keyboard-1"></script>
+<script src="author.js?v=reh-palette-1"></script>
 <script src="catalog-options.js" defer></script>
 </html>
