@@ -16,9 +16,7 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
 .slide-canvas .element[hidden] { display:none }
 .slide-canvas img { width:100%; height:100%; max-height:none; object-fit:contain }
 .slide-canvas .icon { font-size:clamp(18px, 6cqw, 72px) }
-.slide-canvas button { width:100%; height:100%; font:inherit; background:#286340; border:0; border-radius:8px; color:inherit }
-.slide-canvas .audio { color:white }
-.slide-canvas button:disabled { opacity:.6 }
+.slide-canvas .reh-audio-button { width:100%; height:100% }
 
 .element-vector { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
 .shape-label { position:relative; pointer-events:none }
@@ -32,10 +30,10 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
   .slide-canvas.is-zoomed { width:max(100vw, 560px); margin-inline:0; }
 }
 </style>
-<link rel="stylesheet" href="vocab.css?v=1">
+<link rel="stylesheet" href="vocab.css?v=audio-1">
 <main><h1></h1><p></p><div id="media"></div></main>
 <script src="config.js"></script>
-<script src="vocab.js?v=1"></script>
+<script src="vocab.js?v=audio-1"></script>
 <script src="slide-style.js?v=rotation-1"></script>
 <script>
 const params = new URLSearchParams(location.search);
@@ -101,6 +99,7 @@ function showElements(elements) {
     } else if (element.kind === "audio") {
       const button = document.createElement("button");
       button.type = "button";
+      button.className = "reh-audio-button";
       button.setAttribute("aria-label", element.text ? "Play audio: " + element.text : "Play audio");
       button.textContent = REHSlideStyle.audioLabel(element);
       button.addEventListener("click", () => {
