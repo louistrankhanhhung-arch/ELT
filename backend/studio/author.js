@@ -26,6 +26,7 @@ async function makeTitleSlide(title) {
 }
 let selected = 0;
 let selectedElement = null;
+const extraElements = new Set();
 let revealPreview = -1;
 const authorParams = new URLSearchParams(location.search);
 let revision = authorParams.get("revision");
@@ -74,7 +75,7 @@ function loadDraft(value, parent = null) {
   hasUnsavedChanges = !parent;
   selected = 0;
   clipboardScope = "block";
-  selectedElement = null;
+  selectedElement = null; extraElements.clear();
   revealPreview = -1;
   byId("course").value = lesson.course || "";
   byId("level").value = lesson.level ?? "";
@@ -145,17 +146,42 @@ function updateGeometry(element, next) {
   element.height = Math.min(100 - element.y, Math.max(1, round(next.height)));
 }
 
+function selectElement(element, additive = false) {
+  if (!additive) {
+    extraElements.clear();
+  } else if (element === selectedElement) {
+    const previous = extraElements.values().next().value;
+    extraElements.delete(previous);
+    selectedElement = previous || null;
+    setClipboardScope(selectedElement ? "element" : "content");
+    return;
+  } else if (extraElements.delete(element)) {
+    return;
+  } else if (selectedElement) {
+    extraElements.add(selectedElement);
+  }
+  selectedElement = element;
+  setClipboardScope("element");
+}
+
+function highlightElements(canvas) {
+  for (const child of canvas.children) {
+    const element = lesson.blocks[selected].elements[Number(child.dataset.elementIndex)];
+    const chosen = element === selectedElement || extraElements.has(element);
+    child.classList.toggle("is-selected", chosen);
+    child.setAttribute("aria-pressed", String(chosen));
+  }
+}
+
 function bindCanvasPointer(item, element, canvas) {
   item.addEventListener("pointerdown", event => {
     if (event.button !== 0) return;
     event.preventDefault();
     item.focus({preventScroll:true});
-    selectedElement = element;
-    setClipboardScope("element");
-    for (const other of canvas.children) {
-      other.classList.toggle("is-selected", other === item);
-      other.setAttribute("aria-pressed", String(other === item));
-    }
+    const additive = event.shiftKey || event.ctrlKey || event.metaKey;
+    selectElement(element, additive);
+    highlightElements(canvas);
+    if (additive) { renderInspector(); return; }
     const resize = event.target.classList.contains("resize-handle");
     const bounds = canvas.getBoundingClientRect();
     const start = {x:element.x, y:element.y, width:element.width, height:element.height};
@@ -188,29 +214,21 @@ function bindCanvasPointer(item, element, canvas) {
   item.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      selectedElement = element;
-      setClipboardScope("element");
+      selectElement(element, event.shiftKey || event.ctrlKey || event.metaKey);
       renderInspector();
-      for (const other of canvas.children) {
-        other.classList.toggle("is-selected", other === item);
-        other.setAttribute("aria-pressed", String(other === item));
-      }
+      highlightElements(canvas);
       return;
     }
     const delta = {ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[event.key];
     if (!delta) return;
     event.preventDefault();
-    selectedElement = element;
-    setClipboardScope("element");
+    selectElement(element);
     const [dx,dy] = delta;
     updateGeometry(element, event.shiftKey
       ? {...element,width:element.width+dx,height:element.height+dy}
       : {...element,x:Math.min(100-element.width,element.x+dx),y:Math.min(100-element.height,element.y+dy)});
     positionElement(item, element);
-    for (const other of canvas.children) {
-      other.classList.toggle("is-selected", other === item);
-      other.setAttribute("aria-pressed", String(other === item));
-    }
+    highlightElements(canvas);
     dirty();
     renderInspector();
     refreshThumbnail();
@@ -244,6 +262,7 @@ function renderPreview() {
   const isSlide = ["slide", "page"].includes(block.kind);
   const elements = isSlide ? block.elements || [] : [];
   canvas.hidden = !isSlide;
+  byId("multiFormatHint").hidden = !isSlide;
   byId("canvasTools").hidden = !isSlide;
   byId("preview").hidden = isSlide && Boolean(elements.length);
   byId("preview").textContent = [
@@ -262,11 +281,12 @@ function renderPreview() {
       if (revealPreview >= 0 && (revealPreview < (element.appear || 0)
           || (element.disappear != null && revealPreview >= element.disappear))) continue;
       const item = drawElement(element);
+      item.dataset.elementIndex = index;
       item.tabIndex = 0;
       item.setAttribute("role", "button");
       item.setAttribute("aria-label", (index + 1) + ". " + element.kind + (element.text ? " · " + element.text : ""));
-      item.setAttribute("aria-pressed", String(selectedElement === element));
-      item.classList.toggle("is-selected", selectedElement === element);
+      item.setAttribute("aria-pressed", String((selectedElement === element || extraElements.has(element))));
+      item.classList.toggle("is-selected", (selectedElement === element || extraElements.has(element)));
       const handle = document.createElement("span");
       handle.className = "resize-handle";
       handle.setAttribute("aria-hidden", "true");
@@ -287,10 +307,12 @@ function button(parent, label, action) {
 }
 
 function render() {
+  const activeElements = lesson.blocks[selected].elements || [];
+  for (const element of extraElements) if (!activeElements.includes(element)) extraElements.delete(element);
   const list = byId("blocks");
   list.replaceChildren();
   lesson.blocks.forEach((block, index) => {
-    button(list, "", () => { selected = index; clipboardScope = "block"; selectedElement = null; revealPreview = -1; render(); });
+    button(list, "", () => { selected = index; clipboardScope = "block"; selectedElement = null; extraElements.clear(); revealPreview = -1; render(); });
     const item = list.lastChild;
     item.className = "block";
     item.setAttribute("aria-current", String(index === selected));
@@ -567,7 +589,7 @@ function addBlock() {
   selected = lesson.blocks.length - 1;
   clipboardScope = "block";
   if (newWorkFrame) lesson.blocks[selected].elements = structuredClone(newWorkFrame);
-  selectedElement = null;
+  selectedElement = null; extraElements.clear();
   revealPreview = -1;
   dirty();
   render();
@@ -595,7 +617,7 @@ function updateClipboardActions() {
   const {block, scope} = target;
   const copy = byId("copySelection");
   const paste = byId("pasteSelection");
-  copy.disabled = !block;
+  copy.disabled = !block || (scope === "element" && extraElements.size > 0);
   paste.disabled = !canPaste(target);
   const labels = [[copy, "Copy " + scope], [paste, clipboard ? "Paste " + clipboard.type : "Paste"]];
   for (const [button, name] of labels) {
@@ -624,6 +646,7 @@ function renewTaskIds(task) {
 }
 
 function finishPaste(message, element = null) {
+  extraElements.clear();
   selectedElement = element;
   revealPreview = -1;
   dirty();
@@ -687,7 +710,7 @@ for (const id of ["elementPreview", "preview"]) {
   panel.tabIndex = 0;
   panel.addEventListener("pointerdown", event => {
     if (event.target !== panel) return;
-    selectedElement = null;
+    selectedElement = null; extraElements.clear();
     setClipboardScope("content");
     if (clipboardTarget().canvas) renderInspector();
     renderPreview();
@@ -702,7 +725,7 @@ byId("down").onclick = () => move(1);
 byId("remove").onclick = () => {
   if (lesson.blocks.length < 2 || isTitleSlide(lesson.blocks[selected])) return;
   lesson.blocks.splice(selected, 1);
-  selectedElement = null;
+  selectedElement = null; extraElements.clear();
   revealPreview = -1;
   selected = Math.min(selected, lesson.blocks.length - 1);
   dirty();
@@ -915,7 +938,7 @@ async function saveVersion(publishCopy) {
       lesson.blocks.unshift(titleSlide);
       selected = 0;
       clipboardScope = "block";
-      selectedElement = null;
+      selectedElement = null; extraElements.clear();
       revealPreview = -1;
       dirty();
       render();
@@ -1019,6 +1042,7 @@ function renderInspector() {
     (index + 1) + ". " + element.kind + (element.text ? " · " + element.text : ""), String(index))));
   layer.value = elements.includes(selectedElement) ? String(elements.indexOf(selectedElement)) : "";
   layer.onchange = () => {
+    extraElements.clear();
     selectedElement = layer.value === "" ? null : elements[Number(layer.value)];
     setClipboardScope(selectedElement ? "element" : "content");
     revealPreview = -1;
@@ -1026,6 +1050,11 @@ function renderInspector() {
     renderPreview();
   };
   panel.append(layer);
+  const group = elements.filter(item => item === selectedElement || extraElements.has(item));
+  if (group.length > 1) {
+    renderGroupFormatting(panel, group);
+    return;
+  }
   const element = selectedElement;
   if (!elements.includes(element)) return;
   field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
@@ -1094,7 +1123,93 @@ function renderInspector() {
   panel.lastChild.disabled = index === 0;
   button(panel,"Bring forward",() => moveLayer(1));
   panel.lastChild.disabled = index === elements.length - 1;
-  button(panel,"Remove element",() => { elements.splice(index,1); selectedElement = null; dirty(); render(); });
+  button(panel,"Remove element",() => { elements.splice(index,1); selectedElement = null; extraElements.clear(); dirty(); render(); });
+}
+
+function renderGroupFormatting(panel, elements) {
+  const title = document.createElement("p");
+  title.textContent = elements.length + " elements selected";
+  panel.append(title);
+  const common = values => values.every(value => value === values[0]) ? values[0] : "";
+  const apply = (key, value) => elements.forEach(element => { element[key] = value; });
+  const choice = (key, label, choices, fallback = "") => {
+    field(panel, label, common(elements.map(element => element[key] ?? fallback)),
+      value => { apply(key, value || null); refreshThumbnail(); }, choices);
+    const input = panel.lastChild.querySelector("select");
+    const mixed = new Option("Mixed values", "__mixed");
+    mixed.disabled = true;
+    input.prepend(mixed);
+    if (!elements.every(element => (element[key] ?? fallback) === (elements[0][key] ?? fallback))) input.value = "__mixed";
+  };
+  const number = (key, label, min, max, fallback) => {
+    const value = common(elements.map(element => element[key] ?? fallback));
+    field(panel, label, value, next => {
+      const numeric = Number(next);
+      if (next !== "" && Number.isInteger(numeric) && numeric >= min && numeric <= max) {
+        apply(key, numeric);
+        refreshThumbnail();
+      }
+    }, null, false, false, "number");
+    const input = panel.lastChild.querySelector("input");
+    input.min = min;
+    input.max = max;
+    input.placeholder = "Mixed values";
+    input.onchange = () => { input.value = common(elements.map(element => element[key] ?? fallback)) ?? ""; };
+  };
+  const color = (key, label, fallback) => {
+    const values = elements.map(element => element[key] || (typeof fallback === "function" ? fallback(element) : fallback));
+    const labelNode = document.createElement("label");
+    const input = document.createElement("input");
+    input.type = "color";
+    input.value = values[0];
+    const mixed = !common(values);
+    labelNode.append(label + (mixed ? " (mixed)" : ""), input);
+    button(labelNode, "Apply color", () => {
+      apply(key, input.value);
+      dirty();
+      renderPreview();
+      refreshThumbnail();
+    });
+    panel.append(labelNode);
+  };
+  if (elements.every(element => element.kind !== "image")) {
+    choice("font_family", "Font", ["","system-ui","Arial","Verdana","Georgia","Trebuchet MS","Courier New"]);
+    number("font_size", "Font size (12–120 px at 1280px)", 12, 120, null);
+    color("text_color", "Text color", element => element.kind === "audio" ? "#ffffff" : "#172338");
+  }
+  if (elements.every(element => element.kind === "text")) {
+    for (const [key, label] of [["bold","Bold"],["italic","Italic"],["underline","Underline"]]) {
+      const control = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = elements.every(element => element[key]);
+      input.indeterminate = !input.checked && elements.some(element => element[key]);
+      input.onchange = () => {
+        apply(key, input.checked || null);
+        dirty();
+        renderPreview();
+        refreshThumbnail();
+      };
+      control.append(input, " " + label);
+      panel.append(control);
+    }
+    choice("text_align", "Text alignment", ["left","center","right"], "center");
+    choice("list_style", "List (one item per line)", ["","bullet","numbered"]);
+  }
+  if (elements.every(element => element.kind === "shape")) {
+    if (elements.every(element => element.shape !== "line")) {
+      color("fill_color", "Fill color", "#d5e6ff");
+      number("fill_opacity", "Fill opacity (%)", 0, 100, 100);
+    }
+    color("border_color", "Border / line color", "#7aa6dd");
+    number("border_opacity", "Border / line opacity (%)", 0, 100, 100);
+    number("border_width", "Border / line width (px)", 1, 20, 2);
+  }
+  if (panel.lastChild === title) {
+    const hint = document.createElement("p");
+    hint.textContent = "Select elements with shared formatting options.";
+    panel.append(hint);
+  }
 }
 
 function numericStyle(panel, element, key, label, min, max, fallback) {
@@ -1160,7 +1275,7 @@ function renderElements(fields, block) {
         throw new Error("Use an array of up to 60 slide elements.");
       }
       block.elements = layout;
-      selectedElement = null;
+      selectedElement = null; extraElements.clear();
       revealPreview = -1;
       dirty();
       render();
