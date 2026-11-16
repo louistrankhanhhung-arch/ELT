@@ -340,11 +340,12 @@
     let lastSessionBlockIndex = null;
     let displayMode = "follow";
     let slideStep = 0;
+    let vocabRecall = null;
 
     function showSlideStep() {
       const block = currentLesson?.blocks[blockIndex];
       playerFrame.contentWindow?.postMessage({ type: "reh-slide-step", block: block?.id,
-        step: slideStep, interactive: !sessionPin || displayMode === "interact" }, location.origin);
+        step: slideStep, interactive: !sessionPin || displayMode === "interact", vocabRecall }, location.origin);
     }
     playerFrame.addEventListener("load", showSlideStep);
     window.addEventListener("message", event => {
@@ -1045,6 +1046,7 @@
         lastSessionBlockIndex = blockIndex;
         displayMode = session.display_mode || "follow";
         slideStep = session.slide_step || 0;
+        vocabRecall = session.vocab_recall;
         syncBlockTask(session);
 
         renderSessionBlock();
@@ -1149,6 +1151,7 @@
 
           const nextMode = session.display_mode || "follow";
           slideStep = session.slide_step || 0;
+          vocabRecall = session.vocab_recall;
           if (nextIndex !== lastSessionBlockIndex || nextMode !== displayMode) {
             displayMode = nextMode;
             blockIndex = nextIndex;

@@ -11,7 +11,7 @@
       return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
     } catch { return null; }
   }
-  window.renderVocab = (root, cards, title, step, interactive) => {
+  window.renderVocab = (root, cards, title, step, interactive, settings) => {
     playing.get(root)?.pause();
     playing.delete(root);
     const deck = node("section");
@@ -20,7 +20,8 @@
     const grid = node("div");
     grid.className = "vocab-grid";
     const recall = step === 2;
-    for (const [index, card] of cards.entries()) {
+    const visibleCards = recall && settings?.order ? settings.order.map(index => cards[index]) : cards;
+    for (const [index, card] of visibleCards.entries()) {
       const item = node("article");
       item.className = "vocab-card";
       const image = mediaUrl(card.image_url);
@@ -30,11 +31,11 @@
         picture.src = image;
         item.append(picture);
       }
-      item.append(node("h3", recall ? "Word " + (index + 1) : card.term || "New word"));
+      item.append(node("h3", recall ? String(index + 1) : card.term || "New word"));
       if (!recall && card.meaning) item.append(node("p", card.meaning));
       if (!recall && step !== 0 && card.example) item.append(node("p", card.example));
-      const clips = [["Hear word", card.audio_url], ["Hear example", card.example_audio_url]];
-      if (step !== 0) for (const [label, source] of clips) {
+      const clips = [["Hear word", card.audio_url], ["Example", card.example_audio_url]];
+      if (step !== 0 && (!recall || settings?.audio)) for (const [label, source] of clips) {
         const url = mediaUrl(source);
         if (!url) continue;
         const iconOnly = label === "Hear word";

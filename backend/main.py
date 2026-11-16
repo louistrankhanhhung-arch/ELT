@@ -419,6 +419,12 @@ def init_db():
             block_index INTEGER NOT NULL, step INTEGER NOT NULL
         )
     """)
+    if USE_POSTGRES:
+        cur.execute("ALTER TABLE session_slide_steps ADD COLUMN IF NOT EXISTS vocab_recall TEXT")
+    else:
+        cur.execute("PRAGMA table_info(session_slide_steps)")
+        if "vocab_recall" not in {column["name"] for column in cur.fetchall()}:
+            cur.execute("ALTER TABLE session_slide_steps ADD COLUMN vocab_recall TEXT")
     cur.execute("""
         CREATE TABLE IF NOT EXISTS session_display_modes (
             pin TEXT PRIMARY KEY REFERENCES sessions(pin),
@@ -612,7 +618,7 @@ def get_session(pin: str):
     events = [dict(row) for row in cur.fetchall()]
     cur.execute(sql("SELECT mode FROM session_display_modes WHERE pin = ?"), (pin,))
     display = cur.fetchone()
-    cur.execute(sql("SELECT step FROM session_slide_steps WHERE pin = ? AND block_index = ?"), (pin, session["current_block_index"]))
+    cur.execute(sql("SELECT step, vocab_recall FROM session_slide_steps WHERE pin = ? AND block_index = ?"), (pin, session["current_block_index"]))
     slide_step = cur.fetchone()
     cur.execute(sql("SELECT prompt, assigned_at FROM writing_assignments WHERE pin = ?"), (pin,))
     writing = cur.fetchone()
@@ -636,6 +642,7 @@ def get_session(pin: str):
     data["students"] = students
     data["events"] = events
     data["slide_step"] = slide_step["step"] if slide_step else 0
+    data["vocab_recall"] = json.loads(slide_step["vocab_recall"]) if slide_step and slide_step["vocab_recall"] else None
     data["display_mode"] = display["mode"] if display else "follow"
     data["published_score_ids"] = published_scores
     data["active_writing_task"] = task_description(dict(active_writing)) if active_writing else None
@@ -3615,9 +3622,15 @@ def publish_catalogue_version(catalogue_id: str, payload: PublishCatalogueReques
     return catalogue_entry(catalogue_id)
 
 
+class VocabRecallSettings(BaseModel):
+    audio: bool = False
+    order: list[int] | None = None
+
+
 class SlideStepRequest(BaseModel):
     block_index: int = Field(ge=0)
     step: int = Field(ge=0, le=30)
+    vocab_recall: VocabRecallSettings | None = None
 
 
 @app.post("/api/sessions/{pin}/slide-step", dependencies=[Depends(require_teacher)])
@@ -3630,22 +3643,37 @@ def update_slide_step(pin: str, payload: SlideStepRequest):
         raise HTTPException(422, "Invalid block")
     elements = blocks[payload.block_index].get("elements", [])
     steps = {0, *(step for element in elements for step in (element.get("appear"), element.get("disappear")) if step is not None)}
-    if blocks[payload.block_index].get("vocab"):
+    vocab = blocks[payload.block_index].get("vocab")
+    if vocab:
         steps = {0, 1, 2, 3}
-    if payload.step not in steps or (not elements and not blocks[payload.block_index].get("vocab")):
+    if payload.step not in steps or (not elements and not vocab):
         raise HTTPException(422, "Invalid slide step")
+    recall = payload.vocab_recall
+    if recall is not None:
+        if not vocab:
+            raise HTTPException(422, "Recall settings require a vocabulary block")
+        if recall.order is not None and sorted(recall.order) != list(range(len(vocab))):
+            raise HTTPException(422, "Invalid vocabulary card order")
+    recall_json = json.dumps({"audio": recall.audio, "order": recall.order}) if recall else None
+    interact = bool(vocab and payload.step in (1, 2))
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            INSERT INTO session_slide_steps (pin, block_index, step)
-            SELECT pin, current_block_index, ? FROM sessions
+            INSERT INTO session_slide_steps (pin, block_index, step, vocab_recall)
+            SELECT pin, current_block_index, ?, ? FROM sessions
             WHERE pin = ? AND current_block_index = ? AND status = 'active'
-            ON CONFLICT(pin) DO UPDATE SET block_index = excluded.block_index, step = excluded.step
-        """), (payload.step, pin, payload.block_index))
+            ON CONFLICT(pin) DO UPDATE SET block_index = excluded.block_index,
+                step = excluded.step, vocab_recall = excluded.vocab_recall
+        """), (payload.step, recall_json, pin, payload.block_index))
         if cur.rowcount != 1:
             raise HTTPException(409, "The current slide has changed")
+        if interact:
+            cur.execute(sql("""
+                INSERT INTO session_display_modes (pin, mode) VALUES (?, 'interact')
+                ON CONFLICT(pin) DO UPDATE SET mode = excluded.mode
+            """), (pin,))
         conn.commit()
-    return {"slide_step": payload.step}
+    return {"slide_step": payload.step, "display_mode": "interact" if interact else None}
 
 
 @app.patch("/api/lesson-catalogue/{catalogue_id}", dependencies=[Depends(require_teacher)])

@@ -33,7 +33,7 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
 <link rel="stylesheet" href="vocab.css?v=audio-1">
 <main><h1></h1><p></p><div id="media"></div></main>
 <script src="config.js"></script>
-<script src="vocab.js?v=audio-1"></script>
+<script src="vocab.js?v=recall-1"></script>
 <script src="slide-style.js?v=rotation-1"></script>
 <script>
 const params = new URLSearchParams(location.search);
@@ -53,6 +53,7 @@ function youtubeVideoId(source) {
 
 let step = 0;
 let vocabBlock = null;
+let vocabRecall = null;
 let interactive = params.get("role") === "teacher";
 let currentAudio = null;
 let items = [];
@@ -67,11 +68,14 @@ function applyStep() {
 window.addEventListener("message", event => {
   if (event.source !== parent || event.origin !== location.origin
       || event.data?.type !== "reh-slide-step" || event.data.block !== params.get("block")) return;
-  if (step === event.data.step && interactive === event.data.interactive) return;
+  const nextRecall = event.data.vocabRecall ?? null;
+  if (step === event.data.step && interactive === event.data.interactive &&
+      JSON.stringify(vocabRecall) === JSON.stringify(nextRecall)) return;
+  vocabRecall = nextRecall;
   step = event.data.step;
   interactive = event.data.interactive;
   if (vocabBlock) {
-    window.renderVocab(document.querySelector("main"), vocabBlock.vocab, vocabBlock.title, step, interactive);
+    window.renderVocab(document.querySelector("main"), vocabBlock.vocab, vocabBlock.title, step, interactive, vocabRecall);
     return;
   }
   applyStep();
@@ -156,7 +160,7 @@ async function showSlide() {
   if (!block) throw new Error("Slide not found");
   if (block.vocab) {
     vocabBlock = block;
-    window.renderVocab(document.querySelector("main"), block.vocab, block.title, step, interactive);
+    window.renderVocab(document.querySelector("main"), block.vocab, block.title, step, interactive, vocabRecall);
     parent.postMessage({type: "reh-slide-ready"}, location.origin);
     return;
   }
