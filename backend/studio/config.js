@@ -11,6 +11,7 @@ window.runtimePlayerUrl = function (block, role) {
   if (block.native_revision) {
     const player = new URL("player-native-slide.html", config.BASE_URL);
     player.searchParams.set("revision", block.native_revision);
+    player.searchParams.set("v", "recall-1");
     player.searchParams.set("block", block.id);
     player.searchParams.set("role", role);
     return player.href;
