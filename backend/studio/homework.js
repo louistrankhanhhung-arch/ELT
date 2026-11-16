@@ -319,6 +319,16 @@
     return section;
   }
 
+  const fittedFrames = new WeakMap();
+  window.addEventListener("message", event => {
+    if (event.origin !== location.origin || event.data?.type !== "reh-slide-size") return;
+    const frame = fittedFrames.get(event.source);
+    const { block, height } = event.data;
+    if (frame?.isConnected && frame.dataset.block === block && Number.isFinite(height) && height > 0) {
+      frame.style.height = Math.ceil(height) + "px";
+    }
+  });
+
   async function loadStudent() {
     const data = await request("/homework/student");
     el("studentTitle").textContent = data.title;
@@ -335,13 +345,20 @@
       const frame = node("iframe");
       frame.title = item.title;
       frame.loading = "lazy";
-      frame.src = window.runtimePlayerUrl(block, "student");
+      const source = new URL(window.runtimePlayerUrl(block, "student"));
+      const fitContent = block.activity_kind === "native-slide" && source.origin === location.origin;
+      if (fitContent) {
+        source.searchParams.set("homeworkFit", "1");
+        frame.dataset.block = block.id;
+      }
       const step = block.vocab ? 1 : Math.max(0, ...(block.elements || []).map(element => element.appear || 0));
       frame.addEventListener("load", () => frame.contentWindow?.postMessage({
         type: "reh-slide-step", block: block.id, step, interactive: true
       }, location.origin));
+      frame.src = source.href;
       section.append(node("h2", item.title), frame);
       el("items").append(section);
+      if (fitContent) fittedFrames.set(frame.contentWindow, frame);
     }
   }
   if (studentMode) {

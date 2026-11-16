@@ -29,6 +29,11 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
   .slide-canvas { margin:56px auto 0; }
   .slide-canvas.is-zoomed { width:max(100vw, 560px); margin-inline:0; }
 }
+html.homework-fit { overflow: hidden; }
+html.homework-fit body { display:block; min-height:0; overflow-wrap:anywhere; }
+html.homework-fit main { margin:0 auto; }
+html.homework-fit .slide-canvas { width:100%; margin:0; }
+html.homework-fit img, html.homework-fit video { max-height:none; }
 </style>
 <link rel="stylesheet" href="vocab.css?v=audio-1">
 <main><h1></h1><p></p><div id="media"></div></main>
@@ -38,6 +43,18 @@ p { white-space:pre-wrap } img,video { display:block; max-width:100%; max-height
 <script>
 const params = new URLSearchParams(location.search);
 const revision = params.get("revision");
+const homeworkFit = params.get("homeworkFit") === "1";
+if (homeworkFit) {
+  document.documentElement.classList.add("homework-fit");
+  const fitObserver = new ResizeObserver(() => {
+    parent.postMessage({
+      type: "reh-slide-size",
+      block: params.get("block"),
+      height: document.body.getBoundingClientRect().height
+    }, location.origin);
+  });
+  fitObserver.observe(document.body);
+}
 function youtubeVideoId(source) {
   const url = new URL(source);
   let id;
@@ -129,6 +146,12 @@ function showElements(elements) {
     return [element, node];
   });
   document.querySelector("main").replaceWith(canvas);
+  if (!homeworkFit) addSlideZoom(canvas);
+  applyStep();
+  parent.postMessage({ type:"reh-slide-ready" }, location.origin);
+}
+
+function addSlideZoom(canvas) {
   const phone = matchMedia("(max-width: 600px)");
   const zoom = document.createElement("button");
   zoom.id = "slideZoom";
@@ -144,8 +167,6 @@ function showElements(elements) {
   };
   phone.addEventListener("change", () => { zoom.hidden = !phone.matches; });
   document.body.append(zoom);
-  applyStep();
-  parent.postMessage({ type:"reh-slide-ready" }, location.origin);
 }
 
 async function showSlide() {
