@@ -57,6 +57,7 @@
       const response = await request(path, method, payload);
       if (!report || path !== "/session-history/" + encodeURIComponent(selected) || method) return response;
       const data = await response.json();
+      data.test_published = report.published;
       const byId = new Map(data.tasks.map(task => [task.task_id, task]));
       data.tasks = report.sections.flatMap(section => section.tasks.map(item => ({
         ...byId.get(item.task_id), page_task_title: section.name + " · " + item.title

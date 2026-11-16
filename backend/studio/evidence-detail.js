@@ -99,10 +99,69 @@ window.createEvidenceDetail = (root, request, status) => {
   }
   function scoreFor(row) {
     if (Number.isFinite(row.review_score) && row.review_max_score > 0) return [row.review_score, row.review_max_score];
-    if (Number.isFinite(row.score) && row.max_score > 0) return [row.score, row.max_score];
+    if ((!row.ai_state || row.ai_published) && Number.isFinite(row.score) && row.max_score > 0) return [row.score, row.max_score];
     return null;
   }
   function percent([score, maximum]) { return score * 100 / maximum; }
+  const grading = new Set();
+  const writingPath = (pin, task, action) =>
+    "/sessions/" + encodeURIComponent(pin) + "/tasks/" + encodeURIComponent(task.task_id) + "/" + action;
+  async function refreshWriting(pin) {
+    if (current?.session.pin !== pin) return;
+    const version = generation;
+    const next = await (await request(apiPath(pin))).json();
+    if (version !== generation) return;
+    current = next;
+    renderSummary();
+    renderTasks();
+  }
+  function writingActions(task, rows) {
+    const pin = current.session.pin;
+    const homework = current.session.status === "homework";
+    const group = document.createElement("div");
+    const responses = rows.filter(row => row.response?.trim());
+    const candidates = responses.filter(row => !["ready", "needs_review"].includes(row.ai_state));
+    const ready = responses.filter(row => row.ai_state === "ready").length;
+    const needsReview = responses.filter(row => row.ai_state === "needs_review").length;
+    const progress = text("span", "");
+    progress.setAttribute("role", "status");
+    const grade = button("Grade Writing", async () => {
+      if (grading.has(task.task_id)) return;
+      grading.add(task.task_id);
+      grade.disabled = true;
+      let failure;
+      try {
+        for (let i = 0; i < candidates.length && current?.session.pin === pin; i += 3) {
+          progress.textContent = "Grading " + i + "/" + candidates.length + "…";
+          const results = await Promise.allSettled(candidates.slice(i, i + 3).map(row =>
+            request(writingPath(pin, task, "grade-writing"), "POST", {student_id: row.student_id})));
+          failure ||= results.find(result => result.status === "rejected")?.reason;
+        }
+      } finally {
+        grading.delete(task.task_id);
+        grade.disabled = false;
+        try { await refreshWriting(pin); }
+        catch (error) { failure ||= error; }
+        status(failure?.message || "");
+      }
+    });
+    grade.disabled = grading.has(task.task_id) || !candidates.length || Boolean(current.test_published);
+    group.append(text("p", ready + "/" + responses.length + " AI graded · " + needsReview + " need AI review"), grade, progress);
+    if (homework) {
+      const published = responses.length > 0 && responses.every(row => row.ai_published);
+      const publish = button(published ? "Scores published" : "Publish scores", async () => {
+        publish.disabled = true;
+        try {
+          await request(writingPath(pin, task, "publish-scores"), "POST", {});
+          await refreshWriting(pin);
+        } catch (error) { status(error.message); publish.disabled = false; }
+      });
+      publish.disabled = published || !responses.length || ready !== responses.length;
+      group.append(publish);
+    }
+    return group;
+  }
+
   function renderTask(task, index, filter) {
     const article = document.createElement("article");
     const heading = document.createElement("header");
@@ -123,6 +182,9 @@ window.createEvidenceDetail = (root, request, status) => {
       summary.push(["Average score", "—"], ["Class mastery", "—"]);
     }
     article.append(metrics(summary));
+    if (task.type === "writing" && ["homework", "test"].includes(current.session.status)) {
+      article.append(writingActions(task, submitted));
+    }
     if (task.questions?.length) {
       const missed = task.questions.map((question, questionIndex) => ({
         number: questionIndex + 1, prompt: question.prompt,
@@ -160,7 +222,7 @@ window.createEvidenceDetail = (root, request, status) => {
   }
   function renderAnswers(task, row, panel) {
     if (!row.items?.length) {
-      panel.append(blankWriting ? text("p", "No Writing response was saved before time expired.") : text("pre", row.response));
+      panel.append(text("pre", row.response));
       return;
     }
     const list = document.createElement("ol");
@@ -219,11 +281,17 @@ window.createEvidenceDetail = (root, request, status) => {
     } else if (task.questions?.length) {
       renderAnswers(task, row, panel);
     } else {
-      panel.append(text("pre", row.response));
+      panel.append(blankWriting ? text("p", "No Writing response was saved before time expired.") : text("pre", row.response));
     }
     if (!row.attempt_signals) panel.append(text("p", "No attempt signals recorded for this submission."));
-    if (row.ai_feedback?.feedback) panel.append(text("p", row.ai_feedback.feedback));
-    if (!task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting && (!testSpeaking || row.audio_bytes)) {
+    if (row.ai_feedback?.feedback) {
+      const grade = row.ai_feedback;
+      const ai = document.createElement("section");
+      ai.append(text("h4", row.ai_published ? "Published AI feedback" : "AI grading draft"),
+        text("p", grade.score + "/" + grade.max_score + " · " + grade.feedback));
+      panel.append(ai);
+    }
+    if (!task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting && (!testSpeaking || row.audio_bytes) && !current.test_published) {
       const editor = document.createElement("details");
       editor.append(text("summary", "Review and feedback"), reviewForm(task, row, pin));
       panel.append(editor);
@@ -235,7 +303,9 @@ window.createEvidenceDetail = (root, request, status) => {
     form.innerHTML = '<label>Score <input name="score" type="number" min="0" max="100"></label>' +
       '<label>Maximum <input name="maximum" type="number" min="1" max="100"></label>' +
       '<label>Feedback <textarea name="feedback" maxlength="4000"></textarea></label><button>Save review</button><span role="status"></span>';
-    const criteria = pin.startsWith("TEST-") ? task.writing_rubric?.criteria || [] : [];
+    const test = pin.startsWith("TEST-");
+    const ai = pin.startsWith("HW-") && !row.ai_published ? row.ai_feedback : null;
+    const criteria = test ? task.writing_rubric?.criteria || [] : ai?.criteria || [];
     const rubricInputs = new Map();
     if (criteria.length) {
       form.elements.score.closest("label").hidden = true;
@@ -246,7 +316,8 @@ window.createEvidenceDetail = (root, request, status) => {
         const label = text("label", criterion.label + " (0–" + criterion.max_score + ")");
         const input = document.createElement("input");
         input.type = "number"; input.min = 0; input.max = criterion.max_score; input.required = true;
-        input.value = row.rubric_scores?.find(item => item.id === criterion.id)?.score ?? "";
+        input.value = row.rubric_scores?.find(item => item.id === criterion.id)?.score ??
+          row.ai_feedback?.criteria?.find(item => item.id === criterion.id)?.score ?? "";
         label.append(input);
         if (criterion.description) label.append(text("small", criterion.description));
         rubric.append(label);
@@ -257,7 +328,8 @@ window.createEvidenceDetail = (root, request, status) => {
     const fields = form.elements;
     fields.score.value = row.review_score ?? "";
     fields.maximum.value = row.review_max_score ?? "";
-    fields.feedback.value = row.feedback ?? "";
+    fields.feedback.value = row.feedback ?? (test || ai ? row.ai_feedback?.feedback ?? "" : "");
+    if (ai) { fields.feedback.maxLength = 300; fields.feedback.required = true; }
     form.addEventListener("submit", async event => {
       event.preventDefault();
       const save = form.querySelector("button");
@@ -269,6 +341,14 @@ window.createEvidenceDetail = (root, request, status) => {
         if (criteria.length) {
           review.score = review.max_score = null;
           review.criteria_scores = Object.fromEntries([...rubricInputs].map(([id, input]) => [id, Number(input.value)]));
+        }
+        if (ai) {
+          await request(writingPath(pin, task, "approve-writing"), "POST", {
+            student_id: row.student_id, scores: review.criteria_scores, feedback: review.feedback
+          });
+          await refreshWriting(pin);
+          status("Writing review saved.");
+          return;
         }
         await request(apiPath(pin, "/tasks/" + task.task_id + "/reviews/" + row.student_id), "PUT", review);
         if (criteria.length) {

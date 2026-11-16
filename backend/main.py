@@ -2054,6 +2054,8 @@ def export_session_tasks(pin: str):
 
 @app.post("/api/sessions/{pin}/tasks/{task_id}/publish-scores", dependencies=[Depends(require_teacher)])
 def publish_scores(pin: str, task_id: str):
+    if pin.startswith("TEST-"):
+        raise HTTPException(409, "Publish results from the Test workspace")
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
@@ -2172,16 +2174,26 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
     cutoff = (datetime.now(timezone.utc) - timedelta(minutes=2)).isoformat()
     with closing(db()) as conn:
         cur = conn.cursor()
+        if pin.startswith("TEST-") and timed_test_row(cur, pin, lock=True)["published_at"]:
+            raise HTTPException(409, "Published Test reviews are locked")
         cur.execute(sql("""
             SELECT t.prompt, r.response, a.definition, m.definition AS materials
             FROM writing_tasks t JOIN writing_task_responses r ON r.task_id = t.task_id
-            JOIN writing_ai_rubrics a ON a.task_id = t.task_id
+            LEFT JOIN writing_ai_rubrics a ON a.task_id = t.task_id
             LEFT JOIN task_materials m ON m.task_id = t.task_id
+            LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
+            LEFT JOIN speaking_tasks sp ON sp.task_id = t.task_id
             WHERE t.pin = ? AND t.task_id = ? AND r.student_id = ?
+              AND q.task_id IS NULL AND sp.task_id IS NULL
         """), (pin, task_id, payload.student_id))
         row = cur.fetchone()
-        if not row:
+        if not row or not row["response"].strip() or (
+            not row["definition"] and not pin.startswith(("HW-", "TEST-"))
+        ):
             raise HTTPException(404, "Writing submission or rubric not found")
+        if not row["definition"]:
+            save_writing_rubric(cur, task_id)
+        rubric = json.loads(row["definition"]) if row["definition"] else DEFAULT_WRITING_RUBRIC
         cur.execute(sql("""
             INSERT INTO writing_ai_grades (task_id, student_id, state, lease, updated_at)
             VALUES (?, ?, 'grading', ?, ?)
@@ -2197,7 +2209,7 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
     grade = None
     error_detail = ""
     try:
-        grade = generate_writing_grade(key, row["prompt"], json.loads(row["definition"]),
+        grade = generate_writing_grade(key, row["prompt"], rubric,
                                        row["response"], json.loads(row["materials"] or "[]"))
         state = "needs_review" if grade["needs_review"] else "ready"
     except HTTPError as error:
