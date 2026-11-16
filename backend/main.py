@@ -1664,6 +1664,24 @@ def assign_session_writing(pin: str, payload: SessionWritingRequest):
     return assign_classroom_task(pin, payload)
 
 
+DEFAULT_WRITING_RUBRIC = {
+    "criteria": [
+        {"id": "task_fulfillment", "label": "Task fulfillment", "max_score": 4,
+         "description": "Award credit for answering the prompt accurately and covering its required parts."},
+        {"id": "clarity", "label": "Clarity", "max_score": 3,
+         "description": "Award credit for clear, relevant ideas and organization appropriate to the expected response length."},
+        {"id": "language", "label": "Language use", "max_score": 3,
+         "description": "Award credit for vocabulary and sentence control suitable for the task and learner level. Accept minor errors that do not obscure meaning."},
+    ],
+    "difficulties": [],
+}
+
+
+def save_writing_rubric(cur, task_id, rubric=None):
+    cur.execute(sql("INSERT INTO writing_ai_rubrics VALUES (?, ?) ON CONFLICT DO NOTHING"),
+                (task_id, json.dumps(rubric if rubric is not None else DEFAULT_WRITING_RUBRIC)))
+
+
 def assign_classroom_task(pin, payload, race=None):
     session = require_active_session(pin)
     prompt = (payload.prompt or "").strip()
@@ -1713,8 +1731,8 @@ def assign_classroom_task(pin, payload, race=None):
             cur.execute(sql("INSERT INTO speaking_tasks VALUES (?)"), (task_id,))
         elif quiz:
             cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(quiz)))
-        if rubric:
-            cur.execute(sql("INSERT INTO writing_ai_rubrics VALUES (?, ?) ON CONFLICT DO NOTHING"), (task_id, json.dumps(rubric)))
+        else:
+            save_writing_rubric(cur, task_id, rubric)
         if materials:
             cur.execute(sql("INSERT INTO task_materials VALUES (?, ?) ON CONFLICT DO NOTHING"), (task_id, json.dumps(materials)))
         cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?) ON CONFLICT(task_id) DO NOTHING"),
@@ -1859,8 +1877,8 @@ def assign_page(pin: str, payload: AssignPageRequest):
                 cur.execute(sql("INSERT INTO page_task_instances VALUES (?, ?, ?)"), (task_id, index, task["title"]))
                 cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?)"),
                             (task_id, block.get("phase"), task["learning_target_id"]))
-                if task.get("writing_rubric"):
-                    cur.execute(sql("INSERT INTO writing_ai_rubrics VALUES (?, ?)"), (task_id, json.dumps(task["writing_rubric"])))
+                if task["type"] == "writing":
+                    save_writing_rubric(cur, task_id, task.get("writing_rubric"))
                 if task.get("materials"):
                     cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
                 if task["type"] == "speaking":
@@ -3852,8 +3870,8 @@ def create_independent_assignment(payload, test_sections=None):
                     cur.execute(sql("INSERT INTO writing_task_quizzes VALUES (?, ?)"), (task_id, json.dumps(definition)))
                 if task.get("materials"):
                     cur.execute(sql("INSERT INTO task_materials VALUES (?, ?)"), (task_id, json.dumps(task["materials"])))
-                if task.get("writing_rubric"):
-                    cur.execute(sql("INSERT INTO writing_ai_rubrics VALUES (?, ?)"), (task_id, json.dumps(task["writing_rubric"])))
+                if task["type"] == "writing":
+                    save_writing_rubric(cur, task_id, task.get("writing_rubric"))
                 cur.execute(sql("INSERT INTO task_evidence_context VALUES (?, ?, ?)"),
                             (task_id, block.get("phase"), task.get("learning_target_id") or block.get("learning_target_id")))
                 item = {"task_id": task_id, "title": task.get("title") or block["title"]}
