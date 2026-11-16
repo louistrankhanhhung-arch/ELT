@@ -336,7 +336,7 @@
       frame.title = item.title;
       frame.loading = "lazy";
       frame.src = window.runtimePlayerUrl(block, "student");
-      const step = Math.max(0, ...(block.elements || []).map(element => element.appear || 0));
+      const step = block.vocab ? 1 : Math.max(0, ...(block.elements || []).map(element => element.appear || 0));
       frame.addEventListener("load", () => frame.contentWindow?.postMessage({
         type: "reh-slide-step", block: block.id, step, interactive: true
       }, location.origin));
