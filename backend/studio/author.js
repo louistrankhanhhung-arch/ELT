@@ -173,6 +173,97 @@ function field(parent, title, value, changed, choices, multiline = false, catalo
   });
   label.append(input);
   parent.append(label);
+  return input;
+}
+
+function renderTextFormatting(panel, element) {
+  let previous = element.text || "";
+  let formats = Array(previous.length).fill("");
+  for (const {start, end, ...style} of element.text_ranges || []) {
+    formats.fill(JSON.stringify(style), start, end);
+  }
+  // Textareas normalize pasted and imported line endings to LF.
+  formats = formats.filter((_, index) => previous[index] !== "\r" || previous[index + 1] !== "\n");
+  previous = previous.replace(/\r\n?/g, "\n");
+
+  function saveRanges() {
+    element.text = previous;
+    const ranges = [];
+    for (let start = 0; start < formats.length;) {
+      let end = start + 1;
+      while (end < formats.length && formats[end] === formats[start]) end++;
+      if (formats[start]) ranges.push({ start, end, ...JSON.parse(formats[start]) });
+      start = end;
+    }
+    element.text_ranges = ranges.length ? ranges : null;
+  }
+
+  const input = field(panel, "Text or accessible label", previous, value => {
+    let start = 0;
+    while (start < previous.length && previous[start] === value[start]) start++;
+    let oldEnd = previous.length;
+    let newEnd = value.length;
+    while (oldEnd > start && newEnd > start && previous[oldEnd - 1] === value[newEnd - 1]) {
+      oldEnd--;
+      newEnd--;
+    }
+    formats.splice(start, oldEnd - start, ...Array(newEnd - start).fill(""));
+    previous = value;
+    // A text edit can keep one code unit of a changed surrogate pair.
+    for (let index = 0; index < value.length; index++) {
+      if (value.codePointAt(index) > 0xFFFF) formats[index + 1] = formats[index++];
+    }
+    saveRanges();
+  }, null, true);
+  const tools = document.createElement("fieldset");
+  const legend = document.createElement("legend");
+  legend.textContent = "Format selected text";
+  tools.append(legend);
+  const hint = document.createElement("p");
+  hint.textContent = "Highlight a word or phrase in the text above.";
+  hint.setAttribute("role", "status");
+  tools.append(hint);
+  function applySelection(key, color) {
+    const {selectionStart: start, selectionEnd: end} = input;
+    if (start === end) {
+      hint.textContent = "Highlight a word or phrase first.";
+      input.focus();
+      return;
+    }
+    const styles = formats.slice(start, end).map(run => JSON.parse(run || "{}"));
+    const remove = styles.every(style => style[key]);
+    styles.forEach((style, index) => {
+      if (!key) style = {};
+      else if (color) style[key] = color;
+      else if (remove) delete style[key];
+      else style[key] = true;
+      formats[start + index] = Object.keys(style).length ? JSON.stringify(style) : "";
+    });
+    saveRanges();
+    dirty();
+    renderPreview();
+    hint.textContent = "Selection formatting updated.";
+    input.focus();
+    input.setSelectionRange(start, end);
+  }
+  function formatButton(title, action) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = title;
+    button.onclick = action;
+    tools.append(button);
+  }
+  for (const [key, title] of [["bold", "Bold selection"], ["italic", "Italic selection"], ["underline", "Underline selection"]]) {
+    formatButton(title, () => applySelection(key));
+  }
+  const color = document.createElement("input");
+  color.type = "color";
+  color.value = element.text_color || "#172338";
+  color.setAttribute("aria-label", "Selection text color");
+  tools.append(color);
+  formatButton("Apply color to selection", () => applySelection("text_color", color.value));
+  formatButton("Clear selection formatting", () => applySelection());
+  panel.append(tools);
 }
 
 function positionElement(item, element) {
@@ -1284,8 +1375,9 @@ function renderInspector() {
   }
   const element = selectedElement;
   if (!elements.includes(element)) return;
-  field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
-    element.text, value => { element.text = value; }, null, element.kind === "text");
+  if (element.kind === "text") renderTextFormatting(panel, element);
+  else field(panel, element.kind === "audio" ? "Audio label (optional; blank = icon only)" : "Text or accessible label",
+    element.text, value => { element.text = value; });
   if (element.kind !== "image") {
     field(panel, "Font", element.font_family || "", value => { element.font_family = value || null; },
       ["","system-ui","Arial","Verdana","Georgia","Trebuchet MS","Courier New"]);

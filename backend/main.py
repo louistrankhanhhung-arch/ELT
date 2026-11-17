@@ -2331,6 +2331,15 @@ def student_scores(pin: str, payload: StudentScoresRequest):
     return {"scores": scores}
 
 
+class SlideTextRange(BaseModel):
+    start: int = Field(ge=0)
+    end: int = Field(gt=0)
+    bold: Optional[Literal[True]] = None
+    italic: Optional[Literal[True]] = None
+    underline: Optional[Literal[True]] = None
+    text_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
+
+
 class SlideElement(BaseModel):
     kind: Literal["text", "image", "audio", "shape", "icon", "table"]
     text: str = Field(default="", max_length=500)
@@ -2344,6 +2353,7 @@ class SlideElement(BaseModel):
     underline: Optional[bool] = None
     text_align: Optional[Literal["left", "center", "right"]] = None
     list_style: Optional[Literal["bullet", "numbered"]] = None
+    text_ranges: Optional[List[SlideTextRange]] = Field(default=None, max_length=500)
     text_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
     fill_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
     border_color: Optional[str] = Field(default=None, pattern=r"^#[0-9a-fA-F]{6}$")
@@ -2360,6 +2370,19 @@ class SlideElement(BaseModel):
     disappear: Optional[int] = Field(default=None, ge=1, le=30)
 
     def checked(self, block_id):
+        if self.text_ranges:
+            # Textarea selections are measured in UTF-16 code units.
+            boundaries = {0}
+            offset = 0
+            for char in self.text:
+                offset += 2 if ord(char) > 0xFFFF else 1
+                boundaries.add(offset)
+            end = 0
+            for run in self.text_ranges:
+                if (self.kind != "text" or not end <= run.start < run.end
+                        or run.start not in boundaries or run.end not in boundaries):
+                    raise HTTPException(422, f"Block {block_id}: invalid text formatting range")
+                end = run.end
         if self.x + self.width > 100 or self.y + self.height > 100:
             raise HTTPException(422, f"Block {block_id}: slide element must fit within the canvas")
         if self.disappear is not None and self.disappear <= self.appear:

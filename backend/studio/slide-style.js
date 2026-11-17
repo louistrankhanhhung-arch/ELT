@@ -9,6 +9,24 @@
     if (element.font_size) node.style.fontSize = (element.font_size / 12.8) + "cqw";
     if (element.text_color) node.style.color = element.text_color;
   }
+  function appendText(node, value, ranges, offset = 0) {
+    let cursor = 0;
+    for (const range of ranges || []) {
+      const start = Math.max(0, range.start - offset);
+      const end = Math.min(value.length, range.end - offset);
+      if (start >= end) continue;
+      node.append(value.slice(cursor, start));
+      const span = document.createElement("span");
+      if (range.bold) span.style.fontWeight = "bold";
+      if (range.italic) span.style.fontStyle = "italic";
+      if (range.underline) span.style.textDecoration = "underline";
+      if (/^#[0-9a-f]{6}$/i.test(range.text_color)) span.style.color = range.text_color;
+      span.textContent = value.slice(start, end);
+      node.append(span);
+      cursor = end;
+    }
+    node.append(value.slice(cursor));
+  }
   function text(node, element) {
     if (element.bold) node.style.fontWeight = "bold";
     if (element.italic) node.style.fontStyle = "italic";
@@ -17,16 +35,17 @@
     if (!element.list_style) {
       const content = document.createElement("span");
       content.style.width = "100%";
-      content.textContent = element.text || "";
+      appendText(content, element.text || "", element.text_ranges);
       node.append(content);
       return;
     }
     const list = document.createElement(element.list_style === "numbered" ? "ol" : "ul");
     Object.assign(list.style, { width: "100%", margin: "0", paddingInlineStart: "1.7em" });
-    for (const line of (element.text || "").split(/\r?\n/)) {
+    for (const match of (element.text || "").matchAll(/[^\r\n]+/g)) {
+      const [line] = match;
       if (!line.trim()) continue;
       const item = document.createElement("li");
-      item.textContent = line;
+      appendText(item, line, element.text_ranges, match.index);
       list.append(item);
     }
     node.append(list);
