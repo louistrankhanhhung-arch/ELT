@@ -32,6 +32,8 @@ const authorParams = new URLSearchParams(location.search);
 let revision = authorParams.get("revision");
 let catalogueId = authorParams.get("catalogue");
 let hasUnsavedChanges = false;
+const undoHistory = [];
+let currentUndoState;
 
 function status(message) { byId("status").textContent = message; }
 
@@ -85,7 +87,11 @@ function loadDraft(value, parent = null) {
   byId("classroom").hidden = true;
   byId("editLink").hidden = true;
   byId("catalogueLink").hidden = true;
+  if (clipboard) clipboard.cut = false;
   render();
+  undoHistory.length = 0;
+  currentUndoState = captureUndoState();
+  updateClipboardActions();
 }
 
 const templateColors = ["#0B3D25", "#4D8627", "#18352A", "#A68832", "#E9F2E3", "#F7FAF3", "#FFFFFF"];
@@ -764,12 +770,58 @@ function renderQuiz(fields, block) {
   });
 }
 
-function dirty() {
+function captureUndoState() {
+  return {
+    draft: JSON.stringify({
+      ...lesson,
+      course: byId("course").value || null,
+      level: Number(byId("level").value) || null,
+      title: byId("title").value,
+      objective: byId("objective").value
+    }),
+    index: selected
+  };
+}
+
+function markUnsaved() {
   hasUnsavedChanges = true;
   byId("classroom").hidden = true;
   byId("editLink").hidden = true;
   byId("catalogueLink").hidden = true;
 }
+
+function dirty() {
+  const next = captureUndoState();
+  if (currentUndoState && currentUndoState.draft !== next.draft) {
+    undoHistory.push(currentUndoState);
+    if (undoHistory.length > 40) undoHistory.shift();
+  }
+  currentUndoState = next;
+  markUnsaved();
+  updateClipboardActions();
+}
+
+byId("undoEdit").onclick = () => {
+  const previous = undoHistory.pop();
+  if (!previous) return;
+  const blockId = lesson.blocks[selected]?.id;
+  lesson = JSON.parse(previous.draft);
+  const restoredIndex = lesson.blocks.findIndex(block => block.id === blockId);
+  selected = restoredIndex < 0 ? previous.index : restoredIndex;
+  clipboardScope = "block";
+  selectedElement = null;
+  extraElements.clear();
+  revealPreview = -1;
+  if (clipboard) clipboard.cut = false;
+  byId("course").value = lesson.course || "";
+  byId("level").value = lesson.level ?? "";
+  byId("title").value = lesson.title;
+  byId("objective").value = lesson.objective || "";
+  markUnsaved();
+  render();
+  currentUndoState = captureUndoState();
+  clipboardStatus("Last edit undone.");
+};
 function move(offset) {
   const next = selected + offset;
   if (next < 0 || next >= lesson.blocks.length) return;
@@ -810,13 +862,16 @@ function canPaste({block, canvas, scope}) {
 function updateClipboardActions() {
   const target = clipboardTarget();
   const {block, scope} = target;
+  const cut = byId("cutSelection");
   const copy = byId("copySelection");
   const paste = byId("pasteSelection");
   copy.disabled = !block || (scope === "element" && extraElements.size > 0);
+  cut.disabled = !canCut(target);
+  byId("undoEdit").disabled = !undoHistory.length;
   paste.disabled = !canPaste(target);
-  const labels = [[copy, "Copy " + scope], [paste, clipboard ? "Paste " + clipboard.type : "Paste"]];
+  const labels = [[cut, "Cut " + scope], [copy, "Copy " + scope], [paste, clipboard ? "Paste " + clipboard.type : "Paste"]];
   for (const [button, name] of labels) {
-    button.title = name;
+    button.title = button === cut ? name + " (Ctrl+X)" : name;
     button.setAttribute("aria-label", name);
   }
   byId("clipboardScope").textContent = scope[0].toUpperCase() + scope.slice(1);
@@ -854,6 +909,29 @@ function blockContent(block) {
   return content;
 }
 
+function canCut({block, scope, element}) {
+  if (!block) return false;
+  if (scope === "element") return Boolean(element) && !extraElements.size;
+  if (isTitleSlide(block)) return false;
+  return scope === "block" ? lesson.blocks.length > 1 : Object.keys(blockContent(block)).length > 0;
+}
+
+byId("cutSelection").onclick = () => {
+  const target = clipboardTarget();
+  if (!canCut(target)) return;
+  const {block, element, scope} = target;
+  const value = scope === "block" ? block : scope === "content" ? blockContent(block) : element;
+  clipboard = {type: scope, kind: block.kind, value: structuredClone(value), cut: true};
+  if (scope === "block") byId("remove").click();
+  else if (scope === "element") removeSelectedElements();
+  else {
+    for (const key of Object.keys(value)) delete block[key];
+    finishPaste("Content cut. Paste it into a block of the same type.");
+    return;
+  }
+  clipboardStatus(scope === "block" ? "Block cut." : "Element cut.");
+};
+
 byId("copySelection").onclick = () => {
   const {block, element, scope} = clipboardTarget();
   if (!block) return;
@@ -872,16 +950,18 @@ byId("pasteSelection").onclick = () => {
   const {block} = target;
   const value = structuredClone(clipboard.value);
   if (clipboard.type === "block") {
-    renewTaskIds(value);
+    if (!clipboard.cut) renewTaskIds(value);
     lesson.blocks.splice(++selected, 0, value);
+    clipboard.cut = false;
     finishPaste("Block pasted.");
   } else if (clipboard.type === "content") {
     const keys = Object.keys(blockContent(block));
     if (keys.length && !window.confirm("Replace the content of this block?")) return;
-    renewTaskIds(value);
+    if (!clipboard.cut) renewTaskIds(value);
     delete value.id;
     for (const key of keys) delete block[key];
     Object.assign(block, value);
+    clipboard.cut = false;
     finishPaste("Content pasted.");
   } else {
     const elements = block.elements ||= [];
@@ -976,13 +1056,13 @@ document.addEventListener("keydown", event => {
   if (!target.block || event.altKey) return;
   const key = event.key.toLowerCase();
   if ((event.ctrlKey || event.metaKey) && !event.shiftKey) {
-    if (key !== "c" && key !== "v") return;
-    if (key === "c" && window.getSelection()?.toString()) return;
-    const control = byId(key === "c" ? "copySelection" : "pasteSelection");
+    const action = {x: "cutSelection", c: "copySelection", v: "pasteSelection", z: "undoEdit"}[key];
+    if (!action || ((key === "c" || key === "x") && window.getSelection()?.toString())) return;
+    const control = byId(action);
     if (control.disabled) return;
     event.preventDefault();
     control.click();
-    if (key === "v" && !document.activeElement.closest("#editor")) focusStudioSelection(clipboardTarget().scope);
+    if (key !== "c" && !document.activeElement.closest("#editor")) focusStudioSelection(clipboardTarget().scope);
     return;
   }
   if (event.ctrlKey || event.metaKey) return;
