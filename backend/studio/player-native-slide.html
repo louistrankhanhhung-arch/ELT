@@ -72,6 +72,8 @@ let step = 0;
 let vocabBlock = null;
 let vocabRecall = null;
 let interactive = params.get("role") === "teacher";
+// The presentation iframe is hosted by a popup, while Classroom opens the popup.
+const slideController = interactive && params.get("presentation") === "1" ? parent.opener : parent;
 let currentAudio = null;
 let items = [];
 function applyStep() {
@@ -83,7 +85,7 @@ function applyStep() {
   if (currentAudio && (!interactive || currentAudio.node.hidden)) currentAudio.audio.pause();
 }
 window.addEventListener("message", event => {
-  if (event.source !== parent || event.origin !== location.origin
+  if (event.source !== slideController || event.origin !== location.origin
       || event.data?.type !== "reh-slide-step" || event.data.block !== params.get("block")) return;
   const nextRecall = event.data.vocabRecall ?? null;
   if (step === event.data.step && interactive === event.data.interactive &&
@@ -148,7 +150,7 @@ function showElements(elements) {
   document.querySelector("main").replaceWith(canvas);
   if (!homeworkFit) addSlideZoom(canvas);
   applyStep();
-  parent.postMessage({ type:"reh-slide-ready" }, location.origin);
+  slideController?.postMessage({ type:"reh-slide-ready" }, location.origin);
 }
 
 function addSlideZoom(canvas) {
@@ -182,7 +184,7 @@ async function showSlide() {
   if (block.vocab) {
     vocabBlock = block;
     window.renderVocab(document.querySelector("main"), block.vocab, block.title, step, interactive, vocabRecall);
-    parent.postMessage({type: "reh-slide-ready"}, location.origin);
+    slideController?.postMessage({type: "reh-slide-ready"}, location.origin);
     return;
   }
   if (block.elements?.length) { showElements(block.elements); return; }

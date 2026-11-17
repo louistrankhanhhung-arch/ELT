@@ -791,7 +791,11 @@
       projectionTask.hidden = taskStage.hidden;
       if (taskStage.hidden) {
         projectionTask.replaceChildren();
-        if (projectionFrame.src !== previewFrame.src) projectionFrame.src = previewFrame.src;
+        const source = new URL(previewFrame.src || "about:blank");
+        if (source.protocol !== "about:" && currentLesson?.blocks[blockIndex]?.native_revision) {
+          source.searchParams.set("presentation", "1");
+        }
+        if (projectionFrame.src !== source.href) projectionFrame.src = source.href;
       }
       else projectionTask.replaceChildren(taskContent.cloneNode(true));
     }
