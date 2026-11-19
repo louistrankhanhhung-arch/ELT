@@ -4631,6 +4631,44 @@ def read_homework(response: Response, credentials: Optional[HTTPAuthorizationCre
             "status": homework_status(assignment), "lesson_path": assignment["lesson_path"], "items": items}
 
 
+class HomeworkTaskSubmission(HomeworkSubmission):
+    task_id: str = Field(min_length=1, max_length=120)
+
+
+class HomeworkBatchSubmission(BaseModel):
+    tasks: List[HomeworkTaskSubmission] = Field(min_length=1, max_length=100)
+
+
+def save_homework_task(cur, assignment, task_id, payload, request):
+    task = homework_task(cur, assignment["pin"], task_id)
+    if task["speaking_id"]:
+        if not payload.audio_base64 or not payload.media_type:
+            raise HTTPException(422, "Record an answer before submitting")
+        audio = validate_speaking_audio(payload.audio_base64, payload.media_type)
+        response = "[Audio recording]"
+    else:
+        if not payload.response.strip():
+            raise HTTPException(422, "Enter an answer before submitting")
+        audio = None
+        response = payload.response
+    result = homework_feedback(task, response)
+    student_id = assignment["student_id"]
+    cur.execute(sql("""
+        INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
+        ON CONFLICT(task_id, student_id) DO NOTHING
+    """), (task_id, student_id, response, now_iso()))
+    if cur.rowcount != 1:
+        raise HTTPException(409, "This task was already submitted. Reload to see the saved result.")
+    save_task_attempt_signals(cur, task_id, student_id, payload.attempt_signals, request)
+    if audio is not None:
+        cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
+                    (task_id, student_id, payload.media_type, audio))
+    if result:
+        cur.execute(sql("INSERT INTO published_quiz_scores VALUES (?) ON CONFLICT(task_id) DO NOTHING"), (task_id,))
+
+    return result
+
+
 @app.post("/api/homework/student/tasks/{task_id}")
 def submit_homework(task_id: str, payload: HomeworkSubmission, request: Request,
                     credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
@@ -4639,35 +4677,51 @@ def submit_homework(task_id: str, payload: HomeworkSubmission, request: Request,
         assignment = homework_access(cur, credentials, lock=True)
         if homework_status(assignment) != "open":
             raise HTTPException(409, "Homework is closed. Ask your teacher to reopen it.")
-        task = homework_task(cur, assignment["pin"], task_id)
-        if task["speaking_id"]:
-            if not payload.audio_base64 or not payload.media_type:
-                raise HTTPException(422, "Record an answer before submitting")
-            audio = validate_speaking_audio(payload.audio_base64, payload.media_type)
-            response = "[Audio recording]"
-        else:
-            if not payload.response.strip():
-                raise HTTPException(422, "Enter an answer before submitting")
-            audio = None
-            response = payload.response
-        result = homework_feedback(task, response)
-        student_id = assignment["student_id"]
-        cur.execute(sql("""
-            INSERT INTO writing_task_responses VALUES (?, ?, ?, ?)
-            ON CONFLICT(task_id, student_id) DO NOTHING
-        """), (task_id, student_id, response, now_iso()))
-        if cur.rowcount != 1:
-            raise HTTPException(409, "This task was already submitted. Reload to see the saved result.")
-        save_task_attempt_signals(cur, task_id, student_id, payload.attempt_signals, request)
-        if audio is not None:
-            cur.execute(sql("INSERT INTO speaking_audio VALUES (?, ?, ?, ?)"),
-                        (task_id, student_id, payload.media_type, audio))
-        if result:
-            cur.execute(sql("INSERT INTO published_quiz_scores VALUES (?) ON CONFLICT(task_id) DO NOTHING"), (task_id,))
+        result = save_homework_task(cur, assignment, task_id, payload, request)
         conn.commit()
     return {"submitted": True, "result": result}
 
 
+@app.post("/api/homework/student/submit")
+def submit_homework_batch(payload: HomeworkBatchSubmission, request: Request,
+                          credentials: Optional[HTTPAuthorizationCredentials] = Depends(teacher_bearer)):
+    answers = {item.task_id: item for item in payload.tasks}
+    if len(answers) != len(payload.tasks):
+        raise HTTPException(422, "Each Homework task can appear only once.")
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        assignment = homework_access(cur, credentials, lock=True)
+        tasks = {item["task_id"]: item.get("title") for item in json.loads(assignment["items"]) if "task_id" in item}
+        if answers.keys() - tasks.keys():
+            raise HTTPException(422, "A task does not belong to this Homework.")
+        cur.execute(sql("""
+            SELECT r.task_id, r.response FROM writing_task_responses r
+            JOIN writing_tasks t ON t.task_id = r.task_id
+            WHERE t.pin = ? AND r.student_id = ?
+        """), (assignment["pin"], assignment["student_id"]))
+        saved = {row["task_id"]: row["response"] for row in cur.fetchall()}
+        pending = tasks.keys() - saved.keys()
+        if pending and homework_status(assignment) != "open":
+            raise HTTPException(409, "Homework is closed. Ask your teacher to reopen it.")
+        if pending - answers.keys():
+            raise HTTPException(422, "Complete all remaining tasks before submitting Homework.")
+        results = {}
+        try:
+            for task_id, answer in answers.items():
+                if task_id in saved:
+                    results[task_id] = homework_feedback(homework_task(cur, assignment["pin"], task_id), saved[task_id])
+                    continue
+                try:
+                    results[task_id] = save_homework_task(cur, assignment, task_id, answer, request)
+                except HTTPException as error:
+                    if error.status_code == 422:
+                        raise HTTPException(422, f"{tasks[task_id] or 'Task'}: {error.detail}") from error
+                    raise
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+    return {"submitted": True, "results": results}
 
 
 class TimedTestSection(BaseModel):
