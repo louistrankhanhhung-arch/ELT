@@ -2,7 +2,7 @@
 <html lang="en" class="reh-page">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Session Results | REH</title>
+<title>Session History | REH</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#F7FAF3;color:#18352A;font:16px system-ui}
 main{max-width:1050px;margin:auto;padding:20px}section,article{background:#fff;border:1px solid #CCDCC8;border-radius:10px;padding:16px;margin:14px 0}
@@ -23,12 +23,12 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <link rel="stylesheet" href="runtime-ui.css?v=reh-nav-1">
 <link rel="stylesheet" href="evidence-report.css?v=1">
 <main>
-<a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Session Results</h1>
-<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html" aria-current="page">Session Results</a> <a class="reh-nav-button" href="class-reports.html">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a> <a class="reh-nav-button" href="learner-profiles.html">Learner Profile</a></nav>
+<a class="reh-nav-button" href="teacher-home.html">← Teacher home</a><h1>Session History</h1>
+<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html" aria-current="page">Session History</a> <a class="reh-nav-button" href="class-reports.html">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a> <a class="reh-nav-button" href="learner-profiles.html">Learner Profile</a></nav>
 <p>Reopen a classroom session to review and export saved evidence.</p>
 <section>
 <label>Staging teacher access code <input id="token" type="password" autocomplete="off"></label>
-<button id="load">Load session results</button><p id="status" role="status"></p>
+<button id="load">Load session history</button><p id="status" role="status"></p>
 </section>
 <details id="history" hidden>
 <summary>Classroom sessions</summary>
@@ -54,7 +54,7 @@ details{padding:8px 0;border-top:1px solid #CCDCC8}pre{white-space:pre-wrap;over
 <p>This permanently removes their responses, scores and recordings. Download any archives you want to keep first.</p>
 <form method="dialog"><button value="cancel" autofocus>Cancel</button><button class="danger" id="confirmDeleteSessions" value="delete">Delete permanently</button></form>
 </dialog>
-<nav aria-label="Session Results pages"><button id="previous" disabled>Previous</button><span id="historyPages"></span><button id="next" disabled>Next</button></nav>
+<nav aria-label="Session History pages"><button id="previous" disabled>Previous</button><span id="historyPages"></span><button id="next" disabled>Next</button></nav>
 </details>
 <section id="detail" hidden>
 <h2 id="sessionTitle" tabindex="-1"></h2><p id="sessionSummary"></p><div id="reportOverview"></div>
