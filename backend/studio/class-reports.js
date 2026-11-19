@@ -304,6 +304,90 @@
       dialog.showModal();
       const params = new URLSearchParams({lesson_key: lesson.key});
       for (const key of ["start", "end"]) if (filters.has(key)) params.set(key, filters.get(key));
+      const analysisPanel = node("section");
+      const analyze = node("button", "Analyze");
+      analyze.type = "button";
+      analyze.disabled = true;
+      const analysisStatus = node("p", "Loading saved analysis…");
+      analysisStatus.setAttribute("role", "status");
+      const output = node("div");
+      analysisPanel.append(node("h3", "AI lesson analysis"), analyze, analysisStatus, output);
+      dialog.insertBefore(analysisPanel, body);
+      const analysisPath = "/class-reports/" + encodeURIComponent(classCode) + "/lesson-analysis";
+      const access = token.value.trim();
+      function showAnalysis(report) {
+        output.replaceChildren();
+        if (!report) return;
+        const roster = new Map(report.roster.map(student => [student.alias, student]));
+        const reportText = report.text.replace(/\bS\d+\b/g, alias => {
+          const student = roster.get(alias);
+          return student ? student.name + (student.student_id ? " (" + student.student_id + ")" : "") : alias;
+        });
+        const errors = report.evidence.filter(item => item.correct === false && !item.unanswered);
+        const explain = item => [
+          item.ref + " · " + (roster.get(item.alias)?.name || item.alias),
+          item.target, item.question, item.prompt,
+          "Học sinh: " + (item.selected ?? "—"), "Đáp án: " + (item.expected ?? "—")
+        ].filter(Boolean).join(" · ");
+        const exportText = [lesson.title, "Class: " + classCode, "Saved: " + report.created_at,
+          ...["start", "end"].filter(key => params.has(key)).map(key => key + ": " + params.get(key)),
+          "", reportText, "", "Dẫn chứng câu sai", ...errors.map(explain)].join("\n");
+        const share = node("button", "Share");
+        const download = node("button", "Download");
+        share.type = download.type = "button";
+        share.onclick = async () => {
+          try {
+            if (navigator.share) await navigator.share({title: lesson.title, text: exportText});
+            else {
+              await navigator.clipboard.writeText(exportText);
+              analysisStatus.textContent = "Analysis copied.";
+            }
+          } catch (error) {
+            if (error.name !== "AbortError") analysisStatus.textContent = "Sharing is unavailable. Use Download.";
+          }
+        };
+        download.onclick = () => {
+          const url = URL.createObjectURL(new Blob(["\uFEFF", exportText], {type: "text/plain;charset=utf-8"}));
+          const anchor = node("a");
+          anchor.href = url;
+          anchor.download = ("REH-Class-Diagnosis-" + classCode + "-" + lesson.key).replace(/[^A-Za-z0-9._-]/g, "_") + ".txt";
+          dialog.append(anchor);
+          anchor.click();
+          anchor.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 30000);
+        };
+        const evidence = node("details");
+        evidence.append(node("summary", "Incorrect answers (" + errors.length + ")"));
+        for (const item of errors) {
+          const entry = node("p", explain(item) + " ");
+          entry.append(link("session-results.html", {pin: item.pin}, "Open evidence"));
+          evidence.append(entry);
+        }
+        output.append(share, download, node("pre", reportText), evidence);
+      }
+      request(analysisPath + "?" + params, access).then(data => {
+        showAnalysis(data.analysis);
+        analysisStatus.textContent = data.analysis ? "Saved analysis · " + data.analysis.created_at.slice(0, 10) : "";
+      }).catch(error => { analysisStatus.textContent = error.message; }).finally(() => { analyze.disabled = false; });
+      analyze.onclick = async () => {
+        analyze.disabled = true;
+        analysisStatus.textContent = "Analyzing lesson evidence…";
+        try {
+          const response = await fetch(window.ELT_CONFIG.API_BASE + analysisPath, {
+            method: "POST", cache: "no-store",
+            headers: {Authorization: "Bearer " + access, "Content-Type": "application/json"},
+            body: JSON.stringify(Object.fromEntries(params))
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Analysis failed.");
+          showAnalysis(data.analysis);
+          analysisStatus.textContent = "Analysis saved.";
+        } catch (error) {
+          analysisStatus.textContent = error.message;
+        } finally {
+          analyze.disabled = false;
+        }
+      };
       const examples = records => {
         const list = node("ul");
         for (const record of records) {
