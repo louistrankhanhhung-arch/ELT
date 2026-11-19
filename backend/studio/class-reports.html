@@ -20,6 +20,9 @@ table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 8px; border-bottom: 1px solid #CCDCC8; vertical-align: top; }
 progress { width: 7rem; accent-color: #286340; }
 details a { display: block; margin-top: 5px; }
+td pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+td details { min-width: 10rem; }
+td details details { margin-block: 8px; }
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -43,11 +46,12 @@ details a { display: block; margin-top: 5px; }
 <div id="report" hidden>
 <h2 id="classHeading"></h2>
 <section><h3>Class overview</h3><div id="metrics" class="class-metrics"></div><p>Mastery means scoring at least 80% on a task. Submission rates use assigned places for each task.</p></section>
+<section><h3>Lessons</h3><div id="lessons" class="table"></div></section>
 <section><h3>Learning targets to review</h3><div id="targets" class="table"></div></section>
 <section><h3>Students</h3><div id="students" class="table"></div></section>
-<section><h3>Sessions</h3><div id="sessions" class="table"></div></section>
+<section><h3>Classroom sessions and assignments</h3><div id="sessions" class="table"></div></section>
 </div>
 <script src="config.js"></script>
-<script src="class-reports.js?v=1"></script>
+<script src="class-reports.js?v=2"></script>
 </body>
 </html>
