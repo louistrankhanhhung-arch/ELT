@@ -382,8 +382,10 @@
         if (previewUrl) audioPreview.src = previewUrl;
         else audioPreview.removeAttribute("src");
       }
-      audioPreview.hidden = !draft;
-      recordAudio.disabled = Boolean(recordingTaskId);
+      const busy = Boolean(recordingTaskId) || audioSubmitting;
+      audioPreview.hidden = !draft || recordingTaskId === writingTaskId;
+      recordAudio.textContent = draft ? "Record again" : "Record";
+      recordAudio.disabled = busy || submittedTasks.has(writingTaskId);
       stopAudio.disabled = !recorder || recorder.state !== "recording";
       submitAudio.disabled = !draft || Boolean(recordingTaskId) || audioSubmitting;
     }
@@ -393,8 +395,9 @@
     }
 
     recordAudio.addEventListener("click", async () => {
-      if (!isSpeaking || writingPanel.hidden || recordingTaskId) return;
       const taskId = writingTaskId;
+      if (!isSpeaking || writingPanel.hidden || !taskId || recordingTaskId || audioSubmitting || submittedTasks.has(taskId)) return;
+      audioPreview.pause();
       recordingTaskId = taskId;
       updateAudioControls();
       let stream;
@@ -414,12 +417,13 @@
         if (!mimeType) throw new Error("This browser does not support a compatible recording format.");
         const current = new MediaRecorder(stream, { mimeType });
         const chunks = [];
+        let recordingFailed = false;
         recorder = current;
         current.addEventListener("dataavailable", event => {
           if (event.data.size) chunks.push(event.data);
         });
         current.addEventListener("error", () => {
-          chunks.length = 0;
+          recordingFailed = true;
           if (taskId === writingTaskId) writingStatus.textContent = "Recording failed. Please try again.";
         });
         current.addEventListener("stop", () => {
@@ -428,10 +432,10 @@
           const blob = new Blob(chunks, { type: (current.mimeType || mimeType).split(";")[0] });
           recorder = null;
           recordingTaskId = null;
-          if (blob.size && blob.size <= 5 * 1024 * 1024) {
+          if (!recordingFailed && blob.size && blob.size <= 5 * 1024 * 1024) {
             audioDrafts.set(taskId, blob);
             if (taskId === writingTaskId) writingStatus.textContent = "Recording ready. Listen or record again.";
-          } else if (taskId === writingTaskId) {
+          } else if (!recordingFailed && taskId === writingTaskId) {
             writingStatus.textContent = "No usable recording. Try again with a shorter recording.";
           }
           updateAudioControls();
@@ -459,7 +463,7 @@
       const attempt = taskAttemptTrackers.get(taskId);
       const attempt_signals = attempt?.snapshot();
       const blob = audioDrafts.get(taskId);
-      if (!blob || writingPanel.hidden || audioSubmitting || submittedTasks.has(taskId)) return;
+      if (!blob || writingPanel.hidden || recordingTaskId || audioSubmitting || submittedTasks.has(taskId)) return;
       audioSubmitting = true;
       updateAudioControls();
       try {
