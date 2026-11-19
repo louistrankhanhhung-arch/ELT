@@ -257,7 +257,7 @@
     return () => input.value;
   }
 
-  function renderTask(item, closed) {
+  function renderTask(item, closed, pending) {
     const section = node("section");
     const prompt = node("p", item.task.prompt);
     prompt.className = "prompt";
@@ -269,12 +269,12 @@
     };
     if (item.submitted) { submitted(item.result); return section; }
     if (closed) { section.append(node("p", "Submissions are closed.")); return section; }
-    const form = node("form");
+    const form = node("div");
     const task = item.task;
     const attempt = window.createTaskAttemptTracker(task.questions?.length || 0, item.task_id + ":" + access.slice(-16));
     let payload;
     if (task.questions?.length) {
-      const answers = task.questions.map((question, index) => questionInput(form, question, index, task.shuffle));
+      const answers = task.questions.map((question, index) => questionInput(form, question, item.task_id + "-" + index, task.shuffle));
       payload = async () => ({response: JSON.stringify(answers.map(get => get()))});
     } else if (task.type === "speaking") {
       const label = node("label", "Upload an audio recording (WebM, MP4 or Ogg)");
@@ -299,21 +299,20 @@
       label.append(answer); form.append(label);
       payload = async () => ({response: answer.value});
     }
-    const submit = node("button", "Submit answer");
-    const note = node("p");
-    note.setAttribute("role", "status");
-    form.append(submit, note);
-    form.onsubmit = async event => {
-      event.preventDefault();
-      submit.disabled = true;
-      try {
-        const attempt_signals = attempt.snapshot();
-        const saved = await request("/homework/student/tasks/" + encodeURIComponent(item.task_id), {...await payload(), attempt_signals});
+    pending.push({
+      async collect() {
+        try {
+          return {task_id: item.task_id, attempt_signals: attempt.snapshot(), ...await payload()};
+        } catch (error) {
+          throw new Error(item.title + ": " + error.message);
+        }
+      },
+      complete(results) {
         attempt.complete();
         form.remove();
-        submitted(saved.result);
-      } catch (error) { note.textContent = error.message; submit.disabled = false; }
-    };
+        submitted(results[item.task_id]);
+      }
+    });
     section.append(form);
     attempt.mount(section, [...form.querySelectorAll("fieldset")]);
     return section;
@@ -337,8 +336,9 @@
     el("items").replaceChildren();
     el("attemptNotice").hidden = closed;
     const lesson = await request("/" + data.lesson_path);
+    const pending = [];
     for (const item of data.items) {
-      if (item.task) { el("items").append(renderTask(item, closed)); continue; }
+      if (item.task) { el("items").append(renderTask(item, closed, pending)); continue; }
       const block = lesson.blocks.find(entry => entry.id === item.block_id);
       if (!block) continue;
       const section = node("section");
@@ -360,6 +360,36 @@
       el("items").append(section);
       if (fitContent) fittedFrames.set(frame.contentWindow, frame);
     }
+    const submit = el("submitHomework");
+    const note = el("homeworkSubmissionStatus");
+    submit.hidden = !pending.length;
+    if (!closed && !pending.length && data.items.some(item => item.task)) {
+      note.textContent = "Homework submitted.";
+    }
+    let submitting = false;
+    el("homeworkAnswers").onsubmit = async event => {
+      event.preventDefault();
+      if (submitting || submit.hidden) return;
+      submitting = true;
+      submit.disabled = true;
+      note.textContent = "Submitting homework…";
+      const controls = [...el("items").querySelectorAll("input:not(:disabled), textarea:not(:disabled), button:not(:disabled)")];
+      controls.forEach(control => { control.disabled = true; });
+      try {
+        const tasks = [];
+        for (const task of pending) tasks.push(await task.collect());
+        const saved = await request("/homework/student/submit", {tasks});
+        pending.forEach(task => task.complete(saved.results));
+        submit.hidden = true;
+        note.textContent = "Homework submitted.";
+      } catch (error) {
+        note.textContent = error.message;
+      } finally {
+        controls.forEach(control => { control.disabled = false; });
+        submit.disabled = false;
+        submitting = false;
+      }
+    };
   }
   if (studentMode) {
     const pin = params.get("pin") || "";
