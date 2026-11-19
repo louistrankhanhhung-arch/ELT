@@ -119,6 +119,23 @@
     return details;
   }
 
+  function deleteAnalysisButton(message, status, remove, onDeleted) {
+    const button = node("button", "Delete");
+    button.type = "button";
+    button.onclick = async () => {
+      if (!window.confirm(message)) return;
+      button.disabled = true;
+      try {
+        await remove();
+        await onDeleted();
+      } catch (error) {
+        status.textContent = error.message;
+        button.disabled = false;
+      }
+    };
+    return button;
+  }
+
   function diagnosisButton(row, filters, classCode) {
     const open = node("button", "Diagnose student");
     open.type = "button";
@@ -180,6 +197,9 @@
         ].join("\n") + "\n";
       }
 
+      const removeDiagnosis = id => write("/diagnoses/" + encodeURIComponent(id), "DELETE");
+      let displayedDiagnosis = null;
+
       function approvedActions(item, panelStatus) {
         const actions = node("div");
         const share = node("button", "Share");
@@ -211,7 +231,13 @@
           anchor.remove();
           window.setTimeout(() => URL.revokeObjectURL(url), 30000);
         };
-        actions.append(share, download);
+        actions.append(share, download, deleteAnalysisButton(
+          "Delete this approved student diagnosis?", panelStatus, () => removeDiagnosis(item.id), async () => {
+            if (displayedDiagnosis === item.id) result.replaceChildren();
+            status.textContent = "Student diagnosis deleted.";
+            await loadHistory();
+          }
+        ));
         return actions;
       }
 
@@ -239,6 +265,7 @@
         result.replaceChildren();
         try {
           const draft = await write(path, "POST", scope);
+          displayedDiagnosis = draft.diagnosis_id;
           const review = node("label", "Teacher decision");
           const decision = node("textarea");
           decision.rows = 12;
@@ -248,20 +275,29 @@
           const approve = node("button", "Approve and save");
           approve.type = "button";
           approve.onclick = async () => {
-            approve.disabled = true;
+            approve.disabled = discard.disabled = true;
             try {
               await write("/diagnoses/" + encodeURIComponent(draft.diagnosis_id) + "/decision",
                 "PUT", {decision: decision.value});
               decision.readOnly = true;
+              discard.remove();
               status.textContent = "Teacher decision saved.";
               history.open = true;
               await loadHistory(draft.diagnosis_id);
             } catch (error) {
-              approve.disabled = false;
+              approve.disabled = discard.disabled = false;
               status.textContent = error.message;
             }
           };
-          result.append(node("h3", "AI proposal"), evidenceList(draft.evidence), review, approve);
+          const discard = deleteAnalysisButton("Delete this student analysis draft?", status, async () => {
+            approve.disabled = true;
+            try { await removeDiagnosis(draft.diagnosis_id); }
+            catch (error) { approve.disabled = false; throw error; }
+          }, () => {
+            result.replaceChildren();
+            status.textContent = "Student analysis draft deleted.";
+          });
+          result.append(node("h3", "AI proposal"), evidenceList(draft.evidence), review, approve, discard);
           status.textContent = "Review the proposed diagnosis. Evidence used: " + draft.evidence.length + "/" +
             draft.submitted_count + " submitted tasks. Speaking audio is not analyzed.";
         } catch (error) {
@@ -363,7 +399,28 @@
           entry.append(link("session-results.html", {pin: item.pin}, "Open evidence"));
           evidence.append(entry);
         }
-        output.append(share, download, node("pre", reportText), evidence);
+        const remove = deleteAnalysisButton("Delete the saved analysis for this class, lesson and date range?",
+          analysisStatus, async () => {
+            if (analyze.disabled) throw new Error("Wait for the current analysis to finish.");
+            const query = new URLSearchParams(params);
+            query.set("created_at", report.created_at);
+            analyze.disabled = true;
+            try {
+              const response = await fetch(window.ELT_CONFIG.API_BASE + analysisPath + "?" + query, {
+                method: "DELETE", headers: {Authorization: "Bearer " + access}, cache: "no-store"
+              });
+              if (!response.ok) {
+                const data = await response.json();
+                throw new Error(typeof data.detail === "string" ? data.detail : "Could not delete lesson analysis.");
+              }
+            } finally {
+              analyze.disabled = false;
+            }
+          }, () => {
+            showAnalysis(null);
+            analysisStatus.textContent = "Lesson analysis deleted.";
+          });
+        output.append(share, download, remove, node("pre", reportText), evidence);
       }
       request(analysisPath + "?" + params, access).then(data => {
         showAnalysis(data.analysis);
