@@ -2980,11 +2980,13 @@ def profile_score(task, row):
 
 @app.get("/api/class-reports/{class_code}", dependencies=[Depends(require_teacher)])
 def class_report(class_code: str, start: Optional[date] = None, end: Optional[date] = None,
-                 lesson: str = "", target: str = ""):
+                 lesson: str = "", target: str = "", learner: str = ""):
     if start and end and start > end:
         raise HTTPException(422, "The end date must be on or after the start date")
     code = class_code.strip().upper()
     local_zone = timezone(timedelta(hours=7))
+    tester_ids = {"STU0000", "STU1000"}
+    learner = learner.strip().upper()
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("SELECT * FROM reh_classes WHERE class_code = ?"), (code,))
@@ -3002,11 +3004,13 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
                 start and row["ended_on"] and row["ended_on"] < start.isoformat()
             ):
                 continue
-            roster[row["student_id"]] = row["display_name"]
+            if row["student_id"].upper() not in tester_ids:
+                roster[row["student_id"]] = row["display_name"]
         cur.execute(sql("""
-            SELECT s.pin, s.created_at, s.lesson_id, s.lesson_path, r.manifest
+            SELECT s.pin, s.created_at, s.lesson_id, s.lesson_path, s.status, r.manifest, h.title AS homework_title, h.items AS homework_items
             FROM session_classes c JOIN sessions s ON s.pin = c.pin
             LEFT JOIN lesson_revisions r ON s.lesson_path = 'imports/' || r.revision_id
+            LEFT JOIN homework h ON h.pin = s.pin
             WHERE c.class_code = ? ORDER BY s.created_at DESC, s.pin DESC
         """), (code,))
         sessions = [dict(row) for row in cur.fetchall()]
@@ -3032,26 +3036,36 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
         stats["mastered"] += int(bool(score and score["mastered"]))
 
     def learner_record(student_id, name):
-        return {"student_id": student_id, "name": name, **counts(), "latest": None}
+        return {"student_id": student_id, "name": name, "key": student_id, **counts(), "latest": None}
 
     totals = counts()
     learners = {student: learner_record(student, name) for student, name in roster.items()}
     targets = {}
     visits = []
     attempts = {}
+    lessons = {}
+    records = []
     for session in sessions:
         day = parse_iso(session["created_at"]).astimezone(local_zone).date()
         if (start and day < start) or (end and day > end):
             continue
         manifest = json.loads(session["manifest"]) if session["manifest"] else {}
-        title = manifest.get("title") or session["lesson_id"]
+        title = manifest.get("title") or session["homework_title"] or session["lesson_id"]
+        match = re.match(r"^([A-Z][A-Z0-9]*-S\d+-L\d+)\b", title, re.IGNORECASE)
+        lesson_key = match.group(1).upper() if match else session["lesson_id"]
         if lesson.strip().casefold() not in f"{title} {session['lesson_id']}".casefold():
             continue
         pin = session["pin"]
-        members = attendance.get(pin, {})
-        if pin.startswith("TEST-"):
-            title = "Test · " + title
-        visit = {"pin": pin, "date": day.isoformat(), "lesson": title, **counts()}
+        members = {member: row for member, row in attendance.get(pin, {}).items()
+                   if (row["roster_id"] or member).strip().upper() not in tester_ids}
+        if not members or (learner and all((row["roster_id"] or member).upper() != learner
+                                          for member, row in members.items())):
+            continue
+        source = session["status"] if session["status"] in {"homework", "test"} else "classroom"
+        titles = {item["task_id"]: item["title"] for item in json.loads(session["homework_items"] or "[]")
+                  if "task_id" in item}
+        visit = {"pin": pin, "date": day.isoformat(), "lesson": title, "lesson_key": lesson_key,
+                 "source": source, **counts()}
         evidence = session_evidence(pin, include_roster=True)
         for task in reversed(evidence["tasks"]):
             target_id = task.get("learning_target_id")
@@ -3061,7 +3075,7 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
             submissions = {row["student_id"]: row for row in task["submissions"]}
             recipients = task.get("recipient_ids", members)
             group = None
-            if target_id:
+            if target_id and not learner:
                 key = (target_id, task_kind)
                 group = targets.setdefault(key, {"target": target_id, "kind": task_kind, **counts(),
                                                   "learners": set(), "sessions": {}})
@@ -3071,24 +3085,48 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
                     continue
                 student_id = identity["roster_id"]
                 student_id = student_id.upper() if student_id else None
-                learner = learners.setdefault(student_id or member,
-                    learner_record(student_id, roster.get(student_id, identity["student_name"])))
+                learner_key = student_id or member.upper()
                 row = submissions.get(member)
                 score = profile_score(task, row)
-                for stats in (totals, visit, learner):
+                if learner:
+                    if learner == learner_key:
+                        feedback = row.get("feedback") if row else None
+                        if row and not feedback and row.get("ai_published"):
+                            feedback = (row.get("ai_feedback") or {}).get("feedback")
+                        records.append({"pin": pin, "source": source, "date": visit["date"],
+                                        "lesson": title, "lesson_key": lesson_key, "task_id": task["task_id"],
+                                        "block_id": task.get("block_id"), "phase": task.get("phase"),
+                                        "title": titles.get(task["task_id"]) or task.get("page_task_title") or task.get("prompt"),
+                                        "kind": task_kind, "target": target_id, "prompt": task.get("prompt"),
+                                        "score": score, "feedback": feedback,
+                                        "status": "Scored" if score else "Submitted" if row else "Awaiting submission",
+                                        "response": row.get("response") if row else None,
+                                        "items": row.get("items", []) if row else [],
+                                        "submitted_at": row.get("submitted_at") if row else None,
+                                        "audio_member": member if row and row.get("audio_bytes") else None})
+                    continue
+                learner_stats = learners.setdefault(learner_key,
+                    learner_record(student_id, roster.get(student_id, identity["student_name"])))
+                learner_stats["key"] = learner_key
+                lesson_group = lessons.setdefault(lesson_key, {"key": lesson_key, "title": title, "sources": {}})
+                source_stats = lesson_group["sources"].setdefault(source, counts())
+                for stats in (totals, visit, learner_stats, source_stats):
                     add_result(stats, row, score)
-                if score and learner["latest"] is None:
-                    learner["latest"] = {"pin": pin, "date": visit["date"], "percent": score["percent"]}
-                if score and student_id and task.get("block_id"):
+                if score and learner_stats["latest"] is None:
+                    learner_stats["latest"] = {"pin": pin, "date": visit["date"], "percent": score["percent"], "source": source}
+                if score and student_id and source == "classroom" and task.get("block_id"):
                     key = (student_id, session["lesson_path"], task["block_id"], task_kind)
                     attempts.setdefault(key, {})[pin] = score["percent"]
                 if group is not None:
                     add_result(group, row, score)
                     if score:
                         group["learners"].add(student_id or member)
-                    group["sessions"][pin] = {"pin": pin, "date": visit["date"], "lesson": title}
+                    group["sessions"][pin] = {"pin": pin, "date": visit["date"], "lesson": title, "source": source}
         if visit["assigned"] or not target.strip():
             visits.append(visit)
+
+    if learner:
+        return {"records": records}
 
     for (student_id, _lesson_path, _block_id, _kind), by_session in attempts.items():
         values = list(by_session.values())
@@ -3105,7 +3143,7 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
     ordered_targets = sorted(targets.values(), key=lambda row: (
         row["mastered"] / row["scored"] if row["scored"] else 2, row["target"], row["kind"]))
     return {"class": dict(class_row), "summary": totals, "sessions": visits,
-            "targets": ordered_targets, "learners": sorted(learners.values(), key=lambda row: (row["name"].casefold(), row["student_id"] or ""))}
+            "lessons": list(lessons.values()), "targets": ordered_targets, "learners": sorted(learners.values(), key=lambda row: (row["name"].casefold(), row["student_id"] or ""))}
 
 
 @app.get("/api/learner-profiles/{student_id}", dependencies=[Depends(require_teacher)])
