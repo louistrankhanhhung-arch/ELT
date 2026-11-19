@@ -24,6 +24,11 @@ td pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 td details { min-width: 10rem; }
 td details details { margin-block: 8px; }
 [hidden] { display: none !important; }
+.diagnosis-dialog { width: min(760px, 90vw); max-height: 85vh; overflow: auto; border: 1px solid #CCDCC8; border-radius: 12px; padding: 20px; }
+.diagnosis-dialog textarea { width: 100%; box-sizing: border-box; font: inherit; }
+.diagnosis-dialog button { margin: 4px 8px 4px 0; }
+.diagnosis-dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+.diagnosis-dialog::backdrop { background: rgb(20 45 32 / 55%); }
 </style>
 </head>
 <body>
@@ -52,6 +57,6 @@ td details details { margin-block: 8px; }
 <section><h3>Classroom sessions and assignments</h3><div id="sessions" class="table"></div></section>
 </div>
 <script src="config.js"></script>
-<script src="class-reports.js?v=2"></script>
+<script src="class-reports.js?v=3"></script>
 </body>
 </html>
