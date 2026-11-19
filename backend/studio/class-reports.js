@@ -288,6 +288,81 @@
     }
   }
 
+  function lessonDiagnosis(lesson, filters, classCode) {
+    const open = node("button", "Diagnose lesson");
+    open.type = "button";
+    open.onclick = async () => {
+      const dialog = node("dialog");
+      dialog.className = "diagnosis-dialog";
+      const close = node("button", "Close");
+      close.type = "button";
+      close.onclick = () => dialog.close();
+      const body = node("div", "Loading lesson evidence…");
+      dialog.append(node("h2", "Class diagnosis · " + classCode), node("p", lesson.title), close, body);
+      dialog.addEventListener("close", () => dialog.remove(), {once: true});
+      document.body.append(dialog);
+      dialog.showModal();
+      const params = new URLSearchParams({lesson_key: lesson.key});
+      for (const key of ["start", "end"]) if (filters.has(key)) params.set(key, filters.get(key));
+      const examples = records => {
+        const list = node("ul");
+        for (const record of records) {
+          const item = node("li");
+          item.append(link("session-results.html", {pin: record.pin}, record.target + " · " + sourceName(record.source)));
+          item.append(node("div", record.prompt || ""));
+          if (record.task_score) item.append(node("div", "Task score below the 80% review threshold."));
+          else item.append(node("div", "Answer: " + (record.selected ?? "—") + " · Expected: " + (record.expected ?? "—")));
+          list.append(item);
+        }
+        return list;
+      };
+      const guidance = {
+        "Support first": "Check the repeated difficulty with one new equivalent item. If it recurs, model the exact step, then retest independently.",
+        "Verify next": "Use one new independent item for the difficulty shown below before choosing an intervention.",
+        "Insufficient evidence": "Collect one independent response for a lesson target before assigning support.",
+        "Monitor": "Check transfer with one new item before moving on."
+      };
+      try {
+        const data = await request("/class-reports/" + encodeURIComponent(classCode) + "/lesson-diagnosis?" + params,
+          token.value.trim());
+        body.replaceChildren(node("p", "Planning signals from lesson evidence. Review priority is based on observed errors and task scores."));
+        if (!data.students.length) body.append(node("p", "No classroom or homework evidence matches this lesson."));
+        body.append(node("h3", "Class priorities"));
+        if (!data.targets.length) body.append(node("p", "No scored target evidence available."));
+        for (const target of data.targets) {
+          const panel = node("details");
+          panel.append(node("summary", [target.target, target.label,
+            target.needs_verify + "/" + target.checked + " students to verify"].filter(Boolean).join(" · ")));
+          if (target.examples.length) panel.append(examples(target.examples),
+            node("p", target.needs_verify >= 2
+              ? "Start the next lesson with an equivalent class check. If the difficulty recurs, group students by the error shown."
+              : "Verify this difficulty individually with an equivalent item."));
+          body.append(panel);
+        }
+        body.append(node("h3", "Student priorities"));
+        for (const student of data.students) {
+          const panel = node("details");
+          panel.append(node("summary", student.name + (/^STU[0-9]+$/.test(student.id) ? " · " + student.id : "") +
+            " · " + student.priority + " · " + student.submitted + "/" + student.assigned + " submitted"),
+            node("p", guidance[student.priority]));
+          if (student.examples.length) panel.append(examples(student.examples));
+          if (/^STU[0-9]+$/.test(student.id)) {
+            const individualFilters = new URLSearchParams(params);
+            individualFilters.delete("lesson_key");
+            individualFilters.set("lesson", lesson.key);
+            const button = diagnosisButton({student_id: student.id}, individualFilters, classCode);
+            button.addEventListener("click", () => dialog.close(), {capture: true});
+            panel.append(button);
+          }
+          body.append(panel);
+        }
+      } catch (error) {
+        body.textContent = error.message;
+      }
+    };
+    return open;
+  }
+
   function render(data, filters) {
     const info = data.class;
     el("classHeading").textContent = [info.class_code, info.course, info.level].join(" · ");
@@ -303,14 +378,14 @@
       return card;
     }));
 
-    table("lessons", ["Lesson", "Classroom submitted", "Homework submitted", "Test submitted"], data.lessons.map(row => {
+    table("lessons", ["Lesson", "Classroom submitted", "Homework submitted", "Test submitted", "Diagnosis"], data.lessons.map(row => {
       const select = node("button", row.title);
       select.type = "button";
       select.onclick = () => {
         el("filters").elements.lesson.value = row.key;
         el("filters").requestSubmit();
       };
-      return [select, submittedCount(row.sources.classroom), submittedCount(row.sources.homework), submittedCount(row.sources.test)];
+      return [select, submittedCount(row.sources.classroom), submittedCount(row.sources.homework), submittedCount(row.sources.test), lessonDiagnosis(row, filters, info.class_code)];
     }));
 
     table("targets", ["Learning Target", "Task type", "Mastery", "Students scored", "Evidence"], data.targets.map(row => {
