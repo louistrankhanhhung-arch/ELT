@@ -161,13 +161,71 @@
         }
         return list;
       }
-      async function loadHistory() {
+      function approvedExport(item) {
+        const scope = item.scope || {};
+        const filters = [
+          ["Lesson", scope.lesson], ["Learning target", scope.target],
+          ["From", scope.start], ["To", scope.end]
+        ].filter(([, value]) => value).map(([label, value]) => label + ": " + value);
+        const references = (item.evidence || []).map(record =>
+          [record.ref, record.lesson_key, record.source, record.date, record.target].filter(Boolean).join(" · "));
+        return [
+          "REH · Approved diagnosis",
+          "Class: " + classCode,
+          "Student ID: " + row.student_id,
+          "Approved: " + item.approved_at.slice(0, 10),
+          ...filters,
+          "", item.decision,
+          ...(references.length ? ["", "Evidence references", ...references] : [])
+        ].join("\n") + "\n";
+      }
+
+      function approvedActions(item, panelStatus) {
+        const actions = node("div");
+        const share = node("button", "Share");
+        const download = node("button", "Download");
+        share.type = download.type = "button";
+        const report = approvedExport(item);
+        const filename = ["REH-Diagnosis", classCode, row.student_id, item.approved_at.slice(0, 10), item.id.slice(0, 8)]
+          .join("-").replace(/[^A-Za-z0-9._-]/g, "_") + ".txt";
+        share.onclick = async () => {
+          panelStatus.textContent = "";
+          try {
+            if (navigator.share) {
+              await navigator.share({title: "REH · Approved diagnosis", text: report});
+              return;
+            }
+            await navigator.clipboard.writeText(report);
+            panelStatus.textContent = "Approved diagnosis copied. You can paste it into a message.";
+          } catch (error) {
+            if (error.name !== "AbortError") panelStatus.textContent = "Sharing is unavailable. Use Download to share the file.";
+          }
+        };
+        download.onclick = () => {
+          const url = URL.createObjectURL(new Blob(["\uFEFF", report], {type: "text/plain;charset=utf-8"}));
+          const anchor = node("a");
+          anchor.href = url;
+          anchor.download = filename;
+          dialog.append(anchor);
+          anchor.click();
+          anchor.remove();
+          window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+        };
+        actions.append(share, download);
+        return actions;
+      }
+
+      async function loadHistory(openId) {
         try {
           const data = await request(path + "/" + encodeURIComponent(row.student_id), code);
           history.replaceChildren(node("summary", "Approved diagnoses"));
           for (const item of data.diagnoses) {
             const panel = node("details");
-            panel.append(node("summary", item.approved_at.slice(0, 10)), node("pre", item.decision), evidenceList(item.evidence));
+            const panelStatus = node("p");
+            panelStatus.setAttribute("role", "status");
+            panel.open = item.id === openId;
+            panel.append(node("summary", [item.approved_at.slice(0, 10), item.scope?.lesson, item.scope?.target].filter(Boolean).join(" · ")),
+              approvedActions(item, panelStatus), panelStatus, node("pre", item.decision), evidenceList(item.evidence));
             history.append(panel);
           }
           if (!data.diagnoses.length) history.append(node("p", "No approved diagnoses yet."));
@@ -196,7 +254,8 @@
                 "PUT", {decision: decision.value});
               decision.readOnly = true;
               status.textContent = "Teacher decision saved.";
-              await loadHistory();
+              history.open = true;
+              await loadHistory(draft.diagnosis_id);
             } catch (error) {
               approve.disabled = false;
               status.textContent = error.message;
