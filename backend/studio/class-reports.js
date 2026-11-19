@@ -48,18 +48,108 @@
     return link("session-results.html", {pin: session.pin}, session.lesson || "Session " + session.pin);
   }
 
+  const sourceName = source => ({classroom: "Classroom", homework: "Homework", test: "Test"})[source] || "Classroom";
+  const submittedCount = stats => stats ? stats.submitted + "/" + stats.assigned : "—";
+
+  function learnerEvidence(row, filters, classCode) {
+    const details = node("details");
+    const body = node("div");
+    details.append(node("summary", "View student work"), body);
+    let loaded = false;
+    details.addEventListener("toggle", async () => {
+      if (!details.open || loaded) return;
+      loaded = true;
+      body.textContent = "Loading student work…";
+      const id = version;
+      const code = token.value.trim();
+      const params = new URLSearchParams(filters);
+      params.set("learner", row.key);
+      try {
+        const data = await request("/class-reports/" + encodeURIComponent(classCode) + "?" + params, code);
+        if (id !== version) return;
+        const cards = data.records.map(record => {
+          const card = node("details");
+          card.append(node("summary", [sourceName(record.source), record.date, record.lesson, record.title,
+            record.score ? record.score.points + "/" + record.score.maximum : record.status].join(" · ")));
+          if (record.target) card.append(node("p", record.target));
+          if (record.prompt && record.prompt !== record.title) card.append(node("p", record.prompt));
+          if (record.items.length) {
+            const list = node("ol");
+            for (const item of record.items) {
+              const answer = item.selected_text ?? item.selected_option ?? item.response ?? item.answer;
+              if (answer != null) list.append(node("li", (item.prompt || item.question_id || "") + " · " + answer));
+            }
+            if (list.children.length) card.append(list);
+          }
+          if (record.response && !record.items.length && !record.audio_member) card.append(node("pre", record.response));
+          if (record.feedback) card.append(node("p", record.feedback));
+          if (record.audio_member) {
+            const play = node("button", "Load recording");
+            play.type = "button";
+            play.onclick = async () => {
+              play.disabled = true;
+              const key = encodeURIComponent;
+              try {
+                const response = await fetch(window.ELT_CONFIG.API_BASE +
+                  "/sessions/" + key(record.pin) + "/tasks/" + key(record.task_id) + "/speaking/" + key(record.audio_member),
+                  {headers: {Authorization: "Bearer " + code}, cache: "no-store"});
+                if (!response.ok) throw new Error("Could not load the recording.");
+                const blob = await response.blob();
+                if (!play.isConnected || id !== version) return;
+                const audio = node("audio");
+                audio.controls = true;
+                audio.src = URL.createObjectURL(blob);
+                audio.dataset.evidenceAudio = audio.src;
+                play.replaceWith(audio);
+              } catch (error) {
+                play.disabled = false;
+                play.textContent = error.message + " Retry";
+              }
+            };
+            card.append(play);
+          }
+          return card;
+        });
+        body.replaceChildren(...(cards.length ? cards : [node("p", "No matching student work.")]));
+      } catch (error) {
+        loaded = false;
+        body.textContent = error.message;
+      }
+    });
+    return details;
+  }
+
+  function clearAudio() {
+    for (const audio of el("students").querySelectorAll("[data-evidence-audio]")) {
+      audio.pause();
+      URL.revokeObjectURL(audio.dataset.evidenceAudio);
+      audio.remove();
+    }
+  }
+
   function render(data, filters) {
     const info = data.class;
     el("classHeading").textContent = [info.class_code, info.course, info.level].join(" · ");
     const {assigned, submitted, scored, mastered} = data.summary;
     el("metrics").replaceChildren(...[
-      ["Sessions", data.sessions.length, "Matching sessions"],
+      ["Classroom sessions", data.sessions.filter(row => row.source === "classroom").length, "Matching classroom sessions"],
+      ["Homework", data.sessions.filter(row => row.source === "homework").length, "Matching homework assignments"],
       ["Submission rate", rate(submitted, assigned), submitted + "/" + assigned + " submitted"],
       ["Mastery rate", rate(mastered, scored), mastered + "/" + scored + " scored tasks reached mastery"]
     ].map(([title, value, detail]) => {
       const card = node("article");
       card.append(node("span", title), node("strong", value), node("small", detail));
       return card;
+    }));
+
+    table("lessons", ["Lesson", "Classroom submitted", "Homework submitted", "Test submitted"], data.lessons.map(row => {
+      const select = node("button", row.title);
+      select.type = "button";
+      select.onclick = () => {
+        el("filters").elements.lesson.value = row.key;
+        el("filters").requestSubmit();
+      };
+      return [select, submittedCount(row.sources.classroom), submittedCount(row.sources.homework), submittedCount(row.sources.test)];
     }));
 
     table("targets", ["Learning Target", "Task type", "Mastery", "Students scored", "Evidence"], data.targets.map(row => {
@@ -77,7 +167,7 @@
       return [row.target, row.kind.replaceAll("_", " "), result, row.learner_count, evidence];
     }));
 
-    table("students", ["Student", "Submitted", "Mastery", "Latest score", "Progress signal"], data.learners.map(row => {
+    table("students", ["Student", "Submitted", "Mastery", "Latest score", "Progress signal", "Evidence"], data.learners.map(row => {
       const profileFilters = {student: row.student_id, course: info.course, level: info.level};
       for (const key of ["start", "end", "lesson"]) if (filters.has(key)) profileFilters[key] = filters.get(key);
       const learner = row.student_id
@@ -89,16 +179,17 @@
         signal.append(node("summary", row.signal.status + " · " + (row.signal.change > 0 ? "+" : "") + row.signal.change + " pp"),
           ...row.signal.pins.map(pin => sessionLink({pin})));
       }
-      return [learner, row.submitted + "/" + row.assigned, row.mastered + "/" + row.scored, latest, signal];
+      return [learner, row.submitted + "/" + row.assigned, row.mastered + "/" + row.scored, latest, signal, learnerEvidence(row, filters, info.class_code)];
     }));
 
-    table("sessions", ["Date", "Lesson", "Submitted", "Mastery"], data.sessions.map(session =>
-      [session.date, sessionLink(session), session.submitted + "/" + session.assigned, session.mastered + "/" + session.scored]));
+    table("sessions", ["Date", "Lesson", "Source", "Submitted", "Mastery"], data.sessions.map(session =>
+      [session.date, sessionLink(session), sourceName(session.source), session.submitted + "/" + session.assigned, session.mastered + "/" + session.scored]));
     el("report").hidden = false;
   }
 
   token.addEventListener("input", () => {
     version++;
+    clearAudio();
     el("report").hidden = true;
     el("classCodes").replaceChildren();
     status("");
@@ -115,6 +206,7 @@
   el("filters").onsubmit = async event => {
     event.preventDefault();
     const id = ++version;
+    clearAudio();
     const data = new FormData(event.currentTarget);
     const classCode = data.get("class_code").trim();
     const filters = new URLSearchParams();
