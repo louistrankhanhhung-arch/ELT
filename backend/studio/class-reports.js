@@ -119,6 +119,108 @@
     return details;
   }
 
+  function diagnosisButton(row, filters, classCode) {
+    const open = node("button", "Diagnose student");
+    open.type = "button";
+    open.onclick = () => {
+      const dialog = node("dialog");
+      const heading = node("h2", "Diagnosis · " + row.student_id);
+      const close = node("button", "Close");
+      close.type = "button";
+      close.onclick = () => dialog.close();
+      const status = node("p");
+      status.setAttribute("role", "status");
+      const result = node("div");
+      const history = node("details");
+      history.append(node("summary", "Approved diagnoses"));
+      const run = node("button", "Analyze");
+      run.type = "button";
+      const code = token.value.trim();
+      const scope = {student_id: row.student_id, ...Object.fromEntries(filters)};
+      const path = "/class-reports/" + encodeURIComponent(classCode) + "/diagnoses";
+      async function write(url, method, data) {
+        const response = await fetch(window.ELT_CONFIG.API_BASE + url, {
+          method, cache: "no-store",
+          headers: {Authorization: "Bearer " + code, "Content-Type": "application/json"},
+          body: JSON.stringify(data)
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(typeof payload.detail === "string" ? payload.detail : "Diagnosis request failed.");
+        return payload;
+      }
+      function evidenceList(evidence) {
+        const list = node("details");
+        list.append(node("summary", "Evidence references (" + evidence.length + ")"));
+        for (const item of evidence) {
+          const entry = node("div");
+          entry.append(link("session-results.html", {pin: item.pin},
+            [item.ref, item.lesson_key, item.source, item.date, item.target].filter(Boolean).join(" · ")));
+          entry.append(node("span", " " + item.prompt));
+          if (item.response) entry.append(node("pre", item.response));
+          list.append(entry);
+        }
+        return list;
+      }
+      async function loadHistory() {
+        try {
+          const data = await request(path + "/" + encodeURIComponent(row.student_id), code);
+          history.replaceChildren(node("summary", "Approved diagnoses"));
+          for (const item of data.diagnoses) {
+            const panel = node("details");
+            panel.append(node("summary", item.approved_at.slice(0, 10)), node("pre", item.decision), evidenceList(item.evidence));
+            history.append(panel);
+          }
+          if (!data.diagnoses.length) history.append(node("p", "No approved diagnoses yet."));
+        } catch (error) {
+          history.replaceChildren(node("summary", "Approved diagnoses"), node("p", error.message));
+        }
+      }
+      run.onclick = async () => {
+        run.disabled = true;
+        status.textContent = "Analyzing submitted evidence…";
+        result.replaceChildren();
+        try {
+          const draft = await write(path, "POST", scope);
+          const review = node("label", "Teacher decision");
+          const decision = node("textarea");
+          decision.rows = 12;
+          decision.maxLength = 8000;
+          decision.value = draft.proposal;
+          review.append(decision);
+          const approve = node("button", "Approve and save");
+          approve.type = "button";
+          approve.onclick = async () => {
+            approve.disabled = true;
+            try {
+              await write("/diagnoses/" + encodeURIComponent(draft.diagnosis_id) + "/decision",
+                "PUT", {decision: decision.value});
+              decision.readOnly = true;
+              status.textContent = "Teacher decision saved.";
+              await loadHistory();
+            } catch (error) {
+              approve.disabled = false;
+              status.textContent = error.message;
+            }
+          };
+          result.append(node("h3", "AI proposal"), evidenceList(draft.evidence), review, approve);
+          status.textContent = "Review the proposed diagnosis. Evidence used: " + draft.evidence.length + "/" +
+            draft.submitted_count + " submitted tasks. Speaking audio is not analyzed.";
+        } catch (error) {
+          status.textContent = error.message;
+        } finally {
+          run.disabled = false;
+        }
+      };
+      dialog.className = "diagnosis-dialog";
+      dialog.append(heading, node("p", [classCode, ...Object.values(Object.fromEntries(filters))].join(" · ")), run, close, status, result, history);
+      dialog.addEventListener("close", () => dialog.remove(), {once: true});
+      document.body.append(dialog);
+      dialog.showModal();
+      loadHistory();
+    };
+    return open;
+  }
+
   function clearAudio() {
     for (const audio of el("students").querySelectorAll("[data-evidence-audio]")) {
       audio.pause();
@@ -179,7 +281,10 @@
         signal.append(node("summary", row.signal.status + " · " + (row.signal.change > 0 ? "+" : "") + row.signal.change + " pp"),
           ...row.signal.pins.map(pin => sessionLink({pin})));
       }
-      return [learner, row.submitted + "/" + row.assigned, row.mastered + "/" + row.scored, latest, signal, learnerEvidence(row, filters, info.class_code)];
+      const actions = node("div");
+      actions.append(learnerEvidence(row, filters, info.class_code));
+      if (/^STU[0-9]+$/.test(row.student_id || "")) actions.append(diagnosisButton(row, filters, info.class_code));
+      return [learner, row.submitted + "/" + row.assigned, row.mastered + "/" + row.scored, latest, signal, actions];
     }));
 
     table("sessions", ["Date", "Lesson", "Source", "Submitted", "Mastery"], data.sessions.map(session =>
