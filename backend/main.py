@@ -3323,6 +3323,21 @@ def read_class_analysis(class_code: str, lesson_key: str, start: Optional[date] 
     return {"analysis": {**json.loads(row["report"]), "created_at": row["created_at"]} if row else None}
 
 
+@app.delete("/api/class-reports/{class_code}/lesson-analysis", dependencies=[Depends(require_teacher)])
+def delete_class_analysis(class_code: str, lesson_key: str, created_at: str,
+                          start: Optional[date] = None, end: Optional[date] = None):
+    scope = class_analysis_scope(lesson_key, start, end)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            DELETE FROM class_lesson_analyses WHERE class_code = ? AND scope = ? AND created_at = ?
+        """), (class_code.strip().upper(), scope, created_at))
+        if not cur.rowcount:
+            raise HTTPException(409, "This analysis has changed or was already deleted. Reopen the lesson to refresh.")
+        conn.commit()
+    return {"deleted": True}
+
+
 @app.post("/api/class-reports/{class_code}/lesson-analysis", dependencies=[Depends(require_teacher)])
 def analyze_class_lesson(class_code: str, scope: ClassAnalysisScope):
     scope_key = class_analysis_scope(scope.lesson_key, scope.start, scope.end)
@@ -3556,6 +3571,15 @@ def approve_diagnosis(diagnosis_id: str, payload: DiagnosisDecision):
             raise HTTPException(409, "This diagnosis has already been approved.")
         conn.commit()
     return {"approved": True}
+
+
+@app.delete("/api/diagnoses/{diagnosis_id}", dependencies=[Depends(require_teacher)])
+def delete_diagnosis(diagnosis_id: str):
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("DELETE FROM learner_diagnoses WHERE id = ?"), (diagnosis_id,))
+        conn.commit()
+    return {"deleted": True}
 
 
 @app.get("/api/class-reports/{class_code}/diagnoses/{student_id}", dependencies=[Depends(require_teacher)])
