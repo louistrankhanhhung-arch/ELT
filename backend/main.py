@@ -3006,25 +3006,47 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
                 continue
             if row["student_id"].upper() not in tester_ids:
                 roster[row["student_id"]] = row["display_name"]
-        cur.execute(sql("""
-            SELECT s.pin, s.created_at, s.lesson_id, s.lesson_path, s.status, r.manifest, h.title AS homework_title, h.items AS homework_items
-            FROM session_classes c JOIN sessions s ON s.pin = c.pin
+        # Older classrooms could start without a class code. Limit candidates to
+        # sessions with at least one participant enrolled in this class.
+        scope = """
+            WITH candidates AS (
+                SELECT s.*, c.class_code AS assigned_class
+                FROM sessions s LEFT JOIN session_classes c ON c.pin = s.pin
+                WHERE c.class_code = ? OR (
+                    c.pin IS NULL AND s.status IN ('active', 'ended', 'expired') AND EXISTS (
+                        SELECT 1 FROM session_students u
+                        JOIN evidence_student_links link ON link.student_id = u.student_id
+                        JOIN evidence_roster_ids ids ON ids.evidence_id = link.evidence_id
+                        JOIN reh_enrollments e ON e.student_id = UPPER(ids.roster_id)
+                        WHERE u.pin = s.pin AND e.class_code = ?
+                          AND UPPER(ids.roster_id) NOT IN ('STU0000', 'STU1000')
+                    )
+                )
+            )
+        """
+        cur.execute(sql(scope + """
+            SELECT s.pin, s.created_at, s.lesson_id, s.lesson_path, s.status, s.assigned_class,
+                   r.manifest, h.title AS homework_title, h.items AS homework_items
+            FROM candidates s
             LEFT JOIN lesson_revisions r ON s.lesson_path = 'imports/' || r.revision_id
             LEFT JOIN homework h ON h.pin = s.pin
-            WHERE c.class_code = ? ORDER BY s.created_at DESC, s.pin DESC
-        """), (code,))
+            ORDER BY s.created_at DESC, s.pin DESC
+        """), (code, code))
         sessions = [dict(row) for row in cur.fetchall()]
-        cur.execute(sql("""
+        cur.execute(sql(scope + """
             SELECT s.pin, u.student_id, u.student_name, ids.roster_id
-            FROM session_classes c JOIN sessions s ON s.pin = c.pin
-            JOIN session_students u ON u.pin = s.pin
+            FROM candidates s JOIN session_students u ON u.pin = s.pin
             LEFT JOIN evidence_student_links link ON link.student_id = u.student_id
             LEFT JOIN evidence_roster_ids ids ON ids.evidence_id = link.evidence_id
-            WHERE c.class_code = ?
-        """), (code,))
+        """), (code, code))
         attendance = {}
         for row in cur.fetchall():
             attendance.setdefault(row["pin"], {})[row["student_id"]] = dict(row)
+        enrollments = {}
+        if any(not session["assigned_class"] for session in sessions):
+            cur.execute(sql("SELECT student_id, class_code, started_on, ended_on FROM reh_enrollments"))
+            for row in cur.fetchall():
+                enrollments.setdefault(row["student_id"], []).append(dict(row))
 
     def counts():
         return {"assigned": 0, "submitted": 0, "scored": 0, "mastered": 0}
@@ -3061,6 +3083,19 @@ def class_report(class_code: str, start: Optional[date] = None, end: Optional[da
         if not members or (learner and all((row["roster_id"] or member).upper() != learner
                                           for member, row in members.items())):
             continue
+        if not session["assigned_class"]:
+            session_date = day.isoformat()
+            common_classes = None
+            for member in members.values():
+                student_id = (member["roster_id"] or "").strip().upper()
+                classes = {entry["class_code"] for entry in enrollments.get(student_id, [])
+                           if entry["started_on"] <= session_date
+                           and (not entry["ended_on"] or entry["ended_on"] >= session_date)}
+                common_classes = classes if common_classes is None else common_classes & classes
+                if not common_classes:
+                    break
+            if common_classes != {code}:
+                continue
         source = session["status"] if session["status"] in {"homework", "test"} else "classroom"
         titles = {item["task_id"]: item["title"] for item in json.loads(session["homework_items"] or "[]")
                   if "task_id" in item}
