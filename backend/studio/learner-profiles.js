@@ -243,6 +243,17 @@
   el("loadRoster").onclick = () => showRoster(0);
   el("rosterPrevious").onclick = () => showRoster(Math.max(0, rosterOffset - 500));
   el("rosterNext").onclick = () => showRoster(rosterOffset + 500);
+  bind("studentEntry", async ({student_id, display_name, status}) => {
+    const id = student_id.trim().toUpperCase();
+    const name = display_name.trim();
+    if (!id || !name) throw new Error("Enter a Student ID and display name.");
+    const fields = [id, name, status].map(value => '"' + value.replaceAll('"', '""') + '"');
+    const csv_text = "student_id,display_name,status\n" + fields.join(",");
+    await request("/catalogs/students/import", "POST", {csv_text});
+    el("studentEntry").reset();
+    showRoster(0);
+    return "Saved Student ID " + id + ".";
+  });
   bind("rosterImport", async ({file}) => {
     const result = await request("/catalogs/students/import", "POST", {csv_text: await readCsv(file)});
     rosterOffset = 0;
