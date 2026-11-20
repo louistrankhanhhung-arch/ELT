@@ -79,6 +79,12 @@ td small { display: block; }
 <details class="settings no-print">
 <summary>Manage Student IDs</summary>
 <p>Import or update Student IDs using <code>student_id,display_name,status</code>. Use <code>active</code> or <code>inactive</code> for status.</p>
+<form id="studentEntry">
+<label>Student ID <input name="student_id" required maxlength="120" pattern="[A-Za-z0-9][A-Za-z0-9._\-]*"></label>
+<label>Display name <input name="display_name" required maxlength="300"></label>
+<label>Status <select name="status"><option value="active">Active</option><option value="inactive">Inactive</option></select></label>
+<button type="submit">Save Student ID</button>
+</form>
 <form id="rosterImport">
 <label>Student roster CSV <input name="file" type="file" accept=".csv,text/csv" required></label>
 <button>Import Student IDs</button>
@@ -132,6 +138,6 @@ td small { display: block; }
 <footer class="parent-report-footer"><a href="https://rootenglishhouse.com">rootenglishhouse.com</a></footer>
 </div>
 <script src="config.js"></script>
-<script src="learner-profiles.js?v=class-report-link-1"></script>
+<script src="learner-profiles.js?v=manual-student-1"></script>
 </body>
 </html>
