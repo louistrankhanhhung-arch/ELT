@@ -2742,6 +2742,26 @@ def read_speaking(pin: str, task_id: str, student_id: str):
                     headers={"Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"})
 
 
+def infer_session_class(cur, pin, session_day):
+    cur.execute(sql("""
+        SELECT e.class_code, COUNT(DISTINCT e.student_id) AS matches
+        FROM session_students u
+        JOIN evidence_student_links link ON link.student_id = u.student_id
+        JOIN evidence_roster_ids ids ON ids.evidence_id = link.evidence_id
+        JOIN reh_enrollments e ON e.student_id = UPPER(ids.roster_id)
+        WHERE u.pin = ? AND e.started_on <= ?
+          AND (e.ended_on IS NULL OR e.ended_on >= ?)
+          AND e.student_id NOT IN ('STU0000', 'STU1000')
+        GROUP BY e.class_code
+        ORDER BY matches DESC, e.class_code
+        LIMIT 2
+    """), (pin, session_day, session_day))
+    candidates = cur.fetchall()
+    if candidates and (len(candidates) == 1 or candidates[0]["matches"] > candidates[1]["matches"]):
+        return candidates[0]["class_code"]
+    return None
+
+
 @app.get("/api/teacher-activity", dependencies=[Depends(require_teacher)])
 def teacher_activity():
     now = datetime.now(timezone.utc)
@@ -2786,9 +2806,13 @@ def teacher_activity():
             block = blocks[index] if 0 <= index < len(blocks) else {}
             title = manifest.get("title") or row["lesson_id"]
             expires = parse_iso(row["expires_at"]) or parse_iso(row["created_at"]) + timedelta(hours=SESSION_TTL_HOURS)
+            class_code = row["class_code"]
+            if not class_code:
+                session_day = parse_iso(row["created_at"]).astimezone(HOMEWORK_TIMEZONE).date().isoformat()
+                class_code = infer_session_class(cur, row["pin"], session_day)
             sessions.append({
                 "at": expires.isoformat(), "pin": row["pin"], "title": title,
-                "lesson_id": row["lesson_id"], "class_code": row["class_code"], "block_number": index + 1,
+                "lesson_id": row["lesson_id"], "class_code": class_code, "block_number": index + 1,
                 "block_id": block.get("id") or row["event_block"], "block_title": block.get("title"),
             })
         sessions.sort(key=lambda row: (row["at"], row["pin"]), reverse=True)
