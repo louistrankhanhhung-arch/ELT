@@ -2742,6 +2742,84 @@ def read_speaking(pin: str, task_id: str, student_id: str):
                     headers={"Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"})
 
 
+@app.get("/api/teacher-activity", dependencies=[Depends(require_teacher)])
+def teacher_activity():
+    now = datetime.now(timezone.utc)
+    start = now - timedelta(days=7)
+    window = (start.isoformat(), now.isoformat())
+    with closing(db()) as conn:
+        cur = conn.cursor()
+
+        def recent(query):
+            cur.execute(sql(query), window)
+            return [dict(row) for row in cur.fetchall()]
+
+        lessons = recent("""
+            SELECT catalogue_id, title, course, published_at AS at
+            FROM lesson_catalogue
+            WHERE published_at BETWEEN ? AND ?
+            ORDER BY published_at DESC, catalogue_id
+        """)
+        cur.execute(sql("""
+            SELECT s.pin, s.lesson_id, s.lesson_path, s.current_block_index, s.created_at,
+                   s.expires_at, c.class_code, r.manifest,
+                   (SELECT e.block_id FROM events e WHERE e.pin = s.pin
+                      AND e.block_index = s.current_block_index ORDER BY e.id DESC LIMIT 1) AS event_block
+            FROM sessions s LEFT JOIN session_classes c ON c.pin = s.pin
+            LEFT JOIN lesson_revisions r ON s.lesson_path = 'imports/' || r.revision_id
+            WHERE s.status IN ('active', 'expired') AND (
+                s.expires_at BETWEEN ? AND ? OR
+                (NULLIF(s.expires_at, '') IS NULL AND s.created_at BETWEEN ? AND ?)
+            )
+        """), (*window, *((bound - timedelta(hours=SESSION_TTL_HOURS)).isoformat() for bound in (start, now))))
+        sessions = []
+        for row in cur.fetchall():
+            index = row["current_block_index"]
+            manifest = json.loads(row["manifest"]) if row["manifest"] else {}
+            if not manifest and row["lesson_path"].startswith("imports/"):
+                try:
+                    manifest = load_imported_lesson(row["lesson_path"].removeprefix("imports/"))
+                except HTTPException as exc:
+                    if exc.status_code != 404:
+                        raise
+            blocks = manifest.get("blocks", [])
+            block = blocks[index] if 0 <= index < len(blocks) else {}
+            title = manifest.get("title") or row["lesson_id"]
+            expires = parse_iso(row["expires_at"]) or parse_iso(row["created_at"]) + timedelta(hours=SESSION_TTL_HOURS)
+            sessions.append({
+                "at": expires.isoformat(), "pin": row["pin"], "title": title,
+                "lesson_id": row["lesson_id"], "class_code": row["class_code"], "block_number": index + 1,
+                "block_id": block.get("id") or row["event_block"], "block_title": block.get("title"),
+            })
+        sessions.sort(key=lambda row: (row["at"], row["pin"]), reverse=True)
+        class_diagnoses = recent("""
+            SELECT class_code, scope, created_at AS at FROM class_lesson_analyses
+            WHERE created_at BETWEEN ? AND ? ORDER BY created_at DESC, class_code, scope
+        """)
+        for row in class_diagnoses:
+            row["lesson"], row["start"], row["end"] = json.loads(row.pop("scope"))
+        student_diagnoses = recent("""
+            SELECT d.class_code, d.student_id, r.display_name, d.scope, d.approved_at, d.created_at AS at
+            FROM learner_diagnoses d LEFT JOIN reh_roster r ON r.student_id = d.student_id
+            WHERE d.created_at BETWEEN ? AND ? ORDER BY d.created_at DESC, d.id
+        """)
+        for row in student_diagnoses:
+            row["lesson"] = json.loads(row.pop("scope")).get("lesson")
+        assignments = recent("""
+            SELECT h.pin, h.title, h.due_on, hs.due_at, c.class_code, s.status, s.created_at AS at
+            FROM homework h JOIN sessions s ON s.pin = h.pin
+            JOIN session_classes c ON c.pin = s.pin LEFT JOIN homework_schedule hs ON hs.pin = s.pin
+            WHERE s.status IN ('homework', 'test') AND s.created_at BETWEEN ? AND ?
+            ORDER BY s.created_at DESC, h.pin
+        """)
+    return {
+        "from": window[0], "to": window[1], "lessons": lessons, "sessions": sessions,
+        "class_diagnoses": class_diagnoses, "student_diagnoses": student_diagnoses,
+        "homework": [row for row in assignments if row["status"] == "homework"],
+        "tests": [row for row in assignments if row["status"] == "test"],
+    }
+
+
 @app.get("/api/session-history", dependencies=[Depends(require_teacher)])
 def session_history(offset: int = 0, query: str = "", status: Literal["active", "ended", "expired"] | None = None,
                     course: str = "", level: str = ""):
