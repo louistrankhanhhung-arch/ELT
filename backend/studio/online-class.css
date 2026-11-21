@@ -1,0 +1,9 @@
+.online-class { margin: 8px auto; padding: 9px 12px; max-width: 960px; box-sizing: border-box;
+  color: #18352a; background: #fff; border: 1px solid #d3e0d6; border-radius: 10px; }
+.online-class[hidden], .online-class button[hidden] { display: none !important; }
+.online-class summary { cursor: pointer; font-weight: 650; }
+.online-class-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 7px 0; }
+.online-class button { font: inherit; padding: 6px 10px; border: 1px solid #c3d5ca; border-radius: 7px;
+  background: #edf5ee; color: #234f3a; cursor: pointer; }
+.online-class iframe { display: block; width: 100%; height: min(55dvh, 420px); min-height: 290px; border: 0; border-radius: 8px; }
+.online-class [data-video-status] { font-size: .85rem; }

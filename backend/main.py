@@ -1,7 +1,7 @@
 from pathlib import Path
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from fastapi.responses import RedirectResponse, Response, StreamingResponse
+from fastapi.responses import JSONResponse, RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, conint
@@ -1126,8 +1126,104 @@ def log_event(pin: str, payload: EventRequest):
     return {"ok": True}
 
 
+
+def daily_api(method, path, payload=None, *, missing_ok=False):
+    key = os.environ.get("DAILY_API_KEY", "").strip()
+    if not key or not TEACHER_ACCESS_TOKEN:
+        raise HTTPException(503, "Online classroom is not configured on this server.")
+    request = UrlRequest(
+        "https://api.daily.co/v1" + path, method=method,
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        data=json.dumps(payload).encode() if payload is not None else None,
+    )
+    try:
+        with urlopen(request, timeout=8) as response:
+            return json.load(response)
+    except HTTPError as exc:
+        if missing_ok and exc.code == 404:
+            return None
+        raise HTTPException(502, f"Video service returned HTTP {exc.code}.") from exc
+    except (OSError, ValueError) as exc:
+        raise HTTPException(502, "Video service did not respond. Try again.") from exc
+
+
+def daily_room_name(session):
+    identity = f"{session['pin']}:{session['created_at']}"
+    return "reh-" + hashlib.sha256(identity.encode()).hexdigest()[:32]
+
+
+class OnlineClassJoin(BaseModel):
+    student_id: str = Field(min_length=1, max_length=180)
+
+
+def daily_connection(session, *, teacher=False, student_name=None):
+    name = daily_room_name(session)
+    path = "/rooms/" + name
+    expires_at = parse_iso(session.get("expires_at")) or (
+        parse_iso(session["created_at"]) + timedelta(hours=SESSION_TTL_HOURS)
+    )
+    expiry = int(expires_at.timestamp())
+    room = daily_api("GET", path, missing_ok=True)
+    if room is None:
+        if not teacher:
+            raise HTTPException(404, "The teacher has not opened the video room yet.")
+        properties = {
+            "exp": expiry, "eject_at_room_exp": True, "enable_prejoin_ui": True,
+            "enable_knocking": False, "start_video_off": True, "start_audio_off": True,
+        }
+        if os.environ.get("DAILY_ENABLE_RECORDING", "").strip().lower() == "true":
+            properties["enable_recording"] = "cloud"
+        try:
+            room = daily_api("POST", "/rooms", {"name": name, "privacy": "private", "properties": properties})
+        except HTTPException:
+            room = daily_api("GET", path, missing_ok=True)
+            if room is None:
+                raise
+    url = urlsplit(room.get("url", ""))
+    if (url.scheme != "https" or not re.fullmatch(r"[a-z0-9-]+\.daily\.co", url.netloc)
+            or url.path != "/" + name or room.get("privacy") != "private"):
+        raise HTTPException(502, "The video service returned an invalid private room.")
+    if teacher:
+        try:
+            require_active_session(session["pin"])
+        except HTTPException:
+            close_daily_room(session)
+            raise
+    token = daily_api("POST", "/meeting-tokens", {"properties": {
+        "room_name": name, "exp": min(expiry, int(datetime.now(timezone.utc).timestamp()) + 600),
+        "is_owner": teacher, "user_name": "Teacher" if teacher else student_name,
+        "enable_screenshare": teacher, "enable_recording_ui": teacher,
+        "start_cloud_recording": False,
+    }})
+    return JSONResponse({"room_url": room["url"], "token": token["token"]},
+                        headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/sessions/{pin}/online-class/host", dependencies=[Depends(require_teacher)])
+def host_online_class(pin: str):
+    return daily_connection(require_active_session(pin), teacher=True)
+
+
+@app.post("/api/sessions/{pin}/online-class/join")
+def join_online_class(pin: str, payload: OnlineClassJoin):
+    session = require_active_session(pin)
+    student = next((person for person in session["students"]
+                    if hmac.compare_digest(person["student_id"].encode(), payload.student_id.encode())), None)
+    if not student:
+        raise HTTPException(403, "Join the Runtime classroom first.")
+    return daily_connection(session, student_name=student["student_name"][:80])
+
+
+def close_daily_room(session):
+    try:
+        daily_api("DELETE", "/rooms/" + daily_room_name(session), missing_ok=True)
+    except HTTPException:
+        # A room that could not be closed still ejects participants at PIN expiry.
+        pass
+
+
 @app.post("/api/sessions/{pin}/end", dependencies=[Depends(require_teacher)])
-def end_session(pin: str):
+def end_session(pin: str, background_tasks: BackgroundTasks):
     session = get_session(pin)
 
     if not session:
@@ -1141,6 +1237,9 @@ def end_session(pin: str):
     )
     conn.commit()
     conn.close()
+
+    if os.environ.get("DAILY_API_KEY", "").strip():
+        background_tasks.add_task(close_daily_room, session)
 
     return get_session(pin)
 

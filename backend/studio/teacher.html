@@ -378,6 +378,7 @@
 <link rel="stylesheet" href="runtime-ui.css?v=reh-1">
   <link rel="stylesheet" href="classroom-ui.css?v=reh-1">
 <link rel="stylesheet" href="task-materials.css?v=reh-1">
+<link rel="stylesheet" href="online-class.css?v=1">
 </head>
 <body>
   <header>
@@ -417,6 +418,15 @@
       </details>
     </div>
   </header>
+<details class="online-class" id="onlineClass" hidden>
+  <summary>Online classroom</summary>
+  <div class="online-class-tools">
+    <button type="button" data-video-join></button>
+    <button type="button" data-video-leave hidden>Disconnect video</button>
+    <span data-video-status role="status"></span>
+  </div>
+  <div data-video-frame></div>
+</details>
   <main class="app">
     <aside class="sidebar" id="blockList"></aside>
 
@@ -577,6 +587,7 @@
   </div>
 
   <script src="./config.js?v=recall-1"></script>
+  <script src="online-class.js?v=1"></script>
 <script src="task-materials.js?v=1"></script>
   <script src="task-attempt-signals.js?v=1"></script>
   <script src="classroom-report.js?v=attempt-2"></script>
@@ -738,6 +749,8 @@
 
     let currentLesson = null;
     let sessionPin = null;
+    const onlineClass = window.createOnlineClass(API_BASE,
+      () => ({pin: sessionPin, headers: teacherHeaders()}), "Open video room");
     let slideStep = 0;
     let revealPending = false;
     let vocabRecall = { audio: false, order: null };
@@ -1528,6 +1541,7 @@
         const session = await res.json();
 
         sessionPin = session.pin;
+        onlineClass.show();
         latestTasks = [];
         renderTaskPreview(currentLesson.blocks[blockIndex]);
         syncProjection();
@@ -1636,6 +1650,7 @@
 
         clearProjectedSubmission();
         syncProjection();
+        onlineClass.close();
         sessionBanner.textContent = `Session ended · PIN ${sessionPin}`;
         showJoinSession.hidden = true;
         joinWindow?.close();
@@ -1818,6 +1833,7 @@
         const res = await fetch(`${API_BASE}/sessions/${pin}/state`, { headers: teacherHeaders() });
         if (!res.ok || pin !== sessionPin) return;
         const session = await res.json();
+        if (["ended", "expired"].includes(session.status)) onlineClass.close();
         if (session.active_writing_task || currentLesson?.blocks[blockIndex]?.page_tasks?.length) await updateWritingResults(pin);
         if (pin !== sessionPin || endSessionBtn.disabled) return;
 
