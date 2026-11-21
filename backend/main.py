@@ -3200,11 +3200,14 @@ def build_class_report(class_code, start, end, lesson, target, learner, *, lesso
         attendance = {}
         for row in cur.fetchall():
             attendance.setdefault(row["pin"], {})[row["student_id"]] = dict(row)
-        enrollments = {}
-        if any(not session["assigned_class"] for session in sessions):
-            cur.execute(sql("SELECT student_id, class_code, started_on, ended_on FROM reh_enrollments"))
-            for row in cur.fetchall():
-                enrollments.setdefault(row["student_id"], []).append(dict(row))
+        matching_sessions = []
+        for session in sessions:
+            day = parse_iso(session["created_at"]).astimezone(local_zone).date()
+            if (start and day < start) or (end and day > end):
+                continue
+            assigned_class = session["assigned_class"] or infer_session_class(cur, session["pin"], day.isoformat())
+            if assigned_class == code:
+                matching_sessions.append((session, day))
 
     def counts():
         return {"assigned": 0, "submitted": 0, "scored": 0, "mastered": 0}
@@ -3225,10 +3228,7 @@ def build_class_report(class_code, start, end, lesson, target, learner, *, lesso
     attempts = {}
     lessons = {}
     records = []
-    for session in sessions:
-        day = parse_iso(session["created_at"]).astimezone(local_zone).date()
-        if (start and day < start) or (end and day > end):
-            continue
+    for session, day in matching_sessions:
         manifest = json.loads(session["manifest"]) if session["manifest"] else {}
         title = manifest.get("title") or session["homework_title"] or session["lesson_id"]
         match = re.match(r"^([A-Z][A-Z0-9]*-S\d+-L\d+)\b", title, re.IGNORECASE)
@@ -3243,19 +3243,6 @@ def build_class_report(class_code, start, end, lesson, target, learner, *, lesso
         if not members or (learner and all((row["roster_id"] or member).upper() != learner
                                           for member, row in members.items())):
             continue
-        if not session["assigned_class"]:
-            session_date = day.isoformat()
-            common_classes = None
-            for member in members.values():
-                student_id = (member["roster_id"] or "").strip().upper()
-                classes = {entry["class_code"] for entry in enrollments.get(student_id, [])
-                           if entry["started_on"] <= session_date
-                           and (not entry["ended_on"] or entry["ended_on"] >= session_date)}
-                common_classes = classes if common_classes is None else common_classes & classes
-                if not common_classes:
-                    break
-            if common_classes != {code}:
-                continue
         source = session["status"] if session["status"] in {"homework", "test"} else "classroom"
         titles = {item["task_id"]: item["title"] for item in json.loads(session["homework_items"] or "[]")
                   if "task_id" in item}
@@ -3303,9 +3290,7 @@ def build_class_report(class_code, start, end, lesson, target, learner, *, lesso
                 learner_stats = learners.setdefault(learner_key,
                     learner_record(student_id, roster.get(student_id, identity["student_name"])))
                 learner_stats["key"] = learner_key
-                lesson_group = lessons.setdefault(report_lesson_key, {"key": report_lesson_key, "title": title, "sources": {}})
-                source_stats = lesson_group["sources"].setdefault(source, counts())
-                for stats in (totals, visit, learner_stats, source_stats):
+                for stats in (totals, visit, learner_stats):
                     add_result(stats, row, score)
                 if score and learner_stats["latest"] is None:
                     learner_stats["latest"] = {"pin": pin, "date": visit["date"], "percent": score["percent"], "source": source}
@@ -3319,6 +3304,10 @@ def build_class_report(class_code, start, end, lesson, target, learner, *, lesso
                     group["sessions"][pin] = {"pin": pin, "date": visit["date"], "lesson": title, "source": source}
         if visit["assigned"] or not target.strip():
             visits.append(visit)
+            lesson_group = lessons.setdefault(report_lesson_key, {"key": report_lesson_key, "title": title, "sources": {}})
+            source_stats = lesson_group["sources"].setdefault(source, counts())
+            for key in source_stats:
+                source_stats[key] += visit[key]
 
     if learner or lesson_key is not None:
         return {"records": records}
