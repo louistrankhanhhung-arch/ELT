@@ -23,12 +23,15 @@
     return data;
   }
 
+  const openEvidence = window.createReportEvidence(el("token"));
+  let sessionMembers = new Map();
+
   function visitLink(pin) {
-    const link = node("a", "Session " + pin);
-    link.href = "session-results.html?pin=" + encodeURIComponent(pin);
-    link.target = "_blank";
-    link.rel = "noopener";
-    return link;
+    const button = openEvidence(pin, "Task evidence · PIN " + pin, {
+      student: true, members: [sessionMembers.get(pin)].filter(Boolean)
+    });
+    button.classList.add("no-print");
+    return button;
   }
 
   function renderParentNote() {
@@ -40,6 +43,7 @@
   }
 
   function render(data, filters) {
+    sessionMembers = new Map(data.sessions.map(session => [session.pin, session.evidence_member]));
     const vietnamese = el("reportLanguage").value === "vi";
     const label = (english, vietnameseText) => vietnamese ? vietnameseText : english;
     const displayDate = value => vietnamese && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value.split("-").reverse().join("/") : value;

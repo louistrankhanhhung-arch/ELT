@@ -3124,7 +3124,7 @@ def profile_score(task, row):
         return None
     score = row.get("score")
     maximum = row.get("max_score")
-    if manual_rubric or (score is None and not task.get("writing_rubric")):
+    if row.get("review_score") is not None and row.get("review_max_score"):
         score, maximum = row.get("review_score"), row.get("review_max_score")
     if score is None or not maximum:
         return None
@@ -3260,7 +3260,7 @@ def build_class_report(class_code, start, end, lesson, target, learner, *, lesso
         titles = {item["task_id"]: item["title"] for item in json.loads(session["homework_items"] or "[]")
                   if "task_id" in item}
         visit = {"pin": pin, "date": day.isoformat(), "lesson": title, "lesson_key": report_lesson_key,
-                 "source": source, **counts()}
+                 "source": source, "evidence_members": list(members), **counts()}
         evidence = session_evidence(pin, include_roster=True)
         for task in reversed(evidence["tasks"]):
             target_id = task.get("learning_target_id")
@@ -3763,7 +3763,7 @@ def learner_profile(student_id: str, course: str = "", level: str = "", lesson: 
         visit = {"pin": pin, "date": day.isoformat(), "lesson": title, "lesson_id": session["lesson_id"],
                  "lesson_version": manifest.get("version"), "class_code": session["class_code"],
                  "course": course_value, "level": level_value}
-        visits.append(visit)
+        visits.append({**visit, "evidence_member": member})
         for task in evidence["tasks"]:
             if "recipient_ids" in task and member not in task["recipient_ids"]:
                 continue

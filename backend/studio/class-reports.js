@@ -9,6 +9,13 @@
   const status = text => { el("status").textContent = text; };
   const rate = (value, total) => total ? Math.round(value * 100 / total) + "%" : "—";
   let version = 0;
+  const openEvidence = window.createReportEvidence(token);
+  let reportSessions = new Map();
+  let reportTarget = "";
+
+  function evidenceButton(pin, caption) {
+    return openEvidence(pin, caption, {members: reportSessions.get(pin)?.evidence_members || [], target: reportTarget});
+  }
 
   async function request(path, code) {
     const response = await fetch(window.ELT_CONFIG.API_BASE + path, {
@@ -45,7 +52,7 @@
   }
 
   function sessionLink(session) {
-    return link("session-results.html", {pin: session.pin}, session.lesson || "Session " + session.pin);
+    return evidenceButton(session.pin, session.lesson || "Session " + session.pin);
   }
 
   const sourceName = source => ({classroom: "Classroom", homework: "Homework", test: "Test"})[source] || "Classroom";
@@ -170,7 +177,7 @@
         list.append(node("summary", "Evidence references (" + evidence.length + ")"));
         for (const item of evidence) {
           const entry = node("div");
-          entry.append(link("session-results.html", {pin: item.pin},
+          entry.append(evidenceButton(item.pin,
             [item.ref, item.lesson_key, item.source, item.date, item.target].filter(Boolean).join(" · ")));
           entry.append(node("span", " " + item.prompt));
           if (item.response) entry.append(node("pre", item.response));
@@ -396,7 +403,7 @@
         evidence.append(node("summary", "Incorrect answers (" + errors.length + ")"));
         for (const item of errors) {
           const entry = node("p", explain(item) + " ");
-          entry.append(link("session-results.html", {pin: item.pin}, "Open evidence"));
+          entry.append(evidenceButton(item.pin, "Open evidence"));
           evidence.append(entry);
         }
         const remove = deleteAnalysisButton("Delete the saved analysis for this class, lesson and date range?",
@@ -449,7 +456,7 @@
         const list = node("ul");
         for (const record of records) {
           const item = node("li");
-          item.append(link("session-results.html", {pin: record.pin}, record.target + " · " + sourceName(record.source)));
+          item.append(evidenceButton(record.pin, record.target + " · " + sourceName(record.source)));
           item.append(node("div", record.prompt || ""));
           if (record.task_score) item.append(node("div", "Task score below the 80% review threshold."));
           else item.append(node("div", "Answer: " + (record.selected ?? "—") + " · Expected: " + (record.expected ?? "—")));
@@ -506,6 +513,8 @@
 
   function render(data, filters) {
     const info = data.class;
+    reportSessions = new Map(data.sessions.map(session => [session.pin, session]));
+    reportTarget = filters.get("target") || "";
     el("classHeading").textContent = [info.class_code, info.course, info.level].join(" · ");
     const {assigned, submitted, scored, mastered} = data.summary;
     el("metrics").replaceChildren(...[

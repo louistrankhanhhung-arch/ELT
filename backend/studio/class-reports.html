@@ -30,6 +30,16 @@ td details details { margin-block: 8px; }
 .diagnosis-dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 .diagnosis-dialog::backdrop { background: rgb(20 45 32 / 55%); }
 </style>
+<link rel="stylesheet" href="evidence-report.css?v=1">
+<style>
+.report-evidence-dialog { width: min(960px, 92vw); max-height: 88vh; overflow: auto; box-sizing: border-box;
+  border: 1px solid #CCDCC8; border-radius: 12px; padding: 16px; color: #18352A; }
+.report-evidence-dialog::backdrop { background: #18352A80; }
+.report-evidence-dialog > form { justify-content: flex-end; }
+.report-evidence-dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-evidence-dialog audio { max-width: 100%; }
+@media print { .report-evidence-dialog { display: none !important; } }
+</style>
 </head>
 <body>
 <a class="reh-nav-button" href="teacher-home.html">← Teacher home</a>
@@ -57,6 +67,8 @@ td details details { margin-block: 8px; }
 <section><h3>Classroom sessions and assignments</h3><div id="sessions" class="table"></div></section>
 </div>
 <script src="config.js"></script>
-<script src="class-reports.js?v=7"></script>
+<script src="task-attempt-signals.js?v=1"></script>
+<script src="evidence-detail.js?v=report-evidence-1"></script>
+<script src="class-reports.js?v=report-evidence-1"></script>
 </body>
 </html>

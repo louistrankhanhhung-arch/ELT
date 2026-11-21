@@ -20,21 +20,31 @@ window.createEvidenceDetail = (root, request, status) => {
   function readableDate(value) { return new Date(value).toLocaleString("en-GB", {timeZone:"Asia/Ho_Chi_Minh"}); }
   let generation = 0;
   let roster = null;
-  async function open(pin, recipients = null) {
+  let scope = null;
+  async function open(pin, recipients = null, reportScope = null) {
     const version = ++generation;
     const next = await (await request(apiPath(pin))).json();
     if (version !== generation) return false;
-    current = next;
+    scope = reportScope;
+    current = scope?.target ? {...next, tasks: next.tasks.filter(task =>
+      (task.learning_target_id || "").toLowerCase() === scope.target.toLowerCase())} : next;
     roster = recipients ?? next.students ?? [...new Map(next.tasks.flatMap(task => task.submissions).map(row => [row.student_id, row])).values()];
+    if (scope) {
+      const members = new Set(scope.members);
+      roster = roster.filter(row => members.has(row.student_id));
+    }
+    if (scope?.student) current = {...current, tasks: current.tasks.filter(task => audienceFor(task).length)};
     root.hidden = false;
     el("sessionTitle").textContent = next.lesson_title;
     el("sessionSummary").textContent = [
       "PIN " + pin, readableDate(next.session.created_at), next.session.status,
-      next.lesson_version ? "Lesson version " + next.lesson_version : "", next.joined + " joined"
+      next.lesson_version ? "Lesson version " + next.lesson_version : "", !scope && next.joined + " joined"
     ].filter(Boolean).join(" · ");
     const students = new Map(roster.map(row => [row.student_id, row.student_name]));
+    el("studentFilter").closest("label").hidden = !!scope?.student;
+    el("archive").hidden = !!scope;
     el("studentFilter").replaceChildren(new Option("All students", ""), ...[...students].map(([id,name]) => new Option(name,id)));
-    el("deletePanel").hidden = next.session.status === "active" || !next.audio_count;
+    el("deletePanel").hidden = !!scope || next.session.status === "active" || !next.audio_count;
     el("deleteSummary").textContent = next.audio_count + " recordings · " + (next.audio_bytes / 1048576).toFixed(2) + " MiB. Text responses and reviews are kept.";
     el("verified").checked = false;
     el("confirmation").value = "";
@@ -48,6 +58,7 @@ window.createEvidenceDetail = (root, request, status) => {
     objectUrls.clear();
     const filter = el("studentFilter").value;
     el("tasks").replaceChildren(...current.tasks.map((task, index) => renderTask(task, index, filter)));
+    if (!current.tasks.length) el("tasks").append(text("p", "No task evidence in this view."));
   }
   function badge(value, state) {
     const label = text("span", value);
@@ -91,13 +102,14 @@ window.createEvidenceDetail = (root, request, status) => {
     const homework = current.session.status === "homework";
     if (homework) el("sessionSummary").textContent = current.lesson_version ? "Lesson version " + current.lesson_version : "";
     el("reportOverview").replaceChildren(metrics([
-      [homework ? "Students assigned" : "Students joined", roster.length],
+      ...(!scope?.student ? [[homework ? "Students assigned" : "Students joined", roster.length]] : []),
       ["Tasks", current.tasks.length],
       ["All assigned tasks submitted", counts.size ? completed + "/" + counts.size : "—"],
       ["Submissions", expected ? submitted + "/" + expected : "—"]
     ]));
   }
-  function scoreFor(row) {
+  function scoreFor(row, task) {
+    if (scope && task?.writing_rubric && !row.ai_published && !row.rubric_scores?.length) return null;
     if (Number.isFinite(row.review_score) && row.review_max_score > 0) return [row.review_score, row.review_max_score];
     if ((!row.ai_state || row.ai_published) && Number.isFinite(row.score) && row.max_score > 0) return [row.score, row.max_score];
     return null;
@@ -171,9 +183,13 @@ window.createEvidenceDetail = (root, request, status) => {
     const submissions = new Map(task.submissions.map(row => [row.student_id, row]));
     const audience = audienceFor(task);
     const submitted = audience.map(student => submissions.get(student.student_id)).filter(Boolean);
-    const scored = submitted.map(scoreFor).filter(Boolean);
+    const scored = submitted.map(row => scoreFor(row, task)).filter(Boolean);
     const summary = [["Submitted", submitted.length + "/" + audience.length]];
-    if (scored.length) {
+    if (scope?.student) {
+      const score = scored[0];
+      summary.push(["Score", score ? score.join("/") + " · " + Math.round(percent(score)) + "%" : "—"],
+        ["Mastery", score ? (percent(score) >= 80 ? "Mastered" : "Below 80%") : "Not yet scored"]);
+    } else if (scored.length) {
       const mastered = scored.filter(score => percent(score) >= 80).length;
       const average = Math.round(scored.reduce((sum, score) => sum + percent(score), 0) / scored.length);
       summary.push(["Average score", average + "%", scored.length + " scored"],
@@ -182,10 +198,10 @@ window.createEvidenceDetail = (root, request, status) => {
       summary.push(["Average score", "—"], ["Class mastery", "—"]);
     }
     article.append(metrics(summary));
-    if (task.type === "writing" && ["homework", "test"].includes(current.session.status)) {
+    if (!scope && task.type === "writing" && ["homework", "test"].includes(current.session.status)) {
       article.append(writingActions(task, submitted));
     }
-    if (task.questions?.length) {
+    if (!scope?.student && task.questions?.length) {
       const missed = task.questions.map((question, questionIndex) => ({
         number: questionIndex + 1, prompt: question.prompt,
         names: submitted.filter(row => row.items?.[questionIndex]?.is_correct === false).map(row => row.student_name)
@@ -206,7 +222,7 @@ window.createEvidenceDetail = (root, request, status) => {
         article.append(list);
       }
     }
-    article.append(text("h4", "Students"));
+    if (!scope?.student) article.append(text("h4", "Students"));
     for (const student of audience) {
       if (filter && student.student_id !== filter) continue;
       const row = submissions.get(student.student_id);
@@ -256,7 +272,7 @@ window.createEvidenceDetail = (root, request, status) => {
       heading.className = "report-student-row";
       const identity = document.createElement("span");
       identity.append(text("strong", row.student_name), text("small", readableDate(row.submitted_at)));
-      const score = scoreFor(row);
+      const score = scoreFor(row, task);
       heading.append(identity, badge(score ? score.join("/") : blankWriting ? "No response" : testSpeaking ? recordingState : "Submitted", score && percent(score) < 80 ? "pending" : "good"));
       panel.append(heading);
     }
@@ -284,14 +300,15 @@ window.createEvidenceDetail = (root, request, status) => {
       panel.append(blankWriting ? text("p", "No Writing response was saved before time expired.") : text("pre", row.response));
     }
     if (!row.attempt_signals) panel.append(text("p", "No attempt signals recorded for this submission."));
-    if (row.ai_feedback?.feedback) {
+    if (scope && row.feedback) panel.append(text("p", row.feedback));
+    if (row.ai_feedback?.feedback && (!scope || row.ai_published)) {
       const grade = row.ai_feedback;
       const ai = document.createElement("section");
       ai.append(text("h4", row.ai_published ? "Published AI feedback" : "AI grading draft"),
         text("p", grade.score + "/" + grade.max_score + " · " + grade.feedback));
       panel.append(ai);
     }
-    if (!task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting && (!testSpeaking || row.audio_bytes) && !current.test_published) {
+    if (!scope && !task.questions?.length && task.task_id !== "legacy-writing" && !blankWriting && (!testSpeaking || row.audio_bytes) && !current.test_published) {
       const editor = document.createElement("details");
       editor.append(text("summary", "Review and feedback"), reviewForm(task, row, pin));
       panel.append(editor);
@@ -409,4 +426,44 @@ window.createEvidenceDetail = (root, request, status) => {
     el("tasks").replaceChildren();
   }
   return {open, clear, currentPin: () => current?.session.pin};
+};
+
+window.createReportEvidence = token => {
+  const dialog = document.createElement("dialog");
+  dialog.className = "report-evidence-dialog no-print";
+  dialog.setAttribute("aria-label", "Task evidence and mastery");
+  dialog.innerHTML = '<form method="dialog"><button>Close evidence</button></form>' +
+    '<p role="status"></p><div hidden>' +
+    '<h2 id="sessionTitle"></h2><p id="sessionSummary"></p><div id="reportOverview"></div>' +
+    '<label>Student <select id="studentFilter"></select></label><button id="archive" hidden>Download archive</button>' +
+    '<details id="deletePanel" hidden><p id="deleteSummary"></p><input id="verified" type="checkbox">' +
+    '<input id="confirmation"><button id="deleteAudio"></button></details><div id="tasks"></div></div>';
+  document.body.append(dialog);
+  const message = dialog.querySelector('[role="status"]');
+  const status = value => { message.textContent = value; };
+  const request = async path => {
+    const response = await fetch(window.ELT_CONFIG.API_BASE + path, {
+      headers: {Authorization: "Bearer " + token.value.trim()}, cache: "no-store"
+    });
+    if (!response.ok) throw new Error("Could not load evidence (" + response.status + "). Close and try again.");
+    return response;
+  };
+  const detail = window.createEvidenceDetail(dialog.querySelector(":scope > div"), request, status);
+  dialog.addEventListener("close", detail.clear);
+  return (pin, caption, scope) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = caption;
+    button.setAttribute("aria-haspopup", "dialog");
+    button.onclick = async () => {
+      status("Loading task evidence…");
+      dialog.showModal();
+      try {
+        if (await detail.open(pin, null, scope)) status("");
+      } catch (error) {
+        if (dialog.open) status(error.message);
+      }
+    };
+    return button;
+  };
 };

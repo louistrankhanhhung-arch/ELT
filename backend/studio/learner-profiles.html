@@ -59,6 +59,16 @@ td small { display: block; }
   #targets details { break-inside: auto; }
 }
 </style>
+<link rel="stylesheet" href="evidence-report.css?v=1">
+<style>
+.report-evidence-dialog { width: min(960px, 92vw); max-height: 88vh; overflow: auto; box-sizing: border-box;
+  border: 1px solid #CCDCC8; border-radius: 12px; padding: 16px; color: #18352A; }
+.report-evidence-dialog::backdrop { background: #18352A80; }
+.report-evidence-dialog > form { justify-content: flex-end; }
+.report-evidence-dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.report-evidence-dialog audio { max-width: 100%; }
+@media print { .report-evidence-dialog { display: none !important; } }
+</style>
 </head>
 <body>
 <a class="reh-nav-button no-print" href="teacher-home.html">← Teacher home</a>
@@ -138,6 +148,8 @@ td small { display: block; }
 <footer class="parent-report-footer"><a href="https://rootenglishhouse.com">rootenglishhouse.com</a></footer>
 </div>
 <script src="config.js"></script>
-<script src="learner-profiles.js?v=manual-student-1"></script>
+<script src="task-attempt-signals.js?v=1"></script>
+<script src="evidence-detail.js?v=report-evidence-1"></script>
+<script src="learner-profiles.js?v=report-evidence-1"></script>
 </body>
 </html>
