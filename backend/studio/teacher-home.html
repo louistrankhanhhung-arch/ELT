@@ -223,7 +223,7 @@
         <button type="button" id="toggleActivitySearch" aria-expanded="false" aria-controls="activitySearch">Search</button>
       </div>
       <div id="activitySearch" role="search" aria-label="Dashboard activity" hidden>
-        <input id="activityQuery" type="search" aria-label="Search dashboard activity"
+        <input id="activityQuery" type="search" autocomplete="off" aria-label="Search dashboard activity"
           placeholder="Search lesson, class, PIN, student, block…">
         <p id="activitySearchStatus" role="status"></p>
       </div>
@@ -275,12 +275,12 @@
     }
 
     function toggleSearch(open) {
+      queryInput.value = "";
       searchPanel.hidden = !open;
       searchToggle.setAttribute("aria-expanded", String(open));
       if (open) {
         queryInput.focus();
       } else {
-        queryInput.value = "";
         searchToggle.focus();
         if (activityData) renderActivity(activityData);
       }
@@ -313,7 +313,8 @@
         ["Homework assigned", data.homework, "homework.html", assignment],
         ["Tests assigned", data.tests, "test.html", assignment],
       ];
-      const terms = normalizeSearch(queryInput.value.trim()).split(/\s+/).filter(Boolean);
+      const query = searchPanel.hidden ? "" : queryInput.value.trim();
+      const terms = normalizeSearch(query).split(/\s+/).filter(Boolean);
       let totalMatches = 0;
       grid.replaceChildren(...groups.map(([heading, rows, page, describe, parameters]) => {
         const matches = rows.map(row => ({row, fields: describe(row), date: localTime.format(new Date(row.at))}))
