@@ -181,6 +181,12 @@
       font: inherit; padding: 6px 12px; color: #286340; background: #fff;
       border: 1px solid #A5BDA0; border-radius: 8px; cursor: pointer;
     }
+    #activitySearch { margin: 10px 0; }
+    #activityQuery {
+      box-sizing: border-box; width: min(100%, 28rem); padding: 8px 12px;
+      font: inherit; border: 1px solid #A5BDA0; border-radius: 8px;
+    }
+    #activitySearchStatus { margin: 6px 0 0; color: #425649; }
     .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr)); gap: 14px; }
     .activity-card { background: #fff; border: 1px solid #D9E4D6; border-radius: 12px; padding: 14px; overflow-wrap: anywhere; }
     .activity-card h3 { margin: 0 0 10px; font-size: 1rem; }
@@ -214,6 +220,12 @@
       <div class="activity-toolbar">
         <h2 id="activityTitle">Activity · Last 7 days</h2>
         <button type="button" id="refreshActivity">Refresh</button>
+        <button type="button" id="toggleActivitySearch" aria-expanded="false" aria-controls="activitySearch">Search</button>
+      </div>
+      <div id="activitySearch" role="search" aria-label="Dashboard activity" hidden>
+        <input id="activityQuery" type="search" aria-label="Search dashboard activity"
+          placeholder="Search lesson, class, PIN, student, block…">
+        <p id="activitySearchStatus" role="status"></p>
       </div>
       <p id="activityStatus" role="status"></p>
       <div class="activity-grid" id="activityGrid"></div>
@@ -247,11 +259,32 @@
     const refresh = el("refreshActivity");
     const status = el("activityStatus");
     const grid = el("activityGrid");
+    const searchToggle = el("toggleActivitySearch");
+    const searchPanel = el("activitySearch");
+    const queryInput = el("activityQuery");
+    const searchStatus = el("activitySearchStatus");
     const localTime = new Intl.DateTimeFormat("en-GB", {
       timeZone: "Asia/Ho_Chi_Minh", day: "2-digit", month: "short",
       year: "numeric", hour: "2-digit", minute: "2-digit"
     });
     let accessCode = "";
+    let activityData;
+
+    function normalizeSearch(value) {
+      return value.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/g, "d");
+    }
+
+    function toggleSearch(open) {
+      searchPanel.hidden = !open;
+      searchToggle.setAttribute("aria-expanded", String(open));
+      if (open) {
+        queryInput.focus();
+      } else {
+        queryInput.value = "";
+        searchToggle.focus();
+        if (activityData) renderActivity(activityData);
+      }
+    }
 
     const element = (tag, text) => {
       const item = document.createElement(tag);
@@ -280,23 +313,31 @@
         ["Homework assigned", data.homework, "homework.html", assignment],
         ["Tests assigned", data.tests, "test.html", assignment],
       ];
+      const terms = normalizeSearch(queryInput.value.trim()).split(/\s+/).filter(Boolean);
+      let totalMatches = 0;
       grid.replaceChildren(...groups.map(([heading, rows, page, describe, parameters]) => {
+        const matches = rows.map(row => ({row, fields: describe(row), date: localTime.format(new Date(row.at))}))
+          .filter(({row, fields, date}) => {
+            const searchable = normalizeSearch([heading, ...fields, date, row.lesson_id, row.pin,
+              row.at, row.due_on].filter(Boolean).join(" "));
+            return terms.every(term => searchable.includes(term));
+          });
+        totalMatches += matches.length;
         const card = element("section", "");
         card.className = "activity-card";
-        card.append(element("h3", heading + " (" + rows.length + ")"));
-        if (!rows.length) {
-          card.append(element("p", "No activity in this period."));
+        card.append(element("h3", heading + " (" + matches.length + ")"));
+        if (!matches.length) {
+          card.append(element("p", terms.length ? "No matching activity." : "No activity in this period."));
           return card;
         }
         const list = element("ul", "");
         list.tabIndex = 0;
         list.setAttribute("aria-label", heading);
-        for (const row of rows) {
-          const [title, ...details] = describe(row);
+        for (const {row, fields: [title, ...details], date} of matches) {
           const item = element("li", "");
           const link = element("a", title);
           link.href = page + (parameters ? "?" + new URLSearchParams(parameters(row)) : "");
-          const time = element("time", localTime.format(new Date(row.at)));
+          const time = element("time", date);
           time.dateTime = row.at;
           const description = element("small", details.filter(Boolean).map(value => value + " · ").join(""));
           description.append(time);
@@ -306,6 +347,7 @@
         card.append(list);
         return card;
       }));
+      searchStatus.textContent = terms.length ? totalMatches + (totalMatches === 1 ? " result" : " results") : "";
       status.textContent = localTime.format(new Date(data.from)) + " – " +
         localTime.format(new Date(data.to)) + " · Vietnam time";
     }
@@ -324,6 +366,8 @@
         });
         if (response.status === 401) {
           accessCode = "";
+          activityData = undefined;
+          toggleSearch(false);
           grid.replaceChildren();
           teacherApp.classList.add("hidden");
           pinGate.classList.remove("hidden");
@@ -332,7 +376,8 @@
           throw new Error("Incorrect teacher access code. Please try again.");
         }
         if (!response.ok) throw new Error("Could not load activity. Please try again.");
-        renderActivity(await response.json());
+        activityData = await response.json();
+        renderActivity(activityData);
         accessCode = code;
         input.value = "";
         pinGate.classList.add("hidden");
@@ -352,6 +397,13 @@
 
     unlock.addEventListener("click", loadActivity);
     refresh.addEventListener("click", loadActivity);
+    searchToggle.addEventListener("click", () => toggleSearch(searchPanel.hidden));
+    queryInput.addEventListener("input", () => {
+      if (activityData) renderActivity(activityData);
+    });
+    queryInput.addEventListener("keydown", event => {
+      if (event.key === "Escape") toggleSearch(false);
+    });
     input.addEventListener("keydown", event => {
       if (event.key === "Enter") loadActivity();
     });
