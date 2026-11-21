@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Lessons | Root English House</title>
+  <title>Teacher Dashboard | Root English House</title>
 
   <style>
     body {
@@ -28,91 +28,6 @@
     h1 {
       margin: 0;
       font-size: 32px;
-    }
-
-    .subtitle {
-      margin-top: 8px;
-      color: #456052;
-      font-size: 16px;
-    }
-
-    .course {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 18px 20px;
-      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
-      margin-bottom: 16px;
-    }
-
-    .course h2 {
-      margin: 0 0 6px;
-      font-size: 22px;
-    }
-
-    .course p {
-      margin: 0 0 12px;
-      color: #456052;
-      line-height: 1.4;
-      font-size: 14px;
-    }
-
-    .lesson-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .lesson-card {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 8px 14px;
-      border: 1px solid #CCDCC8;
-      border-radius: 999px;
-      background: #F7FAF3;
-      color: inherit;
-      text-decoration: none;
-      transition: 0.15s ease;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .lesson-card:hover {
-      background: #E9F2E3;
-      border-color: #83A875;
-      transform: translateY(-1px);
-    }
-
-    .lesson-title {
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 0;
-    }
-
-    .lesson-meta {
-      display: none;
-      color: #456052;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .status {
-      display: none;
-      margin-top: 10px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #E9F2E3;
-      color: #286340;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .error {
-      padding: 18px;
-      border-radius: 16px;
-      background: #fff1f2;
-      color: #be123c;
     }
 
     .pin-card {
@@ -193,30 +108,27 @@
     .activity-card ul { list-style: none; padding: 0; margin: 0; max-height: 18rem; overflow: auto; }
     .activity-card li { padding: 8px 0; border-top: 1px solid #E4ECE1; }
     .activity-card small { display: block; color: #425649; margin-top: 4px; }
-    .activity-card a { color: #286340; }
   </style>
 <link rel="stylesheet" href="runtime-ui.css?v=reh-1">
+<link rel="stylesheet" href="report-layout.css?v=1">
 </head>
-<body>
+<body class="dashboard-page">
   <main class="shell hidden" id="teacherApp">
     <header>
-      <div class="reh-brand-heading"><img src="reh-brand-mark.jpg" alt="" width="52" height="52"><div><span>Root English House</span><h1>Teacher workspace</h1></div></div>
-      <div class="subtitle">
-        Open a lesson for class, prepare materials, or review student work.
-      </div>
+      <div class="reh-brand-heading"><img src="reh-brand-mark.jpg" alt="" width="52" height="52"><div><span>Root English House</span><h1>Teacher Dashboard</h1></div></div>
     </header>
 
-    <nav class="reh-workspace" aria-label="Teacher workspace">
-      <a href="lesson-catalogue.html">Catalogue<small>Browse published lessons by course and level.</small></a>
-      <a href="author.html">Studio<small>Create or edit slides and tasks.</small></a>
-      <a href="session-results.html">Session History<small>Review submissions and export evidence.</small></a>
-      <a href="class-reports.html">Class Reports<small>Review classroom and homework evidence by class and lesson.</small></a>
-      <a href="test.html">Test<small>Run timed tests and publish results.</small></a>
-      <a href="homework.html">Homework<small>Assign lessons and tasks for independent work.</small></a>
-      <a href="learner-profiles.html">Learner Profiles<small>Manage Student IDs, classes and learning history.</small></a>
-      <a href="catalogs.html">Learning Targets<small>Manage the learning target catalogue.</small></a>
+    <nav class="workspace-nav" aria-label="Teacher workspace">
+      <button type="button" data-page="lesson-catalogue.html">Catalogue</button>
+      <button type="button" data-page="author.html">Studio</button>
+      <button type="button" data-page="session-results.html">Session History</button>
+      <button type="button" data-page="class-reports.html">Class Reports</button>
+      <button type="button" data-page="test.html">Test</button>
+      <button type="button" data-page="homework.html">Homework</button>
+      <button type="button" data-page="learner-profiles.html">Learner Profiles</button>
+      <button type="button" data-page="catalogs.html">Learning Targets</button>
     </nav>
-    <section aria-labelledby="activityTitle">
+    <section class="dashboard-activity" aria-labelledby="activityTitle">
       <div class="activity-toolbar">
         <h2 id="activityTitle">Activity · Last 7 days</h2>
         <button type="button" id="refreshActivity">Refresh</button>
@@ -249,6 +161,7 @@
     <div class="pin-error" id="pinError"></div>
   </section>
 
+  <script src="report-navigation.js?v=1"></script>
   <script>
     const el = id => document.getElementById(id);
     const teacherApp = el("teacherApp");
@@ -326,7 +239,11 @@
         totalMatches += matches.length;
         const card = element("section", "");
         card.className = "activity-card";
-        card.append(element("h3", heading + " (" + matches.length + ")"));
+        const title = element("h3", heading);
+        const count = element("span", matches.length);
+        count.className = "activity-count";
+        title.append(count);
+        card.append(title);
         if (!matches.length) {
           card.append(element("p", terms.length ? "No matching activity." : "No activity in this period."));
           return card;
@@ -336,13 +253,17 @@
         list.setAttribute("aria-label", heading);
         for (const {row, fields: [title, ...details], date} of matches) {
           const item = element("li", "");
-          const link = element("a", title);
-          link.href = page + (parameters ? "?" + new URLSearchParams(parameters(row)) : "");
+          const label = element(parameters ? "button" : "strong", title);
+          if (parameters) {
+            label.type = "button";
+            label.className = "evidence-action";
+            label.onclick = () => location.assign(page + "?" + new URLSearchParams(parameters(row)));
+          }
           const time = element("time", date);
           time.dateTime = row.at;
           const description = element("small", details.filter(Boolean).map(value => value + " · ").join(""));
           description.append(time);
-          item.append(link, description);
+          item.append(label, description);
           list.append(item);
         }
         card.append(list);

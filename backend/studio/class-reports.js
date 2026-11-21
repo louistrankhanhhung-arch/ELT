@@ -14,7 +14,9 @@
   let reportTarget = "";
 
   function evidenceButton(pin, caption) {
-    return openEvidence(pin, caption, {members: reportSessions.get(pin)?.evidence_members || [], target: reportTarget});
+    const button = openEvidence(pin, caption, {members: reportSessions.get(pin)?.evidence_members || [], target: reportTarget});
+    button.classList.add("evidence-action");
+    return button;
   }
 
   async function request(path, code) {
@@ -26,10 +28,12 @@
     return data;
   }
 
-  function link(path, params, caption) {
-    const anchor = node("a", caption);
-    anchor.href = path + "?" + new URLSearchParams(params);
-    return anchor;
+  function profileButton(params, caption) {
+    const button = node("button", caption);
+    button.type = "button";
+    button.className = "evidence-action";
+    button.onclick = () => location.assign("learner-profiles.html?" + params);
+    return button;
   }
 
   function table(id, headers, rows) {
@@ -557,7 +561,7 @@
       const profileFilters = {student: row.student_id, course: info.course, level: info.level};
       for (const key of ["start", "end", "lesson"]) if (filters.has(key)) profileFilters[key] = filters.get(key);
       const learner = row.student_id
-        ? link("learner-profiles.html", profileFilters, row.name + " · " + row.student_id) : row.name;
+        ? profileButton(profileFilters, row.name + " · " + row.student_id) : row.name;
       const latest = row.latest ? sessionLink(row.latest) : "—";
       if (row.latest) latest.textContent = row.latest.percent + "% · " + row.latest.date;
       const signal = row.signal ? node("details") : "—";

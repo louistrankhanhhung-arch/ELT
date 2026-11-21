@@ -19,7 +19,6 @@ button { background: #286340; color: white; border: 0; border-radius: 7px; curso
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 8px; border-bottom: 1px solid #CCDCC8; vertical-align: top; }
 progress { width: 7rem; accent-color: #286340; }
-details a { display: block; margin-top: 5px; }
 td pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 td details { min-width: 10rem; }
 td details details { margin-block: 8px; }
@@ -40,12 +39,13 @@ td details details { margin-block: 8px; }
 .report-evidence-dialog audio { max-width: 100%; }
 @media print { .report-evidence-dialog { display: none !important; } }
 </style>
+<link rel="stylesheet" href="report-layout.css?v=1">
 </head>
-<body>
-<a class="reh-nav-button" href="teacher-home.html">← Teacher home</a>
-<h1>Class Reports</h1>
-<nav class="reh-results-nav" aria-label="Results views"><a class="reh-nav-button" href="session-results.html">Session History</a> <a class="reh-nav-button" href="class-reports.html" aria-current="page">Class Reports</a> <a class="reh-nav-button" href="homework.html">Homework</a> <a class="reh-nav-button" href="learner-profiles.html">Learner Profile</a></nav>
-<section>
+<body class="class-report-page">
+<button type="button" data-page="teacher-home.html">← Teacher home</button>
+<header class="report-heading"><h1>Class Reports</h1></header>
+<nav class="workspace-nav" aria-label="Results views"><button type="button" data-page="session-results.html">Session History</button> <span aria-current="page">Class Reports</span> <button type="button" data-page="homework.html">Homework</button> <button type="button" data-page="learner-profiles.html">Learner Profile</button></nav>
+<section class="report-filters" aria-label="Report filters">
 <form id="filters">
 <label>Teacher access code <input id="token" type="password" required autocomplete="off"></label>
 <label>Class code <input name="class_code" list="classCodes" required maxlength="60"></label>
@@ -66,9 +66,10 @@ td details details { margin-block: 8px; }
 <section><h3>Students</h3><div id="students" class="table"></div></section>
 <section><h3>Classroom sessions and assignments</h3><div id="sessions" class="table"></div></section>
 </div>
+<script src="report-navigation.js?v=1"></script>
 <script src="config.js"></script>
 <script src="task-attempt-signals.js?v=1"></script>
 <script src="evidence-detail.js?v=report-evidence-1"></script>
-<script src="class-reports.js?v=report-evidence-1"></script>
+<script src="class-reports.js?v=report-layout-1"></script>
 </body>
 </html>
