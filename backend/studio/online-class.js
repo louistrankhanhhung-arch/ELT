@@ -26,7 +26,7 @@ function loadDailySdk() {
   return dailySdk;
 }
 
-window.createOnlineClass = (api, credentials, label) => {
+window.createOnlineClass = (api, credentials, label, onAudio) => {
   const panel = document.getElementById("onlineClass");
   const join = panel.querySelector("[data-video-join]");
   const leave = panel.querySelector("[data-video-leave]");
@@ -51,7 +51,7 @@ window.createOnlineClass = (api, credentials, label) => {
   leave.textContent = "Disconnect";
   const share = document.createElement("button");
   share.type = "button";
-  share.textContent = "Share tab audio";
+  share.textContent = "Share external tab";
   share.hidden = true;
   leave.before(share);
   const player = document.createElement("button");
@@ -70,7 +70,7 @@ window.createOnlineClass = (api, credentials, label) => {
     status.textContent = "Choose a browser tab and enable tab audio.";
     try {
       call.startScreenShare({displayMediaOptions: {
-        video: true, audio: true, selfBrowserSurface: "include", systemAudio: "exclude"
+        video: true, audio: true, selfBrowserSurface: "exclude", systemAudio: "exclude"
       }});
     } catch (error) {
       status.textContent = error.message;
@@ -79,7 +79,7 @@ window.createOnlineClass = (api, credentials, label) => {
 
   function shareState(active, message = "") {
     sharing = active;
-    share.textContent = active ? "Stop sharing" : "Share tab audio";
+    share.textContent = active ? "Stop sharing" : "Share external tab";
     status.textContent = message;
   }
 
@@ -276,6 +276,9 @@ window.createOnlineClass = (api, credentials, label) => {
         showLeaveButton: false
       });
       call = next;
+      if (studentId && onAudio) next.on("app-message", ({fromId, data}) => {
+        if (call === next && data?.type === "reh-class-audio" && next.participants()[fromId]?.owner) onAudio(data);
+      });
       next.on("left-meeting", () => {
         if (call === next) disconnect();
       });
@@ -313,6 +316,9 @@ window.createOnlineClass = (api, credentials, label) => {
   leave.addEventListener("click", disconnect);
   window.addEventListener("pagehide", disconnect);
   return {
+    playAudio(block, clip) {
+      if (call?.meetingState() === "joined-meeting") call.sendAppMessage({type: "reh-class-audio", block, clip});
+    },
     show() { panel.hidden = false; },
     open() {
       panel.hidden = false;

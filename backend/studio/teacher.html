@@ -588,7 +588,7 @@
   </div>
 
   <script src="./config.js?v=recall-1"></script>
-  <script src="online-class.js?v=6"></script>
+  <script src="online-class.js?v=7"></script>
 <script src="task-materials.js?v=1"></script>
   <script src="task-attempt-signals.js?v=1"></script>
   <script src="classroom-report.js?v=attempt-2"></script>
@@ -964,6 +964,13 @@
     window.addEventListener("message", event => {
       if (event.origin === location.origin && (event.source === previewFrame.contentWindow || event.source === projectionFrame?.contentWindow)
           && event.data?.type === "reh-slide-ready") showReveal();
+      if (event.origin !== location.origin || (event.source !== previewFrame.contentWindow
+          && event.source !== projectionFrame?.contentWindow)) return;
+      const data = event.data;
+      if (data?.type === "reh-class-audio" && data.block === currentLesson?.blocks[blockIndex]?.id
+          && typeof data.clip === "string" && /^(slide-\d+|vocab-\d+-(word|example))$/.test(data.clip)) {
+        onlineClass.playAudio(data.block, data.clip);
+      }
     });
     const writingPanel = document.getElementById("writingPanel");
     const writingAssignForm = document.getElementById("writingAssignForm");

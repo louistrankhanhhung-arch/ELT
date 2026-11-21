@@ -43,7 +43,8 @@
         play.className = "reh-audio-button";
         play.title = label;
         play.type = "button";
-        play.disabled = !interactive;
+        play.dataset.rehClip = "vocab-" + index + (iconOnly ? "-word" : "-example");
+        play.disabled = !interactive && !settings?.allowClassAudio;
         play.setAttribute("aria-label", label + (recall ? " " + (index + 1) : ": " + card.term));
         play.onclick = () => {
           playing.get(root)?.pause();
@@ -56,6 +57,12 @@
           }
           audio.play().catch(error => {
             if (error.name !== "AbortError" && playing.get(root) === audio) {
+              if (error.name === "NotAllowedError") {
+                play.title = "Tap to listen";
+                play.setAttribute("aria-label", "Tap to listen: " + label);
+                if (!iconOnly) play.textContent = "Tap to listen";
+                return;
+              }
               play.title = "Audio unavailable";
               play.setAttribute("aria-label", label + " (audio unavailable)");
               if (!iconOnly) play.textContent = "Audio unavailable";

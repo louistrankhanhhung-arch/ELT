@@ -38,7 +38,7 @@ html.homework-fit img, html.homework-fit video { max-height:none; }
 <link rel="stylesheet" href="vocab.css?v=audio-1">
 <main><h1></h1><p></p><div id="media"></div></main>
 <script src="config.js"></script>
-<script src="vocab.js?v=recall-1"></script>
+<script src="vocab.js?v=class-audio-1"></script>
 <script src="slide-style.js?v=text-ranges-1"></script>
 <script>
 const params = new URLSearchParams(location.search);
@@ -80,9 +80,9 @@ function applyStep() {
   for (const [element, node] of items) {
     node.hidden = step < element.appear || (element.disappear != null && step >= element.disappear);
     const button = node.querySelector("button");
-    if (button) button.disabled = !interactive;
+    if (button) button.disabled = !interactive && !button.dataset.rehClip;
   }
-  if (currentAudio && (!interactive || currentAudio.node.hidden)) currentAudio.audio.pause();
+  if (currentAudio && currentAudio.node.hidden) currentAudio.audio.pause();
 }
 window.addEventListener("message", event => {
   if (event.source !== slideController || event.origin !== location.origin
@@ -94,15 +94,28 @@ window.addEventListener("message", event => {
   step = event.data.step;
   interactive = event.data.interactive;
   if (vocabBlock) {
-    window.renderVocab(document.querySelector("main"), vocabBlock.vocab, vocabBlock.title, step, interactive, vocabRecall);
+    window.renderVocab(document.querySelector("main"), vocabBlock.vocab, vocabBlock.title, step, interactive, {...vocabRecall, allowClassAudio: params.get("role") === "student"});
     return;
   }
   applyStep();
 });
+document.addEventListener("click", event => {
+  const clip = event.target.closest?.("[data-reh-clip]")?.dataset.rehClip;
+  if (clip && params.get("role") === "teacher") {
+    slideController?.postMessage({type: "reh-class-audio", block: params.get("block"), clip}, location.origin);
+  }
+});
+window.addEventListener("message", event => {
+  if (params.get("role") !== "student" || event.source !== slideController || event.origin !== location.origin
+      || event.data?.type !== "reh-class-audio" || event.data.block !== params.get("block")) return;
+  const button = [...document.querySelectorAll("[data-reh-clip]")]
+    .find(item => item.dataset.rehClip === event.data.clip && !item.closest("[hidden]"));
+  button?.click();
+});
 function showElements(elements) {
   const canvas = document.createElement("div");
   canvas.className = "slide-canvas";
-  items = elements.map(element => {
+  items = elements.map((element, index) => {
     const node = document.createElement("div");
     node.className = "element " + element.kind + (element.kind === "shape" ? " " + element.shape : "");
     Object.assign(node.style, {left:element.x+"%", top:element.y+"%", width:element.width+"%", height:element.height+"%"});
@@ -123,10 +136,11 @@ function showElements(elements) {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "reh-audio-button";
+      button.dataset.rehClip = "slide-" + index;
       button.setAttribute("aria-label", element.text ? "Play audio: " + element.text : "Play audio");
       button.textContent = REHSlideStyle.audioLabel(element);
       button.addEventListener("click", () => {
-        if (!interactive || node.hidden) return;
+        if (node.hidden) return;
         currentAudio?.audio.pause();
         const audio = new Audio(element.url);
         currentAudio = {audio, node};
@@ -136,7 +150,7 @@ function showElements(elements) {
           audio.addEventListener(event, () => button.setAttribute("aria-pressed", "false"));
         }
         audio.play().catch(error => {
-          if (error.name !== "AbortError" && currentAudio?.audio === audio) button.textContent = "Audio unavailable";
+          if (error.name !== "AbortError" && currentAudio?.audio === audio) button.textContent = error.name === "NotAllowedError" ? "Tap to listen" : "Audio unavailable";
         });
       });
       node.append(button);
@@ -183,7 +197,7 @@ async function showSlide() {
   if (!block) throw new Error("Slide not found");
   if (block.vocab) {
     vocabBlock = block;
-    window.renderVocab(document.querySelector("main"), block.vocab, block.title, step, interactive, vocabRecall);
+    window.renderVocab(document.querySelector("main"), block.vocab, block.title, step, interactive, {...vocabRecall, allowClassAudio: params.get("role") === "student"});
     slideController?.postMessage({type: "reh-slide-ready"}, location.origin);
     return;
   }
