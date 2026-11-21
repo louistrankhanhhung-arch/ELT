@@ -109,8 +109,8 @@ window.createEvidenceDetail = (root, request, status) => {
     ]));
   }
   function scoreFor(row, task) {
-    if (scope && task?.writing_rubric && !row.ai_published && !row.rubric_scores?.length) return null;
     if (Number.isFinite(row.review_score) && row.review_max_score > 0) return [row.review_score, row.review_max_score];
+    if (scope && task?.writing_rubric && !row.ai_published && !row.rubric_scores?.length) return null;
     if ((!row.ai_state || row.ai_published) && Number.isFinite(row.score) && row.max_score > 0) return [row.score, row.max_score];
     return null;
   }
@@ -127,17 +127,21 @@ window.createEvidenceDetail = (root, request, status) => {
     renderSummary();
     renderTasks();
   }
+  function isArchivedClassroom() {
+    return ["ended", "expired"].includes(current.session.status);
+  }
   function writingActions(task, rows) {
     const pin = current.session.pin;
     const homework = current.session.status === "homework";
     const group = document.createElement("div");
     const responses = rows.filter(row => row.response?.trim());
-    const candidates = responses.filter(row => !["ready", "needs_review"].includes(row.ai_state));
+    const candidates = responses.filter(row => !["ready", "needs_review"].includes(row.ai_state) &&
+      (!isArchivedClassroom() || scoreFor(row, task) === null));
     const ready = responses.filter(row => row.ai_state === "ready").length;
     const needsReview = responses.filter(row => row.ai_state === "needs_review").length;
     const progress = text("span", "");
     progress.setAttribute("role", "status");
-    const grade = button("Grade Writing", async () => {
+    const grade = button("Grade Writing with AI", async () => {
       if (grading.has(task.task_id)) return;
       grading.add(task.task_id);
       grade.disabled = true;
@@ -158,7 +162,11 @@ window.createEvidenceDetail = (root, request, status) => {
       }
     });
     grade.disabled = grading.has(task.task_id) || !candidates.length || Boolean(current.test_published);
-    group.append(text("p", ready + "/" + responses.length + " AI graded · " + needsReview + " need AI review"), grade, progress);
+    const awaiting = responses.filter(row => !row.ai_published && ["ready", "needs_review"].includes(row.ai_state)).length;
+    const caption = isArchivedClassroom()
+      ? candidates.length + " awaiting AI grading · " + awaiting + " awaiting teacher approval"
+      : ready + "/" + responses.length + " AI graded · " + needsReview + " need AI review";
+    group.append(text("p", caption), grade, progress);
     if (homework) {
       const published = responses.length > 0 && responses.every(row => row.ai_published);
       const publish = button(published ? "Scores published" : "Publish scores", async () => {
@@ -198,7 +206,8 @@ window.createEvidenceDetail = (root, request, status) => {
       summary.push(["Average score", "—"], ["Class mastery", "—"]);
     }
     article.append(metrics(summary));
-    if (!scope && task.type === "writing" && ["homework", "test"].includes(current.session.status)) {
+    if (!scope && task.type === "writing" && task.task_id !== "legacy-writing" &&
+        (isArchivedClassroom() || ["homework", "test"].includes(current.session.status))) {
       article.append(writingActions(task, submitted));
     }
     if (!scope?.student && task.questions?.length) {
@@ -321,7 +330,9 @@ window.createEvidenceDetail = (root, request, status) => {
       '<label>Maximum <input name="maximum" type="number" min="1" max="100"></label>' +
       '<label>Feedback <textarea name="feedback" maxlength="4000"></textarea></label><button>Save review</button><span role="status"></span>';
     const test = pin.startsWith("TEST-");
-    const ai = pin.startsWith("HW-") && !row.ai_published ? row.ai_feedback : null;
+    const classroom = isArchivedClassroom();
+    const ai = (pin.startsWith("HW-") || classroom) && !row.ai_published ? row.ai_feedback : null;
+    if (classroom && ai) form.querySelector("button").textContent = "Approve and publish";
     const criteria = test ? task.writing_rubric?.criteria || [] : ai?.criteria || [];
     const rubricInputs = new Map();
     if (criteria.length) {
@@ -364,7 +375,7 @@ window.createEvidenceDetail = (root, request, status) => {
             student_id: row.student_id, scores: review.criteria_scores, feedback: review.feedback
           });
           await refreshWriting(pin);
-          status("Writing review saved.");
+          status(classroom ? "Writing score published." : "Writing review saved.");
           return;
         }
         await request(apiPath(pin, "/tasks/" + task.task_id + "/reviews/" + row.student_id), "PUT", review);

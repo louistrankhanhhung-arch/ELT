@@ -2227,8 +2227,9 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
         if pin.startswith("TEST-") and timed_test_row(cur, pin, lock=True)["published_at"]:
             raise HTTPException(409, "Published Test reviews are locked")
         cur.execute(sql("""
-            SELECT t.prompt, r.response, a.definition, m.definition AS materials
+            SELECT t.prompt, r.response, a.definition, m.definition AS materials, s.status
             FROM writing_tasks t JOIN writing_task_responses r ON r.task_id = t.task_id
+            JOIN sessions s ON s.pin = t.pin
             LEFT JOIN writing_ai_rubrics a ON a.task_id = t.task_id
             LEFT JOIN task_materials m ON m.task_id = t.task_id
             LEFT JOIN writing_task_quizzes q ON q.task_id = t.task_id
@@ -2237,10 +2238,10 @@ def grade_writing(pin: str, task_id: str, payload: WritingGradeRequest):
               AND q.task_id IS NULL AND sp.task_id IS NULL
         """), (pin, task_id, payload.student_id))
         row = cur.fetchone()
-        if not row or not row["response"].strip() or (
-            not row["definition"] and not pin.startswith(("HW-", "TEST-"))
-        ):
-            raise HTTPException(404, "Writing submission or rubric not found")
+        if not row or not row["response"].strip():
+            raise HTTPException(404, "Writing submission not found")
+        if row["status"] not in {"homework", "test", "ended", "expired"} and not row["definition"]:
+            raise HTTPException(409, "End the classroom session or wait for its PIN to expire before grading.")
         if not row["definition"]:
             save_writing_rubric(cur, task_id)
         rubric = json.loads(row["definition"]) if row["definition"] else DEFAULT_WRITING_RUBRIC
@@ -2313,12 +2314,14 @@ def approve_writing(pin: str, task_id: str, payload: WritingApproval):
     with closing(db()) as conn:
         cur = conn.cursor()
         cur.execute(sql("""
-            SELECT g.definition FROM writing_ai_grades g JOIN writing_tasks t ON t.task_id = g.task_id
+            SELECT g.definition, s.status FROM writing_ai_grades g JOIN writing_tasks t ON t.task_id = g.task_id
+            JOIN sessions s ON s.pin = t.pin
             WHERE t.pin = ? AND g.task_id = ? AND g.student_id = ? AND g.state IN ('needs_review', 'ready') AND g.published = 0
         """), (pin, task_id, payload.student_id))
         row = cur.fetchone()
         if not row:
             raise HTTPException(409, "Only unpublished Writing results can be edited")
+        classroom = row["status"] in {"ended", "expired"}
         grade = json.loads(row["definition"])
         if set(payload.scores) != {item["id"] for item in grade["criteria"]} or not payload.feedback.strip():
             raise HTTPException(422, "Enter a score for every criterion and feedback")
@@ -2329,10 +2332,10 @@ def approve_writing(pin: str, task_id: str, payload: WritingApproval):
             item["score"] = score
         grade.update(score=sum(payload.scores.values()), feedback=payload.feedback.strip(), needs_review=False)
         cur.execute(sql("""
-            UPDATE writing_ai_grades SET state = 'ready', definition = ?, updated_at = ?
+            UPDATE writing_ai_grades SET state = 'ready', definition = ?, updated_at = ?, published = ?
             WHERE task_id = ? AND student_id = ? AND state IN ('needs_review', 'ready')
               AND published = 0 AND definition = ?
-        """), (json.dumps(grade), now_iso(), task_id, payload.student_id, row["definition"]))
+        """), (json.dumps(grade), now_iso(), int(classroom), task_id, payload.student_id, row["definition"]))
         if cur.rowcount != 1:
             raise HTTPException(409, "This result changed or was published. Refresh the report.")
         conn.commit()
@@ -3120,7 +3123,10 @@ def profile_score(task, row):
     if not row:
         return None
     manual_rubric = bool(row.get("rubric_scores"))
-    if task.get("writing_rubric") and not (row.get("ai_published") or manual_rubric):
+    if task.get("writing_rubric") and not (
+        row.get("ai_published") or manual_rubric or
+        (row.get("review_score") is not None and row.get("review_max_score"))
+    ):
         return None
     score = row.get("score")
     maximum = row.get("max_score")
@@ -3761,7 +3767,7 @@ def learner_profile(student_id: str, course: str = "", level: str = "", lesson: 
             peers = [profile_score(task, row) for row in task["submissions"] if row["student_id"] != member]
             peer_scores = [item["percent"] for item in peers if item]
             feedback = (own.get("feedback") or (own.get("ai_feedback") or {}).get("feedback")
-                        if own and (not task.get("writing_rubric") or own.get("ai_published")) else None)
+                        if own and (own.get("feedback") or not task.get("writing_rubric") or own.get("ai_published")) else None)
             records.append({**visit, "task_id": task["task_id"], "block_id": task.get("block_id"),
                             "title": task.get("page_task_title") or task.get("prompt", ""),
                             "kind": task.get("type", "writing"), "target": task.get("learning_target_id"),
