@@ -86,8 +86,63 @@ window.createOnlineClass = (api, credentials, label) => {
     const {left, top} = panel.getBoundingClientRect();
     move(left, top);
   }
+
+  function resetDimensions() {
+    panel.style.removeProperty("--online-width");
+    frame.style.removeProperty("--online-height");
+  }
+
+  function resize(edge, rect, delta) {
+    const horizontal = edge === "left" || edge === "right";
+    const reverse = edge === "left" || edge === "top";
+    const origin = horizontal ? rect.left : rect.top;
+    const length = horizontal ? rect.width : rect.height;
+    const limit = (horizontal ? window.innerWidth : window.innerHeight) - 6;
+    const available = Math.max(0, reverse ? origin + length - 6 : limit - origin);
+    const minimum = Math.min(available, horizontal ? 250 : rect.chrome + 140);
+    const next = Math.max(minimum, Math.min(available, length + (reverse ? -delta : delta)));
+    if (horizontal) panel.style.setProperty("--online-width", next + "px");
+    else frame.style.setProperty("--online-height", Math.max(0, next - rect.chrome) + "px");
+    const offset = reverse ? length - next : 0;
+    move(rect.left + (horizontal ? offset : 0), rect.top + (horizontal ? 0 : offset));
+  }
+
+  function dimensions() {
+    const {left, top, width, height} = panel.getBoundingClientRect();
+    return {left, top, width, height, chrome: height - frame.getBoundingClientRect().height};
+  }
+
+  const edges = [
+    ["left", "clientX", "ArrowLeft", "ArrowRight"],
+    ["right", "clientX", "ArrowLeft", "ArrowRight"],
+    ["top", "clientY", "ArrowUp", "ArrowDown"],
+    ["bottom", "clientY", "ArrowUp", "ArrowDown"]
+  ];
+  for (const [edge, axis, backward, forward] of edges) {
+    const grip = document.createElement("button");
+    grip.type = "button";
+    grip.className = "online-class-resize online-class-resize-" + edge;
+    grip.setAttribute("aria-label", "Resize video from the " + edge + " edge with arrow keys");
+    let gesture;
+    grip.addEventListener("pointerdown", event => {
+      if (event.button !== 0 || gesture) return;
+      gesture = {id: event.pointerId, start: event[axis], rect: dimensions()};
+      grip.setPointerCapture(event.pointerId);
+    });
+    grip.addEventListener("pointermove", event => {
+      if (gesture?.id === event.pointerId) resize(edge, gesture.rect, event[axis] - gesture.start);
+    });
+    grip.addEventListener("lostpointercapture", () => { gesture = null; });
+    grip.addEventListener("keydown", event => {
+      if (event.key !== backward && event.key !== forward) return;
+      event.preventDefault();
+      resize(edge, dimensions(), event.key === backward ? -20 : 20);
+    });
+    panel.append(grip);
+  }
   window.addEventListener("resize", fit);
   size.onclick = () => {
+    resetDimensions();
     panel.classList.toggle("is-expanded");
     updateButtons();
     fit();
@@ -137,6 +192,7 @@ window.createOnlineClass = (api, credentials, label) => {
       mount.remove();
       mount = null;
     }
+    resetDimensions();
     panel.classList.remove("is-floating", "is-expanded", "is-prejoin", "is-collapsed");
     panel.style.left = panel.style.top = panel.style.right = panel.style.bottom = "";
     size.hidden = handle.hidden = collapse.hidden = true;
@@ -194,7 +250,6 @@ window.createOnlineClass = (api, credentials, label) => {
         if (call !== next || version !== generation) return;
         panel.classList.remove("is-prejoin");
         fit();
-        status.textContent = studentId ? "Mute your call mic before recording a Speaking task." : "";
       });
       status.textContent = "";
       await next.join({url: url.href, token: data.token});
