@@ -49,6 +49,39 @@ window.createOnlineClass = (api, credentials, label) => {
   collapse.hidden = true;
   leave.before(collapse);
   leave.textContent = "Disconnect";
+  const share = document.createElement("button");
+  share.type = "button";
+  share.textContent = "Share tab audio";
+  share.hidden = true;
+  leave.before(share);
+  const player = document.createElement("button");
+  player.type = "button";
+  player.textContent = "Audio file";
+  player.hidden = true;
+  player.onclick = () => window.open("listening-player.html", "_blank", "noopener");
+  leave.before(player);
+  let sharing = false;
+  share.onclick = () => {
+    if (!call) return;
+    if (sharing) {
+      call.stopScreenShare();
+      return;
+    }
+    status.textContent = "Choose a browser tab and enable tab audio.";
+    try {
+      call.startScreenShare({displayMediaOptions: {
+        video: true, audio: true, selfBrowserSurface: "include", systemAudio: "exclude"
+      }});
+    } catch (error) {
+      status.textContent = error.message;
+    }
+  };
+
+  function shareState(active, message = "") {
+    sharing = active;
+    share.textContent = active ? "Stop sharing" : "Share tab audio";
+    status.textContent = message;
+  }
 
   function icon(button, path, label) {
     button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="' + path + '"/></svg>';
@@ -199,8 +232,8 @@ window.createOnlineClass = (api, credentials, label) => {
     updateButtons();
     join.disabled = false;
     join.hidden = false;
-    leave.hidden = true;
-    status.textContent = "";
+    leave.hidden = share.hidden = player.hidden = true;
+    shareState(false);
   }
 
   join.addEventListener("click", async () => {
@@ -246,9 +279,24 @@ window.createOnlineClass = (api, credentials, label) => {
       next.on("left-meeting", () => {
         if (call === next) disconnect();
       });
+      if (!studentId) {
+        next.on("local-screen-share-started", () => {
+          if (call === next) shareState(true, "Tab sharing active.");
+        });
+        next.on("local-screen-share-stopped", () => {
+          if (call === next) shareState(false);
+        });
+        next.on("local-screen-share-canceled", () => {
+          if (call === next) shareState(false, "Sharing canceled.");
+        });
+      }
       next.on("joined-meeting", () => {
         if (call !== next || version !== generation) return;
         panel.classList.remove("is-prejoin");
+        if (!studentId) {
+          share.hidden = !navigator.mediaDevices?.getDisplayMedia;
+          player.hidden = false;
+        }
         fit();
       });
       status.textContent = "";
