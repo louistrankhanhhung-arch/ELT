@@ -27,3 +27,12 @@
 @media (max-width: 600px) {
   .online-class.is-floating:not(.is-expanded) { width: min(320px, calc(100vw - 12px)); }
 }
+
+.online-class.is-floating.is-prejoin:not(.is-collapsed) { width: min(780px, calc(100vw - 12px)); }
+.online-class.is-floating.is-prejoin [data-video-frame] { height: min(540px, calc(100dvh - 60px)); }
+.online-class.is-floating.is-collapsed { width: max-content; max-width: calc(100vw - 12px); }
+.online-class.is-floating.is-collapsed [data-video-frame],
+.online-class.is-floating.is-collapsed [data-video-status] { display: none; }
+.online-class.is-floating.is-collapsed .online-class-tools { padding-bottom: 0; }
+.online-class .online-class-mount { width: 100%; height: 100%; }
+.online-class .online-class-icon { display: inline-grid; place-items: center; min-width: 30px; min-height: 28px; }

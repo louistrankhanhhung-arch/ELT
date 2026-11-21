@@ -6,11 +6,20 @@ function loadDailySdk() {
       const script = document.createElement("script");
       script.src = "https://unpkg.com/@daily-co/daily-js@0.94.0";
       script.crossOrigin = "anonymous";
+      const timer = setTimeout(() => {
+        script.remove();
+        reject(new Error("Daily Video took too long to load. Try again."));
+      }, 12000);
       script.onload = () => {
+        clearTimeout(timer);
         if (window.Daily?.createFrame) resolve(window.Daily);
         else reject(new Error("Daily Video could not load."));
       };
-      script.onerror = () => reject(new Error("Daily Video could not load. Try again."));
+      script.onerror = () => {
+        clearTimeout(timer);
+        script.remove();
+        reject(new Error("Daily Video could not load. Try again."));
+      };
       document.head.append(script);
     }).catch(error => { dailySdk = null; throw error; });
   }
@@ -33,17 +42,43 @@ window.createOnlineClass = (api, credentials, label) => {
   panel.querySelector(".online-class-tools").prepend(handle);
   const size = document.createElement("button");
   size.type = "button";
-  size.textContent = "Enlarge";
+  size.className = "online-class-icon";
+  const collapse = document.createElement("button");
+  collapse.type = "button";
+  collapse.className = "online-class-icon";
+  collapse.hidden = true;
+  leave.before(collapse);
+  leave.textContent = "Disconnect";
+
+  function icon(button, path, label) {
+    button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="' + path + '"/></svg>';
+    button.title = label;
+    button.setAttribute("aria-label", label);
+  }
+
+  function updateButtons() {
+    const expanded = panel.classList.contains("is-expanded");
+    const collapsed = panel.classList.contains("is-collapsed");
+    icon(size, expanded ? "M4 9h5V4m11 5h-5V4M4 15h5v5m11-5h-5v5" : "M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5",
+      expanded ? "Compact video" : "Enlarge video");
+    icon(collapse, collapsed ? "m6 9 6 6 6-6" : "M5 12h14", collapsed ? "Show video" : "Collapse video");
+    collapse.setAttribute("aria-expanded", String(!collapsed));
+    size.hidden = collapsed || handle.hidden;
+  }
+
+  updateButtons();
   size.hidden = true;
   leave.before(size);
   let generation = 0;
   let call;
+  let mount;
   let cleanup = Promise.resolve();
   let drag;
 
   function move(left, top) {
     if (!panel.classList.contains("is-floating")) return;
     const gutter = 6;
+    panel.style.right = panel.style.bottom = "auto";
     panel.style.left = Math.max(gutter, Math.min(left, window.innerWidth - panel.offsetWidth - gutter)) + "px";
     panel.style.top = Math.max(gutter, Math.min(top, window.innerHeight - panel.offsetHeight - gutter)) + "px";
   }
@@ -53,7 +88,13 @@ window.createOnlineClass = (api, credentials, label) => {
   }
   window.addEventListener("resize", fit);
   size.onclick = () => {
-    size.textContent = panel.classList.toggle("is-expanded") ? "Compact" : "Enlarge";
+    panel.classList.toggle("is-expanded");
+    updateButtons();
+    fit();
+  };
+  collapse.onclick = () => {
+    panel.classList.toggle("is-collapsed");
+    updateButtons();
     fit();
   };
   handle.addEventListener("pointerdown", event => {
@@ -80,13 +121,26 @@ window.createOnlineClass = (api, credentials, label) => {
     if (call) {
       const previous = call;
       call = null;
-      cleanup = previous.destroy().catch(() => {});
+      const previousMount = mount;
+      mount = null;
+      previousMount.hidden = true;
+      let timeout;
+      cleanup = Promise.race([
+        Promise.resolve().then(() => previous.destroy()).catch(() => {}),
+        new Promise(resolve => { timeout = setTimeout(resolve, 1500); })
+      ]).finally(() => {
+        clearTimeout(timeout);
+        previousMount.remove();
+      });
     }
-    frame.replaceChildren();
-    panel.classList.remove("is-floating", "is-expanded");
-    panel.style.left = panel.style.top = "";
-    size.textContent = "Enlarge";
-    size.hidden = handle.hidden = true;
+    if (mount) {
+      mount.remove();
+      mount = null;
+    }
+    panel.classList.remove("is-floating", "is-expanded", "is-prejoin", "is-collapsed");
+    panel.style.left = panel.style.top = panel.style.right = panel.style.bottom = "";
+    size.hidden = handle.hidden = collapse.hidden = true;
+    updateButtons();
     join.disabled = false;
     join.hidden = false;
     leave.hidden = true;
@@ -101,11 +155,11 @@ window.createOnlineClass = (api, credentials, label) => {
     status.textContent = "Connecting…";
     try {
       const role = studentId ? "join" : "host";
-      const response = await fetch(api + "/sessions/" + encodeURIComponent(pin) + "/online-class/" + role, {
+      const [daily, response] = await Promise.all([loadDailySdk(), fetch(api + "/sessions/" + encodeURIComponent(pin) + "/online-class/" + role, {
         method: "POST", cache: "no-store",
         headers: {...headers, "Content-Type": "application/json"},
         body: studentId ? JSON.stringify({student_id: studentId}) : undefined
-      });
+      })]);
       const data = await response.json();
       if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Could not open the video room.");
       if (version !== generation) return;
@@ -113,15 +167,19 @@ window.createOnlineClass = (api, credentials, label) => {
       if (url.protocol !== "https:" || !/^[a-z0-9-]+\.daily\.co$/.test(url.hostname)) {
         throw new Error("Invalid Daily room.");
       }
-      const daily = await loadDailySdk();
       await cleanup;
       if (version !== generation) return;
-      panel.classList.add("is-floating");
+      panel.classList.add("is-floating", "is-prejoin");
       panel.open = true;
-      size.hidden = handle.hidden = false;
+      handle.hidden = collapse.hidden = false;
+      updateButtons();
       join.hidden = true;
       leave.hidden = false;
-      const next = daily.createFrame(frame, {
+      mount = document.createElement("div");
+      mount.className = "online-class-mount";
+      frame.append(mount);
+      const next = daily.createFrame(mount, {
+        allowMultipleCallInstances: true,
         iframeStyle: {width: "100%", height: "100%", border: "0"},
         activeSpeakerMode: false,
         showLocalVideo: true,
@@ -132,9 +190,14 @@ window.createOnlineClass = (api, credentials, label) => {
       next.on("left-meeting", () => {
         if (call === next) disconnect();
       });
+      next.on("joined-meeting", () => {
+        if (call !== next || version !== generation) return;
+        panel.classList.remove("is-prejoin");
+        fit();
+        status.textContent = studentId ? "Mute your call mic before recording a Speaking task." : "";
+      });
+      status.textContent = "";
       await next.join({url: url.href, token: data.token});
-      if (version !== generation) return;
-      status.textContent = studentId ? "Mute your call mic before recording a Speaking task." : "";
     } catch (error) {
       if (version === generation) {
         disconnect();
@@ -151,8 +214,12 @@ window.createOnlineClass = (api, credentials, label) => {
     open() {
       panel.hidden = false;
       panel.open = true;
-      if (call) handle.focus();
-      else if (!join.disabled) join.click();
+      if (call) {
+        panel.classList.remove("is-collapsed");
+        updateButtons();
+        fit();
+        handle.focus();
+      } else if (!join.disabled) join.click();
     },
     close() { disconnect(); panel.open = false; panel.hidden = true; }
   };
