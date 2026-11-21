@@ -371,7 +371,7 @@
     body.presentation-mode #writingPanel { display: none; }
     body.studio-preview .app { grid-template-columns: minmax(0, 1fr); }
     body.studio-preview :is(#blockList, .live-panel, #writingPanel, #homeBtn, #openQuickTask,
-      #startSessionBtn, #endSessionBtn, .controls label, .reh-tools, #assignOnStage, #taskStageStatus) {
+      #startSessionBtn, #onlineClassBtn, #endSessionBtn, .controls label, .reh-tools, #assignOnStage, #taskStageStatus) {
       display: none !important;
     }
   </style>
@@ -396,6 +396,7 @@
       <button type="button" id="openQuickTask" hidden>Quick assign</button>
       <button id="expandSlide" aria-pressed="false">Expand slide</button>
       <button id="startSessionBtn">Start Session</button>
+      <button type="button" id="onlineClassBtn" hidden>Online classroom</button>
       <button id="endSessionBtn" disabled>End Session</button>
       <label>Student mode
         <select id="displayMode" disabled>
@@ -587,7 +588,7 @@
   </div>
 
   <script src="./config.js?v=recall-1"></script>
-  <script src="online-class.js?v=2"></script>
+  <script src="online-class.js?v=3"></script>
 <script src="task-materials.js?v=1"></script>
   <script src="task-attempt-signals.js?v=1"></script>
   <script src="classroom-report.js?v=attempt-2"></script>
@@ -749,8 +750,10 @@
 
     let currentLesson = null;
     let sessionPin = null;
+    const onlineClassBtn = document.getElementById("onlineClassBtn");
     const onlineClass = window.createOnlineClass(API_BASE,
       () => ({pin: sessionPin, headers: teacherHeaders()}), "Open video room");
+    onlineClassBtn.addEventListener("click", () => onlineClass.open());
     let slideStep = 0;
     let revealPending = false;
     let vocabRecall = { audio: false, order: null };
@@ -1541,7 +1544,7 @@
         const session = await res.json();
 
         sessionPin = session.pin;
-        onlineClass.show();
+        onlineClassBtn.hidden = false;
         latestTasks = [];
         renderTaskPreview(currentLesson.blocks[blockIndex]);
         syncProjection();
@@ -1650,6 +1653,7 @@
 
         clearProjectedSubmission();
         syncProjection();
+        onlineClassBtn.hidden = true;
         onlineClass.close();
         sessionBanner.textContent = `Session ended · PIN ${sessionPin}`;
         showJoinSession.hidden = true;
@@ -1833,7 +1837,10 @@
         const res = await fetch(`${API_BASE}/sessions/${pin}/state`, { headers: teacherHeaders() });
         if (!res.ok || pin !== sessionPin) return;
         const session = await res.json();
-        if (["ended", "expired"].includes(session.status)) onlineClass.close();
+        if (["ended", "expired"].includes(session.status)) {
+          onlineClassBtn.hidden = true;
+          onlineClass.close();
+        }
         if (session.active_writing_task || currentLesson?.blocks[blockIndex]?.page_tasks?.length) await updateWritingResults(pin);
         if (pin !== sessionPin || endSessionBtn.disabled) return;
 

@@ -313,7 +313,7 @@
   </main>
 
   <script src="./config.js?v=recall-1"></script>
-  <script src="online-class.js?v=2"></script>
+  <script src="online-class.js?v=3"></script>
 <script src="task-materials.js?v=1"></script>
 <script src="task-attempt-signals.js?v=1"></script>
   <script>
@@ -1067,7 +1067,7 @@
         syncBlockTask(session);
 
         renderSessionBlock();
-        if (studentId && sessionPin) onlineClass.show();
+        if (session.online_class_open) onlineClass.show();
         startSessionPolling();
       } catch (err) {
         showStudentError(err);
@@ -1126,6 +1126,8 @@
           }
 
           const session = await res.json();
+          if (session.online_class_open) onlineClass.show();
+          else onlineClass.close();
 
           if (isDisconnected) {
             statusText.textContent = `PIN ${sessionPin}`;
@@ -1136,7 +1138,6 @@
             session.status === "ended" ||
             session.status === "expired"
           ) {
-            onlineClass.close();
             lessonTitle.textContent = "Session ended";
             blockTitle.textContent =
               session.status === "expired"

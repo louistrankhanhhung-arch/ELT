@@ -233,6 +233,7 @@ def init_db():
     if USE_POSTGRES:
         cur.execute("ALTER TABLE sessions ADD COLUMN IF NOT EXISTS expires_at TEXT")
         cur.execute("ALTER TABLE sessions ADD COLUMN IF NOT EXISTS ended_at TEXT")
+        cur.execute("ALTER TABLE sessions ADD COLUMN IF NOT EXISTS online_class_open INTEGER NOT NULL DEFAULT 0")
     else:
         cur.execute("PRAGMA table_info(sessions)")
         columns = {row["name"] for row in cur.fetchall()}
@@ -242,6 +243,8 @@ def init_db():
 
         if "ended_at" not in columns:
             cur.execute("ALTER TABLE sessions ADD COLUMN ended_at TEXT")
+        if "online_class_open" not in columns:
+            cur.execute("ALTER TABLE sessions ADD COLUMN online_class_open INTEGER NOT NULL DEFAULT 0")
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS session_students (
@@ -835,6 +838,10 @@ def get_session_state(pin: str, credentials: Optional[HTTPAuthorizationCredentia
         raise HTTPException(status_code=404, detail="Session not found")
 
     session = apply_session_expiry(session)
+    session["online_class_open"] = bool(
+        session.get("online_class_open") and session["status"] == "active"
+        and student_id and any(person["student_id"] == student_id for person in session["students"])
+    )
     if TEACHER_ACCESS_TOKEN:
         try:
             require_teacher(credentials)
@@ -1201,12 +1208,27 @@ def daily_connection(session, *, teacher=False, student_name=None):
 
 @app.post("/api/sessions/{pin}/online-class/host", dependencies=[Depends(require_teacher)])
 def host_online_class(pin: str):
-    return daily_connection(require_active_session(pin), teacher=True)
+    session = require_active_session(pin)
+    connection = daily_connection(session, teacher=True)
+    with closing(db()) as conn:
+        cur = conn.cursor()
+        cur.execute(sql("""
+            UPDATE sessions SET online_class_open = 1
+            WHERE pin = ? AND created_at = ? AND status = 'active'
+        """), (pin, session["created_at"]))
+        opened = cur.rowcount == 1
+        conn.commit()
+    if not opened:
+        close_daily_room(session)
+        raise HTTPException(409, "This session has ended.")
+    return connection
 
 
 @app.post("/api/sessions/{pin}/online-class/join")
 def join_online_class(pin: str, payload: OnlineClassJoin):
     session = require_active_session(pin)
+    if not session.get("online_class_open"):
+        raise HTTPException(404, "The teacher has not opened the video room yet.")
     student = next((person for person in session["students"]
                     if hmac.compare_digest(person["student_id"].encode(), payload.student_id.encode())), None)
     if not student:
@@ -1232,7 +1254,7 @@ def end_session(pin: str, background_tasks: BackgroundTasks):
     conn = db()
     cur = conn.cursor()
     cur.execute(
-        sql("UPDATE sessions SET status = ?, ended_at = ? WHERE pin = ?"),
+        sql("UPDATE sessions SET status = ?, ended_at = ?, online_class_open = 0 WHERE pin = ?"),
         ("ended", now_iso(), pin)
     )
     conn.commit()

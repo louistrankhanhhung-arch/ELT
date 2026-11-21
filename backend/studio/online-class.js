@@ -148,6 +148,12 @@ window.createOnlineClass = (api, credentials, label) => {
   window.addEventListener("pagehide", disconnect);
   return {
     show() { panel.hidden = false; },
+    open() {
+      panel.hidden = false;
+      panel.open = true;
+      if (call) handle.focus();
+      else if (!join.disabled) join.click();
+    },
     close() { disconnect(); panel.open = false; panel.hidden = true; }
   };
 };
