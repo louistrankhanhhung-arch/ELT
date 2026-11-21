@@ -2794,6 +2794,15 @@ def teacher_activity():
                 s.expires_at BETWEEN ? AND ? OR
                 (NULLIF(s.expires_at, '') IS NULL AND s.created_at BETWEEN ? AND ?)
             )
+            AND NOT EXISTS (
+                SELECT 1 FROM session_students u
+                LEFT JOIN evidence_student_links link ON link.student_id = u.student_id
+                LEFT JOIN evidence_roster_ids ids ON ids.evidence_id = link.evidence_id
+                WHERE u.pin = s.pin
+                GROUP BY u.pin
+                HAVING COUNT(*) = SUM(CASE WHEN UPPER(TRIM(COALESCE(ids.roster_id, u.student_id)))
+                    IN ('STU0000', 'STU1000') THEN 1 ELSE 0 END)
+            )
         """), (*window, *((bound - timedelta(hours=SESSION_TTL_HOURS)).isoformat() for bound in (start, now))))
         sessions = []
         for row in cur.fetchall():
